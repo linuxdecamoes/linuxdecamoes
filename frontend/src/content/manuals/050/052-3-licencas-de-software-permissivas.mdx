@@ -1,0 +1,199 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T06 — 052.3 Licenças de software permissivas"
+  code="050"
+  topicNumber="T06"
+  objective="052.3"
+  weight={1}
+  pages="LPI Open Source Essentials (050) - Version 1.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Conceito Geral
+
+| Característica | Descrição |
+|---|---|
+| **Licenças permissivas** | Licenças de código aberto mais utilizadas atualmente; simples, flexíveis e com a maior liberdade disponível entre as licenças de código aberto. |
+| **Origem** | Desenvolvidas no campo académico (BSD da Universidade de Berkeley, MIT/X11 do MIT). |
+| **Princípio** | Permitir a máxima disseminação do software, facilitando o uso comercial e preservando os direitos do autor através da atribuição. |
+
+### Direitos Concedidos (geral para todas as licenças permissivas)
+
+- **Usar** o software — para qualquer finalidade, pessoal ou profissional
+- **Modificar** o software — melhorar, adaptar ou integrar como componente noutro software
+- **Redistribuir** o software — sob diferentes licenças, inclusive proprietárias
+- **Comercializar** o software — com ou sem modificações
+
+### Obrigações Gerais
+
+1. **Atribuição** — Indicar o nome do autor original do software na obra derivada
+2. **Incluir texto da licença** — Uma cópia do texto da licença em toda redistribuição do software
+
+### Comparação das Licenças Permissivas
+
+| Licença | Origem | Obrigações adicionais | Patentes | Compatibilidade GPL |
+|---|---|---|---|---|
+| **MIT/X11** | MIT (1987) | Aviso de direitos autorais + texto da licença | Não menciona | GPLv2 ✅, GPLv3 ✅, LGPLv2 ✅, LGPLv3 ✅, MPL ✅ |
+| **BSD 2-cláusulas** | UC Berkeley (1980) | Aviso de direitos autorais + texto da licença (no código e na documentação) | Não menciona | GPLv2 ✅, GPLv3 ✅, LGPLv2 ✅, LGPLv3 ✅, MPL ✅ |
+| **BSD 3-cláusulas** | UC Berkeley | Igual à BSD 2-cláusulas + **cláusula de não endosso** | Não menciona | GPLv2 ✅, GPLv3 ✅, LGPLv2 ✅, LGPLv3 ✅, MPL ✅ |
+| **Apache 2.0** | Apache Software Foundation (1999) | Avisos em ficheiros modificados + partes não modificadas sob Apache 2.0 + texto da licença | **Concessão explícita** | GPLv3 ✅, LGPLv3 ✅, MPL 2.0 ✅ (**não** compatível com GPLv2 nem LGPLv2) |
+
+### Cláusula de Não Endosso (BSD 3-cláusulas)
+
+Impede que o nome do autor original ou colaboradores seja utilizado para endossar ou promover produtos derivados sem permissão prévia por escrito. Protege o autor de que o seu prestígio seja explorado indevidamente.
+
+### Especificidades da Apache 2.0
+
+- **Licença de patente** — Concede ao licenciado o direito de usar, vender, importar e transferir software coberto por patente
+- **Cláusula de extinção** — Limita e evita pedidos de indenização por violação de patente
+- **Compatibilidade limitada** — Devido às cláusulas de patente, não é compatível com GPLv2 nem LGPLv2
+- A FSF recomenda-a como a melhor licença permissiva para pequenas quantidades de software e bibliotecas
+
+### Licenças Permissivas vs. Outras
+
+| Comparação | Licenças Permissivas | Domínio Público | Copyleft Forte | Copyleft Fraco |
+|---|---|---|---|---|
+| **Obrigação de atribuição** | Sim | Não | Depende da licença | Depende da licença |
+| **Obras derivadas podem ser proprietárias** | Sim | Sim | Não | Parcialmente |
+| **Exigência de manter licença** | Não | Não | Sim (toda a obra) | Sim (apenas a parte derivada do original) |
+| **Obrigações para utilizador** | Mínimas | Nenhuma | Extensas | Moderadas |
+
+### Projetos Exemplos
+
+| Projeto | Licença |
+|---|---|
+| Angular web framework | MIT/X11 |
+| Ruby on Rails | MIT/X11 |
+| Apache HTTP Server | Apache 2.0 |
+| Kubernetes | Apache 2.0 |
+
+## Exercícios Guiados
+
+### Exercício Guiado 1 — Obrigações das licenças permissivas
+
+**Enunciado:** Quais as duas obrigações geralmente impostas pelas licenças de software permissivas?
+
+**Solução:** As duas obrigações são:
+
+1. **Atribuição** — Indicar o nome do autor original do software na obra derivada
+2. **Inclusão do texto da licença** — Incluir uma cópia do texto da licença em toda redistribuição do software
+
+Estas são as obrigações mínimas; licenças específicas como a Apache 2.0 podem impor obrigações adicionais.
+
+### Exercício Guiado 2 — Identificação de licença não permissiva
+
+**Enunciado:** Qual das seguintes licenças não é uma licença de software permissiva?
+
+- Licença Apache 2.0
+- Licença LGPL
+- Licença MIT/X11
+- 3-Clause BSD
+
+**Solução:** A **Licença LGPL** não é uma licença permissiva. É uma licença **copyleft fraco** da Free Software Foundation. As licenças Apache 2.0, MIT/X11 e BSD de 3 cláusulas são todas licenças permissivas que concedem ampla liberdade ao licenciado.
+
+### Exercício Guiado 3 — Permissiva vs. Copyleft
+
+**Enunciado:** O que distingue uma licença de software permissiva de uma licença copyleft?
+
+- O software lançado sob uma licença copyleft não pode ser distribuído, mas o software sob licença permissiva sim.
+- As obras derivadas de software sob licença copyleft não podem ser lançadas sob licença proprietária, mas o software sob licença permissiva sim.
+- As licenças copyleft são legalmente reconhecidas apenas nos EUA, ao passo que as licenças permissivas são reconhecidas globalmente.
+
+**Solução:** A segunda opção está correta. As **obras derivadas de software sob licença copyleft não podem ser lançadas sob licença proprietária**, mas o software sob licença permissiva sim. Esta é a diferença essencial: o copyleft impõe a obrigação de manter a mesma licença na obra derivada, enquanto as licenças permissivas permitem ao licenciado escolher livremente a licença para a sua obra derivada, inclusive proprietária.
+
+### Exercício Guiado 4 — Licença com concessão de patentes
+
+**Enunciado:** Qual licença permissiva de software concede uma licença de patente para usar, vender, importar e transferir, de qualquer outra forma, o software coberto por uma patente?
+
+- Licença Apache 2.0
+- Licença BSD de 2 cláusulas
+- Licença MIT/X11
+- Licença BSD de 3 cláusulas
+
+**Solução:** A **Licença Apache 2.0**. Esta é uma das principais distinções da Apache 2.0 em relação às outras licenças permissivas: concede explicitamente uma licença de patente ao licenciado, incluindo o direito de usar, vender, importar e transferir software coberto por patente, bem como software que poderia infringir reivindicações de patente de um colaborador.
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Conformidade com Apache 2.0 para redistribuição proprietária
+
+**Enunciado:** Pretende modificar um software distribuído sob a licença Apache 2.0 e redistribuir a obra derivada sob uma licença proprietária. Quais etapas é preciso seguir para estar em conformidade com as obrigações da licença Apache 2.0?
+
+
+
+<SolutionBlock>
+É necessário cumprir as seguintes obrigações:
+
+1. **Inserir em cada ficheiro modificado** um aviso atestando que os ficheiros foram alterados
+2. **Lançar todas as partes não modificadas** do software original sob a licença Apache 2.0
+3. **Incluir o aviso de direitos autorais e o texto da licença** no código-fonte do software e das obras derivadas
+4. **Incluir o aviso de direitos autorais e o texto da licença** na documentação e noutros materiais fornecidos com a distribuição do software
+
+A combinação destas obrigações permite a redistribuição proprietária, desde que os devidos créditos e a licença original sejam preservados para as partes não modificadas.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Projetos populares sob licenças permissivas
+
+**Enunciado:** Cite ao menos três exemplos de projetos populares lançados sob licenças de software permissivas.
+
+
+
+<SolutionBlock>
+- **Angular web framework** — Licença MIT/X11
+- **Ruby on Rails** — Licença MIT/X11
+- **Apache HTTP Server** — Licença Apache 2.0
+- **Kubernetes** — Licença Apache 2.0
+
+Estes são apenas alguns exemplos. Muitos outros projetos importantes utilizam licenças permissivas, como o Node.js (MIT), o React (MIT), o Bootstrap (MIT) e o TensorFlow (Apache 2.0).
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Incompatibilidade LGPL 2.0 com Apache 2.0
+
+**Enunciado:** Por que não é possível distribuir, sob uma licença LGPL 2.0, um software que inclua componentes originalmente lançados sob as licenças MIT/X11, Apache 2.0 e BSD de 2 cláusulas? Quais licenças copyleft fracas diferentes poderiam ser usadas para lançar o software?
+
+
+
+<SolutionBlock>
+Embora a licença MIT/X11 e a licença BSD de 2 cláusulas sejam compatíveis com a LGPL 2.0, a **licença Apache 2.0 não é**. A incompatibilidade deve-se às cláusulas de patente da Apache 2.0, que entram em conflito com os termos da LGPL 2.0.
+
+Para resolver este problema, o software pode ser lançado sob a **LGPL 3.0**, que é compatível com todas as licenças de software permissivas mencionadas (MIT/X11, Apache 2.0 e BSD de 2 cláusulas). A LGPL 3.0 resolve a incompatibilidade através das suas disposições mais abrangentes sobre patentes.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Comparação entre MIT/X11 e BSD 2-cláusulas
+
+**Enunciado:** Tanto a licença MIT/X11 quanto a licença BSD de 2 cláusulas são licenças permissivas muito populares. Quais são as principais semelhanças e diferenças entre elas, e em quesituações poderia escolher uma em vez da outra?
+
+
+
+<SolutionBlock>
+**Semelhanças:**
+- Ambas concedem direitos amplíssimos: usar, modificar, redistribuir e comercializar o software
+- Ambas exigem apenas a obrigação de atribuição (incluir aviso de direitos autorais e texto da licença)
+- Ambas são compatíveis com todas as principais licenças copyleft (GPLv2, GPLv3, LGPL, MPL)
+
+**Diferenças:**
+- A licença BSD 2-cláusulas exige que o aviso de direitos autorais e o texto da licença sejam incluídos **tanto no código-fonte quanto no binário** e na documentação; a MIT/X11 é mais flexível quanto aonde os avisos devem aparecer
+- A licença BSD 2-cláusulas é ligeiramente mais antiga (1980 vs. 1987)
+
+**Escolha:** Na prática, a diferença é mínima. A MIT/X11 é frequentemente preferida por ser mais curta e simples, enquanto a BSD 2-cláusulas pode ser preferida em contextos académicos por tradição. Para a maioria dos projetos, ambas são interchangeáveis.
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T05 - 052.2 Licenças de software Copyleft]()
+→ Próximo: [T07 - 053.1 Conceitos de licenças de conteúdo aberto]()

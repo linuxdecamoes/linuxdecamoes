@@ -1,0 +1,252 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="110.3 Proteção de dados com criptografia"
+  code="102"
+  topicNumber="T19"
+  objective="Proteger dados usando criptografia"
+  weight={2}
+  pages="LPIC-1 (102) - Version 5.0"
+  accent="iris"
+/>
+
+
+
+## Resumo Conciso
+
+### OpenSSH — Configuração e uso básico do cliente
+
+| Comando | Função |
+|---------|--------|
+| `ssh user@host` | Conexão remota via SSH |
+| `ssh user@host cmd` | Executar comando remoto e voltar |
+| `ssh host` | Conectar com mesmo utilizador local |
+| `ssh-keygen -t tipo` | Gerar par de chaves (RSA, DSA, ecdsa, ed25519) |
+| `ssh-keygen -R host` | Remover chave de um host de `known_hosts` |
+| `ssh-copy-id user@host` | Copiar chave pública para o servidor |
+| `ssh-agent /bin/bash` | Iniciar agente de autenticação |
+| `ssh-add` | Adicionar chave privada ao agente |
+
+### Algoritmos de chave pública SSH
+
+| Algoritmo | Bits | Estado |
+|-----------|------|--------|
+| RSA | 1024+ (padrão 2048) | Seguro, amplamente usado |
+| DSA | 1024 fixo | **Inseguro**, preterido desde OpenSSH 7.0 |
+| ecdsa | 256, 384 ou 521 | Seguro, baseado em curvas elípticas |
+| ed25519 | 256 fixo | **Mais seguro**, implementação EdDSA |
+
+### Chaves de host do servidor OpenSSH
+
+| Ficheiro | Conteúdo | Permissão |
+|---------|----------|-----------|
+| `/etc/ssh/ssh_host_*_key` | Chave privada do host | `0600` (rw-------) |
+| `/etc/ssh/ssh_host_*_key.pub` | Chave pública do host | `0644` (rw-r--r--) |
+| `~/.ssh/known_hosts` | Chaves públicas de hosts conhecidos | — |
+| `~/.ssh/authorized_keys` | Chaves públicas autorizadas no servidor | — |
+
+### Túneis de porta SSH
+
+| Tipo | Opção | Diretivas relevantes no `sshd_config` | Função |
+|------|-------|---------------------------------------|--------|
+| Local | `-L` | `AllowTcpForwarding`, `PermitOpen` | Porta local → host destino via SSH |
+| Remoto | `-R` | `AllowTcpForwarding`, `GatewayPorts` | Porta remota → host local via SSH |
+| X11 | `-X` | `X11Forwarding` | Encaminhar X Window System |
+
+> **Nota (a correspondência não é 1:1):** `AllowTcpForwarding` ativa/desativa **ambos** os encaminhamentos TCP (`-L` e `-R`) — não é exclusiva do túnel local. `GatewayPorts` controla a **interface de bind** dos encaminhamentos remotos: por omissão, os túneis `-R` ficam ligados a `loopback` no servidor (inacessíveis a outros hosts); com `GatewayPorts yes` passam a aceitar ligações externas.
+
+```bash
+# Túnel local: porta 8585 → www.gnu.org:80 via host local
+ssh -L 8585:www.gnu.org:80 host
+
+# Túnel local remoto: via servidor intermediário
+ssh -L 8585:www.gnu.org:80 -Nf user@server
+
+# Túnel remoto: porta 8585 do servidor → localhost:80
+ssh -R 8585:localhost:80 -Nf user@server
+
+# X11 forwarding
+ssh -X user@host
+```
+
+### GNU Privacy Guard (GnuPG / GPG)
+
+| Comando | Função |
+|---------|--------|
+| `gpg --gen-key` | Gerar par de chaves |
+| `gpg --list-keys` | Listar chaves públicas |
+| `gpg --fingerprint USER-ID` | Mostrar impressão digital |
+| `gpg --export USER-ID > ficheiro` | Exportar chave pública |
+| `gpg --export -a USER-ID > ficheiro` | Exportar em formato ASCII |
+| `gpg --import ficheiro` | Importar chave pública |
+| `gpg --encrypt -r USER-ID ficheiro` | Criptografar ficheiro |
+| `gpg --decrypt ficheiro` | Descriptografar ficheiro |
+| `gpg --sign ficheiro` | Assinar ficheiro (binário) |
+| `gpg --clearsign ficheiro` | Assinar em texto legível |
+| `gpg --verify ficheiro.sig` | Verificar assinatura |
+| `gpg --gen-revoke USER-ID` | Criar certificado de revogação |
+| `gpg --output rev.asc --gen-revoke USER-ID` | Gerar revogação em ficheiro |
+| `gpg --edit-key USER-ID` | Gerir chaves (menu interativo) |
+
+### Estrutura do directório ~/.gnupg
+
+| Ficheiro/Directório | Função |
+|-------------------|--------|
+| `pubring.kbx` | Chaveiro público |
+| `private-keys-v1.d` | Chaves privadas |
+| `trustdb.gpg` | Banco de dados de confiabilidade |
+| `openpgp-revocs.d` | Certificados de revogação |
+
+### Tipos de criptografia GPG
+
+| Componente | Função |
+|------------|--------|
+| Chave pública | Usada para criptografar / verificar assinaturas |
+| Chave privada | Usada para descriptografar / assinar |
+| USER-ID | Nome + email do titular da chave |
+| KEY-ID | Últimos 8 dígitos hexadecimais da impressão digital |
+
+| Local | `-L` | `AllowTcpForwarding` |
+|---|---|---|
+| Remoto/Reverso | `-R` | `GatewayPorts` |
+| X | `-X` | `X11Forwarding` |
+
+### Exercício Guiado 4 — Túnel local e navegador
+
+**Enunciado:** Após `ssh -L 8888:localhost:80 -Nf ina@halof`, o que aparece em `http://localhost:8888`?
+
+**Solução:** A página inicial do servidor web (Apache) em execução no host remoto `halof`, pois `localhost` é entendido da perspetiva do servidor.
+
+---
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Diretivas de segurança do SSH
+
+**Enunciado:** Quais diretivas em `/etc/ssh/sshd_config` permitem logins de root e restringem a contas locais?
+
+
+
+<SolutionBlock>
+```bash
+# Permitir logins de root
+PermitRootLogin
+
+# Restringir a contas locais (exemplo)
+AllowUsers user1 user2
+# ou
+AllowGroups groupname
+```
+
+A diretiva `PermitRootLogin` controla se o root pode aceder via SSH. A diretiva `AllowUsers` ou `AllowGroups` restringe quais utilizadores/grupos podem conectar-se.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — ssh-copy-id
+
+**Enunciado:** Qual comando transfere a chave pública do cliente para o servidor, sendo possível login por chave pública?
+
+
+
+<SolutionBlock>
+```bash
+ssh-copy-id user@server
+```
+
+Este comando adiciona a chave pública do cliente ao `~/.ssh/authorized_keys` do utilizador remoto de forma automática e segura.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Dois túneis locais num comando
+
+**Enunciado:** Crie dois túneis locais (portas 8080 e 8585) para www.gnu.org e www.melpa.org via halof, com opções `-Nf`.
+
+
+
+<SolutionBlock>
+```bash
+ssh -L 8080:www.gnu.org:80 -L 8585:www.melpa.org:80 -Nf ina@halof
+```
+
+- Porta local 8080 encaminha para www.gnu.org:80
+- Porta local 8585 encaminha para www.melpa.org:80
+- `-N` impede login interativo
+- `-f` executa o SSH em segundo plano
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — GPG: opções curtas
+
+**Enunciado:** Complete a tabela com a versão curta de cada opção do GPG.
+
+
+
+<SolutionBlock>
+| Versão longa | Versão curta |
+|--------------|-------------|
+| `--armor` | `-a` |
+| `--output` | `-o` |
+| `--recipient` | `-r` |
+| `--decrypt` | `-d` |
+| `--encrypt` | `-e` |
+| `--sign` | `-s` |
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 5 — Exportar chaves GPG
+
+**Enunciado:** Exporte todas as chaves públicas para `all.key` e todas as chaves privadas para `all_private.key`.
+
+
+
+<SolutionBlock>
+```bash
+# Chaves públicas
+gpg --export --output all.key
+# ou
+gpg --export -o all.key
+
+# Chaves privadas
+gpg --export-secret-keys --output all_private.key
+# ou
+gpg --export-secret-keys -o all_private.key
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 6 — GPG: --edit-key e --clearsign
+
+**Enunciado:** Qual opção permite gerenciar chaves por menu interativo? E qual faz assinatura em texto não criptografado?
+
+
+
+<SolutionBlock>
+- **Menu de gestão:** `--edit-key`
+- **Assinatura em texto legível:** `--clearsign`
+
+```bash
+# Gerir chaves
+gpg --edit-key USER-ID
+
+# Assinar em texto legível
+gpg --clearsign ficheiro.txt
+# Gera ficheiro.txt.asc com texto legível e assinatura
+```
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T18 - 110.2 Configurar a segurança do host]()
+→ Fim: [102 - Visão Geral]()

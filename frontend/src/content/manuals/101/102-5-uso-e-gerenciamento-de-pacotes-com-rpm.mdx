@@ -1,0 +1,174 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="Uso e gerenciamento de pacotes com RPM"
+  code="101"
+  topicNumber="T08"
+  objective="Uso e gerenciamento de pacotes com RPM"
+  weight={2}
+  pages="LPIC-1 (101) - Version 5.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### RPM Package Manager (rpm)
+
+| Comando | Função |
+|---------|--------|
+| `rpm -i PACKAGENAME` | Instalar um pacote |
+| `rpm -U PACKAGENAME` | Atualizar ou instalar um pacote |
+| `rpm -F PACKAGENAME` | Apenas atualizar (não instala se ausente) |
+| `rpm -e PACKAGENAME` | Remover um pacote (erase) |
+| `rpm -ivh PACKAGENAME` | Instalar com saída detalhada e barra de progresso |
+| `rpm -qa` | Listar todos os pacotes instalados |
+| `rpm -qi PACKAGENAME` | Informações sobre um pacote instalado |
+| `rpm -ql PACKAGENAME` | Listar arquivos de um pacote instalado |
+| `rpm -qf FILENAME` | Descobrir qual pacote instalado possui um arquivo |
+| `rpm -qip FILENAME` | Informações sobre um pacote não instalado (arquivo RPM) |
+| `rpm -qlp FILENAME` | Listar arquivos de um pacote não instalado |
+
+**Opções úteis:** `-v` (verbose), `-h` (hash/progresso). Podem ser combinadas: `rpm -ivh`.
+
+### YUM — YellowDog Updater Modified
+
+| Comando | Função |
+|---------|--------|
+| `yum search PATTERN` | Buscar pacote |
+| `yum install PACKAGENAME` | Instalar pacote + dependências |
+| `yum update PACKAGENAME` | Atualizar pacote (omitir nome = todos) |
+| `yum check-update PACKAGENAME` | Verificar atualizações disponíveis |
+| `yum remove PACKAGENAME` | Remover pacote |
+| `yum whatprovides FILENAME` | Descobrir qual pacote fornece um arquivo |
+| `yum info PACKAGENAME` | Informações sobre um pacote |
+| `yum repolist all` | Listar todos os repositórios |
+| `yum-config-manager --add-repo URL` | Adicionar repositório |
+| `yum-config-manager --enable REPO_ID` | Habilitar repositório |
+| `yum-config-manager --disable REPO_ID` | Desabilitar repositório |
+| `yum clean packages` | Limpar pacotes baixados do cache |
+| `yum clean metadata` | Limpar metadados do cache |
+
+**Repositórios:** `/etc/yum.repos.d/` (arquivos `.repo`) e `/etc/yum.conf`
+
+### DNF — Dandified YUM
+
+| Comando | Função |
+|---------|--------|
+| `dnf search PATTERN` | Buscar pacote |
+| `dnf info PACKAGENAME` | Informações sobre pacote |
+| `dnf install PACKAGENAME` | Instalar pacote |
+| `dnf remove PACKAGENAME` | Remover pacote |
+| `dnf upgrade PACKAGENAME` | Atualizar pacote (omitir nome = todos) |
+| `dnf provides FILENAME` | Descobrir qual pacote fornece um arquivo |
+| `dnf list --installed` | Listar pacotes instalados |
+| `dnf repoquery -l PACKAGENAME` | Listar conteúdo de um pacote |
+| `dnf help install` | Ajuda sobre comando específico |
+| `dnf repolist` | Listar repositórios |
+| `dnf config-manager --add-repo URL` | Adicionar repositório |
+| `dnf config-manager --set-enabled REPO_ID` | Habilitar repositório |
+| `dnf config-manager --set-disabled REPO_ID` | Desabilitar repositório |
+
+**Repositórios:** `/etc/yum.repos.d/` (mesmo local do YUM)
+
+### Zypper (openSUSE/SUSE)
+
+| Comando | Função |
+|---------|--------|
+| `zypper refresh` | Atualizar índices dos repositórios |
+| `zypper se PATTERN` | Buscar pacote |
+| `zypper se -i` | Listar pacotes instalados |
+| `zypper se -i PACKAGENAME` | Verificar se pacote está instalado |
+| `zypper se -u PACKAGENAME` | Buscar pacotes não instalados |
+| `zypper se --provides FILENAME` | Descobrir qual pacote fornece um arquivo |
+| `zypper in PACKAGENAME` | Instalar pacote |
+| `zypper in /caminho/pacote.rpm` | Instalar RPM do disco com dependências |
+| `zypper update` | Atualizar todos os pacotes |
+| `zypper list-updates` | Listar atualizações disponíveis |
+| `zypper rm PACKAGENAME` | Remover pacote |
+| `zypper info PACKAGENAME` | Informações sobre pacote |
+| `zypper repos` | Listar repositórios |
+| `zypper addrepo URL NOME` | Adicionar repositório |
+| `zypper removerepo NOME` | Remover repositório |
+| `zypper modifyrepo -e ALIAS` | Habilitar repositório |
+| `zypper modifyrepo -d ALIAS` | Desabilitar repositório |
+| `zypper modifyrepo -f ALIAS` | Ativar auto-refresh |
+| `zypper modifyrepo -F ALIAS` | Desativar auto-refresh |
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Descobrir pacote com zypper
+**Enunciado:** Como usar o zypper para descobrir qual pacote possui o arquivo `/usr/sbin/swapon`?
+
+
+
+<SolutionBlock>
+```bash
+zypper se --provides /usr/sbin/swapon
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Listar pacotes instalados com dnf
+**Enunciado:** Como obter uma lista de todos os pacotes instalados no sistema usando o dnf?
+
+
+
+<SolutionBlock>
+```bash
+dnf list --installed
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Adicionar repositório com dnf
+**Enunciado:** Usando o dnf, qual o comando para adicionar um repositório localizado em `https://www.example.url/home:reponame.repo` ao sistema?
+
+
+
+<SolutionBlock>
+```bash
+dnf config-manager --add-repo https://www.example.url/home:reponame.repo
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Verificar instalação com zypper
+**Enunciado:** Como podemos usar o zypper para conferir se o pacote `unzip` está instalado?
+
+
+
+<SolutionBlock>
+```bash
+zypper se -i unzip
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 5 — Descobrir pacote com yum
+**Enunciado:** Usando o yum, descubra qual pacote fornece o arquivo `/bin/wget`.
+
+
+
+<SolutionBlock>
+```bash
+yum whatprovides /bin/wget
+```
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T07 - 102.4 Gerenciamento de pacotes do Debian]()
+→ Próximo: [T09 - 102.6 Linux virtualizado]()

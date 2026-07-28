@@ -1,0 +1,364 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="Usando a linha de comando para conseguir ajuda"
+  code="010"
+  topicNumber="T06"
+  objective="2.2"
+  weight={2}
+  pages="Linux Essentials (010) - Version 4.1"
+  accent="sage"
+/>
+
+
+
+## Resumo Conciso
+
+### Onde procurar ajuda
+A linha de comando é complexa — cada comando tem as suas próprias opções. Há **4 fontes** de documentação, por ordem de detalhe crescente:
+
+| Fonte | Como invocar | Detalhe | Quando usar |
+|-------|--------------|---------|-------------|
+| **`--help`** | `comando --help` | Resumo conciso das opções (saída direta no terminal) | Primeira tentativa rápida |
+| **`man`** | `man comando` | Página de manual completa (navega com less) | Referência principal |
+| **`info`** | `info comando` | Mais detalhada que man; em **hipertexto** com nós/links | Documentação GNU aprofundada |
+| **`/usr/share/doc/`** | `ls /usr/share/doc/pacote` | README, changelog, exemplos do pacote | Detalhes específicos do pacote |
+
+### `--help` (ajuda interna)
+A maioria dos comandos exibe instruções breves quando invocados com `--help`. Nem todos suportam esta opção, e o conteúdo é **mais conciso** que o `man`.
+
+### Páginas `man`
+Acedidas com `man <comando>` (ex.: `man mkdir`). Navegação: **setas** / **espaço** (avançar página) / **Q** (sair). Internamente, `man` usa o **`less`** como paginator.
+
+**Estrutura de uma página man (até 11 secções, várias opcionais):**
+
+| Secção | Conteúdo |
+|--------|----------|
+| **NAME** | Nome do comando + descrição breve |
+| **SYNOPSIS** | Sintaxe do comando |
+| **DESCRIPTION** | Descrição dos efeitos |
+| **OPTIONS** | Opções disponíveis |
+| **ARGUMENTS** | Argumentos |
+| **FILES** | Ficheiros auxiliares |
+| **EXAMPLES** | Exemplos de uso |
+| **SEE ALSO** | Referências cruzadas |
+| **DIAGNOSTICS** | Mensagens de erro/aviso |
+| **COPYRIGHT** | Autor(es) |
+| **BUGS** | Limitações conhecidas |
+
+**Categorias (secções) — numeradas 1 a 8 (9 = não padrão):**
+
+| Nº | Categoria |
+|----|-----------|
+| 1 | Comandos do utilizador |
+| 2 | Chamadas do sistema |
+| 3 | Funções da biblioteca C |
+| 4 | Drivers / ficheiros de dispositivo |
+| 5 | Ficheiros de configuração e formatos |
+| 6 | Jogos |
+| 7 | Miscelânea |
+| 8 | Comandos do administrador do sistema |
+| 9 | Funções do kernel (não padrão) |
+
+- **Mesmo nome pode existir em várias secções.** Exemplo: `passwd` é um **comando** (sec. 1) **e** um **ficheiro** `/etc/passwd` (sec. 5).
+- Notação: `passwd(1)` ou `passwd(5)`.
+- Por defeito `man passwd` mostra a **primeira** encontrada (a sec. 1). Forçar a secção: `man 5 passwd`.
+- **Pesquisa dentro do man** (via less): `/palavra` (para a frente), `?palavra` (para trás), `N` (próxima ocorrência), `H` (menu de ajuda).
+
+### Páginas `info`
+Mais detalhadas e em **hipertexto** (estrutura de nós em árvore, como páginas web). Invocação: `info <comando>` (ex.: `info mkdir`).
+- Cada **nó** = um tópico. Hiperlinks marcados com `*`.
+- `Enter` sobre um link → segue para o nó.
+- `?` → mostra os comandos de navegação.
+
+### Diretório `/usr/share/doc/`
+- Contém um subdiretório por **pacote instalado** (geralmente `nome[-versão]`).
+- Quase sempre inclui um **`README`** (ou `readme.txt`) em texto simples — legível em qualquer editor.
+- Pode também conter **changelog** (histórico de versões) e **exemplos de configuração**.
+
+### Localizar ficheiros
+
+| Comando | Mecanismo | Velocidade | Notas |
+|---------|-----------|-----------|-------|
+| **`locate`** | Pesquisa numa **base de dados** pré-indexada | ⚡ Muito rápido | BD gerida pelo **`updatedb`** (corre periodicamente); pode estar desatualizada → `sudo updatedb` |
+| **`find`** | Percorre a **árvore de diretórios** ao vivo | Mais lento | Sempre atualizado; muito poderoso (**fora do âmbito do Essentials**) |
+
+```bash
+# locate — por defeito comporta-se como *TERMO* (substrings aceites)
+$ locate note
+/lib/udev/keymaps/zepto-znote
+/usr/bin/zipnote
+...
+
+# Limitar o número de resultados (-l N)
+$ locate -l 3 README
+
+# Atualizar a base de dados (manualmente)
+$ sudo updatedb
+
+# find — caminho + critério (-name)
+$ find . -name thesis.pdf
+$ find ~ -name thesis.pdf
+```
+
+> **Boa prática:** se acabaste de criar um ficheiro e o `locate` não o encontra, corre `sudo updatedb` primeiro.
+
+### Comandos-chave
+| Comando | Função |
+|---------|--------|
+| `man` | Exibe uma página de manual |
+| `info` | Exibe uma página info (hipertexto) |
+| `locate` | Procura ficheiros numa base de dados |
+| `updatedb` | Atualiza a base de dados do `locate` |
+| `find` | Procura ficheiros na árvore (ao vivo) |
+| `whatis` | Descrição de uma linha de um comando |
+| `apropos` | Procura comandos por palavra-chave nas descrições |
+
+| `ls` | Exibe o conteúdo de um diretório. |
+|---|---|
+| `cat` | Concatena ou visualiza ficheiros de texto. |
+| `cut` | Remove secções de um ficheiro de texto. |
+| `cd` | Passa para um diretório diferente. |
+| `cp` | Copia um ficheiro. |
+| `mv` | Move um ficheiro (também serve para renomear). |
+| `mkdir` | Cria um novo diretório. |
+| `touch` | Cria um ficheiro ou modifica a data da última modificação. |
+| `wc` | Conta palavras, linhas ou bytes de um ficheiro. |
+| `passwd` | Muda a senha de um utilizador. |
+| `rm` | Remove um ficheiro. |
+| `rmdir` | Remove um diretório. |
+| `more` | Visualiza ficheiros de texto, um ecrã de cada vez. |
+| `less` | Visualiza texto, permite rolar linha/página (acima e abaixo). |
+| `whereis` | Mostra o caminho de um programa e das páginas de manual relacionadas. |
+| `head` | Exibe as primeiras linhas de um ficheiro. |
+| `tail` | Exibe as últimas linhas de um ficheiro. |
+| `sort` | Ordena um ficheiro numérica ou alfabeticamente. |
+| `tr` | Traduz ou remove caracteres de um ficheiro. |
+| `chmod` | Altera as permissões de um ficheiro. |
+| `grep` | Procura dentro de um ficheiro. |
+
+> [!note] o `cd` **não tem** página `man` própria — é um **builtin do shell** (ver Guiado do Exploratório 1). Para builtins usa-se `help cd`.
+
+### Guiado 2 — Página `info` de `ls`
+
+**Enunciado:** *Abra a página info de `ls` e identifique o MENU. Quais são as opções? Encontre a opção que permite classificar os dados de saída por data de modificação.*
+
+**Solução:**
+
+```bash
+$ info ls
+```
+
+**Opções do MENU:**
+1. Quais ficheiros são listados
+2. Qual informação é listada
+3. Classificação do resultado
+4. Informações sobre a versão
+5. Formatação geral da saída
+6. Formatação dos registos de data e hora do ficheiro
+7. Formatação dos nomes dos ficheiros
+
+**Opção que ordena por data de modificação:** `-t` ou `--sort=time`.
+
+### Guiado 3 — Os 3 primeiros ficheiros `README` (com `locate`)
+
+**Enunciado:** *Exiba o caminho para os três primeiros ficheiros README. Use o `man` para identificar a opção correta do `locate`.*
+
+**Solução passo a passo:**
+1. Descobrir a opção que limita resultados — `man locate` → secção OPTIONS revela `-l N, --limit N`.
+2. Aplicar:
+   ```bash
+   $ locate -l 3 README
+   /etc/alternatives/README
+   /etc/init.d/README
+   /etc/rc0.d/README
+   ```
+
+### Guiado 4 — Criar ficheiro e encontrá-lo com `locate`
+
+**Enunciado:** *Crie um ficheiro `test` no seu diretório Home. Encontre o seu caminho absoluto usando `locate`.*
+
+**Solução:**
+```bash
+$ touch test
+$ locate test
+/home/user/test
+```
+
+### Guiado 5 — Porquê o `locate` "não viu" o ficheiro logo?
+
+**Enunciado:** *Encontrou o ficheiro imediatamente? O que teve de fazer para que o `locate` o encontrasse?*
+
+**Solução:**
+Provavelmente **não** — o ficheiro acabou de ser criado e ainda não está na base de dados do `locate`. É preciso **atualizar a base de dados manualmente** com privilégios de root:
+```bash
+$ sudo updatedb
+$ locate test
+/home/user/test
+```
+> O `updatedb` costuma correr automaticamente (ex.: 1x/dia via cron), mas ficheiros criados **depois** da última indexação não aparecem até à próxima atualização.
+
+### Guiado 6 — Encontrar o ficheiro com `find`
+
+**Enunciado:** *Procure pelo ficheiro de teste usando o `find`. Qual a sintaxe e o caminho absoluto?*
+
+**Solução:**
+```bash
+$ find ~ -name test
+# ou
+$ find . -name test
+/home/user/test
+```
+> Diferença face ao `locate`: o `find` **não** usa base de dados — percorre a árvore ao vivo, por isso **vê sempre** o ficheiro (mesmo recém-criado), à custa de ser mais lento.
+
+---
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+> Exercícios da autoria do agente para praticares **diretamente no terminal**. Consolidam o tópico 2.2.
+> *Dica:* precisas de uma sessão Bash. As soluções estão em `<details>`.
+
+### Exploratório 1 — Builtins não têm `man`! Experimenta `help`
+O manual diz que o `cd` não tem página `man` própria. Confirma isso e descobre a alternativa: usa o **`help`** (que só funciona para builtins) para obter a ajuda do `cd`, do `pwd` e do `export`.
+
+
+
+<SolutionBlock>
+```bash
+# cd NÃO tem man page (é builtin)
+man cd                  # No manual entry for cd
+
+# Confirma que é builtin
+type cd                 # cd is a shell builtin
+
+# help funciona SÓ para builtins
+help cd
+help pwd
+help export
+```
+
+**O que aprendeste:** há **dois "sistemas de ajuda"** paralelos — `man` para comandos **externos**, `help` para **builtins**. `help` (sem argumentos) lista todos os builtins disponíveis.
+</SolutionBlock>
+
+
+
+### Exploratório 2 — `whatis` vs `apropos` (pesquisa por nome vs por conceito)
+`whatis` dá a descrição de **um** comando; `apropos` **procura** comandos cuja descrição contenha uma palavra-chave. Experimenta:
+
+1. `whatis ls ls grep` (vários ao mesmo tempo).
+2. `apropos password` — que comandos aparecem relacionados com "password"?
+
+
+
+<SolutionBlock>
+```bash
+# 1. whatis — descrição curta de comandos específicos
+whatis ls grep passwd
+# ls      (1)  - list directory contents
+# grep    (1)  - print lines that match patterns
+# passwd  (1)  - change user password
+# passwd  (5)  - the password file            <-- repara nas DUAS secções!
+
+# 2. apropos — pesquisa por palavra-chave
+apropos password
+# chpasswd             (8)  - update passwords in batch mode
+# passwd               (1)  - change user password
+# passwd               (5)  - the password file
+# ...
+```
+
+**O que aprendeste:**
+- O `passwd` aparece **duas vezes** em secções diferentes — confirma o que o manual explica sobre `passwd(1)` vs `passwd(5)`.
+- Se o `whatis`/`apropos` devolver "nothing appropriate", pode ser preciso atualizar a BD com `sudo mandb`.
+- **Truque:** `apropos` ≡ `man -k` e `whatis` ≡ `man -f`.
+</SolutionBlock>
+
+
+
+### Exploratório 3 — Explorar `/usr/share/doc/`
+Encontra o diretório de documentação do pacote **`bash`** (ou `coreutils`). Lista-o. Lê as **primeiras 20 linhas** do ficheiro `README` desse pacote.
+
+
+
+<SolutionBlock>
+```bash
+# Localizar a pasta do bash em /usr/share/doc
+ls -d /usr/share/doc/bash*            # ex.: /usr/share/doc/bash
+
+# Listar conteúdo
+ls /usr/share/doc/bash
+
+# Ler as primeiras 20 linhas do README
+head -n 20 /usr/share/doc/bash/README    # ou README.Debian, etc.
+
+# Em distros baseadas em Debian, há muitas vezes um ficheiro "changelog"
+ls /usr/share/doc/bash/changelog*
+```
+
+**O que aprendeste:** `/usr/share/doc/` é a fonte "bruta" de documentação — útil quando o `man` é escasso. Os ficheiros estão em **texto simples** (`.gz` às vezes — usar `zcat` ou `zless`).
+</SolutionBlock>
+
+
+
+### Exploratório 4 — Localizar ficheiros de configuração em `/etc`
+Usa `locate` para listar **todos os ficheiros** com extensão `.conf` dentro de `/etc`. Depois repete a mesma procura com `find`, e compara o tempo de execução.
+
+
+
+<SolutionBlock>
+```bash
+# locate é rápido mas pode estar desatualizado
+locate -r '/etc/.*\.conf$' | head      # -r aceita regex
+# ou, mais simples:
+locate etc | grep '\.conf$' | head
+
+# Comparar tempos (o find percorre a árvore ao vivo)
+time locate -r '/etc/.*\.conf$' > /dev/null
+time find /etc -name '*.conf' > /dev/null
+```
+
+**Resultado típico:** `locate` em milissegundos; `find` demora **muito** mais (procura ao vivo em todos os subdiretórios).
+
+**Ligação ao manual:** esta é exatamente a diferença explicada no manual — `locate` consulta uma BD (rápido, eventualmente desatualizada), `find` percorre o sistema de ficheiros (atualizado, mais lento).
+</SolutionBlock>
+
+
+
+### Exploratório 5 — Atualizar a BD do `locate` e medir o efeito
+Cria um ficheiro com nome único (ex.: `ficheiro-teste-T06`), confirma que o `locate` **não** o encontra, atualiza a BD com `sudo updatedb` e confirma que agora aparece.
+
+
+
+<SolutionBlock>
+```bash
+# 1. Criar um ficheiro com nome único no home
+touch ~/ficheiro-teste-T06
+
+# 2. locate NÃO o encontra (ainda não indexado)
+locate ficheiro-teste-T06            # (vazio)
+
+# 3. Atualizar a base de dados (precisa de root)
+sudo updatedb
+
+# 4. Agora aparece
+locate ficheiro-teste-T06
+# /home/USER/ficheiro-teste-T06
+
+# Limpeza
+rm ~/ficheiro-teste-T06
+```
+
+**O que aprendeste:** sempre que criares um ficheiro novo e precisares de o localizar **logo** com `locate`, atualiza a BD com `updatedb`. Caso contrário, usa antes `find ~ -name ...` (que vê ao vivo).
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T05 - O básico sobre a linha de comando]()
+→ Próximo: [T07 - Usando diretórios e listando arquivos]()

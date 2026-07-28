@@ -1,0 +1,152 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T11 — 054.2 Modelos de negócios para prestadores de serviços"
+  code="050"
+  topicNumber="T11"
+  objective="054.2"
+  weight={2}
+  pages="LPI Open Source Essentials (050) - Version 1.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Fluxos de receita
+
+| Modelo | Descrição |
+|---|---|
+| **Hospedagem** | Fornecer software numa plataforma confiável e segura; taxas por contas, volume de dados ou intervalos de tempo |
+| **Assinaturas** | Taxa mensal ou anual; vários níveis com mais recursos, mais utilizadors ou garantia mais forte; variação freemium |
+| **Suporte** | Aconselhamento, documentação e treinamento para utilizadores com dificuldades; instalação em servidores próprios do cliente |
+| **Serviços personalizados** | Recursos adicionais funcionais ou de segurança desenvolvidos sob medida para o cliente; licença dupla |
+| **Publicidade** | Cliente não paga; provedor exibe anúncios e cobra das empresas anunciantes |
+| **Comissão** | Taxa por gerir transações; base de sites de comércio eletrônico e processadores de pagamento |
+| **Conteúdo aberto** | Conteúdo sob Creative Commons; receita via doações, anúncios, freemium, mercadorias ou consultoria |
+
+### Serviços hospedados vs. auto-hospedados
+
+| Característica | Hospedado | Auto-hospedado |
+|---|---|---|
+| **Configuração** | Mínima; provedor gere manutenção e atualizações | Requer expertise técnica e recursos próprios |
+| **Custos iniciais** | Baixos | Elevados |
+| **Escalabilidade** | Fácil; provedor ajusta recursos à procura | Desafiante; cliente gere infraestrutura |
+| **Controle e personalização** | Limitados | Totais |
+| **Privacidade de dados** | Dados fora das instalações do cliente | Dados no próprio servidor do cliente |
+| **Dependência** | Risco de interrupções ou alteração de termos pelo provedor | Sem dependência de terceiros |
+
+### Impacto das licenças
+
+- Licenças de código aberto funcionam bem em modelos de serviços porque o cliente não espera possuir o software
+- A **GNU Affero GPL** regula explicitamente o uso "no caso de software de servidor de rede"
+- Noutras licenças (GPL, BSD) há ambiguidade sobre o que constitui "cópia", "transmissão" ou "distribuição" pela rede
+- Boa prática: listar publicamente todos os softwares de código aberto e suas licenças
+
+### Segurança e privacidade
+
+- **Segurança:** processo robusto de patches, gestão de dependências, criptografia de dados, controles de acesso, resposta a incidentes
+- **Privacidade:** recolha mínima de dados, conformidade com RGPD e CCPA, controlo dos utilizadores sobre seus dados
+- Auditorias de terceiros e pipelines de CI/CD com verificações de segurança integradas
+
+### Acordos entre provedor e cliente
+
+| Acordo | Descrição |
+|---|---|
+| **ToS (Terms of Serviço)** | Regras, responsabilidades e limitações que regem o uso do serviço |
+| **Política de Privacidade** | Descreve como os dados são coletados, usados, armazenados e protegidos |
+| **SLA (Service Level Agreement)** | Acordo formal sobre nível de serviço esperado: métricas, responsabilidades e consequências |
+| **SLO (Service Level Objective)** | Metas mensuráveis dentro do SLA: tempo de atividade, tempo de resposta, rendimento |
+| **DPA (Data Processing Agreement)** | Contrato de processamento de dados pessoais; obrigatório em algumas jurisdições (ex.: RGPD) |
+
+### Estruturas de custos e investimentos
+
+- Custos fixos mais vultosos: hardware de servidor, data center, eletricidade, largura de banda, salários
+- Custos variáveis: licenças de software ou serviços de terceiros
+- Software de código aberto elimina ou reduz custos de licenciamento
+- Considerar o custo total de propriedade (TCO), incluindo suporte, manutenção e integração
+
+## Exercícios Guiados
+
+### Exercício Guiado 1 — Receita sem cobrar ao utilizador
+
+**Enunciado:** Cite algumas maneiras pelas quais os provedores de serviços podem obter receita sem cobrar dos utilizadors pelo serviço.
+
+**Solução:** O serviço pode oferecer anúncios, que são pagos pelos anunciantes. O serviço pode cobrar uma comissão dos fornecedores que oferecem produtos ou serviços no site, como lojas ou agências de viagem online. O provedor de serviços pode vender dados do cliente, uma prática que deve estar explicitada nos Termos de Serviço, já que muitos clientes não estariam de acordo com isso.
+
+### Exercício Guiado 2 — Auto-hospedagem
+
+**Enunciado:** Por quais motivos um provedor de serviços poderia oferecer seu software para auto-hospedagem pelos clientes?
+
+**Solução:** Os clientes em potencial podem experimentar o software para verificar seus recursos e confiabilidade antes de assinar um contrato com o provedor de serviços. Os clientes também podem encontrar bugs e até mesmo propor correções.
+
+### Exercício Guiado 3 — GNU Affero GPL
+
+**Enunciado:** Por que um provedor de serviços lançaria seu software sob a licença GNU Affero GPL?
+
+**Solução:** A Affero GPL exige que outros provedores de serviços publiquem quaisquer alterações feitas no software sob a mesma licença. Essa disposição impede que os concorrentes tirem vantagem do provedor de serviços adicionando alguns aprimoramentos proprietários e, em seguida, promovendo sua versão do serviço como superior à original.
+
+### Exercício Guiado 4 — SLA e SLO
+
+**Enunciado:** Qual é a diferença entre um SLA e um SLO?
+
+**Solução:** O **SLA** (Service Level Agreement) é um acordo formal e documentado entre o provedor e o cliente que descreve o nível de serviço esperado, incluindo métricas, responsabilidades e consequências por não atingir as metas. O **SLO** (Service Level Objective) é um componente do SLA que especifica as metas ou objetivos mensuráveis concretos, como tempo de atividade, tempo de resposta e tempo de resolução.
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Política de Uso Aceitável
+
+**Enunciado:** O que é uma Política de Uso Aceitável (AUP)?
+
+
+
+<SolutionBlock>
+Uma Política de Uso Aceitável (AUP) é uma política que define os usos aceitáveis e inaceitáveis de um serviço, para evitar abusos e garantir um ambiente seguro e confiável. Alguns elementos comuns de uma AUP incluem uma descrição de ações específicas que não são permitidas, como spam ou hacking, a obrigação para o utilizador de usar o serviço de forma responsável, ações que o provedor de serviços pode tomar em caso de violações, como suspender a conta de um utilizador, e procedimentos para relatar e processar violações.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — EULA
+
+**Enunciado:** O que é um Contrato de Licença de Usuário Final (EULA)?
+
+
+
+<SolutionBlock>
+Um Contrato de Licença de Usuário Final (EULA) é um contrato legal entre um fornecedor de software proprietário e um utilizador final, concedendo ao utilizador o direito de usar o software sob certas condições. Alguns elementos comuns dos EULAs incluem o escopo e as limitações da licença (por exemplo, uso pessoal ou licença intransferível), as ações proibidas (por exemplo, engenharia reversa ou redistribuição), as condições sob as quais a licença pode ser rescindida e a propriedade e proteção dos direitos de propriedade intelectual. Os serviços de código inteiramente aberto usam uma licença de software de código aberto no lugar de um EULA proprietário.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Segurança em serviços hospedados
+
+**Enunciado:** Quais são as principais preocupações de segurança ao utilizar um serviço hospedado baseado em código aberto?
+
+
+
+<SolutionBlock>
+As principais preocupações incluem: dados confidenciais armazenados fora das instalações do cliente (risco de privacidade), ambientes de hospedagem compartilhados (riscos adicionais de segurança), dependência de um único provedor (interrupções ou alteração de termos), necessidade de verificar políticas de criptografia, controles de acesso e resposta a incidentes, e avaliação de conformidade com regulamentações como RGPD e CCPA.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Licença dupla
+
+**Enunciado:** Como funciona o modelo de licença dupla em projetos de código aberto e para que tipo de software é mais eficaz?
+
+
+
+<SolutionBlock>
+No modelo de licença dupla, o software está disponível sob uma licença de software livre (que atende muitos utilizadores) e simultaneamente sob uma licença proprietária baseada em direitos autorais para empresas que desejam incorporar o software a um produto proprietário — o que não pode ser feito sob uma licença copyleft. Este modelo é mais eficaz para bases de dados, porque muitas empresas querem oferecer um base de dados rico em recursos como parte de um produto proprietário.
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T10 - 054.1 Modelos de negócios para desenvolvimento de software]()
+→ Próximo: [T12 - 054.3 Conformidade e redução de riscos]()

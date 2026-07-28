@@ -1,0 +1,343 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T18 — Noções básicas de SQL"
+  code="030"
+  topicNumber="T18"
+  objective="035.3"
+  weight={3}
+  pages="LPI Web Development Essentials (030) - Version 1.0"
+  accent="amber"
+/>
+
+
+
+## Resumo Conciso
+
+### SQL — Structured Query Language
+
+Linguagem específica para bancos de dados relacionais (SQL). As operações de escrita e leitura são expressas em declarações e consultas, compostas por cláusulas.
+
+**Exemplo básico:**
+
+```sql
+-- Inserir dados
+INSERT INTO contacts (name, email) VALUES ('Carol', 'carol@example.com');
+
+-- Consultar dados
+SELECT email FROM contacts;
+
+-- Consultar com filtro
+SELECT email FROM contacts WHERE name = 'Dave';
+```
+
+### SQLite
+
+O SQLite é a solução mais simples para incorporar SQL a um aplicativo. Ao contrário de outros SGBD, o SQLite não é um servidor — fornece funções para criar a base de dados como um ficheiro convencional.
+
+**Instalar o módulo:**
+
+```bash
+$ npm install sqlite3
+```
+
+**Abrir a base de dados:**
+
+```javascript
+const sqlite3 = require('sqlite3')
+const db = new sqlite3.Database('messages.sqlite3');
+```
+
+### Criar tabelas
+
+```javascript
+db.run('CREATE TABLE IF NOT EXISTS messages (id INTEGER PRIMARY KEY AUTOINCREMENT, uuid CHAR(36), message TEXT)')
+```
+
+| Tipo | Descrição |
+|---|---|
+| `INTEGER PRIMARY KEY AUTOINCREMENT` | Chave primária inteira, gerada automaticamente |
+| `CHAR(36)` | Texto de comprimento fixo (36 caracteres) |
+| `TEXT` | Texto de comprimento arbitrário |
+
+### Chaves primárias
+
+- Campo de identificação único para cada registo
+- Não pode ser nula
+- Não pode haver duas chaves primárias idênticas na mesma tabela
+- O SQLite cria automaticamente um `ROWID`; `INTEGER PRIMARY KEY` é um alias para o `ROWID`
+
+### Métodos do módulo sqlite3
+
+| Método | Função |
+|---|---|
+| `db.run()` | Executa declarações SQL (INSERT, UPDATE, DELETE, CREATE) |
+| `db.all()` | Retorna **todas** as entradas correspondentes (matriz) |
+| `db.get()` | Retorna apenas a **primeira** entrada correspondente |
+| `db.each()` | Invoca callback para **cada** linha individualmente |
+| `db.close()` | Fecha a base de dados |
+
+### Inserir dados
+
+```javascript
+db.run(
+  'INSERT INTO messages (uuid, message) VALUES (?, ?)',
+  uuid,
+  req.body.message
+)
+```
+
+- Usa **pontos de interrogação** (`?`) como espaços reservados para valores
+- Os valores são passados como parâmetros após a declaração SQL
+- Previne **injeção de SQL** ao escapar automaticamente os dados
+
+### Consultas
+
+**db.all() — retorna matriz com todos os registos:**
+
+```javascript
+db.all(
+  'SELECT id, message FROM messages WHERE uuid = ?',
+  uuid,
+  (err, rows) => {
+    // rows é uma matriz de objetos
+    // Cada objeto tem propriedades correspondentes aos campos do SELECT
+  }
+)
+```
+
+**db.each() — processa cada registo individualmente:**
+
+```javascript
+db.each('SELECT * FROM messages', (err, row) => {
+  // row é um único registo por vez
+})
+```
+
+**Uso da matriz rows num modelo EJS:**
+
+```html
+<ul>
+  <% rows.forEach( (row) => { %>
+    <li><strong><%= row.id %></strong>: <%= row.message %></li>
+  <% }) %>
+</ul>
+```
+
+### Atualizar dados (UPDATE)
+
+```javascript
+let param = {
+  $message: req.body.message,
+  $id: req.params.id,
+  $uuid: uuid
+}
+
+db.run(
+  'UPDATE messages SET message = $message WHERE id = $id AND uuid = $uuid',
+  param,
+  function(err){
+    if ( this.changes > 0 )
+      res.sendStatus(204)
+    else
+      res.sendStatus(404)
+  }
+)
+```
+
+- **Parâmetros nomeados**: valores agrupados num objeto, precedidos por `$`
+- `this.changes` indica quantos registos foram modificados
+- Função regular `function(){}` necessária (não arrow function) para aceder ao `this`
+
+### Apagar dados (DELETE)
+
+```javascript
+let param = {
+  $id: req.params.id,
+  $uuid: uuid
+}
+
+db.run(
+  'DELETE FROM messages WHERE id = $id AND uuid = $uuid',
+  param,
+  function(err){
+    if ( this.changes > 0 )
+      res.sendStatus(204)
+    else
+      res.sendStatus(404)
+  }
+)
+```
+
+### Fechar a base de dados
+
+```javascript
+process.on('SIGINT', () => {
+  db.close()
+  server.close()
+  console.log('HTTP server closed')
+})
+```
+
+- `Ctrl + C` envia o sinal `SIGINT`
+- `process.on('SIGINT', callback)` intercepta o sinal antes de encerrar
+- `db.close()` fecha a base de dados ordenadamente
+- `server.close()` fecha a instância Express
+
+### Injeção de SQL
+
+| Conceito | Descrição |
+|---|---|
+| **O que é** | Ataque em que utilizadores mal-intencionados inserem declarações SQL em dados variáveis |
+| **Como prevenir** | Usar espaços reservados (`?` ou `$param`) em vez de concatenar dados diretamente na consulta |
+| **Escapar dados** | O SQLite escapa/sanitiza automaticamente os valores dos parâmetros |
+
+### Resumo de declarações SQL
+
+| Declaração | Função | Exemplo |
+|---|---|---|
+| `CREATE TABLE` | Criar tabela | `CREATE TABLE contacts (id INTEGER PRIMARY KEY, name TEXT)` |
+| `INSERT INTO` | Inserir dados | `INSERT INTO contacts (name) VALUES ('Dave')` |
+| `SELECT` | Consultar dados | `SELECT email FROM contacts WHERE name = 'Dave'` |
+| `UPDATE` | Alterar dados | `UPDATE contacts SET email = 'x@y.com' WHERE id = 1` |
+| `DELETE FROM` | Apagar dados | `DELETE FROM contacts WHERE id = 1` |
+
+### Parâmetros de consulta — métodos
+
+| Tipo | Sintaxe | Exemplo |
+|---|---|---|
+| Posicional | `?` | `VALUES (?, ?)` |
+| Nomeado | `$name` | `WHERE id = $id AND uuid = $uuid` |
+
+## 🧭 Exercícios Guiados (resolvidos)
+
+### Exercício Guiado 1 — Finalidade da chave primária
+
+**Enunciado:** Qual é a finalidade de uma chave primária em uma tabela de base de dados SQL?
+
+**Solução passo a passo:**
+
+1. A chave primária é o campo de identificação exclusivo para cada registo
+2. Não pode ser nula
+3. Não pode haver valores duplicados na mesma tabela
+4. Permite rastrear e referenciar cada conteúdo da tabela de forma única
+
+### Exercício Guiado 2 — db.all() vs db.each()
+
+**Enunciado:** Qual a diferença entre as consultas usando `db.all()` e `db.each()`?
+
+**Solução passo a passo:**
+
+1. `db.all()` invoca o callback com uma única matriz contendo **todas** as entradas correspondentes
+2. `db.each()` invoca o callback para **cada linha** de resultado individualmente
+3. `db.all()` é útil quando se quer processar todos os resultados de uma vez; `db.each()` é útil para processamento registo a registo
+
+### Exercício Guiado 3 — Importância dos espaços reservados
+
+**Enunciado:** Por que é importante usar espaços reservados e não incluir dados enviados pelo cliente diretamente em uma declaração ou consulta SQL?
+
+**Solução passo a passo:**
+
+1. Com espaços reservados, os dados são escapados antes de serem incluídos na consulta
+2. Isso dificulta ataques de injeção de SQL
+3. Na injeção de SQL, declarações SQL são inseridas em dados variáveis para executar operações arbitrárias na base de dados
+4. O SQLite sanitiza automaticamente os caracteres perigosos nos dados
+
+### Exercício Guiado 4 — Parâmetros nomeados vs. posicionais
+
+**Enunciado:** Qual a diferença entre usar parâmetros posicionais (`?`) e parâmetros nomeados (`$param`) nas consultas SQL com o módulo sqlite3?
+
+**Solução passo a passo:**
+
+1. Parâmetros posicionais usam `?` e são substituídos pela ordem em que são passados.
+2. Parâmetros nomeados usam `$nome` e são agrupados num objeto.
+3. Parâmetros nomeados são mais legíveis quando há muitos valores.
+
+```javascript
+// Posicional
+db.run('INSERT INTO messages (uuid, message) VALUES (?, ?)', uuid, msg, callback);
+
+// Nomeado
+let param = { $uuid: uuid, $message: msg };
+db.run('INSERT INTO messages (uuid, message) VALUES ($uuid, $message)', param, callback);
+```
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+1. **Enunciado:** Qual método do módulo sqlite3 pode ser usado para retornar apenas uma entrada da tabela, mesmo se a consulta corresponder a diversas entradas?
+
+   
+
+<SolutionBlock>
+O método `db.get()` tem a mesma sintaxe de `db.all()`, mas retorna apenas a primeira entrada correspondente à consulta.
+
+   ```javascript
+   db.get('SELECT * FROM messages WHERE uuid = ?', uuid, (err, row) => {
+     // row é um único objeto (o primeiro resultado)
+   })
+   ```
+
+   Explicação: Enquanto `db.all()` retorna uma matriz com todos os resultados, `db.get()` para na primeira correspondência.
+</SolutionBlock>
+
+
+
+2. **Enunciado:** Suponha que a matriz `rows` foi passada como parâmetro para um callback e contém o resultado de uma consulta feita com `db.all()`. Como um campo chamado `price`, presente na primeira posição de `rows`, pode ser referenciado dentro do callback?
+
+   
+
+<SolutionBlock>
+```javascript
+   db.all('SELECT price FROM products', (err, rows) => {
+     console.log(rows[0].price)
+   })
+   ```
+
+   Explicação: Cada item em `rows` é um objeto cujas propriedades correspondem aos nomes dos campos da base de dados. Para aceder ao primeiro resultado: `rows[0].price`.
+</SolutionBlock>
+
+
+
+3. **Enunciado:** O método `db.run()` executa declarações de modificação da base de dados, como `INSERT INTO`. Depois de inserir um novo registo em uma tabela, como seria possível recuperar a chave primária do registo recém-inserido?
+
+   
+
+<SolutionBlock>
+```javascript
+   db.run('INSERT INTO messages (uuid, message) VALUES (?, ?)', uuid, msg,
+     function(err) {
+       console.log('New ID:', this.lastID)
+     }
+   )
+   ```
+
+    Explicação: Uma função regular `function(){}` (não arrow function) é usada como callback do `db.run()`. Dentro dela, `this.lastID` contém o valor da chave primária do último registo inserido.
+</SolutionBlock>
+
+
+
+4. **Enunciado:** Como fechar a ligação à base de dados de forma ordenada quando o utilizador termina a aplicação com `Ctrl + C`?
+
+    
+
+<SolutionBlock>
+```javascript
+    process.on('SIGINT', () => {
+      db.close();
+      server.close();
+      console.log('HTTP server closed');
+    });
+    ```
+
+    Explicação: O sinal `SIGINT` é enviado quando o utilizador pressiona `Ctrl + C`. O método `process.on('SIGINT', callback)` permite interceptar esse sinal e executar o encerramento ordenado da base de dados com `db.close()` e do servidor com `server.close()`.
+</SolutionBlock>
+
+
+
+## 🔗 Ligações
+
+← Anterior: [T17 - 035.2 — Noções básicas de NodeJS Express]()
+→ Próximo: [030 - Visão Geral]()

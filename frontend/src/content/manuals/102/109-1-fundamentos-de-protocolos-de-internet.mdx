@@ -1,0 +1,189 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="109.1 Fundamentos de protocolos de internet"
+  code="102"
+  topicNumber="T13"
+  objective="Compreender os fundamentos de protocolos de internet"
+  weight={4}
+  pages="LPIC-1 (102) - Version 5.0"
+  accent="iris"
+/>
+
+
+
+## Resumo Conciso
+
+### Pilha TCP/IP
+
+- **IP** (Internet Protocol) — endereçamento lógico e roteamento de pacotes
+- **TCP** (Transmission Control Protocol) — transporte orientado a conexões, com garantia de entrega
+- **UDP** (User Datagram Protocol) — transporte sem conexão, maior desempenho sem garantia
+- **ICMP** (Internet Control Message Protocol) — mensagens de controle e diagnóstico (usado pelo `ping`)
+
+### Endereçamento IPv4
+
+| Propriedade | Valor |
+|---|---|
+| Tamanho | 32 bits (4 octetos) |
+| Formato | Decimal pontilhado (ex: `192.168.10.20`) |
+| Octeto | 0–255 |
+
+### Classes de endereços IP
+
+| Classe | Primeiro octeto | Intervalo | Máscara padrão |
+|---|---|---|---|
+| A | 1–126 | 1.0.0.0 – 126.255.255.255 | 255.0.0.0 /8 |
+| B | 128–191 | 128.0.0.0 – 191.255.255.255 | 255.255.0.0 /16 |
+| C | 192–223 | 192.0.0.0 – 223.255.255.255 | 255.255.255.0 /24 |
+
+### IPs privados (reservados para redes internas)
+
+| Classe | Intervalo |
+|---|---|
+| A | `10.0.0.0` – `10.255.255.255` |
+| B | `172.16.0.0` – `172.31.255.255` |
+| C | `192.168.0.0` – `192.168.255.255` |
+
+### Netmask e CIDR
+
+- A máscara de rede separa a parte de **rede** da parte de **host** num endereço IP
+- **CIDR** (Classless Inter-Domain Routing) — notação simplificada (ex: `/24` = `255.255.255.0`)
+- Cada sub-rede reservou 2 endereços: **endereço de rede** (primeiro) e **endereço de broadcast** (último)
+
+### Portas comuns TCP/UDP
+
+| Porta | Serviço |
+|---|---|
+| 20/21 | FTP (dados/controle) |
+| 22 | SSH |
+| 23 | Telnet |
+| 25 | SMTP |
+| 53 | DNS |
+| 80 | HTTP |
+| 110 | POP3 |
+| 123 | NTP |
+| 143 | IMAP |
+| 443 | HTTPS |
+| 993/995 | IMAPS/POP3S |
+
+- Portas privilegiadas: 1–1023 (requerem root)
+- Portas não privilegiadas: 1024–65535
+- Ficheiro de referência: `/etc/services`
+
+### TCP vs UDP vs ICMP
+
+| Característica | TCP | UDP | ICMP |
+|---|---|---|---|
+| Conexão | Orientado a conexão | Sem conexão | Camada de rede |
+| Garantia | Sim (retransmissão, ordem) | Não | — |
+| Desempenho | Mais lento | Mais rápido | — |
+| Uso | SSH, HTTP, FTP, SMTP | DNS, streaming, VoIP | `ping`, diagnóstico |
+
+> **Nota sobre o DNS:** embora tipicamente associado ao UDP (portas 53) para queries normais, o DNS usa também **TCP** (porta 53) em transferências de zona (zone transfers) e em respostas demasiado grandes para caber num único datagrama UDP (>512 bytes).
+
+### Endereçamento IPv6
+
+| Propriedade | Valor |
+|---|---|
+| Tamanho | 128 bits (8 grupos de 16 bits hex) |
+| Formato | Hexadecimal (ex: `2001:0db8:85a3:08d3:1319:8a2e:0370:7344`) |
+| Abreviação | Substituir `0000` por `0`; omitir grupos consecutivos de zeros com `::` (apenas uma vez) |
+
+### Tipos de endereço IPv6
+
+- **Unicast** — identifica uma interface
+- **Multicast** — pacote entregue a todas as interfaces do grupo
+- **Anycast** — pacote entregue a apenas uma interface do conjunto
+
+### Diferenças IPv4 vs IPv6
+
+- IPv6 não tem broadcast (usa multicast `ff02::1`)
+- TTL IPv4 substituído por **Hop Limit** no IPv6
+- Suporte a **SLAAC** (autoconfiguração sem estado)
+- Todas as interfaces IPv6 têm endereço link-local: `fe80::/10`
+- NDP (Neighbor Discovery Protocol) substitui ARP
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Intervalos reservados
+
+**Enunciado:** Por que os intervalos de IP começando com 127 e após 224 não estão nas classes A, B ou C?
+
+
+
+<SolutionBlock>
+O intervalo `127.x.x.x` é reservado para **loopback** (comunicação interna, ex: `127.0.0.1`). Endereços acima de 224 são usados para **multicast** (224–239) e **reservados/experimentais** (240–255), não sendo endereços de host.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Função do TTL
+
+**Enunciado:** Qual é a função do campo TTL num pacote IP e como funciona?
+
+
+
+<SolutionBlock>
+O **TTL** (Time To Live) define a vida útil do pacote. É um contador decrementado em cada roteador (salto) por onde o pacote passa. Quando chega a 0, o pacote é **descartado**, evitando loops infinitos na rede.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Função do NAT
+
+**Enunciado:** Explique a função do NAT e quando é usado.
+
+
+
+<SolutionBlock>
+O **NAT** (Network Address Translation) permite que hosts de uma rede interna com IPs privados acessem a internet usando o IP público do gateway. É usado quando não há IPs públicos suficientes para todos os dispositivos, convertendo tráfego privado em público e vice-versa.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Serviços TCP
+
+**Enunciado:** Dê 4 exemplos de serviços que usam o protocolo TCP por padrão.
+
+
+
+<SolutionBlock>
+FTP (20/21), SMTP (25), HTTP (80), POP3 (110), IMAP (143), SSH (22), HTTPS (443). Qualquer combinação de 4 destes.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 5 — Hop Limit no IPv6
+
+**Enunciado:** Qual é o nome do campo no cabeçalho do IPv6 que implementa o mesmo recurso do TTL no IPv4?
+
+
+
+<SolutionBlock>
+**Hop Limit** (Limite de saltos).
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 6 — NDP
+
+**Enunciado:** Que tipo de informação o NDP (Neighbor Discovery Protocol) pode descobrir?
+
+
+
+<SolutionBlock>
+O NDP pode descobrir: outros nós na rede, endereços duplicados, rotas, servidores DNS, gateways, e muito mais. Substitui o ARP do IPv4 com mais funcionalidades.
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T12 - 108.4 Configurar impressoras e impressão]()
+→ Próximo: [T14 - 109.2 Configuração persistente de rede]()

@@ -1,0 +1,280 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T02 — 031.2 Arquitetura de aplicativos web"
+  code="030"
+  topicNumber="T02"
+  objective="031.2"
+  weight={2}
+  pages="LPI Web Development Essentials (030) - Version 1.0"
+  accent="amber"
+/>
+
+
+
+## Resumo Conciso
+
+### Modelo Cliente/Servidor
+
+No modelo cliente/servidor, parte do trabalho é feita localmente (cliente) e parte remotamente (servidor). A comunicação é feita via internet, geralmente por HTTP.
+
+| Componente | Função | Exemplo |
+|---|---|---|
+| **Cliente** | Interface com o utilizador, exibe conteúdo | Navegador web, app móvel |
+| **Servidor** | Processa dados, responde a solicitações | Apache, NGINX, Node.js |
+
+**Vantagens do modelo:**
+- Cada parte otimizada para a sua função
+- O cliente não precisa de armazenar todos os dados localmente
+- Atualizações feitas no servidor são imediatamente disponíveis ao cliente
+- O cliente pode ser qualquer dispositivo com navegador compatível
+
+### O Lado do Cliente
+
+O cliente de um aplicativo web é executado num navegador. O motor de renderização transforma HTML, CSS e JavaScript nos elementos visuais da interface.
+
+**Motores de renderização modernos:**
+
+| Motor | Navegador(es) |
+|---|---|
+| **Blink** | Chrome, Edge |
+| **WebKit** | Safari, navegadores iOS |
+| **Gecko** | Firefox |
+
+**Linguagens do cliente web:**
+
+| Linguagem | Função |
+|---|---|
+| **HTML** | Estrutura e conteúdo da página |
+| **CSS** | Aparência e layout dos elementos |
+| **JavaScript** | Interatividade e programação |
+
+**Características:**
+- Multiplataforma (executa em qualquer navegador compatível)
+- Intermediado pelo navegador: mais segurança, mas mais consumo de recursos
+- Acesso a hardware local requer autorização explícita do utilizador
+- WebAssembly acelera atividades de uso intensivo de CPU
+
+### Clientes Web Variados
+
+- **Navegador:** Interface obtida do servidor e renderizada localmente
+- **Aplicativo nativo com interface HTML:** Componentes HTML presentes localmente desde a instalação
+- **PWA (Progressive Web App):** Cliente web empacotado para uso offline, com mais controle sobre armazenamento local
+
+### Comunicação Cliente/Servidor
+
+**Métodos de identificação de solicitações:**
+
+| Método | Descrição |
+|---|---|
+| **URL** | Endereço do recurso |
+| **Campos de cabeçalho HTTP** | Metadados da solicitação |
+| **GET/POST** | Métodos HTTP padrão |
+| **WebSockets** | Comunicação bidirecional em tempo real |
+
+**Paradigmas de comunicação:**
+
+- **REST (Representational State Transfer):** Usa métodos HTTP básicos (GET, POST, PUT, DELETE) com URLs para identificar recursos
+- **GraphQL:** Permite descrições mais detalhadas de operações solicitadas
+
+### O Lado do Servidor
+
+O servidor é o lado passivo da comunicação, respondendo apenas a solicitações do cliente.
+
+**Componentes do lado do servidor:**
+- Máquina física ou virtual
+- Sistema operacional
+- Servidor HTTP (Apache, NGINX)
+- Script/programa de aplicação
+
+**Frameworks e linguagens do servidor:**
+
+| Linguagem/Framework | Notas |
+|---|---|
+| **Node.js + Express** | JavaScript no servidor; manutenção unificada cliente/servidor |
+| **PHP** | Popular para back-end web |
+| **Python** | Flask, Django |
+| **Ruby** | Ruby on Rails |
+| **Java** | Spring Boot |
+| **C#** | ASP.NET |
+
+### Sistemas de Gestão de Bases de Dados
+
+**Bases de dados relacionais (SQL):**
+
+| Sistema | Tipo |
+|---|---|
+| **SQLite** | Leve, embutido na aplicação |
+| **MySQL** | Popular, open source |
+| **MariaDB** | Fork do MySQL |
+| **PostgreSQL** | Avançado, open source |
+
+Características: tabelas com estrutura rígida, relações entre tabelas, consultas via SQL.
+
+**Bases de dados não-relacionais (NoSQL):**
+
+| Sistema | Tipo |
+|---|---|
+| **MongoDB** | Documentos JSON |
+| **CouchDB** | Documentos HTTP |
+| **Redis** | Chave-valor em memória |
+
+Características: maior flexibilidade no armazenamento, sem estrutura rígida, processamento delegado à aplicação.
+
+### Gestão de Conteúdo (CMS)
+
+Permite que utilizadores não-técnicos administrem o aplicativo. Dois tipos de cliente:
+- **Cliente não-privilegiado:** Utilizado por utilizadores comuns
+- **Cliente privilegiado:** Utilizado por administradores para manter e atualizar informações
+
+## 🧭 Exercícios Guiados (resolvidos)
+
+### Exercício Guiado 1 — Linguagem do cliente web
+
+**Enunciado:** Qual linguagem de programação é usada junto com o HTML para criar clientes de aplicativos web?
+
+**Solução passo a passo:**
+
+1. O elemento central de um cliente web é o documento HTML.
+2. Sozinho, o HTML não tem versatilidade para interfaces elaboradas nem programação de propósito geral.
+3. JavaScript é o componente praticamente indispensável que responde a eventos e estende a interatividade.
+
+**Resposta:** JavaScript.
+
+### Exercício Guiado 2 — Obtenção de aplicativo web vs. nativo
+
+**Enunciado:** Como a obtenção de um aplicativo web difere daquela de um aplicativo nativo?
+
+**Solução passo a passo:**
+
+1. Um aplicativo nativo é instalado localmente no dispositivo do utilizador.
+2. Um aplicativo web não é instalado: partes dele são executadas no servidor e a interface do cliente é executada num navegador web comum.
+3. O utilizador acede ao aplicativo web através de um endereço URL.
+
+**Resposta:** Um aplicativo web não está instalado. Em vez disso, partes dele são executadas no servidor e a interface do cliente é executada num navegador web comum.
+
+### Exercício Guiado 3 — Acesso a hardware local
+
+**Enunciado:** Como um aplicativo web difere de um aplicativo nativo no acesso ao hardware local?
+
+**Solução passo a passo:**
+
+1. Um aplicativo nativo tem acesso direto ao hardware do dispositivo.
+2. Num aplicativo web, o navegador intermedia o acesso a recursos como câmera, microfone e localização.
+3. Todos os acessos a recursos locais requerem autorização explícita do utilizador.
+
+**Resposta:** Todos os acessos aos recursos locais, como armazenamento, câmeras ou microfones, são mediados pelo navegador e requerem autorização explícita do utilizador para funcionar.
+
+### Exercício Guiado 4 — Diferença entre cliente web e página web
+
+**Enunciado:** Cite uma característica de um cliente de aplicativo web que o diferencia de uma página web comum.
+
+**Solução passo a passo:**
+
+1. Páginas web tradicionais permitem interação básica: hiperlinks e envio de formulários.
+2. Clientes de aplicativos web usam JavaScript para reagir a eventos sem carregar novas páginas.
+3. A experiência aproxima-se de uma aplicação convencional.
+
+**Resposta:** A interação com as páginas web tradicionais restringe-se basicamente a hiperlinks e envio de formulários, ao passo que os clientes de aplicativos web estão mais próximos de uma interface de aplicativo convencional.
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+1. **Enunciado:** Qual recurso os navegadores modernos oferecem para mitigar o baixo desempenho dos clientes de aplicativos web que usam muita CPU?
+   
+
+<SolutionBlock>
+Os desenvolvedores podem usar o **WebAssembly** para implementar as partes do aplicativo cliente que exigem uso intensivo da CPU. O código do WebAssembly costuma ter melhor desempenho do que JavaScript tradicional, pois requer menos tradução de instruções.
+
+   ```bash
+   # Exemplo de instalação de um compilador para WebAssembly (Emscripten)
+   git clone https://github.com/emscripten-core/emsdk.git
+   cd emsdk
+   ./emsdk install latest
+   ./emsdk activate latest
+   source ./emsdk_env.sh
+   ```
+
+   Explicação: O WebAssembly compila código de linguagens como C ou C++ para um formato binário eficiente que o navegador pode executar mais rapidamente que JavaScript puro.
+</SolutionBlock>
+
+
+
+2. **Enunciado:** Se um aplicativo web usa o paradigma REST para a comunicação cliente/servidor, qual método HTTP deve ser usado quando o cliente solicita que o servidor apague um recurso específico?
+   
+
+<SolutionBlock>
+O método **DELETE**. O REST baseia-se nos métodos HTTP padrão para operações CRUD: GET (ler), POST (criar), PUT (atualizar), DELETE (apagar).
+
+   ```bash
+   # Exemplo de solicitação DELETE com curl
+   curl -X DELETE https://api.exemplo.com/recurso/123
+   ```
+
+   Explicação: O paradigma REST mapeia diretamente as operações CRUD para os métodos HTTP padrão, tornando a API previsível e consistente.
+</SolutionBlock>
+
+
+
+3. **Enunciado:** Cite cinco linguagens de script de servidor suportadas pelo servidor Apache HTTP.
+   
+
+<SolutionBlock>
+As cinco linguagens são: **PHP**, **Go**, **Perl**, **Python** e **Ruby**.
+
+   ```bash
+   # Verificar módulos do Apache instalados (Ubuntu/Debian)
+   apache2ctl -M | grep -i -E "(php|perl|python|ruby)"
+
+   # Instalar módulo PHP no Apache
+   sudo apt install libapache2-mod-php
+   ```
+
+   Explicação: O Apache HTTP Server suporta múltiplas linguagens de script através de módulos que processam os scripts do lado do servidor e geram respostas HTML dinâmicas.
+</SolutionBlock>
+
+
+
+4. **Enunciado:** Por que as bases de dados não-relacionais são consideradas mais fáceis de manter e atualizar do que as bases de dados relacionais?
+   
+
+<SolutionBlock>
+Ao contrário das bases de dados relacionais, as bases de dados não-relacionais não requerem que os dados se adaptem a estruturas predefinidas rígidas. Isto torna mais fácil implementar mudanças nas estruturas de dados sem afetar os dados existentes.
+
+   ```bash
+   # Exemplo: inserir documentos com estruturas diferentes no MongoDB
+   mongo --eval '
+     db.produtos.insert({ nome: "Telemóvel", preco: 599 })
+     db.produtos.insert({ nome: "Portátil", especificacoes: { ram: "16GB", cpu: "i7" } })
+   '
+   ```
+
+   Explicação: No MongoDB, cada documento pode ter uma estrutura diferente. Num banco relacional, seria necessário alterar o esquema da tabela para adicionar novos campos, o que poderia afetar dados existentes.
+</SolutionBlock>
+
+
+
+5. **Enunciado:** Verifique qual é o motor de renderização do navegador que está a utilizar neste momento.
+   
+
+<SolutionBlock>
+```bash
+   # No Windows, verificar predefinições do navegador via registo ou interface
+   # No Firefox, aceder a about:config e procurar "layout.css.has-selector.enabled"
+   # No Chrome, aceder a chrome://version
+
+   # Alternativa via linha de comandos (PowerShell)
+   Get-ItemProperty -Path "HKCU:\Software\Microsoft\Edge\BLBeacon" -Name "state" -ErrorAction SilentlyContinue
+   ```
+
+   Explicação: Cada navegador utiliza um motor de renderização específico: Blink (Chrome, Edge), WebKit (Safari) ou Gecko (Firefox). Conhecer o motor ajuda a compreender compatibilidade e limitações.
+</SolutionBlock>
+
+
+
+## 🔗 Ligações
+
+← Anterior: [T01 — 031.1 Noções básicas de desenvolvimento de software]()
+→ Próximo: [T03 — 031.3 Noções básicas de HTTP]()

@@ -1,0 +1,242 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="104.3 Controle da montagem e desmontagem"
+  code="101"
+  topicNumber="T20"
+  objective="Montar e desmontar sistemas de arquivos manualmente e automaticamente"
+  weight={2}
+  pages="LPIC-1 (101) - Version 5.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Comandos Principais
+
+| Comando | Função |
+|---|---|
+| `mount` | Montar sistema de arquivos |
+| `umount` | Desmontar sistema de arquivos |
+| `lsof` | Listar processos com arquivos abertos |
+| `lsblk` | Listar informações de blocos |
+| `blkid` | Identificar dispositivos de bloco |
+
+### Sintaxe do mount
+
+```
+mount -t TYPE DEVICE MOUNTPOINT
+```
+
+| Campo | Descrição |
+|---|---|
+| `TYPE` | Tipo de sistema de arquivos (ext4, btrfs, exfat, etc.) |
+| `DEVICE` | Nome da partição (ex: /dev/sdb1) |
+| `MOUNTPOINT` | Onde o FS será montado (deve existir) |
+
+### Parâmetros do mount
+
+| Parâmetro | Função |
+|---|---|
+| `-a` | Montar todos os FS listados em /etc/fstab |
+| `-o` / `--options` | Opções de montagem separadas por vírgula |
+| `-r` / `-ro` | Montar como somente leitura |
+| `-w` / `-rw` | Montar como gravável |
+
+### Parâmetros do umount
+
+| Parâmetro | Função |
+|---|---|
+| `-a` | Desmontar todos os FS listados em /etc/fstab |
+| `-f` | Forçar desmontagem (FS remoto inacessível) |
+| `-r` | Tentar tornar somente leitura se não puder desmontar |
+
+### Opções de Montagem em /etc/fstab
+
+| Opção | Função |
+|---|---|
+| `atime` / `noatime` | Atualizar ou não data de acesso |
+| `auto` / `noauto` | Montável automaticamente com mount -a |
+| `defaults` | rw, suid, dev, exec, auto, nouser, async |
+| `dev` / `nodev` | Interpretar ou não dispositivos no FS |
+| `exec` / `noexec` | Permitir ou negar execução de binários |
+| `user` / `nouser` | Permitir ou não que usuário comum monte |
+| `group` | Usuário do mesmo grupo do dispositivo pode montar |
+| `owner` | Proprietário do dispositivo pode montar |
+| `suid` / `nosuid` | Permitir ou não bits SETUID/SETGID |
+| `ro` / `rw` | Somente leitura ou gravável |
+| `remount` | Remontar FS já montado |
+| `sync` / `async` | Operações síncronas ou assíncronas |
+
+### /etc/fstab — Formato
+
+```
+FILESYSTEM  MOUNTPOINT  TYPE  OPTIONS  DUMP  PASS
+```
+
+| Campo | Descrição |
+|---|---|
+| `FILESYSTEM` | Dispositivo, UUID ou rótulo |
+| `MOUNTPOINT` | Local de montagem |
+| `TYPE` | Tipo de sistema de arquivos |
+| `OPTIONS` | Opções de montagem |
+| `DUMP` | 0 (normalmente ignorado) |
+| `PASS` | Ordem de verificação na inicialização (0 = não verificar) |
+
+### UUIDs e Rótulos
+
+> Para criar partições e sistemas de arquivos com UUIDs, ver T18 — Criar partições e sistemas de arquivos.
+
+| Comando | Função |
+|---|---|
+| `lsblk -f DEVICE` | Consultar UUID e rótulo |
+| `UUID=valor` | Especificar por UUID no fstab/mount |
+| `LABEL=valor` | Especificar por rótulo no fstab/mount |
+
+### Systemd — Unidades de Montagem
+
+Arquivo `.mount` em `/etc/systemd/system/`:
+
+```ini
+[Unit]
+Description=External data disk
+[Mount]
+What=/dev/disk/by-uuid/UUID
+Where=/mnt/point
+Type=filesystem
+Options=defaults
+[Install]
+WantedBy=multi-user.target
+```
+
+> O nome do arquivo deve ser idêntico ao ponto de montagem (ex: `mnt-external.mount`).
+
+| Comando | Função |
+|---|---|
+| `systemctl daemon-reload` | Recarregar configurações |
+| `systemctl start name.mount` | Montar (sessão atual) |
+| `systemctl enable name.mount` | Montar em todas as inicializações |
+| `systemctl status name.mount` | Verificar status |
+
+### Systemd — Montagem Automática
+
+Arquivo `.automount` em `/etc/systemd/system/`:
+
+```ini
+[Unit]
+Description=Automount for the external data disk
+[Automount]
+Where=/mnt/external
+[Install]
+WantedBy=multi-user.target
+```
+
+### Onde Montar
+
+| Diretório | Uso |
+|---|---|
+| `/media` | Padrão para mídias removíveis pelo usuário |
+| `/mnt` | Montagens temporárias (recomendado para montagem manual) |
+
+### Formato da Saída do mount
+
+```
+SOURCE on TARGET type TYPE OPTIONS
+```
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — nouser impede montagem
+
+**Enunciado:** Considere a entrada a seguir em /etc/fstab: `/dev/sdc1 /backup ext4 noatime,nouser,async`. Seria possível um usuário montar esse sistema de arquivos com o comando `mount /backup`? Por quê?
+
+
+
+<SolutionBlock>
+Não, o parâmetro `nouser` impede que usuários comuns montem este sistema de arquivos.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Forçar desmontagem de FS remoto
+
+**Enunciado:** Considere um sistema de arquivos remoto montado em /mnt/server que se tornou inacessível devido à perda de conectividade de rede. Como poderíamos forçar a desmontagem, ou montá-lo como somente leitura se isso não for possível?
+
+
+
+<SolutionBlock>
+Passe os parâmetros -f e -r para unmount:
+```bash
+umount -f -r /mnt/server
+# ou
+umount -fr /mnt/server
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Entrada fstab para btrfs
+
+**Enunciado:** Escreva uma entrada de /etc/fstab para montar um volume btrfs com o rótulo Backup em /mnt/backup, com opções padrão e sem permitir a execução de binários por ele.
+
+
+
+<SolutionBlock>
+A linha seria:
+```
+LABEL=Backup /mnt/backup btrfs defaults,noexec
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Equivalente fstab para unidade systemd
+
+**Enunciado:** Considere a seguinte unidade de montagem do systemd. Qual seria uma entrada equivalente em /etc/fstab?
+
+```ini
+[Unit]
+Description=External data disk
+[Mount]
+What=/dev/disk/by-uuid/56C11DCC5D2E1334
+Where=/mnt/external
+Type=ntfs
+Options=defaults
+[Install]
+WantedBy=multi-user.target
+```
+
+
+
+<SolutionBlock>
+A entrada seria:
+```
+UUID=56C11DCC5D2E1334 /mnt/external ntfs defaults 0 2
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 5 — Nome do arquivo da unidade systemd
+
+**Enunciado:** Qual deve ser o nome de arquivo da unidade acima, para que ela possa ser usada pelo systemd? Onde ela deve ser posta?
+
+
+
+<SolutionBlock>
+O nome de arquivo deve ser idêntico ao do ponto de montagem, no caso `mnt-external.mount`, posto em `/etc/systemd/system`.
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T19 - 104.2 Manutenção da integridade de sistemas de arquivos]()
+→ Próximo: [T21 - 104.5 Controlar permissões e propriedades de arquivos]()

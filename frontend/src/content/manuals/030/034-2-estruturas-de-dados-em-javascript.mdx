@@ -1,0 +1,267 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T13 — 034.2 Estruturas de dados em JavaScript"
+  code="030"
+  topicNumber="T13"
+  objective="034.2"
+  weight={3}
+  pages="LPI Web Development Essentials (030) - Version 1.0"
+  accent="amber"
+/>
+
+
+
+## Resumo Conciso
+
+### Constantes e variáveis
+
+O JavaScript é uma linguagem de **tipagem dinâmica** — o tipo de dado é inferido automaticamente a partir do valor atribuído.
+
+| Palavra-chave | Escopo | Mutável | Descrição |
+|---|---|---|---|
+| `const` | Bloco | Não | Valor atribuído uma única vez; tentativa de reatribuição gera `TypeError` |
+| `let` | Bloco | Sim | Variável com escopo restrito ao bloco `{}` em que é declarada |
+| `var` | Função (não bloco) | Sim | Variável com escopo de função; acessível fora de blocos `if`/`for` |
+
+**Regra de nomenclatura:** O nome deve começar com uma letra ou sublinhado (`_`).
+
+```javascript
+const update_interval = 10;
+let variable = true;
+var message = "Global";
+```
+
+### Escopo de variáveis
+
+- Variáveis declaradas fora de funções ou blocos têm **escopo global**.
+- Variáveis com `let` e `const` têm **escopo de bloco** (restrito a `{}`).
+- Variáveis com `var` **não** têm escopo de bloco — são acessíveis fora do bloco em que foram declaradas.
+
+```javascript
+var value = "Global";
+{ value = "Location"; }
+console.log(value); // "Location"
+```
+
+### Tipos primitivos
+
+| Tipo | Exemplo | Descrição |
+|---|---|---|
+| `undefined` | Variável não declarada/sem valor | Valor por omissão de variáveis não inicializadas |
+| `boolean` | `true`, `false` | Valores lógicos |
+| `number` | `3.14159`, `42` | Inteiros e decimais |
+| `string` | `"Text content"` | Cadeias de caracteres |
+| `symbol` | `Symbol()` | Identificador único para atributos de objetos |
+
+O operador `typeof` identifica o tipo de uma variável:
+
+```javascript
+console.log(typeof true);      // "boolean"
+console.log(typeof 3.14159);   // "number"
+console.log(typeof "text");    // "string"
+```
+
+### Tipos estruturados
+
+#### Arrays (Matrizes)
+
+Coleção ordenada de valores entre colchetes. Pode conter tipos mistos.
+
+```javascript
+let cart = ['Milk', 'Bread', 'Eggs'];
+console.log(cart.length);  // 3
+cart.push('Candy');         // Adiciona elemento
+cart.pop();                 // Remove o último elemento
+console.log(cart[0]);       // "Milk" (índice começa em 0)
+```
+
+#### Objetos
+
+Pares de propriedade/valor delimitados por chaves `{}`. Cada propriedade é acessível por `variavel.propriedade`.
+
+```javascript
+let item = { name: 'Milk', quantity: 1, price: 4.99 };
+console.log(item.name);      // "Milk"
+console.log(item.quantity);  // 1
+```
+
+#### Arrays de objetos
+
+```javascript
+let cart = [
+  { name: 'Milk', quantity: 1 },
+  { name: 'Bread', quantity: 4 }
+];
+cart.push({ name: 'Eggs', quantity: 12 });
+console.log(cart[2].name + " quantity: " + cart[2].quantity); // "Eggs quantity: 12"
+```
+
+### Operadores
+
+#### Aritméticos
+
+| Operador | Descrição | Exemplo abreviado |
+|---|---|---|
+| `+` | Adição / concatenação | `a += b` |
+| `-` | Subtração | `a -= b` |
+| `*` | Multiplicação | `a *= b` |
+| `/` | Divisão | `a /= b` |
+| `%` | Módulo (resto da divisão) | — |
+| `++` | Incremento de 1 | `a++` equivale a `a = a + 1` |
+| `--` | Decremento de 1 | `a--` equivale a `a = a - 1` |
+
+**Precedência:** Multiplicação/divisão antes de adição/subtração. Usar parênteses para alterar a ordem.
+
+```javascript
+let total = item.quantity * 9.99 + 3.15;
+```
+
+#### Coerção e conversão de tipo
+
+- Quando um dos operandos de `+` é uma string, os outros são convertidos para string (concatenação).
+- Usar `Number()` para converter explicitamente uma string numérica para número.
+
+```javascript
+sum = Number(value1) + value2;
+```
+
+- `NaN` (Not a Number) é retornado quando uma operação numérica recebe um operando inválido (ex.: multiplicar por uma string).
+- `null` indica uma variável sem valor atribuído.
+
+## 🧭 Exercícios Guiados (resolvidos)
+
+### Exercício Guiado 1 — Tipos em arrays
+
+**Enunciado:** Um array é uma estrutura de dados presente em várias linguagens de programação, das quais algumas permitem apenas arrays com itens do mesmo tipo. No caso do JavaScript, é possível definir uma matriz com itens de tipos diferentes?
+
+**Solução passo a passo:**
+
+1. Sim, JavaScript permite arrays com tipos mistos.
+2. Os valores podem ser strings, números, booleans, ou até outros objetos/arrays.
+
+```javascript
+let mixed = ['text', 42, true, null];
+console.log(typeof mixed[0]); // "string"
+console.log(typeof mixed[1]); // "number"
+```
+
+### Exercício Guiado 2 — Adicionar propriedade a um objeto
+
+**Enunciado:** Com base no exemplo `let item = { name: 'Milk', quantity: 1 }` para um objeto em uma lista de compras, como esse objeto poderia ser declarado de forma a incluir o preço do item?
+
+**Solução passo a passo:**
+
+1. Adicionar uma nova propriedade `price` ao objeto na sua declaração inicial.
+
+```javascript
+let item = { name: 'Milk', quantity: 1, price: 4.99 };
+```
+
+### Exercício Guiado 3 — Atualizar valor para metade
+
+**Enunciado:** Em uma única linha de código, quais são as maneiras de atualizar o valor de uma variável para a metade de seu valor atual?
+
+**Solução passo a passo:**
+
+1. Usar a própria variável como operando com `/`.
+2. Usar o operador abreviado `/=`.
+
+```javascript
+value = value / 2;   // Forma explícita
+value /= 2;          // Forma abreviada
+```
+
+### Exercício Guiado 4 — Converter string para número
+
+**Enunciado:** Dada a string `"42"`, como convertê-la para o tipo número e somá-la com o número 8?
+
+**Solução passo a passo:**
+
+1. Usar `Number()` para converter a string numérica para número.
+2. Realizar a soma normalmente.
+
+```javascript
+let str = "42";
+let result = Number(str) + 8;
+console.log(result); // 50
+```
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+1. **Enunciado:** No código a seguir, qual valor será exibido na saída do console?
+
+   ```javascript
+   var value = "Global";
+   { value = "Location"; }
+   console.log(value);
+   ```
+
+   
+
+<SolutionBlock>
+```
+   Location
+   ```
+
+   Explicação: A variável `value` foi declarada com `var` (escopo de função/global). O bloco `{}` não restringe o acesso. Dentro do bloco, o valor é alterado para "Location", e essa alteração persiste fora do bloco.
+</SolutionBlock>
+
+
+
+2. **Enunciado:** O que acontece quando um ou mais operandos envolvidos em uma operação de multiplicação é uma string?
+
+   
+
+<SolutionBlock>
+```javascript
+   console.log(5 * "3");   // 15 (conversão automática)
+   console.log(5 * "abc"); // NaN (Not a Number)
+   ```
+
+   Explicação: O JavaScript tenta converter a string para número. Se a conversão for bem-sucedida (ex.: "3" → 3), a operação é realizada. Caso contrário, o resultado é `NaN`.
+</SolutionBlock>
+
+
+
+3. **Enunciado:** Como é possível remover o item Eggs da matriz `cart` declarada com `let cart = ['Milk', 'Bread', 'Eggs']`?
+
+   
+
+<SolutionBlock>
+```javascript
+   let cart = ['Milk', 'Bread', 'Eggs'];
+   cart.pop();
+   console.log(cart); // ['Milk', 'Bread']
+   ```
+
+    Explicação: O método `pop()` remove o último elemento da matriz. Como Eggs está no índice 2 (último), `cart.pop()` remove-o. Para remover um elemento específico pelo índice, usar `cart.splice(2, 1)`.
+</SolutionBlock>
+
+
+
+4. **Enunciado:** Qual é a diferença entre acessar um elemento de um array pela notação de colchetes e pela notação de pontos?
+
+    
+
+<SolutionBlock>
+```javascript
+    let arr = [10, 20, 30];
+    console.log(arr[1]);  // 20
+
+    let obj = { name: "Milk", quantity: 1 };
+    console.log(obj.name); // "Milk"
+    ```
+
+    Explicação: A notação de colchetes `[]` é usada para arrays (índices numéricos) e também para propriedades de objetos com nomes dinâmicos. A notação de pontos `.` é usada para propriedades de objetos com nomes estáticos. Arrays não suportam notação de pontos (ex.: `arr.1` é inválido).
+</SolutionBlock>
+
+
+
+## 🔗 Ligações
+
+← Anterior: [T12 - 034.1 Execução e sintaxe de JavaScript]()
+→ Próximo: [034.3 — Estruturas de controle e funções do JavaScript](034-3-Estruturas-de-controle-e-funcoes-do-JavaScript.md)

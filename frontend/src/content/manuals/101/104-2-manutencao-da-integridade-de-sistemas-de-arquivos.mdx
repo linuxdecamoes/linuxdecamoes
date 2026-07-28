@@ -1,0 +1,219 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="104.2 Manutenção da integridade de sistemas de arquivos"
+  code="101"
+  topicNumber="T19"
+  objective="Verificar a integridade dos sistemas de arquivos e corrigir erros"
+  weight={1}
+  pages="LPIC-1 (101) - Version 5.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Comandos de Uso de Disco
+
+| Comando | Função |
+|---|---|
+| `du` | Uso de disco por arquivo/diretório |
+| `df` | Uso de disco por sistema de arquivos |
+| `fsck` | Verificação de erros do sistema de arquivos |
+| `e2fsck` | Verificação específica para ext2/3/4 |
+| `tune2fs` | Modificar parâmetros ext2/3/4 |
+| `xfs_repair` | Verificação/reparo de XFS |
+| `xfs_db` | Depuração de XFS |
+| `xfs_fsr` | Desfragmentação de XFS |
+
+### Parâmetros do du
+
+| Parâmetro | Função |
+|---|---|
+| `-h` | Saída legível por humanos |
+| `-a` | Contagem individual para todos os arquivos |
+| `-S` | Separa espaço do diretório atual dos subdiretórios |
+| `-c` | Total geral no final |
+| `-d N` | Limitar profundidade a N níveis |
+| `--exclude="PATTERN"` | Excluir tipos de arquivo |
+
+### Parâmetros do df
+
+| Parâmetro | Função |
+|---|---|
+| `-h` | Saída legível por humanos |
+| `-i` | Mostrar inodes ao invés de blocos |
+| `-T` | Mostrar tipo de sistema de arquivos |
+| `-t TYPE` | Filtrar por tipo de sistema de arquivos |
+| `-x TYPE` | Excluir tipo de sistema de arquivos |
+| `--output=campos` | Personalizar saída |
+
+### Campos de saída do df
+
+| Campo | Descrição |
+|---|---|
+| `source` | Dispositivo |
+| `fstype` | Tipo de sistema de arquivos |
+| `size` | Tamanho total |
+| `used` | Espaço usado |
+| `avail` | Espaço disponível |
+| `pcent` | Porcentagem de uso |
+| `target` | Ponto de montagem |
+| `itotal` | Total de inodes |
+| `iused` | Inodes usados |
+| `iavail` | Inodes disponíveis |
+| `ipcent` | Porcentagem de inodes |
+
+### fsck — Parâmetros
+
+| Parâmetro | Função |
+|---|---|
+| `-A` | Verificar todos os FS listados em /etc/fstab |
+| `-C` | Barra de progresso (ext2/3/4) |
+| `-N` | Imprimir o que seria feito (teste) |
+| `-R` | Pular verificação do FS raiz (com -A) |
+| `-V` | Modo detalhado |
+
+### e2fsck — Parâmetros
+
+| Parâmetro | Função |
+|---|---|
+| `-p` | Corrigir automaticamente erros simples |
+| `-y` | Responder "sim" a todas as questões |
+| `-n` | Responder "não" a todas (monta como somente leitura) |
+| `-f` | Forçar verificação mesmo se marcado como "limpo" |
+
+### tune2fs — Parâmetros
+
+| Parâmetro | Função |
+|---|---|
+| `-l` | Listar parâmetros atuais |
+| `-c N` | Contagem máxima de montagens |
+| `-C N` | Definir contagem atual de montagens |
+| `-i INTERVAL` | Intervalo entre verificações (d=days, w=weeks, m=months) |
+| `-L LABEL` | Definir rótulo (máx 16 caracteres) |
+| `-U UUID` | Definir UUID |
+| `-j` | Adicionar journal (converter ext2→ext3) |
+| `-J size=,location=,device=` | Opções de journal |
+| `-e BEHAVIOUR` | Comportamento em erro (continue, remount-ro, panic) |
+| `-f` | Força bruta (extrema cautela!) |
+
+### xfs_repair — Parâmetros
+
+| Parâmetro | Função |
+|---|---|
+| `-n` | Verificar sem reparar (no modify) |
+| `-l LOGDEV` | Dispositivo de log externo |
+| `-r RTDEV` | Dispositivo de tempo real |
+| `-m N` | Limitar memória a N MB |
+| `-d` | Modo perigoso (reparar FS montado read-only) |
+| `-v` | Modo verboso (acumulável) |
+| `-L` | Zerar log corrompido (último recurso) |
+
+### Comandos Principais
+
+| Comando | Função |
+|---|---|
+| `du -h` | Uso de disco legível |
+| `du -Sh` | Uso só do diretório atual |
+| `du -ah --exclude="*.bin"` | Filtrar por padrão |
+| `df -h` | Espaço em disco legível |
+| `df -hT` | Com tipo de FS |
+| `df -ht ext4` | Apenas ext4 |
+| `df -hx tmpfs` | Excluir tmpfs |
+| `df --output=target,source,fstype,pcent` | Saída personalizada |
+| `fsck /dev/sdb1` | Verificar FS |
+| `e2fsck -p /dev/sdc1` | Reparar ext automaticamente |
+| `tune2fs -l /dev/sda1` | Listar parâmetros |
+| `tune2fs -j /dev/sda1` | Adicionar journal (ext2→ext3) |
+| `xfs_repair -n /dev/sdb1` | Verificar XFS sem reparar |
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Contagem de montagens
+
+**Enunciado:** Considere um sistema de arquivos ext4 em /dev/sda1 com os parâmetros a seguir, obtidos com tune2fs:
+```
+Mount count:              8
+Maximum mount count:      -1
+```
+O que acontecerá na próxima inicialização se o comando `tune2fs -c 9 /dev/sda1` for emitido?
+
+
+
+<SolutionBlock>
+O comando define a contagem de montagem máxima do sistema de arquivos para 9. Como a contagem atual de montagem é 8, a próxima inicialização do sistema causará uma verificação do sistema de arquivos.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Interpretação do du
+
+**Enunciado:** Considere a saída a seguir de `du -h`:
+```
+216K    ./somedir/anotherdir
+224K    ./somedir
+232K    .
+```
+Quanto espaço está ocupado apenas pelos arquivos no diretório atual? Como poderíamos reescrever o comando para mostrar essas informações com mais clareza?
+
+
+
+<SolutionBlock>
+Do total de 232 K usados, 224 K são ocupados pelo diretório somedir e seus subdiretórios. Assim, se excluirmos esses, restam 8K sendo ocupados pelos arquivos no diretório atual. Essa informação pode ser exibida mais claramente com o parâmetro -S, que separa os diretórios na contagem.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Conversão ext2 com journal externo
+
+**Enunciado:** O que aconteceria ao sistema de arquivos ext2 /dev/sdb1 se o comando abaixo fosse emitido?
+```bash
+tune2fs -j /dev/sdb1 -J device=/dev/sdc1 -i 30d
+```
+
+
+
+<SolutionBlock>
+Um diário seria adicionado a /dev/sdb1, convertendo-o em ext3. O diário será armazenado no dispositivo /dev/sdc1 e o sistema de arquivos será verificado a cada 30 dias.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — XFS com log externo
+
+**Enunciado:** Como podemos verificar se há erros em um sistema de arquivos XFS em /dev/sda1 que tem uma seção de log em /dev/sdc1, mas sem fazer nenhum reparo?
+
+
+
+<SolutionBlock>
+Use xfs_repair, seguido por -l /dev/sdc1 para indicar o dispositivo que contém a seção de log e -n para evitar que sejam feitas alterações:
+```bash
+xfs_repair -l /dev/sdc1 -n
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 5 — Diferença entre -T e -t do df
+
+**Enunciado:** Qual a diferença entre os parâmetros -T e -t do df?
+
+
+
+<SolutionBlock>
+O parâmetro -T inclui o tipo de cada sistema de arquivos na saída de df. -t é um filtro e mostra apenas sistemas de arquivos do tipo solicitado na saída, excluindo todos os outros.
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T18 - 104.1 Criar partições e sistemas de arquivos]()
+→ Próximo: [T20 - 104.3 Controle da montagem e desmontagem]()

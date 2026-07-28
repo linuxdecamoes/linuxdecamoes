@@ -1,0 +1,12 @@
+# Dependências — instaladas dentro do contentor via `npm ci` (binários Linux).
+# NUNCA copiar o node_modules do host (Windows) — corrompe a build (SWC/esbuild win32).
+node_modules
+
+# Artefactos de build locais — regenerados dentro do contentor.
+.next
+.git
+*.log
+
+# Ficheiros do próprio Docker (não pertencem à imagem).
+Dockerfile
+.dockerignore

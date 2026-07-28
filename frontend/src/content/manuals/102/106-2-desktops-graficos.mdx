@@ -1,0 +1,136 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="106.2 Desktops gráficos"
+  code="102"
+  topicNumber="T04"
+  objective="Configurar e gerir desktops gráficos"
+  weight={2}
+  pages="LPIC-1 (102) - Version 5.0"
+  accent="iris"
+/>
+
+
+
+## Resumo Conciso
+
+### X Window System — Papel na área de trabalho
+
+O X11 fornece recursos de baixo nível para a interface gráfica:
+- Tratamento de eventos de entrada (mouse, teclado)
+- Copiar/colar entre aplicações separadas
+- API para desenhar elementos gráficos
+- **Não** desenha elementos visuais complexos — isso é feito pelo ambiente de desktop
+
+### Ambiente de desktop vs Gestor de janelas
+
+| Componente | Função |
+|---|---|
+| **Gestor de janelas** | Posicionamento, decoração e alternância de janelas (barra de título, botões minimizar/maximizar/fechar) |
+| **Ambiente de desktop** | Inclui gestor de janelas + ferramentas de widget + acessórios + configurações integradas |
+| **Ferramentas de widget** | GTK+ e Qt — bibliotecas que fornecem botões, campos de entrada, diálogos, etc. |
+
+### Principais ambientes de desktop
+
+| Ambiente | Toolkit | Distribuições padrão | Características |
+|---|---|---|---|
+| **GNOME** | GTK+ | Fedora, Debian, Ubuntu, RHEL | Gnome Shell (v3+), Activities, alternativa Classic |
+| **KDE Plasma** | Qt | openSUSE, Kubuntu, Mageia | Grande ecossistema, coesão visual com apps GTK+ |
+| **Xfce** | GTK+ | — | Leve, modular, baixo consumo de recursos |
+| **LXDE** | GTK+ | — | Ultra-leve, ideal para equipamentos antigos/placa única |
+| **Cinnamon** | GTK+ | Linux Mint | Fork do GNOME 3 |
+| **MATE** | GTK+ | Linux Mint | Fork do GNOME 2 |
+
+### Interoperabilidade (freedesktop.org)
+
+Especificações partilhadas entre ambientes de desktop:
+- **Localização de diretórios** — configurações pessoais do utilizador
+- **Itens de área de trabalho** — ficheiros `.desktop` com informações sobre aplicações
+- **Início automático** — aplicações iniciadas após login
+- **Arrastar e soltar** — comportamento padronizado
+- **Lixo** — localização comum de ficheiros eliminados
+- **Temas de ícones** — formato comum para bibliotecas intercambiáveis
+
+### Protocolos de acesso remoto
+
+| Protocolo | Porta | Características |
+|---|---|---|
+| **XDMCP** | UDP 177 | Nativo do X, alto consumo de banda, questões de segurança |
+| **VNC (RFB)** | 5900, 5901... | Plataforma independente, cada servidor = porta TCP exclusiva, sem criptografia nativa |
+| **RDP** | 3389 | Protocolo Microsoft, cliente open-source disponível no Linux |
+| **Spice** | — | Acesso a desktops virtualizados, integração local/remoto nativa |
+
+- **Remmina**: cliente gráfico integrado com plugins para XDMCP, VNC, RDP e Spice
+- **~/.vnc/xstartup**: script executado pelo servidor VNC ao iniciar (define o ambiente de desktop)
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Atalhos de teclado universais
+
+**Enunciado:** Quais são os atalhos de teclado universais nos ambientes de desktop e onde podem ser configurados?
+
+
+
+<SolutionBlock>
+Atalhos universais incluem:
+- `Alt+Tab` — alternar entre janelas
+- `Ctrl+C` / `Ctrl+V` — copiar/colar
+
+Cada ambiente de desktop fornece uma ferramenta de configuração do teclado onde os atalhos podem ser adicionados ou modificados.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Terminal no KDE via Alt+F2
+
+**Enunciado:** No KDE, que comando executaria o emulador de terminal padrão a partir da janela "Executar programa" (`Alt+F2`)?
+
+
+
+<SolutionBlock>
+```bash
+konsole
+```
+
+Também funciona o termo genérico `terminal`, dependendo da configuração do KDE.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Protocolo para desktop remoto Windows
+
+**Enunciado:** Qual protocolo é mais adequado para aceder a uma área de trabalho remota do Windows a partir de um ambiente Linux?
+
+
+
+<SolutionBlock>
+O **RDP (Remote Desktop Protocol)**, que é suportado nativamente pelo Windows e disponível no Linux através de clientes open-source como o Remmina (plugin RDP) ou o `xfreerdp`.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Múltiplas sessões no VNC
+
+**Enunciado:** Pretende executar dois servidores VNC na mesma máquina. Que portas TCP devem ser usadas?
+
+
+
+<SolutionBlock>
+Por convenção:
+- Primeiro servidor VNC: porta **5900** (display `:0`)
+- Segundo servidor VNC: porta **5901** (display `:1`)
+
+Cada servidor VNC necessita de uma porta TCP exclusiva na interface de rede.
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T03 - 106.1 Instalar e configurar o X11]()
+→ Próximo: [T05 - 106.3 Acessibilidade]()

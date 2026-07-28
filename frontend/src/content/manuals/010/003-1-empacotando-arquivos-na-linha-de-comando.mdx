@@ -1,0 +1,292 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="Empacotando arquivos na linha de comando"
+  code="010"
+  topicNumber="T09"
+  objective="3.1"
+  weight={2}
+  pages="Linux Essentials (010) - Version 4.1"
+  accent="sage"
+/>
+
+
+
+## Resumo Conciso
+
+A **compressão** reduz o espaço/banda consumidos por dados, substituindo padrões repetitivos. O **empacotamento** agrupa vários ficheiros/diretórios num só ficheiro (útil para backups, código-fonte, retenção). Em Linux usam-se em conjunto, mas são conceitos distintos.
+
+### Compressão — sem perda vs. com perda
+- **Sem perda (lossless):** recuperável, byte a byte. **gzip, bzip2, xz** — as ferramentas da Lição.
+- **Com perda (lossy):** imagens, vídeo, áudio (perda impercetível).
+- **Trade-off:** maior taxa de compressão = mais CPU/tempo (procura padrões mais complexos).
+
+### Ferramentas de compressão (uma por ficheiro, não empacotam)
+
+| Ferramenta | Comprimir | Descomprimir | Extensão | Prefixo p/ ferramentas de texto |
+|------------|-----------|--------------|----------|----------------------------------|
+| **gzip** | `gzip` | `gunzip` | `.gz` | `z` (zcat, zgrep, zless…) |
+| **bzip2** | `bzip2` | `bunzip2` | `.bz2` | `bz` (bzcat, bzgrep…) |
+| **xz** | `xz` | `unxz` | `.xz` | `xz` (xzcat, xzgrep…) |
+
+- **Após comprimir, o ficheiro original é removido** (fica só o `.gz/.bz2/.xz`); ao descomprimir, o comprimido é removido.
+- **Níveis de compressão:** `-1` (rápido, compressão menor) … `-9` (lento, compressão maior). Suportados por gzip e xz.
+- **Algoritmos incompatíveis entre si** — um `.gz` só é lido por ferramentas gzip.
+- As ferramentas de texto "com prefixo" permitem **ler sem descomprimir** (ex.: `zcat hosts.gz`).
+
+### `tar` — empacotamento (tape archive)
+O `tar` **gerencia o pacote, mas não comprime** por si só (embora possa chamar um compressor). Os pacotes chamam-se *tar balls*. Na versão GNU, o `-` antes das opções é opcional.
+
+| Opção | Ação |
+|-------|------|
+| **`c`** | criar pacote |
+| **`x`** | extrair |
+| **`t`** | listar conteúdo |
+| **`f`** | nome do ficheiro (vem sempre a seguir às opções) |
+| **`v`** | verbose (lista os ficheiros processados) |
+| **`u`** | adicionar/substituir ficheiros (**só em pacotes não comprimidos**) |
+| **`z`** | gzip |
+| **`j`** | bzip2 |
+| **`J`** | xz |
+| **`P`** | manter a `/` inicial em caminhos absolutos (perigoso) |
+
+Padrões comuns:
+```bash
+tar -cvzf pacote.tar.gz diretorio      # criar (gzip)
+tar -xvzf pacote.tar.gz                # extrair
+tar -tvzf pacote.tar.gz                # listar
+tar -xvzf pacote.tar.gz diretorio/f   # extrair só um ficheiro
+```
+- Ao extrair, o `tar` **preserva os caminhos relativos** e **sobrescreve** ficheiros existentes.
+- **Não é possível atualizar** (`tar uf`) pacotes comprimidos → erro `tar: Cannot update compressed archives`. Solução: descomprimir → adicionar → recomprimir.
+- Sempre que o `.tar` for comprimido, **acrescentar a extensão do algoritmo** (`.tar.gz`, `.tar.bz2`, `.tar.xz`, ou formas curtas como `.tgz`).
+
+### `zip` / `unzip` — interoperabilidade com Windows
+- Um **ZIP é simultaneamente pacote + compressão** (equivale a um tar comprimido).
+- `zip -r arq.zip diretorio` — o **`-r`** é indispensável para incluir o conteúdo dos diretórios.
+- `unzip arq.zip` extrai; `unzip -l arq.zip` lista o conteúdo.
+- Suporta níveis `-0` (sem compressão) a `-9` (máxima); padrão **`-6`**.
+- Podem não vir instalados por defeito (repositório das distros).
+
+| `archive.tar` | ? | ? | ? | ? |
+|---|---|---|---|---|
+| `archive.tgz` | ? | ? | ? | ? |
+| `archive.tar.xz` | ? | ? | ? | ? |
+
+**Solução:**
+
+| Nome do ficheiro | tar | gzip | bzip2 | xz |
+|-----------------|:---:|:----:|:-----:|:--:|
+| `archive.tar` | **X** | | | |
+| `archive.tgz` | **X** | **X** | | |
+| `archive.tar.xz` | **X** | | | **X** |
+
+> `.tgz` é a forma curta de `.tar.gz`.
+
+### Guiado 2 — Empacotado vs. comprimido
+
+**Enunciado:** *Quais destes ficheiros estão empacotados e quais estão comprimidos?*
+
+| Nome do ficheiro | Empacotado | Comprimido |
+|-----------------|:----------:|:----------:|
+| `file.tar` | ? | ? |
+| `file.tar.bz2` | ? | ? |
+| `file.zip` | ? | ? |
+| `file.xz` | ? | ? |
+
+**Solução:**
+
+| Nome do ficheiro | Empacotado | Comprimido |
+|-----------------|:----------:|:----------:|
+| `file.tar` | **X** | |
+| `file.tar.bz2` | **X** | **X** |
+| `file.zip` | **X** | **X** |
+| `file.xz` | | **X** |
+
+### Guiado 3 — Adicionar um ficheiro a um tar comprimido com gzip
+
+**Enunciado:** *Como se adiciona um ficheiro a um ficheiro tar comprimido com gzip?*
+
+**Solução:**
+Não dá para adicionar diretamente (`tar` recusa atualizar pacotes comprimidos). Processo em 3 passos:
+1. **Descomprimir** com `gunzip`
+2. **Adicionar** com `tar uf`
+3. **Recomprimir** com `gzip`
+
+```bash
+gunzip pacote.tar.gz        # -> pacote.tar
+tar uf pacote.tar novo.txt  # adiciona novo.txt
+gzip pacote.tar             # -> pacote.tar.gz
+```
+
+### Guiado 4 — Opção de `tar` para caminhos absolutos
+
+**Enunciado:** *Qual opção de `tar` instrui o tar a incluir o caractere inicial `/` nos caminhos absolutos?*
+
+**Solução:**
+A opção **`-P`** (`--absolute-names`), que impede o `tar` de remover a barra inicial:
+
+```
+-P, --absolute-names
+    Don't strip leading slashes from file names when creating archives
+```
+
+> ⚠️ Perigoso: ao extrair pode **sobrescrever ficheiros de sistema** importantes.
+
+### Guiado 5 — O `zip` suporta níveis de compressão?
+
+**Enunciado:** *O zip suporta diferentes níveis de compressão?*
+
+**Solução:**
+**Sim**, via **`-#`** com `#` de 0 a 9:
+- `-0` — sem compressão (só armazena)
+- `-1` — compressão mais rápida (menor rácio)
+- `-9` — compressão mais lenta (melhor rácio)
+- **Padrão: `-6`**
+
+```bash
+zip -9 maximo.zip ficheiro    # máxima compressão
+```
+
+---
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+> Exercícios da autoria do agente. Consolidam o tópico 3.1 (compressão, `tar`, `zip`, `zcat`).
+> *Dica:* cria um diretório de testes `~/lab31`. As soluções estão em `<details>`.
+
+### Exploratório 1 — Comparar o rácio de compressão das 3 ferramentas
+Cria um ficheiro grande a partir de `/etc`, faz 3 cópias e comprime cada uma com `gzip`, `bzip2` e `xz`. Compara os tamanhos finais com `ls -lh`.
+
+
+
+<SolutionBlock>
+```bash
+mkdir -p ~/lab31/compressao && cd ~/lab31/compressao
+
+# Ficheiro grande (conteúdo textual de /etc)
+cat /etc/*.conf > dados.txt 2>/dev/null
+
+# 3 cópias idênticas
+cp dados.txt dados_gz
+cp dados.txt dados_bz
+cp dados.txt dados_xz
+
+# Comprimir cada uma com ferramenta diferente
+gzip dados_gz
+bzip2 dados_bz
+xz dados_xz
+
+# Comparar
+ls -lh
+```
+
+**Resultado esperado (típico):** o `dados_xz.xz` é o mais pequeno (xz costuma ter melhor rácio), seguido de `.bz2` e `.gz`. Repara que os ficheiros `.txt` originais das cópias desapareceram após compressão — só o `dados.txt` (não comprimido) permanece.
+</SolutionBlock>
+
+
+
+### Exploratório 2 — Ciclo completo de um `tar.gz` (criar/listar/extrair)
+Empacota o diretório `compressao` num `backup.tar.gz`, lista o seu conteúdo sem extrair e extrai-o numa pasta `restauro`.
+
+
+
+<SolutionBlock>
+```bash
+cd ~/lab31
+
+# Criar (c=create, v=verbose, z=gzip, f=ficheiro)
+tar -cvzf backup.tar.gz compressao
+
+# Listar conteúdo (t=list) sem extrair
+tar -tvzf backup.tar.gz
+
+# Extrair (x=extract) numa pasta limpa
+mkdir -p restauro && cd restauro
+tar -xvzf ../backup.tar.gz
+ls -R
+```
+
+**Aprendido:** as letras da opção ditam a operação — **`c`/`x`/`t`** (criar/extrair/listar), sempre com **`f`** (nome do ficheiro) e **`z`** (gzip) neste caso.
+</SolutionBlock>
+
+
+
+### Exploratório 3 — Ler ficheiro comprimido sem descomprimir (`zcat`)
+Comprime o `/etc/hosts` com gzip e lê o conteúdo **diretamente** com `zcat`, sem o descomprimir.
+
+
+
+<SolutionBlock>
+```bash
+cd ~/lab31/compressao
+cp /etc/hosts .
+gzip hosts                # -> hosts.gz
+
+# Ler sem descomprimir
+zcat hosts.gz
+```
+
+**Resultado:** o conteúdo do `hosts` aparece no terminal, mas o ficheiro continua comprimido (`ls` mostra `hosts.gz`). Existem variantes equivalentes: `bzcat` (bzip2) e `xzcat` (xz).
+</SolutionBlock>
+
+
+
+### Exploratório 4 — `zip`/`unzip` com diretórios
+Cria uma estrutura com subpastas, fecha-a num `projeto.zip`, elimina o original e extrai de volta. Confirma que a opção `-r` foi necessária.
+
+
+
+<SolutionBlock>
+```bash
+cd ~/lab31
+mkdir -p zipproj/notas zipproj/img
+echo "reuniao 14h" > zipproj/notas/a.txt
+echo "tarefas"    > zipproj/notas/b.txt
+touch zipproj/img/diagrama.png
+
+# -r inclui o conteúdo das subpastas
+zip -r projeto.zip zipproj
+
+# Remover o original e extrair
+rm -rf zipproj
+unzip -l projeto.zip     # listar antes
+unzip projeto.zip
+find zipproj
+```
+
+**Aprendido:** sem `-r`, o `zip` armazenaria **apenas o diretório vazio**. O `unzip -l` lista o conteúdo sem extrair (equivalente ao `tar -tf`).
+</SolutionBlock>
+
+
+
+### Exploratório 5 — Extrair um único ficheiro de um tarball
+A partir do `backup.tar.gz` do Exploratório 2, extrai **apenas** o ficheiro `compressao/dados.txt`, deixando o resto intocado.
+
+
+
+<SolutionBlock>
+```bash
+cd ~/lab31/restauro
+rm -rf compressao         # garantir que começa limpo
+
+# Indicar o caminho do ficheiro após o nome do pacote
+tar -xvzf ../backup.tar.gz compressao/dados.txt
+
+ls compressao             # mostra apenas dados.txt
+```
+
+**Aprendido:** basta indicar o caminho do ficheiro desejado a seguir ao nome do pacote. Vários ficheiros podem ser listados de uma vez. O caminho tem de **corresponder ao que o `tar -t` mostra**.
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T08 - Criando, Movendo e Deletando Arquivos]()
+→ Próximo: [T10 - Pesquisando e extraindo dados de arquivos]()

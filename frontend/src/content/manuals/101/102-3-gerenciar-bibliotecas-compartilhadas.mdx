@@ -1,0 +1,239 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="Gerenciar bibliotecas compartilhadas"
+  code="101"
+  topicNumber="T06"
+  objective="Gerenciar bibliotecas compartilhadas"
+  weight={1}
+  pages="LPIC-1 (101) - Version 5.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Bibliotecas Estáticas vs Compartilhadas
+
+| Característica | Biblioteca Estática | Biblioteca Compartilhada (Dinâmica) |
+|----------------|--------------------|------------------------------------|
+| Vínculo | Mesclada no momento da compilação | Referenciada em tempo de execução |
+| Cópia no programa | Sim (incorporada) | Não (apenas referência) |
+| Dependência em runtime | Não | Sim (deve estar disponível) |
+| Tamanho do executável | Maior | Menor |
+| Atualização | Recompilar programa | Atualizar biblioteca (afeta todos os programas) |
+| Extensão do arquivo | `.a` (ex: `libpthread.a`) | `.so` (ex: `libpthread.so.0`) |
+
+### Convenção de Nomenclatura (Soname)
+
+```
+lib<nome>.so.<versão>
+```
+
+Exemplo: `libpthread.so.0` → nome=`libpthread`, sufixo=`so`, versão=`0`
+
+Links simbólicos apontam para arquivos com versão completa:
+```bash
+$ ls -l /lib/x86_64-linux-gnu/libc.so.6
+lrwxrwxrwx 1 root root 12 ... libc.so.6 -> libc-2.24.so
+```
+
+### Locais Comuns para Bibliotecas Compartilhadas
+
+- `/lib`
+- `/lib32`
+- `/lib64`
+- `/usr/lib`
+- `/usr/local/lib`
+
+### Configuração dos Caminhos
+
+**Arquivo principal:** `/etc/ld.so.conf`
+```
+include /etc/ld.so.conf.d/*.conf
+```
+
+**Diretório de configuração:** `/etc/ld.so.conf.d/`
+- Contém arquivos `*.conf` com caminhos absolutos para diretórios de bibliotecas
+
+**Exemplo:** `/etc/ld.so.conf.d/x86_64-linux-gnu.conf`
+```
+/lib/x86_64-linux-gnu
+/usr/lib/x86_64-linux-gnu
+```
+
+### Variável de Ambiente LD_LIBRARY_PATH
+
+| Ação | Comando |
+|------|---------|
+| Definir | `LD_LIBRARY_PATH=/usr/local/mylib` |
+| Exportar | `export LD_LIBRARY_PATH=/usr/local/mylib` |
+| Verificar | `echo $LD_LIBRARY_PATH` |
+| Remover | `unset LD_LIBRARY_PATH` |
+| Permanentizar | Adicionar `export LD_LIBRARY_PATH=...` em `/etc/bash.bashrc` ou `~/.bashrc` |
+
+### Comandos Essenciais
+
+| Comando | Função | Exemplo |
+|---------|--------|---------|
+| `ldconfig` | Configura vínculos de tempo de execução e atualiza `/etc/ld.so.cache` | `sudo ldconfig` |
+| `ldconfig -v` | Exibe versões, diretórios e vínculos criados | `sudo ldconfig -v` |
+| `ldconfig -p` | Exibe cache atual de bibliotecas | `sudo ldconfig -p` |
+| `ldd` | Lista dependências de bibliotecas de um programa | `ldd /usr/bin/git` |
+| `ldd -u` | Lista dependências diretas não utilizadas | `ldd -u /usr/bin/git` |
+
+### Exemplo de Saída do `ldd`
+
+```bash
+$ ldd /usr/bin/git
+    linux-vdso.so.1 =>  (0x00007ffcbb310000)
+    libpcre.so.3 => /lib/x86_64-linux-gnu/libpcre.so.3 (0x00007f18241eb000)
+    libz.so.1 => /lib/x86_64-linux-gnu/libz.so.1 (0x00007f1823fd1000)
+    libresolv.so.2 => /lib/x86_64-linux-gnu/libresolv.so.2 (0x00007f1823db6000)
+    libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007f1823b99000)
+    librt.so.1 => /lib/x86_64-linux-gnu/librt.so.1 (0x00007f1823991000)
+    libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f18235c7000)
+    /lib64/ld-linux-x86-64.so.2 (0x00007f182445b000)
+```
+
+### Comandos Adicionais
+
+| Comando | Função |
+|---------|--------|
+| `readelf` | Exibe informações sobre arquivos ELF |
+| `objdump` | Exibe informações de arquivos-objeto |
+
+| `linux-vdso.so.1` | `linux-vdso` | `so` | `1` |
+|---|---|---|---|
+| `libprocps.so.6` | `libprocps` | `so` | `6` |
+| `libdl.so.2` | `libdl` | `so` | `2` |
+| `libc.so.6` | `libc` | `so` | `6` |
+| `libsystemd.so.0` | `libsystemd` | `so` | `0` |
+| `ld-linux-x86-64.so.2` | `ld-linux-x86-64` | `so` | `2` |
+
+### Exercício Guiado 2 — Adicionar diretório de biblioteca
+**Enunciado:** Você desenvolveu um programa e deseja adicionar um novo diretório de biblioteca compartilhada em seu sistema (`/opt/lib/mylib`). Você escreve o caminho absoluto em um arquivo chamado `mylib.conf`.
+- Em que diretório deve ser armazenado esse arquivo?
+- Qual comando deve ser executado para que as alterações sejam totalmente efetivas?
+
+**Solução:**
+- `/etc/ld.so.conf.d`
+- `ldconfig`
+
+### Exercício Guiado 3 — Dependências do kill
+**Enunciado:** Qual comando você usaria para listar as bibliotecas compartilhadas exigidas por `kill`?
+**Solução:** `ldd /bin/kill`
+
+---
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Usando objdump
+**Enunciado:** `objdump` é um utilitário de linha de comando que exibe informações sobre arquivos objeto.
+1. Use `objdump` com `-p` e `grep` para exibir as dependências de glibc:
+2. Use `objdump` com `-p` e `grep` para exibir o soname de glibc:
+3. Use `objdump` com `-p` e `grep` para exibir as dependências do Bash:
+
+
+
+<SolutionBlock>
+```bash
+# Dependências de glibc
+objdump -p /lib/x86_64-linux-gnu/libc.so.6 | grep NEEDED
+
+# Soname de glibc
+objdump -p /lib/x86_64-linux-gnu/libc.so.6 | grep SONAME
+
+# Dependências do Bash
+objdump -p /bin/bash | grep NEEDED
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Usando ldd para analisar dependências
+**Enunciado:** Use `ldd` para descobrir quais bibliotecas compartilhadas o comando `ls` depende. Identifique qual biblioteca fornece a função de compressão (zlib) e qual fornece suporte a localization (locale).
+
+
+
+<SolutionBlock>
+```bash
+# Listar todas as dependências do ls
+ldd /bin/ls
+
+# Identificar a biblioteca zlib (compressão)
+ldd /bin/ls | grep libz
+
+# Identificar a biblioteca de locale (suporte a internacionalização)
+ldd /bin/ls | grep libc.so.6
+```
+
+A saída mostrará `libz.so.1` para compressão (zlib) e `libc.so.6` (glibc) para suporte a locale. É o glibc que fornece as rotinas de internacionalização (`setlocale`, `nl_langinfo`, etc.); não existe uma `liblocale` separada. (Nota: `libpthread.so.0`, quando presente, refere-se a *POSIX threads*, e não a locale.)
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Testando LD_LIBRARY_PATH
+**Enunciado:** Crie um diretório temporário, copie uma biblioteca para ele e teste se o `LD_LIBRARY_PATH` permite ao sistema encontrá-la.
+
+
+
+<SolutionBlock>
+```bash
+# Criar diretório temporário
+mkdir -p /tmp/mylib
+
+# Copiar uma biblioteca para o diretório
+cp /lib/x86_64-linux-gnu/libz.so.1 /tmp/mylib/
+
+# Verificar que ldd não encontra no novo caminho
+ldd /bin/ls | grep libz
+
+# Adicionar o diretório ao LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=/tmp/mylib:$LD_LIBRARY_PATH
+
+# Verificar que agora encontra a biblioteca no novo caminho
+ldd /bin/ls | grep libz
+
+# Limpar a variável
+unset LD_LIBRARY_PATH
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Usando ldconfig para gerenciar cache
+**Enunciado:** Use `ldconfig` para verificar o estado atual do cache de bibliotecas do sistema e identificar quantas bibliotecas estão cacheadas.
+
+
+
+<SolutionBlock>
+```bash
+# Exibir o cache atual de bibliotecas (contagem)
+ldconfig -p | wc -l
+
+# Exibir apenas as bibliotecas que começam com "lib"
+ldconfig -p | head -20
+
+# Verificar o soname de uma biblioteca específica
+ldconfig -p | grep libc.so
+
+# Verificar diretórios que o ldconfig utiliza
+ldconfig -v 2>/dev/null | grep -E "^/lib|^/usr/lib"
+```
+
+O comando `ldconfig -p` mostra o cache `/etc/ld.so.cache` que o dynamic linker usa para localizar bibliotecas rapidamente.
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T05 - 102.2 Instalar um gerenciador de inicialização]()
+→ Próximo: [T07 - 102.4 Gerenciamento de pacotes do Debian]()

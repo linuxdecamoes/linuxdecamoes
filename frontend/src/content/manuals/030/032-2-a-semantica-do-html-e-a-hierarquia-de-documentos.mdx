@@ -1,0 +1,377 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T05 — A semântica do HTML e a hierarquia de documentos"
+  code="030"
+  topicNumber="T05"
+  objective="032.2"
+  weight={2}
+  pages="LPI Web Development Essentials (030) - Version 1.0"
+  accent="amber"
+/>
+
+
+
+## Resumo Conciso
+
+### Texto e parágrafos
+
+Nenhum bloco de texto deve ficar "nu" fora de um elemento. O elemento `<p>` cria parágrafos e é um elemento de **bloco** (adiciona espaçamento antes e depois).
+
+### Títulos e hierarquia
+
+Seis níveis de títulos: `<h1>` a `<h6>`. `<h1>` é o mais importante (identifica o conteúdo da página). A hierarquia deve ser sequencial: `<h1>` → `<h2>` → `<h3>` etc.
+
+### Elementos de quebra
+
+| Elemento | Função | Tipo |
+|----------|--------|------|
+| `<br>` | Quebra de linha (auto-fechamento) | Uso em poemas, endereços |
+| `<hr>` | Linha horizontal/separador | Separa seções ou mudanças temáticas |
+
+### Listas em HTML
+
+| Tipo | Elemento | Item | Descrição |
+|------|----------|------|-----------|
+| Ordenada | `<ol>` | `<li>` | Ordem dos itens é relevante (numeração) |
+| Não ordenada | `<ul>` | `<li>` | Ordem não é relevante (marcadores) |
+| Definição | `<dl>` | `<dt>`, `<dd>` | Termo e descrição (estilo dicionário) |
+
+**Atributos de `<ol>`:**
+
+| Atributo | Valores | Função |
+|----------|---------|--------|
+| `type` | `1`, `A`, `a`, `I`, `i` | Formato da numeração |
+| `start` | Número decimal | Valor inicial |
+| `reversed` | (booleano) | Inverte a ordem |
+
+**Regra:** Os elementos `<li>` são os únicos filhos válidos em `<ol>` e `<ul>`.
+
+**Listas aninhadas:** Listas podem ser aninhadas dentro de um `<li>` (não sobrepor tags).
+
+### Formatação de texto
+
+**Elementos de apresentação** (apenas visual):
+
+| Elemento | Efeito |
+|----------|--------|
+| `<b>` | Negrito |
+| `<i>` | Itálico |
+| `<u>` | Sublinhado |
+| `<tt>` | Fonte monoespaçada (obsoleto em HTML5; usar `<code>` ou `<pre>`.) |
+
+**Elementos de expressão** (visual + semântica, acessíveis):
+
+| Elemento | Efeito semântico |
+|----------|------------------|
+| `<em>` | Enfase no texto (equivale visual a `<i>`) |
+| `<strong>` | Importância/destaque (equivale visual a `<b>`) |
+| `<code>` | Trecho de código de computador |
+| `<mark>` | Texto destacado (fundo amarelo) |
+
+**Texto pré-formatado:** `<pre>` preserva espaços em branco e quebras de linha, exibe em fonte monoespaçada.
+
+### Elementos de agrupamento
+
+| Elemento | Tipo | Função |
+|----------|------|--------|
+| `<div>` | Bloco | Contêiner genérico em nível de bloco; não adiciona valor semântico |
+| `<span>` | Linha | Contêiner genérico para texto em linha; permite estilização com CSS |
+
+### Elementos semânticos de estrutura de página
+
+| Elemento | Função |
+|----------|--------|
+| `<header>` | Cabeçalho informativo de um elemento semântico |
+| `<main>` | Conteúdo central da página (máximo 1) |
+| `<footer>` | Rodapé com informações de autoria/contacto |
+| `<nav>` | Unidade de navegação (menu com hiperlinks) |
+| `<aside>` | Conteúdo suplementar (barra lateral) |
+| `<section>` | Seção lógica do documento |
+| `<article>` | Conteúdo independente e autónomo (blog, produto) |
+
+**Regras importantes:**
+- `<header>` não pode ser aninhado dentro de outro `<header>`
+- `<footer>` não pode ser aninhado dentro de outro `<footer>`
+- Um `<header>` não pode estar dentro de um `<footer>`
+- `<nav>` não deve conter todos os hiperlinks — apenas grupos de navegação
+
+### Comparação de tipos de elementos
+
+| Característica | Bloco | Linha |
+|----------------|-------|-------|
+| Começa nova linha | Sim | Não |
+| Ocupa largura total | Sim | Apenas necessário |
+| Exemplos | `<p>`, `<div>`, `<h1>`-`<h6>`, `<ol>`, `<ul>` | `<span>`, `<em>`, `<strong>`, `<i>`, `<code>` |
+
+## 🧭 Exercícios Guiados (resolvidos)
+
+### Exercício Guiado 1 — Tags de fechamento correspondentes
+
+**Enunciado:** Para cada uma das seguintes tags, indique a tag de fechamento correspondente:
+`<h5>`, `<br>`, `<ol>`, `<dd>`, `<hr>`, `<strong>`, `<tt>`, `<main>`
+
+**Solução passo a passo:**
+
+1. `<h5>` → `</h5>` — tag de título nível 5
+2. `<br>` → Não existe — elemento de auto-fechamento
+3. `<ol>` → `</ol>` — lista ordenada
+4. `<dd>` → `</dd>` — descrição de lista de definição
+5. `<hr>` → Não existe — elemento de auto-fechamento
+6. `<strong>` → `</strong>` — texto forte
+7. `<tt>` → `</tt>` — fonte monoespaçada
+8. `<main>` → `</main>` — conteúdo principal
+
+### Exercício Guiado 2 — Bloco vs. linha
+
+**Enunciado:** Para cada tag, indique se é elemento de bloco ou de linha: `<h3>`, `<span>`, `<b>`, `<div>`, `<em>`, `<dl>`, `<li>`, `<nav>`, `<code>`, `<pre>`
+
+**Solução passo a passo:**
+
+| Tag | Tipo |
+|-----|------|
+| `<h3>` | Bloco |
+| `<span>` | Linha |
+| `<b>` | Linha |
+| `<div>` | Bloco |
+| `<em>` | Linha |
+| `<dl>` | Bloco |
+| `<li>` | Bloco |
+| `<nav>` | Bloco |
+| `<code>` | Linha |
+| `<pre>` | Bloco |
+
+### Exercício Guiado 3 — Tipos de listas HTML
+
+**Enunciado:** Que tipos de lista podemos criar em HTML? Quais tags devemos usar?
+
+**Solução passo a passo:**
+
+1. **Lista ordenada** (`<ol>`) — itens numerados, entre `<ol>` e `</ol>`, com `<li>` para cada item
+2. **Lista não ordenada** (`<ul>`) — itens com marcadores, entre `<ul>` e `</ul>`, com `<li>` para cada item
+3. **Lista de definição** (`<dl>`) — termo + descrição, com `<dt>` para termos e `<dd>` para descrições
+
+### Exercício Guiado 4 — Tags de estrutura de página
+
+**Enunciado:** Quais tags encerram os elementos de bloco para estruturar uma página HTML?
+
+**Solução passo a passo:**
+
+1. `<header>` e `</header>` — cabeçalho da página
+2. `<main>` e `</main>` — conteúdo principal
+3. `<nav>` e `</nav>` — barra de navegação
+4. `<aside>` e `</aside>` — barra lateral
+5. `<footer>` e `</footer>` — rodapé da página
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+1. **Enunciado:** Crie uma página HTML com título "Regras do Formulário", um `<h1>` "Como preencher o formulário de solicitação", um parágrafo introdutório e uma lista não ordenada com os campos: Nome, Sobrenome, Endereço de email, País, Estado, CEP/Código Postal.
+   
+
+<SolutionBlock>
+```html
+   <!DOCTYPE html>
+   <html>
+     <head>
+       <title>Form Rules</title>
+     </head>
+     <body>
+       <h1>Como preencher o formulário de solicitação</h1>
+       <p>Para receber o documento PDF com o curso de HTML completo, é necessário preencher os seguintes campos:</p>
+       <ul>
+         <li>Nome</li>
+         <li>Sobrenome</li>
+         <li>Endereço de email</li>
+         <li>País</li>
+         <li>Estado</li>
+         <li>CEP/Código Postal</li>
+       </ul>
+     </body>
+   </html>
+   ```
+
+   Explicação: Estrutura básica com `<h1>`, `<p>` e `<ul>` com `<li>` para cada campo.
+</SolutionBlock>
+
+
+
+2. **Enunciado:** Coloque os três primeiros campos em negrito com importância semântica, adicione `<h2>` "Campos obrigatórios" e parágrafo explicativo.
+   
+
+<SolutionBlock>
+```html
+   <!DOCTYPE html>
+   <html>
+     <head>
+       <title>Form Rules</title>
+     </head>
+     <body>
+       <h1>Como preencher o formulário de solicitação</h1>
+       <p>Para receber o documento PDF com o curso de HTML completo, é necessário preencher os seguintes campos:</p>
+       <ul>
+         <li><strong>Nome</strong></li>
+         <li><strong>Sobrenome</strong></li>
+         <li><strong>Endereço de email</strong></li>
+         <li>País</li>
+         <li>Estado</li>
+         <li>CEP/Código Postal</li>
+       </ul>
+       <h2>Campos obrigatórios</h2>
+       <p>Os campos em negrito são obrigatórios.</p>
+     </body>
+   </html>
+   ```
+
+   Explicação: `<strong>` usado em vez de `<b>` para adicionar importância semântica além do visual.
+</SolutionBlock>
+
+
+
+3. **Enunciado:** Adicione `<h2>` "Passos a seguir", parágrafo e lista ordenada com 4 etapas do formulário.
+   
+
+<SolutionBlock>
+```html
+   <!DOCTYPE html>
+   <html>
+     <head>
+       <title>Form Rules</title>
+     </head>
+     <body>
+       <h1>Como preencher o formulário de solicitação</h1>
+       <p>Para receber o documento PDF com o curso de HTML completo, é necessário preencher os seguintes campos:</p>
+       <ul>
+         <li><strong>Nome</strong></li>
+         <li><strong>Sobrenome</strong></li>
+         <li><strong>Endereço de email</strong></li>
+         <li>País</li>
+         <li>Estado</li>
+         <li>CEP/Código Postal</li>
+       </ul>
+       <h2>Campos obrigatórios</h2>
+       <p>Os campos em negrito são obrigatórios.</p>
+       <h2>Passos a seguir</h2>
+       <p>Há quatro etapas a seguir:</p>
+       <ol>
+         <li>Preencha os campos</li>
+         <li>Clique no botão Enviar</li>
+         <li>Verifique o seu email e confirme a sua solicitação clicando no link recebido</li>
+         <li>Verifique o seu email - Você receberá o curso completo de HTML em alguns minutos</li>
+       </ol>
+     </body>
+   </html>
+   ```
+
+   Explicação: Lista ordenada com `<ol>` e `<li>` para as etapas sequenciais.
+</SolutionBlock>
+
+
+
+4. **Enunciado:** Usando `<div>`, crie um bloco para cada seção que começa com `<h2>`.
+   
+
+<SolutionBlock>
+```html
+   <!DOCTYPE html>
+   <html>
+     <head>
+       <title>Form Rules</title>
+     </head>
+     <body>
+       <h1>Como preencher o formulário de solicitação</h1>
+       <p>Para receber o documento PDF com o curso de HTML completo, é necessário preencher os seguintes campos:</p>
+       <ul>
+         <li><strong>Nome</strong></li>
+         <li><strong>Sobrenome</strong></li>
+         <li><strong>Endereço de email</strong></li>
+         <li>País</li>
+         <li>Estado</li>
+         <li>CEP/Código Postal</li>
+       </ul>
+          <div>
+            <h2>Campos obrigatórios</h2>
+            <p>Os campos em negrito são obrigatórios.</p>
+          </div>
+          <hr>
+          <div>
+            <h2>Passos a seguir</h2>
+            <p>Há quatro etapas a seguir:</p>
+            <ol>
+              <li>Preencha os campos</li>
+              <li>Clique no botão Enviar</li>
+              <li>Verifique o seu email e confirme a sua solicitação clicando no link recebido</li>
+              <li>Verifique o seu email - Você receberá o curso completo de HTML em alguns minutos</li>
+            </ol>
+          </div>
+     </body>
+   </html>
+   ```
+
+   Explicação: `<div>` agrupa cada seção como bloco independente, útil para estilização posterior com CSS.
+</SolutionBlock>
+
+
+
+5. **Enunciado:** Adicione `<header>` com "Regras do Formulário - 2021", `<footer>` com "Copyright - 2021" e `<main>` contendo os três blocos, separados com `<hr>`.
+   
+
+<SolutionBlock>
+```html
+   <!DOCTYPE html>
+   <html>
+     <head>
+       <title>Form Rules</title>
+     </head>
+     <body>
+       <header>
+         <h1>Regras do Formulário - 2021</h1>
+       </header>
+       <main>
+         <div>
+           <h1>Como preencher o formulário de solicitação</h1>
+           <p>Para receber o documento PDF com o curso de HTML completo, é necessário preencher os seguintes campos:</p>
+           <ul>
+             <li><strong>Nome</strong></li>
+             <li><strong>Sobrenome</strong></li>
+             <li><strong>Endereço de email</strong></li>
+             <li>País</li>
+             <li>Estado</li>
+             <li>CEP/Código Postal</li>
+           </ul>
+         </div>
+          <hr>
+          <div>
+            <h2>Campos obrigatórios</h2>
+            <p>Os campos em negrito são obrigatórios.</p>
+          </div>
+          <hr>
+          <div>
+           <h2>Passos a seguir</h2>
+           <p>Há quatro etapas a seguir:</p>
+           <ol>
+             <li>Preencha os campos</li>
+             <li>Clique no botão Enviar</li>
+             <li>Verifique o seu email e confirme a sua solicitação clicando no link recebido</li>
+             <li>Verifique o seu email - Você receberá o curso completo de HTML em alguns minutos</li>
+           </ol>
+         </div>
+       </main>
+       <footer>
+         <p>Copyright - 2021</p>
+       </footer>
+     </body>
+   </html>
+   ```
+
+   Explicação: Elementos semânticos `<header>`, `<main>` e `<footer>` estruturam a página de forma compreensível para máquinas e leitores de ecrã.
+</SolutionBlock>
+
+
+
+## 🔗 Ligações
+
+← Anterior: [T04 — A anatomia do documento HTML]()
+→ Próximo: [T06 — Referências e recursos incorporados do HTML]()

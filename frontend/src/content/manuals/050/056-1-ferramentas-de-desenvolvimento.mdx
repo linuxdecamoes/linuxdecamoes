@@ -1,0 +1,187 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T16 — 056.1 Ferramentas de desenvolvimento"
+  code="050"
+  topicNumber="T16"
+  objective="056.1"
+  weight={2}
+  pages="LPI Open Source Essentials (050) - Version 1.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Objetivos do desenvolvimento
+
+| Objetivo | Descrição |
+|---|---|
+| **Robustez e precisão** | Produzir programas que funcionem corretamente e de forma confiável |
+| **Desempenho** | Produzir programas que executam rapidamente |
+| **Escalabilidade** | Produzir programas fáceis de ampliar |
+| **Adaptabilidade** | Diferentes utilizadores, dispositivos e ambientes |
+| **Velocidade** | Acelerar o desenvolvimento e a implantação de novos recursos |
+| **Redução de erros** | Diminuir tarefas tediosas e erros de programação |
+| **Legado** | Suporte a códigos e dispositivos legados |
+| **Interoperabilidade** | Funcionar em conjunto com outras ferramentas já utilizadas |
+| **Reversão** | Permitir reversão fácil em caso de erros ou mudanças de plano |
+
+### Processos de desenvolvimento
+
+#### Modelo em cascata
+
+- Popular nas décadas de 1950–1970; ainda utilizado em grandes organizações
+- **Problemas:** requisitos difíceis de alterar, compreensão ambígua dos requisitos, processo lento (um lançamento por ano ou menos), detecção tardia de bugs de integração e barreiras entre equipas
+
+#### CI/CD (Integração Contínua / Entrega Contínua)
+
+| Conceito | Descrição |
+|---|---|
+| **Integração Contínua (CI)** | Incorporação rápida de pequenas alterações no código; testes automatizados antes de submeter ao repositório principal |
+| **Entrega Contínua (CD)** | Tudo o que acontece após a CI até ao lançamento; testes detalhados e implantação automatizada |
+| **Pipeline** | Etapas sequenciais e automatizadas; falha em qualquer etapa interrompe o pipeline e notifica a equipa |
+| **Tudo como código** | Processos e infraestrutura são definidos formalmente no código e versionados |
+| **Ambiente de homologação** | Ambiente intermédio que espelha o de produção para testes antes da implantação |
+| **Sistema de desenvolvimento local** | Laptop ou computador pessoal do programador |
+| **Sistema de desenvolvimento remoto** | Sistema compartilhado em nuvem administrado pela organização |
+
+### Ferramentas de geração de código
+
+| Ferramenta/Tipo | Descrição |
+|---|---|
+| **Compilador** | Transforma código de alto nível em código de máquina (ou bytecode) |
+| **GNU Compiler Collection (GCC)** | Compilador de código aberto para C e C++ |
+| **LLVM** | Compilador de código aberto para C e C++ |
+| **Bytecode** | Código intermédio portátil; compilado por uma máquina virtual (ex.: Java) |
+| **Interpretador** | Converte e executa código diretamente sem compilação prévia (ex.: Python) |
+| **Maven / Gradle** | Ferramentas de compilação para Java; gerenciam opções e combinações de arquivos |
+| **IA generativa** | Geração automática de código a partir de descrições em texto simples |
+| **Refatoração** | Reestruturação do código para maior lógica e menor duplicação |
+| **Engenharia reversa** | Reprodução do funcionamento de outro código; uso de desmontadores (disassemblers) |
+
+### Depuradores
+
+- Facilitam a localização de bugs com pontos de interrupção (breakpoints), inspeção de variáveis e execução passo a passo
+- **Watchpoint (ponto de observação):** monitora quando e como uma variável se altera
+- **Depurador GNU (GDB):** depurador de código aberto mais conhecido para C e C++
+
+### Ferramentas analíticas
+
+| Tipo | Descrição |
+|---|---|
+| **Análise estática** | Examina o código sem o executar (ex.: linters) |
+| **Análise dinâmica** | Executa o programa e verifica problemas durante a execução |
+| **Linter** | Detecta erros como atribuição incorreta de tipos (ex.: float para int) |
+| **Ferramentas de segurança** | Encontram vulnerabilidades que tornam o programa exposto a ataques |
+
+### Ambientes de Desenvolvimento Integrados (IDEs)
+
+- Ferramentas que integram edição, formatação, análise, depuração, compilação e controlo de versão num só ambiente
+- **Exemplo de código aberto:** Eclipse
+
+### Tipos de testes de software
+
+| Tipo | Descrição |
+|---|---|
+| **Teste unitário** | Testa funções individuais; base do desenvolvimento orientado a testes (TDD) |
+| **Teste de integração** | Verifica se o produto como um todo funciona corretamente |
+| **Teste de regressão** | Deteta quando uma alteração quebra algo que funcionava antes |
+| **Smoke test** | Verifica rapidamente as atividades mais importantes; interrompe se houver erros |
+| **Teste de aceitação** | Avalia o impacto do programa no utilizador (usabilidade e navegação) |
+| **Teste de segurança** | Executa ações maliciosas para verificar rejeição sem falha ou fuga de informações |
+| **Fuzz testing** | Gera caracteres aleatórios como entrada para revelar vulnerabilidades |
+| **Teste de desempenho** | Verifica velocidade num ambiente semelhante ao de produção; uso de benchmarks |
+| **JUnit** | Ferramenta de código aberto para testes unitários em Java |
+| **Selenium** | Ferramenta para simular interações de utilizador em aplicações web |
+
+### Ambientes de implantação
+
+- **Ferramentas de CI/CD:** constroem pipelines com testes e ramificações
+- **Orquestração:** verificam falhas em sistemas virtuais e reiniciam automaticamente
+- **Jenkins:** ferramenta de código aberto mais conhecida para orquestração de pipelines
+
+## Exercícios Guiados
+
+### Exercício Guiado 1 — Verificação de segurança de um programa
+
+**Enunciado:** Cite algumas maneiras de verificar a segurança de um programa.
+
+**Solução:** Especialistas humanos podem examinar o código. Muitas ferramentas de análise estática e dinâmica existem para detetar práticas de programação inadequadas que expõem um programa a ameaças de segurança. Outras ferramentas enviam informações maliciosas para programas em execução e verificam as suas reações.
+
+### Exercício Guiado 2 — Testes unitários para uma função
+
+**Enunciado:** Por que escrever vários testes unitários para uma única função de um programa?
+
+**Solução:** Uma função de programa geralmente precisa ser executada em muitas variedades de entrada, e cada variedade merece o seu próprio teste. Por exemplo, a função pode lidar com um valor de entrada zero de uma maneira específica. Também é necessário antecipar as entradas inválidas e escrever testes para mostrar que a função lida com elas adequadamente.
+
+### Exercício Guiado 3 — Diferença entre cascade e CI/CD
+
+**Enunciado:** Quais são as principais diferenças entre o modelo em cascata e o modelo CI/CD?
+
+**Solução:** O modelo em cascata é um processo linear e lento em que os requisitos são definidos no início e os testes ocorrem pouco antes do lançamento, o que torna as alterações complicadas e dispendiosas. O CI/CD, por outro lado, baseia-se em comunicação estreita entre a equipa, implementação rápida de correções e novos recursos, testes rigorosos e contínuos, e automação máxima de etapas desde a escrita do código até à implantação.
+
+### Exercício Guiado 4 — Ambientes de teste e produção
+
+**Enunciado:** Por que os testes devem ser realizados em sistemas diferentes dos sistemas de produção?
+
+**Solução:** Uma falha catastrófica não só pode derrubar um sistema de produção, como também corromper dados. Além disso, os testes competem pelo tempo do sistema e prejudicam o desempenho da máquina. Portanto, é recomendável configurar um ambiente de homologação que espelhe o ambiente de produção, com hardware e software semelhantes, para executar os testes sem riscos para os utilizadores.
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Melhoria de aplicativos legados
+
+**Enunciado:** Sua equipa herdou um aplicativo antigo que roda lentamente e ao qual é difícil adicionar recursos. Cite algumas maneiras de melhorar o aplicativo sem descartá-lo e escrever um novo do zero.
+
+
+
+<SolutionBlock>
+Primeiro, verifique se o projeto está sob controlo de versão, se ainda não for o caso. Depois de adicionar um novo recurso, execute testes de regressão para determinar onde o programa falha e designe programadores para descobrir quais funções são responsáveis por isso. Essas funções podem ser substituídas seletivamente. Os testes de desempenho podem identificar as funções específicas mais lentas, sendo mais fácil concentrar os esforços em corrigir ou substituir o código mais ineficiente. Se o código estiver numa linguagem que não é mais popular, considere adicionar recursos numa linguagem preferida pela equipa, garantindo que as funções na nova linguagem possam ser integradas às funções antigas.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Colaboração inter-equipas (InnerSource)
+
+**Enunciado:** Em projetos grandes, frequentemente, a Equipa A deseja que um recurso seja implementado numa parte do sistema mantida pela Equipa B, mas a Equipa B não vê o recurso como prioridade. Como a Equipa A pode codificar o recurso como parte do projeto da Equipa B?
+
+
+
+<SolutionBlock>
+A Equipa B pode permitir que a Equipa A crie uma nova ramificação, escreva o código do recurso e envie a ramificação para a Equipa B para incluir no seu projeto. A Equipa A, no entanto, não deve ter poderes para fazer o que quiser. A Equipa B deve fornecer documentação e ajuda para a Equipa A seguir os padrões do projeto. Um membro da Equipa B também deve rever o envio da Equipa A e executar todas as formas usuais de testes de integração. Essa forma de colaboração às vezes é chamada de InnerSource, porque se assemelha ao código aberto, mas ocorre dentro de uma única organização.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — TDD vs. testes tradicionais
+
+**Enunciado:** O que é o desenvolvimento orientado a testes (TDD) e quais são as suas principais vantagens?
+
+
+
+<SolutionBlock>
+No desenvolvimento orientado a testes (TDD), os programadores escrevem testes antes de escrever o código que desejam testar. Os defensores do TDD afirmam que ele preenche lacunas nos testes e ajuda a garantir que o código faça o que o programador deseja. Ao escrever primeiro o teste, o programador define claramente o comportamento esperado, o que orienta a implementação e facilita a deteção precoce de erros.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Fuzz testing
+
+**Enunciado:** O que é o fuzz testing e por que pode ser eficaz na deteção de vulnerabilidades?
+
+
+
+<SolutionBlock>
+O fuzz testing (ou fuzz testing) consiste em gerar sequências de caracteres aleatórios e enviá-los como entrada para um programa. Embora possa parecer perda de tempo, essa abordagem frequentemente revela vulnerabilidades que os testes comuns não detetam, uma vez que os caracteres aleatórios podem desencadear comportamentos inesperados no programa, como falhas de memória, erros de tratamento de entrada ou vulnerabilidades de segurança.
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T15 - 055.3 Gestão da comunidade]()
+→ Próximo: [T17 - 056.2 Gestão do código-fonte]()

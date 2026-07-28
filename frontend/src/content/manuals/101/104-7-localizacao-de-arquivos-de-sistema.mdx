@@ -1,0 +1,256 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="104.7 Localização de arquivos de sistema"
+  code="101"
+  topicNumber="T23"
+  objective="Usar comandos de busca para localizar arquivos no sistema de arquivos"
+  weight={2}
+  pages="LPIC-1 (101) - Version 5.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Comandos de Busca
+
+| Comando | Função |
+|---|---|
+| `find` | Buscar arquivos por critérios variados |
+| `locate` | Buscar arquivos usando banco de dados |
+| `updatedb` | Atualizar banco de dados do locate |
+| `which` | Caminho completo de um executável |
+| `whereis` | Localização de binários, manual e código-fonte |
+| `type` | Tipo e localização de um comando |
+
+### Filesystem Hierarchy Standard (FHS)
+
+| Diretório | Função |
+|---|---|
+| `/` | Raiz da hierarquia |
+| `/bin` | Binários essenciais para todos os usuários |
+| `/boot` | Arquivos de inicialização (kernel, initrd) |
+| `/dev` | Arquivos de dispositivos (físicos e virtuais) |
+| `/etc` | Arquivos de configuração do hospedeiro |
+| `/home` | Diretórios iniciais dos usuários |
+| `/lib` | Bibliotecas compartilhadas para /bin e /sbin |
+| `/media` | Mídias removíveis montadas pelo usuário |
+| `/mnt` | Pontos de montagem temporários |
+| `/opt` | Pacotes de software opcionais |
+| `/root` | Diretório inicial do superusuário |
+| `/run` | Dados variáveis de tempo de execução |
+| `/sbin` | Binários do sistema |
+| `/srv` | Dados de serviços (ex: /srv/www) |
+| `/tmp` | Arquivos temporários (limpo na inicialização) |
+| `/usr` | Dados de usuários de apenas leitura |
+| `/proc` | Sistema de arquivos virtual (processos) |
+| `/var` | Dados variáveis (logs, cache, fila, etc.) |
+
+### Locais de Arquivos Temporários
+
+| Diretório | Comportamento |
+|---|---|
+| `/tmp` | Pode ser limpo na inicialização |
+| `/var/tmp` | Não deve ser limpo na inicialização |
+| `/run` | Limpo na inicialização (anteriormente /var/run) |
+
+### Parâmetros do find
+
+| Parâmetro | Função |
+|---|---|
+| `-name PATTERN` | Buscar por nome (diferencia maiúsculas) |
+| `-iname PATTERN` | Buscar por nome (não diferencia maiúsculas) |
+| `-maxdepth N` | Profundidade máxima de busca |
+| `-mindepth N` | Profundidade mínima de busca |
+| `-mount` | Não mergulhar em FS montados |
+| `-fstype TYPE` | Restringir a tipo de FS |
+| `-user USERNAME` | Arquivos de um proprietário |
+| `-group GROUPNAME` | Arquivos de um grupo |
+| `-readable` | Arquivos legíveis pelo usuário atual |
+| `-writable` | Arquivos graváveis pelo usuário atual |
+| `-executable` | Arquivos executáveis pelo usuário atual |
+| `-perm NNNN` | Permissão exata |
+| `-perm -NNNN` | Pelo menos essa permissão |
+| `-empty` | Arquivos/diretórios vazios |
+| `-size N[c,k,M,G]` | Tamanho específico |
+| `-size +N` / `-size -N` | Maior/menor que N |
+| `-amin N` | Acessados há N minutos |
+| `-cmin N` | Atributos alterados há N minutos |
+| `-mmin N` | Modificados há N minutos |
+| `-atime N` | Acessados há N*24 horas |
+| `-ctime N` | Atributos alterados há N*24 horas |
+| `-mtime N` | Modificados há N*24 horas |
+
+### Parâmetros do locate
+
+| Parâmetro | Função |
+|---|---|
+| `-i` | Não diferenciar maiúsculas de minúsculas |
+| `-A` | Arquivos que correspondam a TODOS os padrões |
+| `-c` | Contar arquivos correspondentes |
+| `-e` | Verificar se o arquivo existe (banco de dados pode estar desatualizado) |
+
+### Parâmetros do updatedb (/etc/updatedb.conf)
+
+| Variável | Função |
+|---|---|
+| `PRUNEFS=` | Tipos de FS ignorados (ex: NFS, nfs) |
+| `PRUNENAMES=` | Nomes de diretórios ignorados |
+| `PRUNEPATHS=` | Caminhos ignorados |
+| `PRUNE_BIND_MOUNTS=` | yes/no — ignorar bind mounts |
+
+### Parâmetros do which
+
+| Parâmetro | Função |
+|---|---|
+| `-a` | Mostrar todos os caminhos para o executável |
+
+### Parâmetros do whereis
+
+| Parâmetro | Função |
+|---|---|
+| `-b` | Apenas binários |
+| `-m` | Apenas páginas de manual |
+| `-s` | Apenas código-fonte |
+
+### Parâmetros do type
+
+| Parâmetro | Função |
+|---|---|
+| `-a` | Mostrar todos os caminhos |
+| `-t` | Tipo de arquivo (alias, keyword, function, builtin, file) |
+
+### Comandos Comuns de Busca
+
+```bash
+# find — buscar arquivos .jpg no diretório atual
+find . -name '*.jpg'
+
+# find — busca case-insensitive
+find . -iname '*.jpg'
+
+# find — limitar profundidade
+find . -maxdepth 2 -name '*.txt'
+
+# find — por atributos
+find ~ -iname "*report*" -perm 0644 -atime 10 -size +1M
+
+# find — por tempo e tamanho
+find . -mtime -1 -size +100M
+
+# locate — buscar padrão
+locate jpg
+
+# locate — case-insensitive
+locate -i .jpg
+
+# locate — múltiplos padrões (AND)
+locate -A .jpg .zip
+
+# locate — contar
+locate -c .jpg
+
+# which — caminho do executável
+which bash
+
+# which — todos os caminhos
+which -a mkfs.ext3
+
+# whereis — binário + manual + fonte
+whereis locate
+
+# whereis — apenas manual
+whereis -m ifconfig
+
+# type — tipo de comando
+type -t locate
+type -t ll
+```
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — locate com arquivos existentes
+
+**Enunciado:** Quando locate é usado, os resultados são puxados de um banco de dados gerado por updatedb. No entanto, este banco de dados pode estar desatualizado, fazendo com que o locate mostre arquivos que não existem mais. Como fazer com que locate mostre apenas arquivos existentes em sua saída?
+
+
+
+<SolutionBlock>
+Adicione o parâmetro -e a locate:
+```bash
+locate -e PATTERN
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — find com maxdepth e mount
+
+**Enunciado:** Encontre qualquer arquivo no diretório ou subdiretórios atuais até 2 níveis abaixo, excluindo sistemas de arquivos montados, que contenham o padrão Status ou statute em seus nomes.
+
+
+
+<SolutionBlock>
+Lembre-se de que para -maxdepth também devemos levar em conta o diretório atual, de forma que queremos três níveis (o atual, mais 2 níveis para baixo):
+```bash
+find . -maxdepth 3 -mount -iname "*statu*"
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — find com fstype, permissões e tempo
+
+**Enunciado:** Limitando a pesquisa aos sistemas de arquivos ext4, encontre quaisquer arquivos sob /mnt que tenham no mínimo permissões de execução para o grupo, sejam legíveis para o usuário atual e tenham tido qualquer atributo alterado nas últimas 2 horas.
+
+
+
+<SolutionBlock>
+Use o parâmetro -fstype para limitar a tipos específicos de sistemas de arquivos. Um arquivo legível pelo usuário atual teria ao menos 4 no primeiro dígito de permissões, e um executável pelo grupo teria ao menos 1 no segundo dígito:
+```bash
+find /mnt -fstype ext4 -perm -410 -cmin -120
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Arquivos vazios antigos
+
+**Enunciado:** Encontre arquivos vazios que foram criados há mais de 30 dias e estão pelo menos dois níveis abaixo do diretório atual.
+
+
+
+<SolutionBlock>
+```bash
+find . -empty -mtime +30 -mindepth 3
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 5 — Arquivos legíveis por grupo
+
+**Enunciado:** Considere que os usuários carol e john fazem parte do grupo mkt. Encontre no diretório pessoal de john quaisquer arquivos que também possam ser lidos por carol.
+
+
+
+<SolutionBlock>
+Considerando que os dois são membros do mesmo grupo, precisamos de pelo menos um r (4) nas permissões de grupo:
+```bash
+find /home/john -perm -040
+```
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T22 - 104.6 Criar e alterar links simbólicos e hardlinks]()
+→ Fim: [101 - Visão Geral]()

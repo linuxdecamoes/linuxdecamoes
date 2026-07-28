@@ -1,0 +1,277 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="110.1 Tarefas administrativas de segurança"
+  code="102"
+  topicNumber="T17"
+  objective="Executar tarefas administrativas de segurança"
+  weight={3}
+  pages="LPIC-1 (102) - Version 5.0"
+  accent="iris"
+/>
+
+
+
+## Resumo Conciso
+
+### Permissões especiais SUID e SGID
+
+| Permissão | Numérica | Simbólica | Efeito |
+|-----------|----------|-----------|--------|
+| SUID | 4000 | `s`/`S` no bit de execução do proprietário | Executa com privilégios do proprietário |
+| SGID (ficheiro) | 2000 | `s`/`S` no bit de execução do grupo | Executa com privilégios do grupo |
+| SGID (directório) | 2000 | `s`/`S` no bit de execução do grupo | Ficheiros criados herdam propriedade do grupo |
+
+### Comandos find para permissões especiais
+
+| Comando | O que encontra |
+|---------|----------------|
+| `find / -perm 4000` | Ficheiros com **apenas** SUID |
+| `find / -perm -4000` | Ficheiros com SUID (e outras permissões) |
+| `find / -perm /6000` | Ficheiros com SUID **ou** SGID |
+
+### Gestão de senhas e expiração
+
+| Comando | Função |
+|---------|--------|
+| `passwd -S` | Estado da senha (P/L/NP), datas de expiração (ver T06) |
+| `passwd -l user` | Bloquear conta (ver T06) |
+| `passwd -u user` | Desbloquear conta (ver T06) |
+| `passwd -d user` | Remover senha |
+| `chage -l user` | Listar informações de expiração (ver T06) |
+| `chage -M 365 user` | Validade máxima da senha (dias) |
+| `chage -m 1 user` | Dias mínimos entre alterações |
+| `chage -d 0 user` | Forçar alteração no próximo login |
+| `chage -E 2050-12-13 user` | Data de expiração da conta |
+| `usermod -L user` / `usermod -U user` | Bloquear / desbloquear senha |
+
+### Ferramentas de descoberta de portas abertas
+
+| Comando | Função |
+|---------|--------|
+| `lsof -i` | Lista todos os ficheiros de rede |
+| `lsof -i :22` | Ficheiros de rede na porta 22 |
+| `lsof -i@192.168.1.7:22,80` | Filtrar por IP e portas |
+| `fuser .` | Processos que acedem um ficheiro/directório |
+| `fuser -vn tcp 80` | Processos na porta TCP 80 |
+| `netstat -lt` | Portas TCP ouvintes |
+| `netstat -lu` | Portas UDP ouvintes |
+| `netstat -lute` | Portas ouvintes com info estendida |
+| `nmap host` | Scanner de portas |
+| `nmap -p 22 host` | Escanear porta específica |
+| `nmap -p 1-65535 host` | Escanear todas as portas |
+| `nmap -p- host` | Atalho para todas as portas |
+
+### Limites de recursos (ulimit)
+
+| Opção | Recurso |
+|-------|---------|
+| `-S` / `-H` | Limites soft (flexíveis) / hard (rígidos) |
+| `-f` | Tamanho máximo de ficheiros escritos |
+| `-m` | Tamanho máximo do RSS |
+| `-v` | Memória virtual máxima |
+| `-u` | Nº máximo de processos por utilizador |
+| `-a` | Mostrar todos os limites soft |
+
+**Persistência:** valores definidos em `/etc/security/limits.conf`.
+
+### Monitorização de sessões
+
+| Comando | Função |
+|---------|--------|
+| `last` | Últimos logins (baseado em `/var/log/wtmp`) |
+| `lastb` | Tentativas de login incorretas |
+| `who` | Utilizadores atualmente logados |
+| `w` | Utilizadores logados + o que estão a fazer |
+
+### sudo e /etc/sudoers
+
+| Conceito | Detalhe |
+|----------|---------|
+| `su - user` | Trocar de utilizador (carrega ambiente) |
+| `sudo cmd` | Executar comando como root |
+| `sudo -u user cmd` | Executar como outro utilizador |
+| `/etc/sudoers` | Ficheiro de política de segurança do sudo |
+| `visudo` | Editar `/etc/sudoers` com validação de sintaxe |
+| `Host_Alias` | Alias de hosts no sudoers |
+| `User_Alias` | Alias de utilizadores no sudoers |
+| `Cmnd_Alias` | Alias de comandos no sudoers |
+| `%grupo` | Membros de um grupo no sudoers |
+
+| SUID | 4000 | s, S | `find -perm 4000` ou `find -perm u+s` |
+|---|---|---|---|
+| SGID | 2000 | s, S | `find -perm 2000` ou `find -perm g+s` |
+
+### Exercício Guiado 2 — Busca produtiva de SUID/SGID em /usr/bin
+
+**Enunciado:** Encontre todos os ficheiros com SUID, SGID e SUID ou SGID em `/usr/bin`.
+
+**Solução:**
+```bash
+# SUID (e outras permissões)
+find /usr/bin -perm -4000
+# ou
+find /usr/bin -perm -u+s
+
+# SGID (e outras permissões)
+find /usr/bin -perm -2000
+# ou
+find /usr/bin -perm -g+s
+
+# SUID ou SGID
+find /usr/bin -perm /6000
+```
+
+### Exercício Guiado 3 — Comandos chage para o utilizador mary
+
+**Enunciado:** Forneça os comandos `chage` corretos para cada cenário.
+
+**Solução:**
+
+| Significado | Comando |
+|-------------|---------|
+| Senha válida por 365 dias | `chage -M 365 mary` |
+| Alterar senha no próximo login | `chage -d 0 mary` |
+| Mínimo 1 dia entre alterações | `chage -m 1 mary` |
+| Desativar expiração da senha | `chage -M 99999 mary` |
+| Alterar senha a qualquer momento | `chage -m 0 mary` |
+| Aviso 7 dias + conta expira 20/08/2050 | `chage -W 7 -E 2050-08-20 mary` |
+| Imprimir informações de validade | `chage -l mary` |
+
+### Exercício Guiado 4 — Utilitários de rede
+
+**Enunciado:** Preencha a tabela com o utilitário apropriado para cada ação.
+
+**Solução:**
+
+| Ação | Comando |
+|------|---------|
+| Ficheiros de rede do host 192.168.1.55 na porta 22 (lsof) | `lsof -i@192.168.1.55:22` |
+| Processos na porta padrão do Apache (fuser) | `fuser -vn tcp 80` |
+| Sockets UDP ouvintes (netstat) | `netstat -lu` |
+| Escanear portas 80-443 em 192.168.1.55 (nmap) | `nmap -p 80-443 192.168.1.55` |
+
+### Exercício Guiado 5 — Limites ulimit do RSS
+
+**Enunciado:** Execute tarefas relativas ao RSS e ulimit como utilizador regular.
+
+**Solução:**
+```bash
+# Limites soft do RSS
+ulimit -m          # ou ulimit -Sm
+
+# Limites rígidos do RSS
+ulimit -Hm
+
+# Definir limites soft para 5000 KB
+ulimit -Sm 5000
+
+# Definir limites rígidos para 10000 KB
+ulimit -Hm 10000
+
+# Aumentar limites rígidos para 15000 KB
+# Resultado: ERRO — utilizadores comuns não podem aumentar limites rígidos
+```
+
+### Exercício Guiado 6 — Análise de saída do last
+
+**Enunciado:** Analise `carol pts/0 192.168.1.4 Sun May 31 14:16 - 14:22 (00:06)`.
+
+**Solução:**
+- **Host remoto?** Sim, o endereço IP 192.168.1.4 está na terceira coluna.
+- **Duração?** Seis minutos (última coluna).
+- **Terminal de texto clássico?** Não, `pts/0` indica Pseudo Terminal Slave (emulador gráfico).
+
+### Exercício Guiado 7 — sudoers e aliases
+
+**Enunciado:** Dado o sudoers com `User_Alias ADMINS = carol, %sudo, PRIVILEGED_USERS, !REGULAR_USERS` e `User_Alias REGULAR_USERS = john, mary, alex`, pode alex verificar o status do Apache em qualquer host?
+
+**Solução:** Não. alex é membro de REGULAR_USERS, que está excluído (!) de ADMINS. Apenas ADMINS (e %sudo/root) podem executar o comando.
+
+---
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Sticky bit
+
+**Enunciado:** Além de SUID e SGID, existe o sticky bit, usado em directórios como `/tmp`. Defina, encontre e remova o sticky bit em `~/temporal`.
+
+
+
+<SolutionBlock>
+```bash
+# Definir sticky bit
+chmod +t ~/temporal
+# ou
+chmod 1755 ~/temporal
+
+# Encontrar directórios com sticky bit no directório inicial
+find ~ -perm -1000
+
+# Remover sticky bit
+chmod -t ~/temporal
+# ou
+chmod 0755 ~/temporal
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Senha bloqueada em /etc/shadow
+
+**Enunciado:** Quando a senha de um utilizador é bloqueada via `passwd -l` ou `usermod -L`, como saber olhando em `/etc/shadow`?
+
+
+
+<SolutionBlock>
+Um ponto de exclamação (`!`) aparece no segundo campo, logo após o nome de login do utilizador afetado. Exemplo: `mary:!$6$gOg9xJgv...`.
+
+```bash
+# Verificar o campo de senha no shadow (precisa de root)
+sudo grep mary /etc/shadow
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Equivalente do chage -E no usermod
+
+**Enunciado:** Qual o equivalente do comando `chage -E date username` no `usermod`?
+
+
+
+<SolutionBlock>
+```bash
+usermod -e date username
+# ou
+usermod --expiredate date username
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Escanear todas as portas com nmap
+
+**Enunciado:** Forneça dois comandos `nmap` diferentes para escanear todas as 65535 portas no host local.
+
+
+
+<SolutionBlock>
+```bash
+nmap -p 1-65535 localhost
+# ou
+nmap -p- localhost
+```
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T16 - 109.4 Configurar DNS cliente]()
+→ Próximo: [T18 - 110.2 Configurar a segurança do host]()

@@ -1,0 +1,219 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="Criando, Movendo e Deletando Arquivos"
+  code="010"
+  topicNumber="T08"
+  objective="2.4"
+  weight={3}
+  pages="Linux Essentials (010) - Version 4.1"
+  accent="sage"
+/>
+
+
+
+## Resumo Conciso
+
+A linha de comando é a forma mais eficaz de gerir ficheiros em Linux. Um **ficheiro** é uma coleção de dados com nome e atributos (data de acesso/modificação, etc.); um **diretório** é um tipo especial de ficheiro que organiza outros ficheiros.
+
+### Maiúsculas e minúsculas (case-sensitive)
+- Ao contrário do Windows, **Linux diferencia maiúsculas de minúsculas**: `/etc/` e `/ETC/` são diretórios distintos. `cd ETC` falha se só existir `etc`.
+
+### Diretórios — `mkdir` / `rmdir`
+| Comando | Ação | Opção útil |
+|---------|------|-----------|
+| `mkdir` | cria diretórios | **`-p`** cria os diretórios pai inexistentes |
+| `rmdir` | remove **apenas diretórios vazios** | **`-p`** remove a cadeia de pais vazios (estilo `mkdir -p`) |
+
+### Ficheiros — `touch` / `echo >`
+- **`touch ficheiro`** — cria ficheiro vazio; se já existir, **atualiza o timestamp** (conteúdo inalterado).
+- **`echo "texto" > ficheiro`** — cria/escreve (sobrescreve!). **`>>`** anexa no fim.
+- `cat ficheiro` mostra o conteúdo.
+
+### Mover e renomear — `mv`
+- `mv` faz **ambas** as operações. O **último argumento é o destino**: se for um diretório, os ficheiros são movidos para dentro dele; caso contrário, é interpretado como novo nome.
+- **Sobrescreve sem avisar** por defeito. Opções: **`-i`** (pede confirmação), **`-n`**/**`--no-clobber`** (impede sobrescrever), **`-v`** (detalhado).
+
+### Copiar — `cp`
+- Por defeito, `cp` só funciona em ficheiros individuais. **`-r`** é obrigatório para copiar diretórios (e todo o conteúdo).
+| Opção | Efeito |
+|-------|--------|
+| **`-r`** | copia recursivamente (diretórios) |
+| **`-i`** | confirma antes de sobrescrever |
+| **`-p`** | preserva modo, dono e timestamps do original |
+| **`-u`** | só copia se o destino não existir ou for mais antigo que a origem |
+| **`-v`** | saída detalhada |
+
+### Remover — `rm`
+- `rm` apaga ficheiros (por defeito não atua em diretórios). **`-r`** torna-o recursivo (diretório + subdiretórios + conteúdo); **`-i`** pede confirmação antes de cada ação → **`rm -ri`** é o "modo seguro".
+
+### Globbing (correspondência de padrões)
+Linguagem simples do shell para especificar grupos de ficheiros:
+
+| Padrão | Significado | Exemplo |
+|--------|-------------|---------|
+| `*` | qualquer nº de caracteres (incluindo nenhum) | `star*` → star10, star1100, star2002 |
+| `?` | exatamente um caractere qualquer | `question?3` → question13, question23 |
+| `[abc]` | um caractere do conjunto | `file[1a5]` → file1, file5, filea |
+| `[a-z]` | um caractere do intervalo | `file[1-3]` → file1, file2, file3 |
+| `[!abc]` ou `[^abc]` | qualquer caractere **exceto** os do conjunto | `file[^a]` → todos exceto filea |
+| `[:classe:]` | classe POSIX dentro de `[ ]` | `[:digit:]`, `[:alpha:]`, `[:upper:]`, `[:lower:]`, `[:space:]` |
+
+- **Escape:** `\` antes de um metacaractere anula a sua interpretação (`ls star\*` procura o nome literal "star*").
+- O glob é **expandido pelo shell** antes de o comando ser executado — `*` não significa nada para o próprio comando.
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+> Exercícios da autoria do agente, para praticares no terminal Linux. Consolidam o tópico 2.4 (`mkdir`, `touch`, `mv`, `cp`, `rm`, globbing).
+> *Dica:* trabalha num diretório de testes em `/tmp` ou em `~/lab24`. As soluções estão em `<details>` — tenta primeiro.
+
+### Exploratório 1 — Estruturar um projeto com `mkdir -p` e `touch`
+Cria, **num só comando `mkdir -p`**, a árvore `projeto/{src,docs,tests}` e depois preenche-a com ficheiros vazios.
+
+
+
+<SolutionBlock>
+```bash
+# 1. Criar a árvore de uma só vez com -p
+mkdir -p projeto/src projeto/docs projeto/tests
+
+# 2. Criar ficheiros vazios
+touch projeto/src/main.py projeto/src/utils.py
+touch projeto/docs/README.md
+touch projeto/tests/test_main.py
+
+# 3. Verificar a estrutura
+find projeto
+```
+
+**Resultado esperado:**
+```
+projeto
+projeto/src
+projeto/src/main.py
+projeto/src/utils.py
+projeto/docs
+projeto/docs/README.md
+projeto/tests
+projeto/tests/test_main.py
+```
+**Aprendido:** sem `-p`, o `mkdir` recusa-se a criar `projeto/src` se `projeto` ainda não existir. Com `-p`, os pais são criados automaticamente.
+</SolutionBlock>
+
+
+
+### Exploratório 2 — Renomear com `mv` e fazer backup com `cp -r`
+Dentro do `projeto`, renomeia `docs/README.md` para `docs/LEIAME.md` e cria uma cópia de segurança de todo o projeto em `projeto_backup`.
+
+
+
+<SolutionBlock>
+```bash
+# Renomear (mv = mudar o nome)
+mv projeto/docs/README.md projeto/docs/LEIAME.md
+
+# Copiar recursivamente o diretório inteiro
+cp -r projeto projeto_backup
+
+# Confirmar
+ls projeto/docs
+ls -R projeto_backup
+```
+
+**Aprendido:** `cp` sem `-r` recusa-se a copiar diretórios (`cp: omitting directory`); `-r` copia a árvore completa. Como `projeto_backup` não existia, é criado e preenchido com o conteúdo de `projeto`.
+</SolutionBlock>
+
+
+
+### Exploratório 3 — Limpeza segura com `rm -ri`
+Remove a pasta de backup **com confirmação interativa**, observando as perguntas que o `rm` faz em cada nível.
+
+
+
+<SolutionBlock>
+```bash
+rm -ri projeto_backup
+```
+
+**Interação esperada:**
+```
+rm: descend into directory 'projeto_backup'? y
+rm: descend into directory 'projeto_backup/src'? y
+rm: remove regular empty file 'projeto_backup/src/main.py'? y
+...
+rm: remove directory 'projeto_backup'? y
+```
+**Aprendido:** `-r` percorre a árvore; `-i` transforma cada remoção numa pergunta — protege contra apagar o ficheiro errado por distracção.
+</SolutionBlock>
+
+
+
+### Exploratório 4 — Atalhos com `ln` (ligações simbólicas)
+*(Bónus — o `ln` é um utilitário de gestão de ficheiros relacionado, embora não detalhado na Lição 2.4.)* Cria, dentro de `projeto`, um atalho (symlink) para `src/main.py` chamado `atalho_main` e confirma que ambos apontam para o mesmo conteúdo.
+
+
+
+<SolutionBlock>
+```bash
+cd projeto
+
+# Criar ligação simbólica: ln -s <alvo> <nome_do_atalho>
+ln -s src/main.py atalho_main
+
+# Ver a seta -> que indica o alvo
+ls -l atalho_main
+# lrwxrwxrwx ... atalho_main -> src/main.py
+
+# Ler através do atalho (mesmo conteúdo do alvo)
+cat atalho_main
+```
+
+**Aprendido:** `ln -s` cria uma **ligação simbólica** (um ponteiro). O `ls -l` mostra `atalho_main -> src/main.py`. Editar por qualquer dos nomes altera o mesmo ficheiro. Se apagares o alvo, o atalho fica "partido".
+</SolutionBlock>
+
+
+
+### Exploratório 5 — Ginástica de globbing
+Cria um conjunto de ficheiros e usa **cada tipo de glob** (`*`, `?`, `[abc]`, `[^…]`, classe POSIX) para listar grupos diferentes.
+
+
+
+<SolutionBlock>
+```bash
+mkdir -p glob_lab && cd glob_lab
+
+# Preparar ficheiros de teste
+touch relatorio2021.txt relatorio2022.txt relatorio2023.txt
+touch nota1.txt nota2.txt nota10.txt
+touch IMG_001.jpg IMG_002.jpg IMG_010.jpg
+
+# 1. *  → qualquer nº de caracteres
+ls relatorio*.txt        # relatorio2021/2022/2023.txt
+
+# 2. ?  → exatamente um caractere
+ls nota?.txt             # nota1.txt nota2.txt  (não nota10!)
+
+# 3. [abc] → um caractere do conjunto
+ls IMG_00[12].jpg        # IMG_001.jpg IMG_002.jpg
+
+# 4. [^...] → negação
+ls *[^0-9].* 2>/dev/null # nomes cujo último car. antes do ponto NÃO é dígito
+
+# 5. classe POSIX [:digit:]
+ls nota:digit:.txt   # nota1.txt nota2.txt
+```
+
+**Reflexão:** `nota?.txt` exclui `nota10.txt` porque `?` é **um só** caractere. Para dois dígitos usarias `nota:digit::digit:.txt` ou `nota??.txt`.
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T07 - Usando diretórios e listando arquivos]()
+→ Próximo: [T09 - Empacotando arquivos na linha de comando]()

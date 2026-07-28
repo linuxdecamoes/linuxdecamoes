@@ -1,0 +1,308 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="Gerenciando permissões e donos de ficheiros"
+  code="010"
+  topicNumber="T18"
+  objective="5.3"
+  weight={2}
+  pages="Linux Essentials (010) - Version 4.1"
+  accent="sage"
+/>
+
+
+
+## Resumo Conciso
+
+### Porquê permissões?
+Linux é **multiutilizador**: precisa de rastrear o **dono** de cada ficheiro e quem pode executar cada ação. Cada ficheiro tem **3 conjuntos de permissões** — para o **proprietário (user/u)**, para o **grupo (group/g)** e para os **demais (others/o)**.
+
+### `ls -l` — o que significa cada coluna
+
+| Coluna | Significado |
+|--------|-------------|
+| 1ª (10 chars) | **Tipo** (1º char) + **permissões** (3 grupos de 3: `rwx` para u, g, o) |
+| 2ª | Nº de **links físicos** (diretório = nº de subdiretórios + `.` + `..`) |
+| 3ª / 4ª | **Utilizador** / **grupo** proprietários |
+| 5ª | Tamanho em bytes (use `-h` para formato legível: K, M, G) |
+| 6ª | Data/hora da última modificação |
+| 7ª | Nome do ficheiro |
+
+Parâmetros úteis do `ls`: `-l` (longo), `-h` (legível), `-a` (ocultos), `-d` (info do próprio diretório, em vez do conteúdo), `-i` (inode). Combináveis: `ls -lah`.
+
+### Tipos de ficheiro (1º caractere de `ls -l`)
+
+| Char | Tipo | | Char | Tipo |
+|------|------|---|------|------|
+| `-` | ficheiro normal | | `b` | dispositivo de bloco (ex.: `/dev/sda`) |
+| `d` | diretório | | `c` | dispositivo de caractere (ex.: `/dev/ttyS0`) |
+| `l` | link simbólico | | `s` | socket |
+
+> ⚠️ Não alterar permissões de dispositivos `b`/`c`/`s` sem saber — pode parar o sistema.
+
+### Permissões — ficheiros vs. diretórios
+
+| Letra | Octal | Em **ficheiro** | Em **diretório** |
+|-------|-------|----------------|------------------|
+| `r` | 4 | ler conteúdo | listar nomes (não implica ler os ficheiros) |
+| `w` | 2 | editar/remover | criar/apagar/renomear ficheiros dentro dele |
+| `x` | 1 | executar | "entrar" no diretório (aceder a ficheiros pelo nome) |
+
+> Curiosidade prática: num diretório sem `r` mas com `x`, pode-se executar um script conhecendo o caminho completo, mas não listar o conteúdo.
+
+### Verificação de permissões (ordem)
+O sistema só aplica **um** conjunto: se és o **dono** → só as permissões de `u` contam (mesmo que `g`/`o` sejam mais permissivas); senão, se pertences ao **grupo** → as de `g`; senão → as de `o`.
+
+### `chmod` — alterar permissões
+
+**Modo simbólico** — controle fino, sem mexer no resto:
+- Quem: `u` `g` `o` `a` (todos)
+- Ação: `+` (conceder) `-` (revogar) `=` (definir exato)
+- O quê: `r` `w` `x`
+- Vários separados por vírgula: `chmod u+x,go-wx emptyfile`
+- Recursivo: `chmod -R` (⚠️ cuidado — altera em massa)
+
+**Modo numérico (octal, 3 dígitos)** — definir tudo de uma vez:
+- Cada dígito = soma de `r`(4) + `w`(2) + `x`(1). `rwx`=7, `r-x`=5, `r--`=4, `---`=0.
+- Ordem: **u g o**. Ex.: `chmod 660` → `rw-rw----`; `chmod 754` → `rwxr-xr--`.
+- `chmod` lê dígitos "de trás pra frente" (menos→mais significativo): `chmod 4` mexe só em `o`; `chmod 44` mexe em `g` e `o`; etc.
+- **Dica:** dígito ímpar → ficheiro executável.
+
+| Quando usar | Modo |
+|-------------|------|
+| Definir um valor exato (ex.: `640`) | **numérico** |
+| Mexer só numa permissão sem tocar nas outras (ex.: `u+x`) | **simbólico** |
+
+### `chown` / `chgrp` — alterar dono
+```
+chown user:group ficheiro    # muda ambos
+chown carol ficheiro         # só utilizador
+chown :students ficheiro     # só grupo
+chgrp students ficheiro      # só grupo (alternativa)
+```
+- O dono **não precisa** de pertencer ao grupo proprietário, mas precisa de ser membro do grupo para lhe transferir a propriedade.
+- Sem ser **root**, não se pode alterar dono de ficheiros alheios (`Operation not permitted`).
+
+### Consultar grupos
+- `groups` → grupos do utilizador atual. `groups carol` → grupos de `carol`.
+- `sudo groupmems -g cdrom -l` → lista membros de um grupo (só corre como root).
+
+### Permissões especiais (4º dígito octal)
+
+| Bit | Octal | Símbolo | Onde aparece | Efeito |
+|-----|-------|---------|--------------|--------|
+| **Sticky** | 1 | `t`/`T` | outros (3º grupo) | Em diretórios: só o dono do ficheiro (ou do diretório) pode apagar/renomear. Ex.: `/tmp`. |
+| **SGID** | 2 | `s`/`S` | grupo (2º grupo) | Executável: corre com privilégios do **grupo**. Diretório: novos ficheiros **herdam o grupo** do diretório pai. |
+| **SUID** | 4 | `s`/`S` | user (1º grupo) | Executável: corre com privilégios do **utilizador dono** (ex.: `passwd`). |
+
+- **Notação numérica de 4 dígitos:** `chmod 1755` (sticky), `chmod 2755` (SGID), `chmod 4755` (SUID), `chmod 6755` (SUID+SGID).
+- **Maiúsculas vs. minúsculas:** `s`/`t` minúsculo = bit ativo **e** `x` presente; `S`/`T` maiúsculo = bit ativo **mas sem** `x`. (Remover o `x` com SUID ativo mostra `S`.)
+
+> 💡 `umask` (bónus, fora do texto 5.3): define as permissões **padrão** que novos ficheiros/diretórios **não** terão. `umask 022` → ficheiros `644`, diretórios `755`. Ver exploratório 5.
+
+- 1 root disk 8, 17 Dec 21 18:51 /dev/sdb1`. Que tipo de ficheiro é `sdb1`? E quem pode escrever nele?*
+
+**Solução:** O primeiro char `b` = **dispositivo de bloco** (normalmente um disco interno/externo). Podem escrever nele o **proprietário (`root`)** e todos os membros do grupo **`disk`**.
+
+### Guiado 6 — Converter simbólico → octal de 4 dígitos
+
+**Enunciado:** *Escreva as permissões em notação numérica de 4 dígitos para:*
+
+| Arquivo | Permissões |
+|---------|------------|
+| `Another_Directory` | `drwxr-xr-t` |
+| `foo.bar` | `----r--r--` |
+| `HugeFile.zip` | `-rw-rw-r--` |
+| `Sample_Directory` | `drwxr-sr-x` |
+
+**Solução (oficial):**
+
+| Arquivo | Octal | Justificação |
+|---------|-------|--------------|
+| `Another_Directory` | **`1755`** | `1` = sticky bit; `755` = `rwx` `r-x` `r-x` |
+| `foo.bar` | **`0044`** | `0` = sem especiais; `00` = `---` `---`; `44` = `r--` `r--` (grupo/outros só leitura) |
+| `HugeFile.zip` | **`0664`** | `0` = sem especiais; `66` = `rw-` `rw-`; `4` = `r--` |
+| `Sample_Directory` | **`2755`** | `2` = SGID; `755` = `rwx` `r-x` `r-x` |
+
+---
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+> Exercícios da autoria do agente, para praticares diretamente no terminal Linux. Consolidam o tópico 5.3 com comandos reais.
+> *Dica:* precisas de uma sessão Linux (física, VM ou WSL). As soluções estão em `<details>` para tentares primeiro.
+
+### Exploratório 1 — Ler `ls -l` e traduzir para octal (e vice-versa)
+Cria 3 ficheiros, define permissões **diferentes** em cada um com `chmod` numérico e, **sem olhar**, prevê o simbólico. Depois confirma com `ls -l`. Por fim, converte manualmente octal→simbólico.
+
+
+
+<SolutionBlock>
+```bash
+# Preparar ficheiros de teste
+touch a.txt b.txt c.txt
+
+# Definir permissões (prevê o resultado antes de executar!)
+chmod 755 a.txt   # expectativa: rwxr-xr-x
+chmod 640 b.txt   # expectativa: rw-r-----
+chmod 600 c.txt   # expectativa: rw-------
+
+# Confirmar
+ls -l a.txt b.txt c.txt
+```
+
+**Truque de conversão octal → simbólico:** soma `r`=4, `w`=2, `x`=1.
+- `7`=`rwx`, `6`=`rw-`, `5`=`r-x`, `4`=`r--`, `0`=`---`.
+
+**Verificação rápida com `stat` (mostra octal e simbólico juntos):**
+```bash
+stat -c '%a %A %n' a.txt b.txt c.txt
+#   %a = octal   %A = simbólico   %n = nome
+```
+</SolutionBlock>
+
+
+
+### Exploratório 2 — `chmod` simbólico (adicionar/remover/definir)
+A partir de um ficheiro com `644` (`rw-r--r--`), faz **em passos separados**: dar execução ao dono (`u+x`), tirar leitura aos outros (`o-r`), e definir o grupo exatamente como `rw-` (`g=rw`). Confirma o estado a cada passo.
+
+
+
+<SolutionBlock>
+```bash
+touch script.sh
+chmod 644 script.sh
+ls -l script.sh        # -rw-r--r--
+
+chmod u+x script.sh
+ls -l script.sh        # -rwxr--r--
+
+chmod o-r script.sh
+ls -l script.sh        # -rwxr-----
+
+chmod g=rw script.sh
+ls -l script.sh        # -rwxrw----
+
+# Bónus: recursivo num diretório inteiro (cuidado!)
+mkdir -p playground/sub
+echo "x" > playground/f1
+echo "y" > playground/sub/f2
+chmod -R u+rwX,go-rwx playground/   # X = executa só em diretórios/ficheiros já executáveis
+ls -lR playground/
+```
+
+**O que aprendeste:** `+`/`-` mexem numa permissão isolada; `=` define um valor exato (sobrescrevendo o grupo); `X` (maiúsculo) é mais seguro que `x` em `-R` porque só adiciona execução a diretórios.
+</SolutionBlock>
+
+
+
+### Exploratório 3 — `chown`, `chgrp`, `groups` e `groupmems`
+Cria um grupo de teste, adiciona-te a ele, cria um ficheiro e transfere-lhe a propriedade do grupo de três formas diferentes.
+
+
+
+<SolutionBlock>
+```bash
+# (precisa de sudo)
+
+# 1. Criar grupo e ficheiro
+sudo groupadd projetox
+touch relatorio.txt
+
+# 2. Ver os teus grupos atuais
+groups
+
+# 3. Mudar SÓ o grupo do ficheiro (3 formas equivalentes)
+sudo chgrp projetox relatorio.txt
+sudo chown :projetox relatorio.txt        # alternativa
+ls -l relatorio.txt
+
+# 4. Mudar utilizador E grupo ao mesmo tempo
+sudo chown $(whoami):projetox relatorio.txt
+ls -l relatorio.txt
+
+# 5. Listar membros do grupo
+sudo groupmems -g projetox -l
+
+# 6. Adicionar-te ao grupo (efetiva após novo login)
+sudo groupmems -g projetox -a $(whoami)
+groups $(whoami)
+```
+
+**Nota:** `chown user:grupo` é a forma mais comum; `chgrp` existe para mudar só o grupo. Sem `sudo` só podes atribuir grupos dos quais és membro.
+</SolutionBlock>
+
+
+
+### Exploratório 4 — Bits especiais: SGID + Sticky num diretório partilhado
+Cria um diretório `box` do grupo `users` (ou um grupo de teste) onde (a) os novos ficheiros **herdem** automaticamente o grupo e (b) cada utilizador só possa apagar **os seus próprios** ficheiros.
+
+
+
+<SolutionBlock>
+```bash
+# (precisa de sudo)
+sudo groupadd equipa 2>/dev/null
+mkdir box
+
+# Grupo proprietário
+sudo chown :equipa box
+
+# SGID (herdar grupo) + escrita ao grupo + Sticky (só dono apaga)
+sudo chmod g+wxs,o+t box
+# Equivalente numérico: sudo chmod 3775 box  (3=SGID+sticky, 775=rwxrwxr-x; com SGID→rws no grupo, sticky→r-t nos outros, resultado drwxrwsr-t)
+
+ls -ld box
+# expectativa: drwxrwsr-t ... box   (repara no 's' do grupo e no 't' dos outros)
+```
+
+**Leitura do resultado:** o `s` no 2º grupo = **SGID** ativo (ficheiros novos herdam o grupo `equipa`); o `t` no 3º grupo = **sticky** (só o dono do ficheiro — ou do diretório — pode apagá-lo). É exatamente a lógica de `/tmp`.
+
+**Verificar o sticky bit noutro sítio conhecido:**
+```bash
+ls -ld /tmp        # drwxrwxrwt  -> sticky bit ativo
+```
+</SolutionBlock>
+
+
+
+### Exploratório 5 — `umask`: permissões padrão dos novos ficheiros
+*(Bónus — fora do texto do manual 5.3, mas essencial na prática.)* Descobre a tua `umask` atual, prevê as permissões de um novo ficheiro/diretório, e testa como mudar a `umask` afeta o que é criado de seguida.
+
+
+
+<SolutionBlock>
+```bash
+# 1. Ver a umask atual (em octal simbólico)
+umask               # ex.: 0022
+umask -S            # ex.: u=rwx,g=rx,o=rx  (formato legível)
+
+# 2. Previsão: a umask é o que é RETIRADO às permissões máximas
+#    ficheiro: 666 - umask   |   diretório: 777 - umask
+#    Com 0022 -> ficheiro 644 (rw-r--r--), diretório 755 (rwxr-xr-x)
+
+# 3. Testar
+touch antes.txt
+ls -l antes.txt     # -rw-r--r--  (644)
+
+# 4. Mudar temporariamente para algo mais restritivo
+umask 077
+touch depois.txt
+ls -l depois.txt    # -rw-------  (600)  só o dono lê/escreve
+
+# 5. Restaurar (só dura nesta shell)
+umask 022
+```
+
+**O que aprendeste:** `umask` = máscara de permissões **negadas** por omissão. Arquivos nunca nascem executáveis (máximo `666`); diretórios nascem até `777`. Alterar com `umask NNN` só dura a sessão de shell — para tornar permanente, põe-se no `~/.bashrc` ou `/etc/profile`.
+</SolutionBlock>
+
+
+
+---
+
+## 🔗 Ligações
+
+← Anterior: [T17 - Criando Utilizadores e Grupos]() / → Próximo: [T19 - Diretórios e ficheiros especiais]()

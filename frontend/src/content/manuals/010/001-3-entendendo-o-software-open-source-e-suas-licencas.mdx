@@ -1,0 +1,275 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="Entendendo o Software Open Source e suas Licenças"
+  code="010"
+  topicNumber="T03"
+  objective="1.3"
+  weight={1}
+  pages="Linux Essentials (010) - Version 4.1"
+  accent="sage"
+/>
+
+
+
+## Resumo Conciso
+
+### Software Livre vs. Software de Código Aberto
+**"Livre" não significa "gratuito"** — como resume **Richard Stallman** (fundador da FSF): *"pense em 'livre' como em 'livre expressão', não como em 'cerveja grátis'"*. Independentemente do preço, um software é **livre** se cumprir as **quatro liberdades essenciais** (numeração a partir de zero):
+
+| Liberdade | Direito | Requer |
+|-----------|---------|--------|
+| **0** | Executar o programa **para qualquer finalidade** | — |
+| **1** | **Estudar** como funciona e **alterá-lo** | acesso ao **código fonte** |
+| **2** | **Redistribuir cópias** (para ajudar os outros) | — |
+| **3** | **Distribuir versões modificadas** | acesso ao **código fonte** |
+
+> Quem distribuir software livre modificado **é obrigado a fazê-lo também livremente**, sem restringir as liberdades originais. É o princípio que dá origem aos **forks** (ramificações de desenvolvimento).
+
+**Origem dos dois movimentos:**
+
+| Movimento | Origem | Ênfase | Oponente |
+|-----------|--------|--------|----------|
+| **Software Livre** | **Richard Stallman**, projeto **GNU** (1985) — quase 10 anos antes do Linux. *"GNU não é Unix"* | **Movimento social e político** (a liberdade como valor) | Software **proprietário** (código fechado) |
+| **Código Aberto (Open Source)** | Abordagem mais **pragmática-técnica** que ganhou peso com o sucesso do Linux | Característica determinante: o **código fonte visível** | — |
+
+- **FOSS** = *Free and Open Source Software*; **FLOSS** = *Free/Libre and Open Source Software* (enfatiza "livre" também para além do inglês).
+- Ambos trabalham na mesma coisa, mas surgem de direções diferentes; há **conflitos** quando o código é aberto mas as **4 liberdades não são respeitadas** (restrições à divulgação/alteração/combinação). A FSF é mais exigente e **rejeita** muitas licenças "open source".
+
+### Licenças — porquê tantas?
+O software é **digital**, não físico: o fornecedor não transfere a posse, mas sim **direitos de uso**, definidos na **licença**. Como a FSF e a OSI perseguem objetivos diferentes, criaram organizações próprias que formulam e validam licenças:
+- **FSF** (Free Software Foundation) — licenças tipo **copyleft**.
+- **OSI** (Open Source Initiative, fundada em **1998** por Eric S. Raymond e Bruce Perens) — mantém a **Definição de Código Aberto** e aprova licenças (80+ reconhecidas). Orientação predominantemente **económica**.
+
+> Complicadores: versões diferentes da mesma licença e misturas de licenças entre projetos podem causar **disputas legais**. Diferenças legais internacionais (ex.: *Urheber* alemão vs. *copyright* americano) tornam as licenças difíceis de universalizar.
+
+### Copyleft vs. Permissivas
+
+**Copyleft** (FSF) — a licença livre **aplica-se também às variantes modificadas** (a liberdade "transmite-se"). Críticos chamam-lhe **"viral"**. Pode impedir a combinação de componentes sob licenças copyleft diferentes.
+
+| Licença | Tipo | Notas |
+|---------|------|-------|
+| **GPL** (GNU General Public License) | Copyleft forte | Usada pelo **kernel Linux**; a mais importante licença livre |
+| **LGPL** (Lesser GPL) | Copyleft fraco | Permite ligar software livre a componentes **não-livres** (típico em **bibliotecas**) |
+| **AGPL** (Affero GPL) | Copyleft + rede | Cobre **venda de acesso a software hospedado** (fecha a "falha" da GPL: quem só dá acesso via servidor não "redistribui") |
+| **FDL** (Free Documentation License) | Copyleft | Estende as liberdades à **documentação** |
+
+**Permissivas** (tipo BSD) — **não** impõem copyleft; visam a **distribuição mais ampla possível**, deixando ao editor decidir se fecha ou abre o código. A **BSD de 2 Cláusulas** (Simplificada / FreeBSD) é muito curta: manter os avisos de copyright no fonte e no binário + cláusula de responsabilidade.
+
+> **Licença dual:** o mesmo software é oferecido sob uma licença livre **e** uma proprietária (ex.: pagar para ficar dispensado das restrições de copyleft). Caso típico: **ownCloud** (GPL + "Business Edition" proprietária).
+
+### Creative Commons (CC)
+Organização global **sem fins lucrativos** que fornece **ferramentas legais gratuitas** para partilha/reutilização de criatividade e conhecimento (não só software). O foco muda do distribuidor para o **autor**, que escolhe os aspetos a aplicar — quantos mais escolher, **mais restritiva** a licença. Quatro blocos moduláveis: **BY** (atribuição), **SA** (compartilha igual = copyleft), **ND** (sem derivações), **NC** (não comercial). As **6 licenças** resultantes:
+
+| Licença | Permite editar? | Permite uso comercial? | Copyleft? |
+|---------|:---:|:---:|:---:|
+| **CC BY** (Atribuição) | ✅ | ✅ | — |
+| **CC BY-SA** (CompartilhaIgual) | ✅ | ✅ | ✅ |
+| **CC BY-ND** (SemDerivações) | ❌ | ✅ | — |
+| **CC BY-NC** (NãoComercial) | ✅ | ❌ | — |
+| **CC BY-NC-SA** | ✅ | ❌ | ✅ |
+| **CC BY-NC-ND** | ❌ | ❌ | — *(mais restritiva)* |
+
+### Modelos de negócios em Open Source
+Apesar de "grátis", há negócios multimiliardários (ex.: **Red Hat**, fundada 1993, >3 mil milhões USD em 2018, adquirida pela **IBM** (anúncio 2018, concluída em julho de 2019)). Os principais modelos:
+
+| Modelo | Descrição | Exemplo |
+|--------|-----------|---------|
+| **Crowdfunding** | Doações via plataforma (Kickstarter); doadores recebem bónus se os objetivos forem atingidos | — |
+| **Licença dual** | Versão livre + "Edição Empresarial" paga (suporte, atualizações) | **ownCloud** |
+| **Serviços profissionais** | Consultoria, manutenção, assistência (transfere-se o risco) | ownCloud |
+| **SaaS** (Software as a Service) | Provedor executa o software (CRM, CMS) e o cliente paga por uso/n.º de utilizadores | — |
+| **Merchandising / certificação** | Venda de produtos físicos ou certificados oficiais | Moodle (certificação de instrutores) |
+| **Encomenda de extensões** | Desenvolvimento pago de extensões específicas (cliente decide se as liberta) | Projetos menores |
+
+| **0** | **Executar** o software |
+|---|---|
+| **1** | **Estudar e modificar** o software (pré-requisito: **código fonte**) |
+| **2** | **Distribuir/redistribuir** o software |
+| **3** | **Distribuir versões modificadas** do software (pré-requisito: **código fonte**) |
+
+> As liberdades **1** e **3** exigem acesso ao **código fonte**; a liberdade **3** obriga a manter a obra modificada igualmente **livre**.
+
+### Guiado 2 — Significado de FLOSS
+
+**Enunciado:** *O que significa a abreviatura FLOSS?*
+
+**Solução:** **FLOSS** = **F**ree/**L**ibre **O**pen **S**ource **S**oftware — termo que enfatiza inequivocamente a ideia de **liberdade** ("livre") também para outros idiomas além do inglês (ao contrário de FOSS, onde "free" é ambíguo).
+
+### Guiado 3 — Garantir que software e derivados fiquem livres
+
+**Enunciado:** *Você desenvolveu um software livre e quer garantir que o software em si, mas também todas as futuras criações que se baseiem nele, também sejam livres. Qual licença deve escolher? (CC BY / GPL versão 3 / Licença BSD de 2 Cláusulas / LGPL)*
+
+**Solução:** **GPL versão 3** — é uma licença **copyleft forte**: obriga a que **qualquer obra derivada** seja distribuída sob a **mesma licença**, garantindo a perpetuidade da liberdade.
+
+> **Porque não as outras?** CC BY é **permissiva** (não obriga a partilhar modificações); BSD de 2 Cláusulas é **permissiva** (permite fechar o código); **LGPL** é copyleft **fraco** (permitem-se ligações a componentes não-livres), ideal para bibliotecas mas não para garantir a liberdade de derivados.
+
+### Guiado 4 — Permissivas vs. copyleft
+
+**Enunciado:** *Quais das seguintes licenças são permissivas e quais são copyleft? (Licença BSD Simplificada / GPL versão 3 / CC BY / CC BY-SA)*
+
+**Solução:**
+
+| Licença | Tipo | Porquê |
+|---------|------|--------|
+| **BSD Simplificada** | **Permissiva** | Não impõe copyleft; permite fechar o código |
+| **GPL versão 3** | **Copyleft** | Obriga a que derivados mantenham a mesma licença |
+| **CC BY** | **Permissiva** | Permite editar e distribuir sem copyleft (só exige atribuição) |
+| **CC BY-SA** | **Copyleft** | "CompartilhaIgual": derivados só sob a **mesma** licença |
+
+### Guiado 5 — Rentabilizar uma app web sob licença livre
+
+**Enunciado:** *Você escreveu um aplicativo web e o publicou sob uma licença livre. Como pode ganhar dinheiro com seu produto? Cite três possibilidades.*
+
+**Solução:**
+1. **Licença dual** — oferecer uma **"Edição Empresarial" paga** (com suporte, SLA, etc.) para além da versão livre.
+2. **Hospedagem, serviços e suporte** — cobrar pela operação/manutenção/consultoria (serviços profissionais).
+3. **Desenvolver extensões proprietárias** para clientes específicos.
+
+> *(Alternativas válidas do manual: SaaS, merchandising, certificação, crowdfunding — qualquer 3 delas.)*
+
+---
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+> Exercícios da autoria do agente, para praticares no terminal Linux. Consolidam o tópico 1.3 (filosofia e licenças), usando os **ficheiros de licença que já estão no teu sistema**.
+> *Dica:* numa distro Debian/Ubuntu os textos das licenças canónicas vivem em `/usr/share/common-licenses/` e os copyrights em `/usr/share/doc/<pacote>/copyright`.
+
+### Exploratório 1 — Descobrir as licenças "canónicas" presentes no sistema
+Lista as licenças-padrão que a tua distro já traz e mostra **as primeiras linhas** da GPL.
+
+
+
+<SolutionBlock>
+```bash
+# 1. Listar licenças canónicas (Debian/Ubuntu)
+ls -1 /usr/share/common-licenses/
+
+# 2. Ver os cabeçalhos das principais
+head -n 20 /usr/share/common-licenses/GPL-3
+head -n 15 /usr/share/common-licenses/BSD
+head -n 15 /usr/share/common-licenses/Apache-2.0
+
+# Em distros RPM, procurar noutros locais:
+ls /usr/share/licenses/ 2>/dev/null
+```
+
+**O que aprendeste:** o sistema já tem cópias das principais licenças FOSS. Isto revela como as distros empacotam a **GPL**, **BSD**, **Apache** e outras para que os pacotes as referenciem de forma compacta (em vez de incluir o texto completo em cada pacote).
+</SolutionBlock>
+
+
+
+### Exploratório 2 — Auditar a licença de pacotes instalados
+Verifica a **licença exata** de 3 pacotes conhecidos (ex.: `bash`, `coreutils`, `vim-tiny`) lendo o ficheiro `copyright` de cada um.
+
+
+
+<SolutionBlock>
+```bash
+# Em Debian/Ubuntu — o copyright do pacote indica a licença
+for pkg in bash coreutils vim-tiny; do
+  echo "=== $pkg ==="
+  grep -iE 'license|gpl|bsd|apache|lgpl' /usr/share/doc/$pkg/copyright | head -n 5
+done
+
+# Alternativa: apt show mostra a "License" declarada no metadado
+apt show bash coreutils 2>/dev/null | grep -iE '^(Package|License):'
+
+# Em RPM — licenças em /usr/share/licenses/<pacote>/
+ls /usr/share/licenses/bash/ 2>/dev/null
+rpm -qi bash | grep -i license
+```
+
+**O que aprendeste:** `/usr/share/doc/<pacote>/copyright` é o **local canónico** onde a licença real do pacote está documentada — frequentemente uma **mistura** de licenças (ex.: o pacote pode ser GPL mas incluir excertos BSD ou LGPL). `rpm -qi` mostra o campo `License` do metadado.
+</SolutionBlock>
+
+
+
+### Exploratório 3 — Mapear aplicações famosas às suas licenças
+O manual (Exploratório 1) cita as licenças do Apache HTTP, MySQL, Wikipedia, Firefox e GIMP. Cria um ficheiro com esse mapeamento e valida-o com `grep`.
+
+
+
+<SolutionBlock>
+```bash
+# 1. Criar o mapeamento (aplicação -> licença, conforme o manual)
+cat > licencas.txt <<'EOF'
+Apache HTTP Server: Apache License 2.0
+MySQL Community Server: GPL 2
+Wikipedia articles: CC BY-SA
+Mozilla Firefox: Mozilla Public License 2.0
+GIMP: GPL 3
+EOF
+
+# 2. Validar: listar só os projetos sob licença GPL
+grep -i 'GPL' licencas.txt
+
+# 3. Listar os que usam Creative Commons
+grep -i 'CC' licencas.txt
+```
+
+**Resultado esperado:** `grep GPL` → Apache (não, é Apache License), MySQL, GIMP. `grep CC` → Wikipedia. *(Nota: a Apache License 2.0 é permissiva, não GPL — por isso não aparece no `grep GPL`.)*
+
+**Ligações ao manual:** este é exatamente o mapeamento pedido no Exploratório 1 do manual (p. 49 impressa). Compreender que **Firefox = MPL**, **Wikipedia = CC BY-SA** e **GIMP = GPL 3** ajuda a memorizar licenças copyleft vs. permissivas vs. mistas.
+</SolutionBlock>
+
+
+
+### Exploratório 4 — Distinguir copyleft de permissivas por inspeção
+O objetivo é treinar o olho: lê o texto do **aviso de licença** de um pacote **permissivo** (ex.: `bsdutils`, ou qualquer pacote sob BSD) e de um **copyleft** (ex.: `coreutils`, sob GPL), e compara o que cada uma **exige/proíbe**.
+
+
+
+<SolutionBlock>
+```bash
+# 1. Encontrar um pacote permissivo (BSD) e um copyleft (GPL) no sistema
+dpkg -l | awk 'NR>5 {print $2}' | grep -iE 'bsd|freebsd' | head -n 3
+apt show coreutils 2>/dev/null | grep -iE 'license'
+
+# 2. Comparar os copyrights (procura por "redistribute" / "same license")
+echo "----- BSD (permissiva) -----"
+grep -iA3 'redistrib' /usr/share/common-licenses/BSD | head -n 8
+
+echo "----- GPL-3 (copyleft) -----"
+grep -iA3 'carry the same\|same license\|derivat' /usr/share/common-licenses/GPL-3 | head -n 8
+```
+
+**O que aprendeste:** a **BSD** permite redistribuição com/sem modificação **sem** impor a licença aos derivados — só exige manter o aviso de copyright. A **GPL** exige expressamente que os trabalhos derivados sejam distribuídos **sob a mesma licença** (copyleft). Esta é a diferença fundamental do Guiado 4.
+</SolutionBlock>
+
+
+
+### Exploratório 5 — Verificar se tens software "Edição Empresarial" disponível
+O manual cita exemplos de software livre que também tem **versão paga** (MySQL, Zammad, Nextcloud). Verifica se algum deles (ou equivalente) está instalado ou disponível no teu repositório.
+
+
+
+<SolutionBlock>
+```bash
+# 1. Procurar nos repositórios
+apt search nextcloud 2>/dev/null | grep -i '^nextcloud' | head
+apt search zammad   2>/dev/null | head -n 5
+apt search mysql-server 2>/dev/null | grep -i mysql-server | head
+
+# 2. Em RPM
+# dnf search nextcloud
+
+# 3. Ver se já tens algum instalado
+dpkg -l | grep -iE 'nextcloud|mysql-server|mariadb-server|zammad' || echo "Nenhum instalado"
+```
+
+**O que aprendeste:** o facto de um pacote estar num repositório público **não** significa que não exista um modelo de negócio por trás. Empresas como **MySQL/Oracle**, **Nextcloud GmbH** e **Zammad** oferecem o núcleo livre (comunidade) e uma **"Edição Empresarial"** paga com suporte/funcionalidades extra — o modelo de **licença dual / serviços profissionais** do Resumo.
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Início: [010 - Visão Geral]()
+← Anterior: [T02 - Principais Aplicações Open Source]()
+→ Próximo: [T04 - Habilidades ICT e trabalhando no Linux]()

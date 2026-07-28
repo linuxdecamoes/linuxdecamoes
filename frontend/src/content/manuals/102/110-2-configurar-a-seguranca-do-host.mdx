@@ -1,0 +1,202 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="110.2 Configurar a segurança do host"
+  code="102"
+  topicNumber="T18"
+  objective="Configurar a segurança do host"
+  weight={3}
+  pages="LPIC-1 (102) - Version 5.0"
+  accent="iris"
+/>
+
+
+
+## Resumo Conciso
+
+### Senhas ocultas e /etc/shadow
+
+| Ficheiro | Conteúdo | Permissões |
+|---------|----------|------------|
+| `/etc/passwd` | Dados da conta (7 campos: login, x, uid, gid, GECOS, home, shell) | Legível por todos |
+| `/etc/shadow` | Hash da senha + dados de expiração | Apenas root |
+
+| Comando | Função |
+|---------|--------|
+| `passwd user` | Definir/alterar senha (ver T06) |
+| `passwd -l user` | Bloquear conta (ver T06) |
+| `passwd -u user` | Desbloquear conta (ver T06) |
+| `chage -l user` | Listar expiração da senha (ver T06) |
+| `chage -E 2020-03-26 user` | Definir data de expiração da conta (ver T06) |
+
+### Bloqueio global de logins
+
+| Mecanismo | Efeito |
+|-----------|--------|
+| Criar `/etc/nologin` | Impede logins de todos (exceto root) |
+| `usermod -s /sbin/nologin user` | Impede login de um utilizador específico |
+
+### Superdaemon xinetd
+
+| Conceito | Detalhe |
+|----------|---------|
+| Função | Escuta conexões de rede e inicia serviços sob demanda |
+| Config principal | `/etc/xinetd.conf` (inclui `/etc/xinetd.d/`) |
+| Config por serviço | `/etc/xinetd.d/<serviço>` |
+| `disable = no` | Ativa o serviço no xinetd |
+| `socket_type` | `stream` (TCP) ou `dgram` (UDP) |
+| `server` | Caminho completo do binário do serviço |
+| `server_args` | Argumentos do serviço (ex: `-i` para SSH) |
+| `interface` / `bind` | Interface de rede a monitorar |
+
+### systemd.socket (alternativa moderna)
+
+```bash
+sudo systemctl start ssh.socket
+# Verificar com:
+sudo lsof -i :22 -P
+```
+
+### Desativar serviços desnecessários
+
+| Sistema | Comando para listar | Comando para desativar |
+|---------|--------------------|-----------------------|
+| Sys-V-init | `service --status-all` | `update-rc.d SERVICE remove` (Debian) |
+| Red Hat init | — | `chkconfig SERVICE off` |
+| systemd | `systemctl list-units --state active --type service` | `systemctl disable UNIT --now` |
+
+### Verificar portas de rede em escuta
+
+| Comando | Descrição |
+|---------|-----------|
+| `netstat -ltu` | Portas TCP e UDP ouvintes |
+| `ss -ltu` | Equivalente moderno do netstat |
+
+### TCP wrappers (firewall simples)
+
+| Conceito | Detalhe |
+|----------|---------|
+| Verificar suporte | `ldd /usr/sbin/sshd \| grep libwrap` |
+| `/etc/hosts.deny` | Negar acesso (ex: `sshd: ALL`) |
+| `/etc/hosts.allow` | Permitir acesso (ex: `sshd: LOCAL`) |
+| Efeito | Imediato, sem reiniciar serviços |
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — /etc/nologin e root
+
+**Enunciado:** Verifique se a existência do ficheiro `/etc/nologin` impede o login do utilizador root.
+
+
+
+<SolutionBlock>
+```bash
+# Criar o ficheiro nologin
+sudo touch /etc/nologin
+
+# Tentar fazer login como root via tty — continua possível
+# O root NÃO é impedido de fazer login por /etc/nologin
+
+# Remover quando terminar
+sudo rm /etc/nologin
+```
+
+**Resposta:** O utilizador root continua capaz de fazer login. O `/etc/nologin` apenas impede logins de utilizadores não-root.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — nologin e chaves SSH
+
+**Enunciado:** A existência do `/etc/nologin` impede logins sem senha com chaves SSH?
+
+
+
+<SolutionBlock>
+Sim, os logins sem senha via SSH também são impedidos pela presença do `/etc/nologin`. O mecanismo verifica o ficheiro independentemente do método de autenticação.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Mensagem do nologin
+
+**Enunciado:** O que acontece no login quando `/etc/nologin` contém apenas `login currently is not possible`?
+
+
+
+<SolutionBlock>
+A mensagem `login currently is not possible` será exibida ao utilizador e o login não será possível. O conteúdo do ficheiro `/etc/nologin` é apresentado como mensagem de aviso antes de rejeitar o login.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Leitura de /etc/passwd
+
+**Enunciado:** A utilizadora comum emma pode obter informações sobre o utilizador root em `/etc/passwd`?
+
+
+
+<SolutionBlock>
+Sim. O ficheiro `/etc/passwd` tem permissões de leitura para todos os utilizadores.
+
+```bash
+grep root /etc/passwd
+# Funciona para qualquer utilizador
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 5 — Leitura de /etc/shadow
+
+**Enunciado:** A utilizadora emma pode ler a sua própria senha com hash em `/etc/shadow`?
+
+
+
+<SolutionBlock>
+Não. Os utilizadores comuns não têm permissão de leitura para `/etc/shadow`.
+
+```bash
+grep emma /etc/shadow
+# Permission denied
+```
+
+Apenas root pode aceder a este ficheiro.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 6 — Serviço daytime via xinetd
+
+**Enunciado:** Que etapas são necessárias para habilitar o serviço daytime no xinetd?
+
+
+
+<SolutionBlock>
+```bash
+# 1. Editar /etc/xinetd.d/daytime e definir:
+#    disable = no
+
+# 2. Reiniciar o xinetd
+sudo systemctl restart xinetd.service
+
+# 3. Verificar com netcat
+nc localhost daytime
+# ou
+netcat localhost daytime
+```
+
+**Nota:** Este é apenas um exercício exploratório — não faça isso em produção.
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T17 - 110.1 Tarefas administrativas de segurança]()
+→ Próximo: [T19 - 110.3 Proteção de dados com criptografia]()

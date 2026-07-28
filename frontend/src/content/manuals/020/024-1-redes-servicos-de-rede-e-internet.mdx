@@ -1,0 +1,223 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="024.1 — Redes, Serviços de Rede e Internet"
+  code="020"
+  topicNumber="T12"
+  objective="024.1"
+  weight={4}
+  pages="LPI Security Essentials (020) - Version 1.0"
+  accent="coral"
+/>
+
+
+
+## Resumo Conciso
+
+### Tipos de Mídia de Rede
+
+| Tipo | Meio de Transmissão | Velocidade | Custo | Distância |
+|------|-------------------|------------|-------|-----------|
+| **Ethernet** | Cabo de cobre | Alta (local) | Baixo | Curta-média |
+| **Fibra Óptica** | Luz (fibras de vidro) | Muito alta | Alto | Longa |
+| **Wi-Fi** | Ondas de rádio | Variável | Baixo | Curta |
+| **Celular (3G/4G/5G)** | Ondas de rádio (torres) | Variável | Variável | Variável |
+
+### Faixas de Frequência Wi-Fi
+
+| Faixa | Alcance | Velocidade | Uso Recomendado |
+|-------|---------|------------|-----------------|
+| **2.4 GHz** | Maior | Mais lenta | Dispositivos distantes do roteador |
+| **5 GHz** | Menor | Mais rápida | Streaming, jogos (perto do roteador) |
+
+### Dispositivos de Rede
+
+| Dispositivo | Camada OSI | Função |
+|------------|------------|--------|
+| **Switch** | Camada 2 (Enlace) | Encaminha tráfego dentro da mesma rede usando endereços MAC |
+| **Roteador** | Camada 3 (Rede) | Conecta diferentes redes usando endereços IP |
+| **Ponto de Acesso (AP)** | Camada 1-2 | Transmite sinal Wi-Fi para dispositivos sem fio |
+
+### Endereço MAC
+
+- Identificador único de hardware atribuído a cada Placa de Interface de Rede (NIC)
+- Formato: **6 pares de caracteres hexadecimais** (ex.: `00:1A:2B:3C:4D:5E`)
+- Primeiros 3 bytes → OUI (identifica o fabricante, ex.: Cisco, Intel)
+- Últimos 3 bytes → identificador único do dispositivo
+
+### Versões de IP
+
+| Característica | IPv4 | IPv6 |
+|---------------|------|------|
+| **Formato** | 4 octetos (ex.: `192.168.1.1`) | 8 grupos hexadecimais (ex.: `2001:0db8:85a3::8a2e:0370:7334`) |
+| **Total de endereços** | ~4,3 mil milhões | ~3,4×10³⁸ |
+| **Segurança** | NAT (solução temporária) | Criptografia e autenticação embutidas |
+
+### Protocolos TCP/IP
+
+| Protocolo | Camada | Função | Fiável? |
+|-----------|--------|--------|---------|
+| **TCP** | Transporte | Entrega fiável, ordenada e verificada | Sim (handshake 3 vias: SYN → SYN-ACK → ACK) |
+| **UDP** | Transporte | Entrega rápida sem garantias | Não (sem conexão) |
+| **ICMP** | Rede | Diagnóstico e relatório de erros (ping) | N/A |
+| **DHCP** | Aplicação | Atribuição automática de endereços IP | N/A |
+
+### Portas TCP/UDP
+
+| Faixa | Designação | Exemplos |
+|-------|------------|----------|
+| 0–1023 | Portas bem conhecidas | HTTP (80), HTTPS (443), DNS (53) |
+| 1024–49151 | Portas registradas | — |
+| 49152–65535 | Portas dinâmicas/privadas | Conexões temporárias |
+
+### DNS
+
+- **DNS direto (forward lookup)**: nome de domínio → endereço IP
+- **DNS reverso (reverse lookup)**: endereço IP → nome de domínio
+- Comandos úteis: `nslookup`, `dig`
+
+### Computação em Nuvem
+
+| Modelo | Controlo do Utilizador | Exemplo |
+|--------|----------------------|---------|
+| **IaaS** | Total (SO, apps, dados) | AWS EC2, Azure VMs |
+| **PaaS** | Camada de aplicação | Google App Engine, Heroku |
+| **SaaS** | Apenas uso do aplicativo | Gmail, Slack, Salesforce |
+
+## Exercícios Guiados
+
+### Exercício Guiado 1: Diferenças entre Redes Com Fio e Sem Fio
+
+**Enunciado:** Descreva as diferenças entre redes com fio e sem fio. Forneça exemplos de cada uma e explique como elas funcionam.
+
+**Solução:** As redes com fio dependem de cabos físicos, como Ethernet ou fibra óptica, para transmitir dados entre dispositivos. Os cabos Ethernet são comuns em configurações domésticas e de escritório para conexões estáveis em distâncias mais curtas, enquanto a fibra óptica usa luz para transmitir dados em velocidades muito mais altas em distâncias maiores, frequentemente entre cidades ou para grandes organizações. As redes sem fio, como o Wi-Fi, usam ondas de rádio para enviar dados, permitindo que dispositivos como telefones ou laptops se conectem sem a necessidade de cabos. O Wi-Fi opera em diferentes bandas de frequência, com 2,4 GHz oferecendo um alcance maior, mas velocidades mais lentas, e 5 GHz fornecendo velocidades mais rápidas, mas em uma distância menor.
+
+### Exercício Guiado 2: Endereço MAC e Comunicação em Rede Local
+
+**Enunciado:** O que é um endereço MAC e como ele ajuda os dispositivos a se comunicarem em uma rede local? Forneça um exemplo de como um endereço MAC pode parecer e explique sua estrutura.
+
+**Solução:** Um endereço MAC é um identificador de hardware exclusivo atribuído à placa de rede de cada dispositivo, permitindo que os dispositivos se comuniquem dentro da mesma rede. Ele garante que os dados sejam enviados para o dispositivo correto na rede. O endereço consiste em seis pares de caracteres hexadecimais, sendo os três primeiros que identificam o fabricante do dispositivo e os três últimos específicos para o dispositivo individual. Um exemplo de um endereço MAC é `00:1A:2B:3C:4D:5E`, onde `00:1A:2B` identifica o fabricante e `3C:4D:5E` é único para o dispositivo no catálogo desse fabricante.
+
+### Exercício Guiado 3: IPv4 vs. IPv6
+
+**Enunciado:** Explique as diferenças entre endereços IPv4 e IPv6. Por que o IPv6 foi desenvolvido e o que ele melhora em relação ao IPv4?
+
+**Solução:** Os endereços IPv4 consistem em quatro números separados por pontos, como `192.168.1.1`, e fornecem um número limitado de endereços exclusivos (~4,3 mil milhões), o que se tornou insuficiente à medida que mais dispositivos se conectam à internet. O IPv6 foi criado para resolver essa escassez, usando um formato muito mais longo com mais combinações possíveis, como `2001:0db8:85a3:0000:0000:8a2e:0370:7334`. O IPv6 oferece um suprimento quase ilimitado de endereços (~3,4×10³⁸) e melhora a eficiência de roteamento e segurança, incluindo recursos como criptografia embutida (IPsec) e autenticação aprimorada.
+
+### Exercício Guiado 4: DNS — Resolução de Nomes
+
+**Enunciado:** Como o Sistema de Nomes de Domínio (DNS) converte um nome de domínio como `www.example.com` em um endereço IP? Quais são os papéis do DNS direto e do DNS reverso e como eles diferem?
+
+**Solução:** O DNS traduz nomes de domínio legíveis por humanos, como `www.example.com`, em endereços IP, como `192.0.2.1`, permitindo que os dispositivos se comuniquem pela internet. Em uma busca DNS direta (forward lookup), o nome de domínio é convertido no seu endereço IP correspondente, permitindo que o dispositivo localize o servidor web correto. Em contraste, a busca DNS reversa (reverse lookup) pega um endereço IP e resolve-o para o seu nome de domínio associado, frequentemente usado para verificar a identidade de um host, como em sistemas de email ou diagnósticos de rede. Ambos os processos são essenciais para garantir uma comunicação fluente e a segurança na internet.
+
+### Exercício Guiado 5: Modelos de Computação em Nuvem (IaaS, PaaS, SaaS)
+
+**Enunciado:** Quais são as diferenças entre Infraestrutura como Serviço (IaaS), Plataforma como Serviço (PaaS) e Software como Serviço (SaaS)? Forneça um exemplo de cada e explique o nível de controlo que o utilizador tem em cada modelo.
+
+**Solução:**
+
+| Modelo | Descrição | Controlo do Utilizador | Exemplo |
+|--------|-----------|----------------------|---------|
+| **IaaS** | Fornece recursos virtualizados (servidores, armazenamento, rede) | Total — o utilizador gere SO, apps e dados | AWS EC2 |
+| **PaaS** | Fornece plataforma para desenvolvimento e implementação de apps | Limitado à camada de aplicação | Google App Engine |
+| **SaaS** | Software totalmente gerenciado acedido via navegador | Apenas uso — sem controlo de infraestrutura | Gmail |
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1: Spoofing de Endereço MAC
+
+**Enunciado:** Pesquise como o spoofing de endereço MAC é usado em ataques de rede. Quais são os potenciais riscos de segurança associados ao spoofing de MAC e quais técnicas podem ser usadas para prevenir tais ataques?
+
+
+
+<SolutionBlock>
+O spoofing de endereço MAC ocorre quando um dispositivo é deliberadamente configurado para imitar o endereço MAC de outro dispositivo. Os invasores usam essa técnica para contornar filtros de rede, obter acesso não autorizado ou disfarçar sua identidade numa rede. Por exemplo, em redes Wi-Fi públicas, um invasor pode falsificar o endereço MAC de um dispositivo autorizado para obter acesso a áreas restritas.
+
+**Riscos de segurança:**
+- Acesso não autorizado a dados sensíveis
+- Interrupção dos serviços de rede
+- Dificuldade em rastrear atividades maliciosas
+
+**Técnicas de prevenção:**
+- Segurança de porta em switches (limita o número de endereços MAC por porta)
+- Filtragem de endereços MAC em roteadores e firewalls
+- Criptografia de rede (WPA3 para Wi-Fi)
+- Monitorização de atividades incomuns de MAC
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2: Adoção Global de IPv6
+
+**Enunciado:** Pesquise o estado atual da adoção do IPv6 ao redor do mundo. Quais desafios as organizações enfrentaram na transição do IPv4 para o IPv6, e quais são os principais benefícios de usar o IPv6 em relação ao IPv4?
+
+
+
+<SolutionBlock>
+Globalmente, a adoção do IPv6 tem sido gradual, com algumas regiões e indústrias avançando mais rapidamente do que outras.
+
+**Principais desafios na transição:**
+- Custo e complexidade da migração da infraestrutura existente
+- Incompatibilidade de sistemas legados com IPv6
+- Falta de necessidade imediata do vasto espaço de endereçamento por algumas organizações
+
+**Benefícios do IPv6 sobre o IPv4:**
+- Espaço de endereços exponencialmente maior (~3,4×10³⁸)
+- Configuração de rede simplificada (SLAAC — autoconfiguração de endereços sem estado)
+- Eficiência aprimorada no roteamento
+- Recursos de segurança integrados (IPsec para comunicação criptografada)
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3: Riscos de Segurança DNS
+
+**Enunciado:** Pesquise e explique alguns dos riscos de segurança mais comuns associados ao DNS, como falsificação de DNS ou envenenamento de cache. Como esses ataques funcionam e quais medidas podem ser tomadas para se proteger contra eles?
+
+
+
+<SolutionBlock>
+**DNS Spoofing (Falsificação de DNS):** O invasor forja respostas do DNS para fazer o dispositivo da vítima acreditar que está se conectando a um domínio legítimo, enquanto na verdade está sendo redirecionado para um servidor prejudicial.
+
+**Cache Poisoning (Envenenamento de cache):** O invasor corrompe o cache DNS num servidor, fazendo com que ele armazene e retorne endereços IP incorretos para nomes de domínio.
+
+**Medidas de proteção:**
+- **DNSSEC** (Extensões de Segurança do DNS) — verifica a autenticidade das respostas do DNS
+- **Limpeza regular do cache** — minimiza os riscos de cache poisoning
+- **DNS over HTTPS (DoH)** — criptografa consultas DNS, prevenindo interceptação e manipulação
+- **DNS over TLS (DoT)** — alternativa ao DoH com criptografia via TLS
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4: Comparação de Provedores de Nuvem
+
+**Enunciado:** Compare três principais provedores de serviços em nuvem — Amazon Web Services (AWS), Microsoft Azure e Google Cloud — em termos de suas ofertas para IaaS, PaaS e SaaS. Quais são as principais diferenças em seus modelos de precificação, serviços e públicos-alvo?
+
+
+
+<SolutionBlock>
+| Provedor | Foco Principal | Público-Alvo | Modelo de Precificação |
+|----------|---------------|--------------|----------------------|
+| **AWS** | Infraestrutura global extensa, ampla gama de serviços | Grandes empresas | Pagamento conforme o uso, altamente flexível |
+| **Microsoft Azure** | Integração com ecossistema Microsoft | Empresas com infraestrutura Windows | Pagamento conforme o uso, competitivo para utilizadores Microsoft |
+| **Google Cloud** | Análise de dados e machine learning | Empresas focadas em dados e IA | Pagamento conforme o uso, com créditos iniciais generosos |
+
+**Principais ofertas por modelo:**
+
+| Modelo | AWS | Azure | Google Cloud |
+|--------|-----|-------|-------------|
+| **IaaS** | EC2, S3 | Virtual Machines, Blob Storage | Compute Engine, Cloud Storage |
+| **PaaS** | Elastic Beanstalk, Lambda | Azure App Service, Functions | App Engine, Cloud Functions |
+| **SaaS** | WorkSpaces, Chime | Microsoft 365, Dynamics | Google Workspace, BigQuery |
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T11 - 023.4 Disponibilidade de Dados]()
+→ Próximo: [T13 - 024.2 Segurança de Rede e Internet]()

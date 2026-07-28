@@ -1,0 +1,210 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="108.1 Manutenção da data e hora do sistema"
+  code="102"
+  topicNumber="T09"
+  objective="Manter a data e hora do sistema"
+  weight={2}
+  pages="LPIC-1 (102) - Version 5.0"
+  accent="iris"
+/>
+
+
+
+## Resumo Conciso
+
+### Relógio do Sistema vs Relógio de Hardware
+
+| Característica | Relógio do Sistema | Relógio de Hardware (RTC) |
+|---|---|---|
+| Atualizado por | Sistema operacional | Placa-mãe (funciona independentemente) |
+| Definido a partir do | Relógio de hardware (na inicialização) | Definido manualmente ou via NTP |
+| Comando principal | `date` | `hwclock` |
+
+### Comandos Principais
+
+| Comando | Função | Opções importantes |
+|---|---|---|
+| `date` | Exibe ou altera o relógio do sistema | `-u` (UTC), `+%s` (Unix time), `--date=` (data específica), `-s` (definir hora) |
+| `hwclock` | Exibe ou altera o relógio de hardware | `--systohc` (sistema→hardware), `--hctosys` (hardware→sistema), `--set --date` (definir manualmente) |
+| `timedatectl` | Gere data/hora (systemd) | `set-time`, `list-timezones`, `set-timezone`, `set-ntp` |
+| `ntpq` | Monitora status do NTP | `-p` (imprimir pares), `-n` (endereços IP) |
+| `chronyc` | Gere o chrony | `tracking`, `sources`, `ntpdata`, `makestep` |
+| `ntpdate` | Sincronização manual única | Seguido de endereço do servidor NTP |
+
+### Fusos Horários
+
+| Caminho | Função |
+|---|---|
+| `/usr/share/zoneinfo/` | Informações sobre fusos horários |
+| `/etc/timezone` | Representação de dados do fuso horário local |
+| `/etc/localtime` | Link simbólico para o zoneinfo ativo |
+| `/etc/ntp.conf` | Configuração do daemon NTP (ntpd) |
+| `/etc/chrony.conf` | Configuração do daemon chrony |
+
+### Termos NTP Importantes
+
+| Termo | Definição |
+|---|---|
+| Deslocamento (offset) | Diferença absoluta entre hora do sistema e hora NTP |
+| Salto (step) | Alteração significativa quando deslocamento > 128ms |
+| Ajuste gradativo (slew) | Alteração gradual quando deslocamento &lt; 128ms |
+| Relógio insano | Deslocamento > 17 minutos — daemon NTP não altera o relógio |
+| Escorregamento (drift) | Dois relógios ficam fora de sincronia com o tempo |
+| Variação (jitter) | Quantidade de escorregamento desde a última consulta |
+
+### Hierarquia NTP
+
+- **Estrato 0**: Relógios de referência (relógios atômicos)
+- **Estrato 1**: Servidores diretamente conectados a relógios de referência
+- **Estrato 2+**: Servidores acessíveis ao público
+- **pool.ntp.org**: Projeto de código aberto que distribui carga entre servidores
+
+|---|---|---|
+| `date -u` | X | | |
+| `hwclock --set --date "12:00:00"` | | X | |
+| `timedatectl` | | | X |
+| `timedatectl \| grep RTC` | | X | |
+| `hwclock --hctosys` | | | X |
+| `date +%T -s "08:00:00"` | X | | |
+| `timedatectl set-time 1980-01-10` | X | | |
+
+**Solução:** `date` atua no relógio do sistema; `hwclock` no relógio de hardware; `timedatectl` exibe ambos; `hwclock --hctosys` sincroniza hardware→sistema (ambos).
+
+### Exercício Guiado 2 — Corrigir formato de argumento do date
+
+**Enunciado:** Corrija o formato para que o comando seja bem-sucedido:
+```
+$ date --debug --date "20/20/12 0:10 -3"
+```
+
+**Solução:** O formato está incorreto (mês 20 não existe). Correção:
+```
+$ date --debug --set "12/20/20 0:10 -3"
+```
+
+### Exercício Guiado 3 — Definir mês sem alterar resto da data
+
+**Enunciado:** Use o comando `date` para definir o mês como fevereiro, deixando o resto inalterado.
+
+**Solução:**
+```bash
+date +%m -s "2"
+```
+
+### Exercício Guiado 4 — Sincronizar relógio de hardware
+
+**Enunciado:** Após alterar a hora do sistema, use `hwclock` para ajustar o relógio de hardware.
+
+**Solução:**
+```bash
+hwclock -systohc
+```
+
+### Exercício Guiado 5 — Descobrir continente de eucla
+
+**Enunciado:** Existe um local chamado `eucla`. De que continente faz parte? Use `grep` para descobrir.
+
+**Solução:**
+```bash
+timedatectl list-timezones | grep -i eucla
+# ou
+grep -ri eucla /usr/share/zoneinfo
+```
+Resultado: eucla está na Austrália.
+
+### Exercício Guiado 6 — Definir fuso horário para eucla
+
+**Enunciado:** Defina seu fuso horário atual para eucla.
+
+**Solução:**
+```bash
+timedatectl set-timezone 'Australia/Eucla'
+# ou
+ln -s /usr/share/zoneinfo/Australia/Eucla /etc/localtime
+```
+
+---
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Método ideal de configuração de hora
+
+**Enunciado:** Qual método de configuração de hora é o ideal? Em que caso seria impraticável?
+
+
+
+<SolutionBlock>
+Na maioria das distribuições, o NTP vem ativado por padrão e define a hora automaticamente. O método preferido seria impraticável em sistemas sem conectividade de rede, como equipamentos industriais embarcados.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Por que tantos métodos?
+
+**Enunciado:** Por que existem tantos métodos para definir a hora do sistema?
+
+
+
+<SolutionBlock>
+A configuração da hora é um requisito de todos os sistemas *nix por décadas. Existem muitos métodos legados que ainda são mantidos por compatibilidade retroativa com sistemas mais antigos.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Problema do Ano 2038
+
+**Enunciado:** Por que não se adotou uma "Nova Época" em vez de usar 64 bits para resolver o problema de 2038?
+
+
+
+<SolutionBlock>
+Até 2038, a maioria dos computadores já terá CPUs de 64 bits e 64 bits não degradará o desempenho. Reiniciar a Época causaria impactos imprevisíveis em software legado (bancos, grandes empresas). Qualquer sistema de 32 bits sofreria o estouro, mas alterar a Época afetaria mais sistemas do que apenas os de 32 bits.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Ativar NTP e verificar sincronização
+
+**Enunciado:** Ative a sincronização NTP via systemd e confirme se o relógio do sistema ficou sincronizado.
+
+
+
+<SolutionBlock>
+```bash
+sudo timedatectl set-ntp true
+timedatectl status
+```
+
+`set-ntp true` ativa o serviço de sincronização de hora (normalmente o `systemd-timesyncd`). Em `timedatectl status`, as linhas relevantes são `NTP service: active` e `System clock synchronized: yes`. Para desativar, usar `set-ntp false`.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 5 — Estado da sincronização com chronyc
+
+**Enunciado:** Usando o chrony, verifique o estado de sincronização atual do sistema e identifique os servidores de origem.
+
+
+
+<SolutionBlock>
+```bash
+chronyc tracking
+chronyc sources
+```
+
+`chronyc tracking` mostra o deslocamento (offset), a taxa de erro (drift) e a que estrato o sistema está sincronizado. `chronyc sources` lista os servidores NTP de origem, os seus estratos e o estado de seleção (`^*` = origem sincronizada atual, `^+` = candidato, `^?` = fora de alcance).
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T08 - 107.3 Localização e internacionalização]()
+→ Próximo: [T10 - 108.2 Log do sistema]()

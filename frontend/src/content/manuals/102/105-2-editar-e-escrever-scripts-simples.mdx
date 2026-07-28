@@ -1,0 +1,300 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="105.2 Editar e escrever scripts simples"
+  code="102"
+  topicNumber="T02"
+  objective="Editar e escrever scripts simples de shell"
+  weight={4}
+  pages="LPIC-1 (102) - Version 5.0"
+  accent="iris"
+/>
+
+
+
+## Resumo Conciso
+
+### Estrutura de um script bash
+
+```bash
+#!/bin/bash
+# Comentário
+echo "Hello world!"
+```
+
+- **Shebang** (`#!`): define o interpretador na primeira linha
+- Linhas com `#` após o shebang são comentários
+- Linhas em branco são ignoradas
+
+### Execução de scripts
+
+| Método | Comando | Executa em… |
+|--------|---------|-------------|
+| Interpretador explícito | `bash script.sh` | Sub-shell |
+| Com bit de execução | `chmod +x script.sh; ./script.sh` | Sub-shell |
+| PATH | `script.sh` (se em directório do PATH) | Sub-shell |
+| No shell atual | `source script.sh` ou `. script.sh` | Shell atual |
+| Substitui shell atual | `exec script.sh` | Shell atual (substitui) |
+
+### Parâmetros especiais do script
+
+| Parâmetro | Significado |
+|-----------|-------------|
+| `$0` | Nome do ficheiro de script |
+| `$1`..`$9`, `${10}` | Parâmetros posicionais (argumentos) |
+| `$*` / `$@` | Todos os argumentos passados |
+| `$#` | Nº de argumentos |
+| `$?` | Código de status do último comando (0 = sucesso) |
+| `$$` | PID do shell atual |
+| `$!` | PID do último processo em background |
+
+### Variáveis e arrays
+
+```bash
+VAR="valor"           # Atribuição (sem espaços ao redor de =)
+echo $VAR             # Referência
+echo ${#VAR}          # Comprimento da string
+
+declare -a ARR        # Declarar array
+ARR=( elem1 elem2 )   # Array implícito
+echo ${ARR[0]}        # Primeiro elemento
+echo ${#ARR[@]}       # Nº de elementos
+```
+
+### Substituição de comandos
+
+```bash
+VAR=$(comando)        # Forma moderna
+VAR=`comando`         # Forma antiga (backtick)
+```
+
+### Expressões aritméticas
+
+```bash
+SUM=$(( $VAL1 + $VAL2 ))
+RESULT=$(( 1024 ** 3 ))
+```
+
+### Execução condicional
+
+| Operador | Comportamento |
+|----------|---------------|
+| `A && B` | B executa só se A for bem-sucedido ($?=0) |
+| `A \|\| B` | B executa só se A falhar ($?≠0) |
+
+### Estrutura `if`
+
+```bash
+if [ CONDIÇÃO ] ; then
+    COMANDOS
+elif [ CONDIÇÃO ] ; then
+    COMANDOS
+else
+    COMANDOS
+fi
+```
+
+### Estrutura `case`
+
+```bash
+case "$VAR" in
+    padrao1|padrao2)
+        COMANDOS ;;
+    *)
+        COMANDOS ;;
+esac
+```
+
+### Construções de loop
+
+```bash
+# for — percorre uma lista
+for VAR in LISTA; do
+    COMANDOS
+done
+
+# for estilo C
+for (( IDX=0; IDX<N; IDX++ )); do
+    COMANDOS
+done
+
+# while — repete enquanto condição for verdadeira
+while [ CONDIÇÃO ]; do
+    COMANDOS
+done
+
+# until — repete até condição ser verdadeira
+until [ CONDIÇÃO ]; do
+    COMANDOS
+done
+```
+
+### Testes de ficheiros (`test` / `[ ]`)
+
+| Opção | Avalia |
+|-------|--------|
+| `-f` | Ficheiro regular existe |
+| `-d` | É um directório |
+| `-e` | Existe no sistema de ficheiros |
+| `-r` | É legível |
+| `-w` | É gravável |
+| `-x` | É executável |
+| `-s` | Existe e não está vazio |
+| `-h` / `-L` | É um link simbólico |
+| `-nt` | Mais recente que outro ficheiro |
+| `-ot` | Mais antigo que outro ficheiro |
+
+### Testes numéricos
+
+| Opção | Avalia |
+|-------|--------|
+| `-eq` | Igual |
+| `-ne` | Diferente |
+| `-lt` | Menor que |
+| `-gt` | Maior que |
+| `-le` | Menor ou igual |
+| `-ge` | Maior ou igual |
+
+### Saída do script
+
+| Comando | Função |
+|---------|--------|
+| `echo "texto"` | Exibe texto (nova linha automática) |
+| `echo -n "texto"` | Sem nova linha |
+| `echo -e "lin1\nlin2"` | Interpreta sequências de escape |
+| `printf "%s\n" "$VAR"` | Saída formatada (C-style) |
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Erro "Permission denied" ao executar script
+
+**Enunciado:** Após criar um script, o utilizador recebe `bash: ./script.sh: Permission denied`. Qual a causa provável?
+
+
+
+<SolutionBlock>
+O ficheiro não tem permissão de execução. Solução:
+
+```bash
+chmod +x script.sh
+./script.sh
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Identificar nome de chamada via link simbólico
+
+**Enunciado:** O script `do.sh` é executável e `undo.sh` é um link simbólico para ele. Como identificar dentro do script se foi chamado como `do.sh` ou `undo.sh`?
+
+
+
+<SolutionBlock>
+A variável especial `$0` contém o nome do ficheiro usado para chamar o script:
+
+```bash
+#!/bin/bash
+echo "Este script foi chamado como: $0"
+```
+
+Se chamado via `undo.sh`, `$0` será `undo.sh`.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Enviar email de erro com `if`
+
+**Enunciado:** Escreva uma instrução `if` para enviar email ao root somente se o comando anterior falhar.
+
+
+
+<SolutionBlock>
+```bash
+if [ "$?" -ne 0 ]; then
+    mail -s "Maintenance Error" root <<<"Scheduled task error"
+fi
+```
+
+A variável `$?` armazena o código de status do último comando. `-ne` (not equal) verifica se é diferente de 0 (falha).
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Criar array com argumentos do script
+
+**Enunciado:** Como usar todos os argumentos de linha de comando para inicializar um array Bash?
+
+
+
+<SolutionBlock>
+```bash
+PARAMS=( "$@" )
+# ou
+PARAMS=( $* )
+```
+
+`"$@"` preserva aspas individuais de cada argumento, sendo a forma recomendada.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 5 — Script de sincronização com `mapfile`
+
+**Enunciado:** Escreva um script que sincronize ficheiros de um directório de origem para um destino usando `mapfile` e um ficheiro de lista.
+
+
+
+<SolutionBlock>
+```bash
+#!/bin/bash
+set -ef
+FILE=~/.sync.list
+FROM=$1
+TO=$2
+
+if [ ! -d "$FROM" -o ! -d "$TO" ]; then
+    echo "Usage: $0 <SOURCEDIR> <DESTDIR>"
+    exit 1
+fi
+
+mapfile -t LIST < "$FILE"
+
+for (( IDX=0; IDX < ${#LIST[*]}; IDX++ )); do
+    echo -e "$FROM/${LIST[$IDX]} → $TO/${LIST[$IDX]}"
+    rsync -qa --delete "$FROM/${LIST[$IDX]}" "$TO"
+done
+```
+
+`mapfile -t` lê cada linha do ficheiro para um elemento do array, removendo o `\n` final.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 6 — Formatação com `printf`
+
+**Enunciado:** Reescreva o seguinte `echo -e` usando `printf` para exibir o SO e a RAM livre formatados.
+
+```bash
+echo -e "Operating system:\t$OS"
+echo -e "Unallocated RAM:\t$(( $FREE / 1024**2 )) MB"
+```
+
+
+
+<SolutionBlock>
+```bash
+printf "Operating system:\t%s\nUnallocated RAM:\t%d MB\n" "$OS" "$(( $FREE / 1024**2 ))"
+```
+
+`printf` não adiciona `\n` automaticamente — é necessário incluir no formato. `%s` para strings, `%d` para inteiros.
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T01 - 105.1 Personalizar e trabalhar no ambiente shell]()
+→ Próximo: [T03 - 106.1 Instalar e configurar o X11]()

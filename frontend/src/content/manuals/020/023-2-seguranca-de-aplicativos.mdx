@@ -1,0 +1,172 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="023.2 — Segurança de Aplicativos"
+  code="020"
+  topicNumber="T09"
+  objective="023.2"
+  weight={3}
+  pages="LPI Security Essentials (020) - Version 1.0"
+  accent="coral"
+/>
+
+
+
+## Resumo Conciso
+
+A segurança de software abrange a instalação segura, atualizações regulares e a gestão de ligações de rede para manter a integridade dos sistemas e dados.
+
+### Tipos Comuns de Software
+
+| Tipo | Descrição | Importância de Atualização |
+|---|---|---|
+| **Firmware** | Software de baixo nível embutido em hardware | Vulnerabilidade pode comprometer todo o dispositivo |
+| **Sistemas Operacionais** | Software central que gere recursos de hardware/software | Patches de segurança para protocolos de rede, memória, controlo de acesso |
+| **Aplicativos** | Programas para tarefas específicas do utilizador | Corrigir bugs, prevenir injeções, estouros de buffer |
+
+### Aquisição e Instalação Segura de Software
+
+- **Lojas de aplicativos oficiais**: Apple App Store, Google Play Store, Microsoft Store — verificação de segurança, mas não são infalíveis
+- **Sítios de fornecedores**: Verificar certificados HTTPS e assinaturas digitais
+- **Gestores de pacotes**: APT (Linux), Windows Package Manager — repositórios confiáveis
+- **Práticas recomendadas**: Evitar fontes não confiáveis, verificar integridade via hashes/assinaturas digitais
+
+### Fontes para Aplicativos Móveis
+
+| Fonte | Nível de Segurança | Observações |
+|---|---|---|
+| Lojas oficiais (App Store, Play Store) | Alto | Processos rigorosos de verificação |
+| Lojas de terceiros | Baixo | Risco significativamente maior, sem verificação rigorosa |
+| Lojas empresariais | Médio/Alto | Exigem gestão cuidadosa para distribuição segura |
+
+### Vulnerabilidades Comuns de Software
+
+| Vulnerabilidade | Descrição | Mitigação |
+|---|---|---|
+| **Buffer Overflow** | Gravação de dados em excesso num buffer, sobrescrevendo memória adjacente | Validação de entrada, verificações de limites, stack canaries, ASLR |
+| **Injeção de SQL** | Inserção de código SQL malicioso em campos de entrada | Sanitização de entrada, consultas parametrizadas |
+
+### Software de Proteção Local
+
+| Ferramenta | Camada | Descrição |
+|---|---|---|
+| **Filtros de pacotes locais** | Rede | Inspecionam pacotes individuais com base em regras (IP, porta, protocolo) |
+| **Firewalls de endpoint** | Dispositivo | Proteção abrangente para dispositivos individuais, controlam todo o tráfego |
+| **Firewalls de camada de aplicação** | Aplicação | Inspecionam tráfego de protocolos como HTTP, FTP, SMTP |
+
+### Exemplos de Ferramentas
+
+| Plataforma | Ferramenta | Tipo |
+|---|---|---|
+| Linux | iptables | Filtro de pacotes |
+| Linux | SELinux | Controlo de acesso obrigatório (MAC) |
+| Windows | Windows Defender Firewall | Filtro de pacotes + firewall de endpoint |
+| macOS | Firewall integrado | Filtro de pacotes + firewall de endpoint |
+| Web | ModSecurity (WAF) | Firewall de camada de aplicação |
+| Web | F5 BIG-IP | Firewall de camada de aplicação |
+| Cloud | AWS WAF, Cloud Armor, Azure WAF | Firewalls baseados em nuvem |
+
+## Exercícios Guiados
+
+### Exercício Guiado 1: Importância da Instalação Segura de Software
+
+**Enunciado:** Qual é a importância da instalação segura de software?
+
+**Solução:**
+Garantir que o software seja instalado a partir de fontes confiáveis ajuda a prevenir a introdução de código malicioso. Esse processo assegura que o software é legítimo e livre de ameaças de segurança, reduzindo o risco de acesso não autorizado ou infecções por malware.
+
+### Exercício Guiado 2: Atualização Regular de Software
+
+**Enunciado:** Por que a atualização regular de software é crucial para a segurança?
+
+**Solução:**
+Atualizações de software e patches são vitais porque abordam vulnerabilidades que os invasores podem explorar. Atualizações regulares garantem que quaisquer falhas de segurança sejam corrigidas, ajudando a proteger os sistemas contra ameaças conhecidas. É também importante monitorar o ciclo de vida do SO, pois sistemas antigos podem deixar de receber atualizações críticas.
+
+### Exercício Guiado 3: Gestão de Ligações de Rede
+
+**Enunciado:** Como o gestão de ligações de rede protege o software contra ameaças?
+
+**Solução:**
+Firewalls, filtros de pacotes e proteção de endpoint garantem que o software se comunique apenas com redes autorizadas. Isso previne o acesso não autorizado e protege o software de ser comprometido por ligações indesejadas, como tráfego malicioso de entrada.
+
+### Exercício Guiado 4: Comparação entre Filtro de Pacotes e Firewall de Endpoint
+
+**Enunciado:** Como um firewall de endpoint difere de um filtro de pacotes?
+
+**Solução:**
+- **Filtro de pacotes**: Inspeciona e filtra pacotes de dados com base em regras predefinidas da camada de rede (endereços IP, portas, protocolos). Controlo básico de tráfego.
+- **Firewall de endpoint**: Monitora e controla todo o tráfego de entrada e saída do dispositivo. Impõe políticas de segurança mais complexas, como bloquear aplicativos não autorizados e impedir que dispositivos externos se conectem. Mais eficaz para proteger sistemas individuais.
+
+Exemplos: Windows Defender Firewall e firewall integrado do macOS.
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1: Buffer Overflow
+
+**Enunciado:** O que acontece durante um buffer overflow?
+
+
+
+<SolutionBlock>
+Um buffer overflow ocorre quando mais dados são gravados num buffer do que ele pode suportar, levando à sobrescrição da memória adjacente. Isso pode permitir que invasores injetem código malicioso ou causem uma falha no sistema. Para prevenir isso, os desenvolvedores devem usar práticas de codificação seguras, como validação de entrada e verificações de limites, e empregar recursos de segurança como stack canaries e ASLR (Randomização do Layout do Espaço de Endereço).
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2: Injeção de SQL
+
+**Enunciado:** Como os invasores exploram vulnerabilidades de injeção de SQL?
+
+
+
+<SolutionBlock>
+A injeção de SQL ocorre quando invasores inserem código SQL malicioso nos campos de entrada de um aplicativo web, manipulando o base de dados para obter acesso não autorizado a dados sensíveis ou realizar operações destrutivas. Isso pode ser mitigado ao limpar as entradas dos utilizadores e utilizando consultas parametrizadas, que impedem a manipulação direta das declarações SQL.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3: Firewall de Endpoint vs. Filtro de Pacotes
+
+**Enunciado:** Compare detalhadamente um firewall de endpoint e um filtro de pacotes, incluindo exemplos de cada.
+
+
+
+<SolutionBlock>
+| Característica | Filtro de Pacotes | Firewall de Endpoint |
+|---|---|---|
+| Camada | Rede | Dispositivo |
+| Inspeção | Pacotes individuais | Todo o tráfego E/S do dispositivo |
+| Políticas | Regras predefinidas (IP, porta) | Políticas complexas (bloquear apps, controlar dados) |
+| Exemplo | iptables | Windows Defender Firewall |
+
+O firewall de endpoint oferece proteção mais abrangente ao monitorar e controlar todo o tráfego específico do dispositivo, enquanto o filtro de pacotes apenas inspeciona pacotes com base em regras da camada de rede.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4: Firewalls de Camada de Aplicação
+
+**Enunciado:** Explique o funcionamento de firewalls de camada de aplicação e forneça exemplos de implementações.
+
+
+
+<SolutionBlock>
+Firewalls de camada de aplicação operam a um nível mais alto que filtros de pacotes ou firewalls de endpoint, inspecionando o tráfego relacionado a aplicativos ou serviços específicos. Monitoram dados trocados na camada de aplicação (HTTP, FTP, SMTP), permitindo bloquear tráfego com base no tipo de aplicativo ou conteúdo dos dados transmitidos.
+
+**Exemplos**:
+- **ModSecurity**: WAF de código aberto que protege contra injeção de SQL e XSS
+- **F5 BIG-IP**: Capacidades avançadas para gerenciar tráfego em nível de aplicativo
+- **AWS WAF**: Proteção contra explorações web comuns na AWS
+- **Cloud Armor (Google Cloud)**: Mitiga vulnerabilidades e protege contra DDoS
+- **Azure WAF**: Proteção centralizada para aplicativos na Azure
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T08 - 023.1 Segurança de Hardware]()
+→ Próximo: [T10 - 023.3 Malware]()

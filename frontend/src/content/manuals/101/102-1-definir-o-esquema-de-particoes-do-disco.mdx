@@ -1,0 +1,123 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="Definir o esquema de partições do disco"
+  code="101"
+  topicNumber="T04"
+  objective="Definir o esquema de partições do disco"
+  weight={2}
+  pages="LPIC-1 (101) - Version 5.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Conceitos Fundamentais
+
+| Conceito | Descrição |
+|----------|-----------|
+| **Disco** | Receptáculo físico para dados (dispositivo de armazenamento) |
+| **Partição** | Subconjunto lógico do disco; informação armazenada em tabela de partições |
+| **Sistema de Arquivos** | Descreve como informações são armazenadas (diretórios, relação entre eles, dados dos arquivos) |
+| **Ponto de Montagem** | Local na árvore de diretórios onde um sistema de arquivos é vinculado |
+| **LVM** | Gerenciador de Volumes Lógicos - permite combinar partições em volumes lógicos |
+
+### Diretórios e Suas Partições
+
+| Diretório | Função | Observações |
+|-----------|--------|-------------|
+| `/` | Sistema de arquivos raiz | Pode ser SSD rápido |
+| `/boot` | Arquivos do gerenciador de inicialização (GRUB2), kernel e disco RAM inicial | Tamanho recomendado: ~300 MB. Termina antes do cilindro 1024 (528 MB) |
+| `/boot/efi` | Partição do Sistema EFI (ESP) | Formato FAT; ID GPT: `C12A7328-F81F-11D2-BA4B-00A0C93EC93B`; ID MBR: `0xEF` |
+| `/home` | Diretórios pessoais dos usuários | Exceção: root vai para `/root` |
+| `/var` | Dados variáveis (logs, temp, cache, Apache, MySQL) | Partição separada evita pânico do kernel por falta de espaço |
+| `/mnt` | Montagem manual de sistemas de arquivos | Tradição desde dispositivos externos |
+| `/media` | Mídia removível (USB, CD-ROM, cartão de memória) | Montagem automática em `/media/USER/LABEL` |
+
+### Tamanhos de Swap Recomendados (Red Hat)
+
+| RAM | Swap Recomendado | Swap c/ Hibernação |
+|-----|-----------------|-------------------|
+| &lt; 2 GB | 2x a RAM | 3x a RAM |
+| 2-8 GB | Igual à RAM | 2x a RAM |
+| 8-64 GB | Mínimo 4 GB | 1.5x a RAM |
+| > 64 GB | Mínimo 4 GB | Não recomendado |
+
+### LVM - Gerenciamento de Volumes Lógicos
+
+| Componente | Sigla | Descrição |
+|------------|-------|-----------|
+| Volume Físico | PV | Dispositivo de bloco (partição ou RAID) |
+| Grupo de Volumes | VG | Agrupamento de PVs; visto como único dispositivo lógico |
+| Volume Lógico | LV | Subdivisão do VG; funcionalidade semelhante a partições |
+| Extensão Física | PE | Unidade de tamanho fixo em um PV (padrão: 4 MB) |
+| Extensão Lógica | LE | Unidade de tamanho fixo em um LV |
+
+- Dispositivo LV criado em `/dev/VGNAME/LVNAME`
+- Formatar com `mkfs.ext4` (ver T18) e montar com `mount` ou `/etc/fstab` (ver T20)
+
+### Partição de Inicialização
+
+- Contém arquivos do gerenciador de inicialização (GRUB2 ou GRUB Legacy) — ver T05
+- Localizada geralmente como primeira partição do disco
+- Razão: compatibilidade com BIOS legada (INT13 original: máx 1024 cilindros × 16 cabeças × 63 setores × 512 bytes ≈ 528 MB)
+- Arquivos do GRUB em `/boot/grub`
+- Tamanho recomendado: ~300 MB
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Menor unidade do VG
+**Enunciado:** Qual a menor unidade dentro de um Grupo de Volumes?
+
+
+
+<SolutionBlock>
+Os Grupos de Volumes são subdivididos em extensões.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Tamanho do LV
+**Enunciado:** Como se define o tamanho de um Volume Lógico?
+
+
+
+<SolutionBlock>
+Pelo tamanho das extensões físicas multiplicado pelo número de extensões no volume.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — ID da partição EFI no MBR
+**Enunciado:** Em um disco formatado com o esquema de particionamento MBR, qual a ID da Partição do Sistema EFI?
+
+
+
+<SolutionBlock>
+A ID é `0xEF`.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Aumentar espaço de troca
+**Enunciado:** Além das partições de troca, como é possível aumentar rapidamente o espaço de troca em um sistema Linux?
+
+
+
+<SolutionBlock>
+Podem ser usados arquivos de troca.
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T03 - 101.3 Alterar níveis de execução - destinos de energia]()
+→ Próximo: [T05 - 102.2 Instalar um gerenciador de inicialização]()

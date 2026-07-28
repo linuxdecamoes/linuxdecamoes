@@ -1,0 +1,268 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="105.1 Personalizar e trabalhar no ambiente shell"
+  code="102"
+  topicNumber="T01"
+  objective="Personalizar e trabalhar no ambiente shell de comandos Linux"
+  weight={4}
+  pages="LPIC-1 (102) - Version 5.0"
+  accent="iris"
+/>
+
+
+
+## Resumo Conciso
+
+### Tipos de shell
+
+| Tipo | Descrição | Exemplo |
+|------|-----------|---------|
+| Interativo de login | Login no sistema | `su - user2`, Ctrl+Alt+F2, `ssh` |
+| Interativo sem login | Shell aberto após login | `bash`, gnome-terminal, konsole |
+| Não-interativo sem login | Scripts executados | `./script.sh` |
+
+### Ficheiros de inicialização
+
+| Shell | Nível global | Nível local (utilizador) |
+|-------|-------------|------------------------|
+| Login interativo | `/etc/profile`, `/etc/profile.d/*` | `~/.bash_profile` → `~/.bash_login` → `~/.profile` |
+| Login interativo | — | `~/.bash_logout` (ao sair) |
+| Interativo sem login | `/etc/bash.bashrc` | `~/.bashrc` (→ `~/.bash_aliases`) |
+| Não-interativo sem login | — | `BASH_ENV` (variável) |
+
+> Os ficheiros locais têm precedência sobre os globais. Quando vários ficheiros existem, o primeiro encontrado é executado e os restantes são ignorados.
+
+### Variáveis: local vs global
+
+| Característica | Variável local | Variável de ambiente |
+|---------------|---------------|---------------------|
+| Escopo | Shell atual | Shell + processos filhos |
+| Convenção | Minúsculas | Maiúsculas |
+| Criar | `var=valor` | `export var=valor` |
+| Listar | `set \| less` | `export`, `env`, `printenv` |
+| Remover | `unset var` | `unset var` |
+| Imutável | `readonly var` | `readonly var` |
+
+### Comandos essenciais
+
+| Comando | Função |
+|---------|--------|
+| `bash -l` | Shell de login |
+| `bash -i` | Shell interativo |
+| `bash --noprofile` | Ignora `/etc/profile` e ficheiros de login do utilizador |
+| `bash --norc` | Ignora `/etc/bash.bashrc` e `~/.bashrc` |
+| `bash --rcfile <file>` | Usa `<file>` como ficheiro de inicialização |
+| `su - user` | Shell de login interativo como `user` |
+| `T17 sudo -i` | Shell de login interativo como root |
+| `source ~/.bashrc` / `. ~/.bashrc` | Executa o ficheiro no shell atual |
+| `echo $0` | Mostra o tipo de shell atual |
+
+### Variáveis de ambiente comuns
+
+| Variável | Função |
+|----------|--------|
+| `PATH` | Directórios de busca de executáveis (separados por `:`) |
+| `HOME` | Directório home do utilizador |
+| `USER` | Nome do utilizador atual |
+| `SHELL` | Caminho do shell atual |
+| `PS1` | Prompt do shell |
+| `LANG` | Idioma do sistema |
+| `HISTSIZE` | Nº de comandos em memória |
+| `HISTFILE` | Ficheiro de histórico (`~/.bash_history`) |
+| `DISPLAY` | Servidor X (`:0`, `:1`, etc.) |
+
+### Sourcing com `.` e `source`
+
+- `.` e `source` são sinónimos — executam um ficheiro no shell atual
+- Usado para aplicar alterações a `~/.bashrc` sem reiniciar sessão
+- O directório `/etc/skel` é o modelo para novas contas de utilizador (SKEL)
+
+### Aliases e funções
+
+| Recurso | Aliases | Funções |
+|---------|---------|---------|
+| Variáveis locais | Sim | Sim |
+| Variáveis de ambiente | Sim | Sim |
+| Escapáveis com `\` | Sim | Não |
+| Recursivas | Sim | Sim |
+| Com parâmetros posicionais | Não (pouco prático) | Sim |
+
+| `sudo ssh user2@machine2` | Sim | Sim | — |
+|---|---|---|---|
+| Ctrl+Alt+F2 | Sim | Sim | — |
+| `su - user2` | Sim | Sim | — |
+| gnome-terminal | Sim | Não | — |
+| Um utilizador usa o konsole para iniciar sakura | Sim | Não | — |
+| Um script chamado test.sh com `echo $0` | Não | Não | — |
+
+**Solução:**
+
+| Shell iniciado com… | Interativo? | Login? | `echo $0` |
+|---------------------|-------------|--------|-----------|
+| `sudo ssh user2@machine2` | Sim | Sim | `-bash` |
+| Ctrl+Alt+F2 | Sim | Sim | `-bash` |
+| `su - user2` | Sim | Sim | `-bash` |
+| gnome-terminal | Sim | Não | `bash` |
+| konsole → sakura | Sim | Não | `/bin/bash` |
+| test.sh | Não | Não | `./test.sh` |
+
+### Exercício Guiado 2 — Comandos `su` e `sudo` para shells específicos
+
+**Enunciado:** Escreva os comandos `su` e `sudo` para lançar cada tipo de shell.
+
+| Shell desejado | `su` | `sudo` |
+|----------------|------|--------|
+| Login interativo como user2 | `su - user2` / `su -l user2` | `sudo su - user2` |
+| Login interativo como root | `su - root` / `su -` | `sudo su - root` / `sudo -i` |
+| Sem login interativo como root | `su root` / `su` | `sudo su root` / `sudo -s` |
+| Sem login interativo como user2 | `su user2` | `sudo su user2` / `sudo -u user2 -s` |
+
+### Exercício Guiado 3 — Ficheiros de inicialização por tipo de shell
+
+**Enunciado:** Indique quais ficheiros são lidos para cada tipo de shell.
+
+| Tipo de shell | `/etc/profile` | `/etc/bash.bashrc` | `~/.profile` | `~/.bashrc` |
+|---------------|---------------|-------------------|-------------|------------|
+| Login interativo (user2) | Sim | Sim | Sim | Sim |
+| Login interativo (root) | Sim | Sim | Sim | Sim |
+| Sem login interativo (root) | Não | Sim | Não | Sim |
+| Sem login interativo (user2) | Não | Sim | Não | Sim |
+
+### Exercício Guiado 4 — Variáveis locais vs globais
+
+**Enunciado:** Analise a atribuição de variáveis e indique se cada uma é Local ou Global:
+
+| Comando | Local | Global |
+|---------|-------|--------|
+| `debian=mother` | Sim | Não |
+| `ubuntu=deb-based` | Sim | Não |
+| `mint=ubuntu-based; export mint` | Não | Sim |
+| `export suse=rpm-based` | Não | Sim |
+| `zorin=ubuntu-based` | Sim | Não |
+
+### Exercício Guiado 5 — Variáveis de ambiente: significado
+
+**Enunciado:** Interprete a saída de comandos com variáveis de ambiente:
+
+| Comando | Saída | Significado |
+|---------|-------|-------------|
+| `echo $HISTCONTROL` | `ignoreboth` | Comandos duplicados e os que começam com espaço não são salvos |
+| `echo ~` | `/home/carol` | HOME de carol é `/home/carol` |
+| `echo $DISPLAY` | `reptilium:0:2` | Servidor X na máquina reptilium, segunda tela |
+| `echo $MAILCHECK` | `60` | Verificação de email a cada 60 segundos |
+
+---
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Verificar tipo de shell
+
+**Enunciado:** Descubra em que tipo de shell está a trabalhar.
+
+
+
+<SolutionBlock>
+```bash
+echo $0
+```
+
+- `-bash` ou `-su` → shell de login interativo
+- `bash` ou `/bin/bash` → shell interativo sem login
+- `<nome_do_script>` → shell não-interativo sem login
+
+```bash
+# Ver shells bash em execução:
+ps aux | grep bash
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Função em ficheiro de inicialização
+
+**Enunciado:** Crie uma função `hello()` que imprima "Hello world!" e faça-a persistir em `~/.bashrc`.
+
+
+
+<SolutionBlock>
+```bash
+# Adicionar ao ~/.bashrc:
+echo 'hello() { echo "Hello world!"; }' >> ~/.bashrc
+source ~/.bashrc
+hello
+```
+
+Para tornar a função disponível: `source ~/.bashrc` ou `. ~/.bashrc`. Para invocar: `hello`. Para persistir entre sessões, colocar em `~/.bashrc` (shell interativo sem login) ou `/etc/bash.bashrc` (para todos os utilizadores root).
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Sourcing sem reiniciar
+
+**Enunciado:** Altere variáveis em `~/.bashrc` e aplique as alterações sem reiniciar.
+
+
+
+<SolutionBlock>
+```bash
+# Duas formas de aplicar alterações:
+source ~/.bashrc
+# ou
+. ~/.bashrc
+```
+
+Ambos os comandos (`source` e `.`) executam o ficheiro no shell atual, aplicando imediatamente as alterações sem necessidade de logout/login.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Criar `~/.bash_login` para novos utilizadores
+
+**Enunciado:** Como administrador, crie `~/.bash_login` para todos os novos utilizadores do sistema.
+
+
+
+<SolutionBlock>
+```bash
+# Criar o ficheiro no directório skel:
+echo 'date' > /etc/skel/.bash_login
+```
+
+O directório `/etc/skel` é copiado para o directório home de cada novo utilizador. Colocar `.bash_login` em `/etc/skel` garante que todos os novos utilizadores o receberão automaticamente.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 5 — Criar pasta `~/bin` e adicionar ao PATH
+
+**Enunciado:** Crie `~/bin`, adicione-a ao PATH e torne a mudança persistente.
+
+
+
+<SolutionBlock>
+```bash
+mkdir ~/bin
+PATH="$HOME/bin:$PATH"
+```
+
+Para persistir em `~/.profile`:
+
+```bash
+if [ -d "$HOME/bin" ] ; then
+    PATH="$HOME/bin:$PATH"
+fi
+```
+
+A declaração `if` verifica se `~/bin` existe antes de adicionar ao PATH. Colocar em `~/.profile` garante que é executado no login. Usar `~/.bashrc` se preferir que aplique a todos os shells interativos.
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Início: [102 - Visão Geral]()
+→ Próximo: [T02 - 105.2 Editar e escrever scripts simples]()

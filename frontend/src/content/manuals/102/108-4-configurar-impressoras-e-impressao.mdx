@@ -1,0 +1,183 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="108.4 Configurar impressoras e impressão"
+  code="102"
+  topicNumber="T12"
+  objective="Configurar impressoras e impressão"
+  weight={2}
+  pages="LPIC-1 (102) - Version 5.0"
+  accent="iris"
+/>
+
+
+
+## Resumo Conciso
+
+### CUPS — Common Unix Printing System
+
+**Fluxo de impressão:**
+1. Utilizador envia ficheiro para impressão
+2. Daemon `cupsd` coloca na fila (spool) — recebe ID do CUPS
+3. Filtros do CUPS geram ficheiro formatado para a impressora
+4. CUPS envia o ficheiro reformatado à impressora
+
+### Ficheiros e Directórios Importantes
+
+| Caminho | Função |
+|---|---|
+| `/etc/cups/cupsd.conf` | Configuração principal do CUPS |
+| `/etc/printcap` | Ficheiro legado LPD (lista impressoras) |
+| `/etc/cups/printers.conf` | Impressoras configuradas no CUPS |
+| `/etc/cups/ppd/` | Ficheiros PostScript Printer Description |
+| `/var/log/cups/access_log` | Log de acesso à interface web |
+| `/var/log/cups/page_log` | Log de trabalhos de impressão |
+| `/var/log/cups/error_log` | Log de erros |
+
+### Interface Web CUPS
+
+- URL padrão: `http://localhost:631`
+- Porta: **631/TCP**
+- Habilitada em `cupsd.conf`: `WebInterface Yes`
+- Requer autenticação de root para operações administrativas
+
+### Comandos LPD/LPR
+
+| Comando | Função | Opções importantes |
+|---|---|---|
+| `lpadmin` | Instala/remove impressoras | `-p` (nome), `-L` (local), `-v` (URI), `-m` (modelo), `-x` (remover) |
+| `lpoptions` | Configura opções da impressora | `-d` (definir padrão) |
+| `lpstat` | Exibe status das impressoras | `-p` (listar), `-d` (padrão), `-v` (detalhes), `-o` (filas) |
+| `lpr` | Envia trabalhos de impressão | `-P` (impressora), `-o` (opções), `-#N` (nº de cópias) |
+| `lp` | Envia trabalhos (alternativa a lpr) | `-d` (impressora), `-n` (nº de cópias), `-o` (opções) |
+| `lpq` | Lista trabalhos na fila | `-a` (todas as impressoras) |
+| `lprm` | Cancela trabalho por ID | `-` (todos os trabalhos) |
+| `cancel` | Cancela trabalho (alternativa a lprm) | Nome-impressora-ID |
+| `lpmove` | Move trabalho entre filas | `ORIGEM-ID DESTINO` |
+| `cupsdisable` | Desabilita impressora | Nome da impressora |
+| `cupsaccept` | Aceita novos trabalhos | Nome da impressora |
+| `cupsreject` | Rejeita novos trabalhos | `-r` (motivo), Nome da impressora |
+
+### Opções de Impressão (`-o`)
+
+| Opção | Efeito |
+|---|---|
+| `landscape` | Modo paisagem (página rotacionada 90°) |
+| `two-sided-long-edge` | Dupla face, retrato |
+| `two-sided-short-edge` | Dupla face, paisagem |
+| `media=A4` | Tamanho do papel (A4, Letter, Legal, DL, COM10) |
+| `collate=true` | Agrupar cópias |
+| `page-ranges=5-7,9` | Selecionar páginas específicas |
+| `fit-to-page` | Redimensionar para caber no papel |
+| `outputorder=reverse` | Ordem inversa de impressão |
+
+### Formato de Configuração do CUPS
+
+A sintaxe do `cupsd.conf` é semelhante ao Apache 2:
+```
+<Limit CUPS-Add-Modify-Printer>
+  AuthType Default
+  Require user @SYSTEM
+  Order deny,allow
+</Limit>
+```
+
+### Remoção de Impressora (passos)
+
+1. `lpstat -v` — listar impressoras
+2. `cupsreject -r "motivo" IMPRESSORA` — rejeitar novos trabalhos
+3. `lpadmin -x IMPRESSORA` — remover
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Verificar impressora PDF
+
+**Enunciado:** Instale `cups` e `printer-driver-cups-pdf`, verifique se a impressora PDF está ativa e definida como padrão.
+
+
+
+<SolutionBlock>
+```bash
+# Instalar pacotes (Debian/Ubuntu)
+sudo apt install cups printer-driver-cups-pdf cups-client
+
+# Verificar status e impressora padrão
+lpstat -p -d
+```
+Saída esperada:
+```
+printer PDF is idle.  enabled since ...
+system default destination: PDF
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Imprimir ficheiro para PDF
+
+**Enunciado:** Imprima o ficheiro `/etc/services` na impressora PDF.
+
+
+
+<SolutionBlock>
+```bash
+lp -d PDF /etc/services
+```
+O resultado será um ficheiro PDF no directório `PDF` dentro do directório inicial do utilizador.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Desabilitar e verificar
+
+**Enunciado:** Desabilite a impressora PDF e verifique com `lpstat`.
+
+
+
+<SolutionBlock>
+```bash
+# Desabilitar
+sudo cupsdisable PDF
+
+# Verificar status
+lpstat -t
+```
+Saída mostrará: `printer PDF disabled ... - Paused`
+Tentar imprimir manterá o trabalho na fila sem processar.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Cancelar e remover
+
+**Enunciado:** Cancele o trabalho pendente e remova a impressora PDF.
+
+
+
+<SolutionBlock>
+```bash
+# Listar trabalhos
+lpstat -o
+
+# Cancelar trabalho (exemplo com ID 4)
+cancel PDF-4
+
+# Remover impressora
+sudo lpadmin -x PDF
+
+# Verificar remoção
+lpstat -a
+```
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T11 - 108.3 Fundamentos de MTA (Mail Transfer Agent)]()
+→ Próximo: [T13 - 109.1 Fundamentos de protocolos de internet]()

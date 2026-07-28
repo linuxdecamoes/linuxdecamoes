@@ -1,0 +1,249 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T09 — Seletores de CSS e aplicação de estilo"
+  code="030"
+  topicNumber="T09"
+  objective="033.2"
+  weight={3}
+  pages="LPI Web Development Essentials (030) - Version 1.0"
+  accent="amber"
+/>
+
+
+
+## Resumo Conciso
+
+### Tipos de Seletores CSS
+
+| Seletor | Sintaxe | Descrição | Exemplo |
+|---------|---------|-----------|---------|
+| Universal | `*` | Aplica-se a todos os elementos | `* { color: purple }` |
+| Tipo (tag) | `element` | Aplica-se a todos os elementos desse tipo | `p { font-size: 14px }` |
+| ID | `#id` | Aplica-se a um único elemento com esse ID | `#topmenu { list-style-type: none }` |
+| Classe | `.class` | Aplica-se a todos os elementos com essa classe | `.menu { font-style: oblique }` |
+| Descendente | `ancestor descendant` | Elementos descendentes de um ancestral | `#content ul { list-style-type: circle }` |
+| Agrupado | `sel1, sel2` | Aplica as mesmas regras a múltiplos seletores | `#topmenu, #footer ul { font-style: oblique }` |
+
+### Estilos de Página Inteira
+
+O seletor universal `*` aplica regras **diretamente** a todos os elementos (não por herança). Em muitos casos, o efeito visual assemelha-se a aplicar a regra a `body` (cuja `color` e `font-size` são depois herdadas pelos descendentes), mas há diferenças importantes: `*` atinge **todos** os elementos, incluindo aqueles cujas propriedades não são herdadas (como a `border`), e atribui a cada elemento o seu próprio valor em vez de depender da herança.
+
+```css
+/* * atinge todos os elementos diretamente (não é o mesmo que body { ... },
+   embora para `color` o resultado visual possa coincidir devido à herança) */
+* { color: purple; font-size: large }
+```
+
+### Especificidade e Cascata
+
+Quando dois seletores correspondem ao mesmo elemento com propriedades conflitantes:
+
+1. O navegador aplica a regra do seletor **mais específico**
+2. Se ambos são igualmente específicos, aplica-se a regra que aparece **em último lugar**
+3. A regra `!important` sobrepõe todas as outras (usar com cautela!)
+
+**Exemplo de conflito:**
+
+```css
+body { color: purple; font-size: large }
+li   { font-size: small }
+```
+
+→ Elementos `li` receberão `font-size: small` (seletor mais específico), mas manterão `color: purple` (herdado de `body`).
+
+**Exemplo com `!important`:**
+
+```css
+li { font-size: small !important; }
+li { font-size: x-small; }
+```
+
+→ Aplica `font-size: small` porque `!important` sobrepõe a última regra.
+
+### Seletores por ID
+
+O caractere `#` identifica um seletor por ID. O nome da tag à esquerda é opcional:
+
+```css
+ul#topmenu { list-style-type: none }  /* Equivalente a #topmenu { ... } */
+```
+
+- Cada ID deve ser único na página
+- Preferível para elementos-chave de layout
+
+### Seletores Descendentes
+
+Permitem corresponder a elementos internos de um contêiner:
+
+```css
+#content ul { list-style-type: circle }
+#content ul li { font-size: small }  /* seletor descendente mais específico: afeta apenas <li> dentro de <ul> dentro de #content */
+```
+
+### Agrupamento de Seletores
+
+Seletores que partilham as mesmas regras podem ser agrupados com vírgulas:
+
+```css
+#topmenu, #footer ul {
+  font-style: oblique
+}
+```
+
+### Classes
+
+As classes identificam grupos de elementos que partilham características. Um ponto (`.`) precede o nome da classe:
+
+```css
+.menu { font-style: oblique }
+.menu.top { font-size: large }
+.menu.footer { font-size: small }
+```
+
+**Regras importantes:**
+
+| Sintaxe | Significado |
+|---------|-------------|
+| `.menu.top` | Elementos com **ambas** as classes `menu` e `top` |
+| `.menu .top` | Elementos com classe `top` que são **descendentes** de um elemento com classe `menu` |
+| `ul.menu` | Apenas elementos `ul` com a classe `menu` |
+| `.menu` | Qualquer elemento com a classe `menu` |
+
+- Uma tag pode ter múltiplas classes (separadas por espaços): `class="menu top"`
+
+### Pseudoclasses
+
+Seletores que correspondem a estados dinâmicos dos elementos:
+
+| Pseudoclasse | Descrição |
+|-------------|-----------|
+| `:hover` | Quando o ponteiro do mouse está sobre o elemento |
+| `:visited` | Hiperlinks já visitados |
+| `:focus` | Elementos de formulário em foco |
+
+**Exemplo:**
+
+```css
+.menu.top a { text-decoration: none }
+.menu.top a:hover { text-decoration: underline }
+```
+
+## 🧭 Exercícios Guiados (resolvidos)
+
+### Exercício Guiado 1 — Conflito de seletores
+
+**Enunciado:** Suponha que uma página HTML tenha as duas regras seguintes: `p { color: green }` e `p { color: red }`. Que cor o navegador aplicará ao texto dentro dos elementos `p`?
+
+**Solução passo a passo:**
+
+1. Ambos os seletores são idênticos (`p`), logo têm a mesma especificidade
+2. Quando dois seletores equivalentes têm propriedades conflitantes, o navegador dá preferência ao **último**
+3. **Resposta:** A cor `red` (vermelha) será aplicada
+
+### Exercício Guiado 2 — Diferença entre div#main e #main
+
+**Enunciado:** Qual é a diferença entre usar o seletor de ID `div#main` e `#main`?
+
+**Solução passo a passo:**
+
+1. `div#main` afeta apenas elementos `<div>` que possuem o ID `main`
+2. `#main` afeta **qualquer** elemento que tenha o ID `main`, independentemente do tipo de tag
+3. Na prática, como IDs devem ser únicos, a diferença é raramente relevante
+
+### Exercício Guiado 3 — Seletor descendente com ID
+
+**Enunciado:** Qual seletor corresponde a todos os elementos `p` usados dentro de um `div` com o atributo de ID `#main`?
+
+**Solução passo a passo:**
+
+1. Usar o seletor descendente para combinar o ID do contêiner com o tipo de elemento filho
+2. **Resposta:** `#main p` ou `div#main p`
+
+### Exercício Guiado 4 — Diferença entre seletores de classe
+
+**Enunciado:** Qual é a diferença entre usar o seletor de classe `p.highlight` e `.highlight`?
+
+**Solução passo a passo:**
+
+1. `p.highlight` afeta somente os elementos de tipo `p` que têm a classe `highlight`
+2. `.highlight` afeta **todos** os elementos que têm a classe `highlight`, independentemente do tipo
+3. O primeiro é mais restritivo; o segundo é mais abrangente
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+1. **Enunciado:** Escreva uma única regra CSS que altere a propriedade `font-style` para `oblique`. A regra deve corresponder apenas aos elementos `<a>` que estão dentro de `<div id="sidebar">` ou `<ul class="links">`.
+
+   
+
+<SolutionBlock>
+```css
+   #sidebar a, ul.links a {
+     font-style: oblique
+   }
+   ```
+
+   Explicação: Usa-se o agrupamento de seletores com vírgula para aplicar a mesma regra a dois contextos diferentes. Cada seletor descendente restringe os elementos `<a>` ao seu contêiner específico.
+</SolutionBlock>
+
+
+
+2. **Enunciado:** Suponha que queira alterar o estilo dos elementos cujo atributo `class` está definido como `article reference` (duas classes no mesmo elemento). O seletor `.article .reference` não altera a aparência. Por quê?
+
+   
+
+<SolutionBlock>
+O seletor `.article .reference` afeta os elementos com a classe `reference` que são **descendentes** de elementos com a classe `article` (dois elementos separados). Para afetar um elemento que tenha **ambas** as classes simultaneamente, o seletor deve ser `.article.reference` (sem espaço):
+
+   ```css
+   .article.reference { /* estilos */ }
+   ```
+</SolutionBlock>
+
+
+
+3. **Enunciado:** Escreva uma regra de CSS para alterar a propriedade `color` de todos os links visitados na página para `red`.
+
+   
+
+<SolutionBlock>
+```css
+   a:visited {
+     color: red;
+   }
+   ```
+
+   Explicação: A pseudoclasse `:visited` corresponde aos hiperlinks que o navegador do utilizador já visitou. Aplica-se ao elemento `<a>` genérico.
+</SolutionBlock>
+
+
+
+4. **Enunciado:** Usando um seletor de atributo e a pseudoclasse `:nth-child()`, escreva duas regras CSS que: (a) apliquem `background: yellow` a todos os `<input>` com `type="text"`; (b) apliquem `color: blue` apenas aos elementos `<li>` em posição **ímpar** dentro de uma lista.
+
+   
+
+<SolutionBlock>
+```css
+   /* (a) Seletor de atributo: corresponde a <input> cujo atributo type é exatamente "text" */
+   input[type="text"] {
+     background: yellow;
+   }
+
+   /* (b) :nth-child(odd) corresponde aos filhos ímpares (1.º, 3.º, 5.º, ...) */
+   li:nth-child(odd) {
+     color: blue;
+   }
+   ```
+
+   Explicação: O seletor de atributo `[attr="valor"]` permite selecionar elementos com base no valor de um atributo HTML, sem precisar de lhes adicionar uma classe. A pseudoclasse estrutural `:nth-child(n)` seleciona elementos pela sua posição entre os irmãos; `odd` (ímpar) é equivalente a `2n+1` e `even` (par) a `2n`.
+</SolutionBlock>
+
+
+
+## 🔗 Ligações
+
+← Anterior: [T08 — Noções básicas de CSS]()
+→ Próximo: [T10 — Estilização com CSS]()

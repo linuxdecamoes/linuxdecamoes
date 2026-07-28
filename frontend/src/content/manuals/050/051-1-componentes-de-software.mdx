@@ -1,0 +1,199 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T01 — 051.1 Componentes de software"
+  code="050"
+  topicNumber="T01"
+  objective="051.1"
+  weight={2}
+  pages="LPI Open Source Essentials (050) - Version 1.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### O que é software
+
+Software é a parte não-física, não-material, de qualquer tipo de computador. É o que permite que as partes físicas (hardware) interajam e que o computador aceite comandos e execute tarefas.
+
+| Conceito | Descrição |
+|---|---|
+| Software | Sequências de comando codificadas que controlam os componentes do computador |
+| Algoritmo | Maneira de resolver um problema (ex.: calcular uma média) |
+| Código-fonte | Texto escrito numa linguagem de programação, legível por humanos |
+| Código de máquina | Padrões de bits que a CPU executa diretamente |
+| Bytecode | Formato intermediário executado por uma máquina virtual em tempo de execução |
+
+### Linguagens de programação
+
+Linguagens artificiais altamente estruturadas que dizem a um computador o que ele deve fazer. Existem cerca de 400 linguagens reconhecidas.
+
+| Tipo | Descrição | Exemplos |
+|---|---|---|
+| Compiladas | Traduzidas em código de máquina ou bytecode por um compilador | C, C++, Java, C# |
+| Interpretadas | Executadas linha a linha por um interpretador | Python, Ruby, JavaScript |
+| Orientadas a dados | Otimizadas para processamento de grandes quantidades de dados | SQL, R, MATLAB |
+| Assembly | Linguagem de baixo nível com nomes para instruções de máquina | Usada em firmware, drivers, microcontroladores |
+
+### Características das linguagens de programação
+
+| Característica | Descrição |
+|---|---|
+| Concorrência | Tratamento de diversas tarefas simultaneamente (processos, tarefas, threads) |
+| Gestão de memória | Alocação e liberação de memória num programa (manual ou automática) |
+| Memória partilhada | Mecanismo que permite vários processos ler e manipular a mesma região de memória |
+| Passagem de mensagens | Comunicação entre processos via sockets, pipes ou filas de mensagens |
+| Coleta de lixo | Técnica de gestão automático de memória (garbage collection) |
+| Tipos de dados | Determinam que tipo de informação pode ser representada no programa |
+| Entrada e saída (E/S) | Mecanismos para ler e gravar dados de e para um programa |
+| Tratamento de erros | Detecção e resposta a erros durante a execução de um programa |
+
+### Sintaxe das linguagens
+
+| Elemento | Descrição |
+|---|---|
+| Procedimentos e funções | Blocos de código reutilizáveis chamados várias vezes |
+| Variáveis | Contêineres na memória que armazenam dados |
+| Operadores | Palavras-chave ou símbolos que atribuem valores e realizam operações |
+| Estrutura de controle | Declarações condicionais, loops e exceções que alteram o fluxo de execução |
+
+### Bibliotecas e vinculação
+
+| Conceito | Descrição |
+|---|---|
+| Biblioteca | Coleção de procedimentos e funções combinados num único ficheiro |
+| Vinculação (linking) | Combinação de ficheiros binários e bibliotecas pré-compiladas num executável |
+| Vinculação estática | Código da biblioteca incluído no executável final |
+| Vinculação dinâmica | Biblioteca partilhada por todas as aplicações que a utilizam |
+| Versionamento semântico | Três números separados por pontos (ex.: 2.39.16) |
+
+### Paradigmas de programação
+
+| Paradigma | Descrição | Linguagens-exemplo |
+|---|---|---|
+| Orientado a objetos (POO) | Baseia-se em objetos que encapsulam dados e comportamento | Java, C#, Python |
+| Procedural | Executa tarefas por meio de procedimentos/blocos de código | C, Pascal, Fortran |
+| Funcional | Enfatiza funções, imutabilidade e avaliação de expressões | Erlang, Haskell, Lisp, Scheme |
+| Imperativa | Concentra-se nas instruções para controlar o fluxo de transições | C, Assembly |
+| Declarativa | Descreve quais ações tomar sem especificar a ordem de execução | SQL, Prolog |
+| Natural | Utiliza linguagem natural para descrever o comportamento do programa | Scratch, Alice |
+
+### Código de máquina vs. linguagem assembly
+
+| Aspeto | Código de máquina | Linguagem assembly |
+|---|---|---|
+| Formato | Padrões de bits (0s e 1s) | Instruções com nomes legíveis |
+| Legibilidade | Muito baixa | Muito superior |
+| Uso atual | Execução direta pelo hardware | Firmware, drivers, microcontroladores |
+| Conversão | — | Convertida por um assembler |
+
+### Compiladores vs. interpretadores
+
+| Aspeto | Compilador | Interpretador |
+|---|---|---|
+| Funcão | Traduz todo o código-fonte para código de máquina ou bytecode antes de executar | Lê e executa cada linha de código imediatamente |
+| Velocidade de execução | Mais rápida | Mais lenta |
+| Flexibilidade | Requer recompilação após alterações | Modificações imediatas sem recompilação |
+| Uso típico | Aplicações de desempenho (C, C++) | Scripts, prototipagem rápida (Python, Ruby) |
+
+### Bytecode vs. código de máquina
+
+| Aspeto | Código de máquina | Bytecode |
+|---|---|---|
+| Execução | Executado diretamente pela CPU | Executado por uma máquina virtual |
+| Portabilidade | Dependente da plataforma | Independente da plataforma |
+| Desempenho | Máximo | Inferior (tradução em tempo de execução) |
+
+## Exercícios Guiados
+
+### Exercício Guiado 1 — Finalidade das funções
+
+**Enunciado:** Qual a finalidade das funções?
+
+**Solução:** As funções encapsulam certas atividades comuns, como a saída de uma string. Ao criar uma função, podemos permitir que aquele programa e outros programas executem a função de maneira conveniente e repetida, sem que precisem escrever o próprio código para ela. As funções são blocos de código reutilizáveis que podem ser chamados várias vezes, promovendo a reutilização e a manutenção do código.
+
+### Exercício Guiado 2 — Vantagem do bytecode sobre código de máquina
+
+**Enunciado:** Qual a vantagem do bytecode sobre um ficheiro de código de máquina?
+
+**Solução:** O ficheiro bytecode pode ser executado em vários computadores diferentes, nos quais uma máquina virtual transforma o código em código de máquina. Assim, por exemplo, o JavaScript é executado em muitos navegadores e em muitos tipos de computadores. O bytecode torna os programas independentes da plataforma, podendo ser executados em qualquer sistema com uma máquina virtual compatível.
+
+### Exercício Guiado 3 — Vantagem do código de máquina sobre bytecode
+
+**Enunciado:** Qual a vantagem de um ficheiro de código de máquina sobre o bytecode?
+
+**Solução:** O código de máquina é executado o mais rápido possível. O bytecode é executado mais lentamente porque a máquina virtual deve transformá-lo em código de máquina enquanto executa o bytecode. Para aplicações onde o desempenho é crítico, o código de máquina direto é preferível.
+
+### Exercício Guiado 4 — Função de um compilador
+
+**Enunciado:** Qual a função de um compilador no processo de execução de software?
+
+**Solução:** O compilador é responsável por traduzir o código-fonte escrito numa linguagem de programação de alto nível em código de máquina ou num formato intermediário chamado bytecode. Dentre as linguagens compiladas que produzem código de máquina diretamente estão o C e o C++. Já o Java e o C# produzem bytecode. A escolha entre código de máquina e bytecode depende dos requisitos do projeto, como desempenho, agnosticismo de plataforma e facilidade de desenvolvimento.
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Desvantagens de dividir um programa em processos
+
+**Enunciado:** Quais as desvantagens de dividir um programa em um grande número de processos ou tarefas?
+
+
+
+<SolutionBlock>
+Quando um programa é dividido em processos, eles precisam se comunicar entre si. Se trabalharem com muitos dados em comum, os processos poderão gastar muita sobrecarga na troca de dados e na proteção contra alterações múltiplas e simultâneas (condições de corrida). Os processos também incorrem em sobrecarga quando são iniciados e finalizados. Quanto mais processos houver, mais complexos se tornam o programa e suas interações, tornando os erros mais difíceis de encontrar. O paradigma funcional tende a facilitar a divisão dos programas em muitos processos, devido à imutabilidade — dados imutáveis não sofrem com condições de corrida.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Critérios para escolher um pacote de código aberto
+
+**Enunciado:** Você encontrou vários pacotes de código aberto, oferecidos em diferentes versões, que fornecem os recursos necessários para o seu programa. Quais são os critérios para escolher um pacote?
+
+
+
+<SolutionBlock>
+- Verifique relatórios de bugs e avisos de segurança dos pacotes, pois alguns apresentam muitos bugs e até são inseguros. Às vezes, a versão mais recente não é a melhor, porque uma falha de segurança pode ter sido introduzida nela.
+- Visite o fórum em que os desenvolvedores conversam sobre o pacote para ver se ele é mantido ativamente. O seu programa provavelmente será usado por bastante tempo e, por isso, o pacote também precisa estar disponível e se manter robusto ao longo do tempo.
+- Experimente diferentes pacotes para verificar o desempenho, bem como a correção.
+- A maioria dos pacotes depende de funções encontradas em outros pacotes (dependências), de modo que uma fraqueza numa das dependências pode afetar o seu programa.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Outros paradigmas de programação além de POO e procedural
+
+**Enunciado:** Além dos paradigmas de POO e de desenvolvimento procedural, que outras abordagens de desenvolvimento de software existem? Dê exemplos das linguagens de programação que melhor suportam cada abordagem.
+
+
+
+<SolutionBlock>
+- **Programação funcional:** Enfatiza o uso de funções e conceitos matemáticos (lambdas, closures), tratando funções como cidadãs de primeira classe e enfatizando a imutabilidade. Linguagens: Erlang, Haskell, Lisp e Scheme.
+- **Linguagens imperativas:** Concentram-se nas instruções necessárias para controlar o fluxo das transições do programa de e para diferentes estados.
+- **Linguagens declarativas:** Descrevem quais ações tomar e a lógica por trás das instruções, sem especificar a ordem de execução. Podem ser reordenadas e otimizadas por compiladores.
+- **Programação natural:** Utiliza a linguagem natural para descrever o comportamento desejado do programa, tornando a programação acessível a pessoas sem educação formal em ciência da computação. Linguagens: Scratch e Alice.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Vinculação estática vs. dinâmica
+
+**Enunciado:** Explique as diferenças entre vinculação estática e vinculação dinâmica, indicando as vantagens e desvantagens de cada uma.
+
+
+
+<SolutionBlock>
+**Vinculação estática:** O código da biblioteca necessária é incluído diretamente no ficheiro executável do aplicativo final. O executável é maior mas não depende da presença das bibliotecas no sistema em tempo de execução. Pode causar duplicação de código se múltiplos programas usam a mesma biblioteca.
+
+**Vinculação dinâmica:** Uma biblioteca instalada no sistema é partilhada por todas as aplicações que a utilizam. Atualmente é a abordagem mais usada, caracterizada por ficheiros executáveis menores e menos uso de memória em tempo de execução. No entanto, depende da presença correta das bibliotecas no sistema, podendo causar problemas de compatibilidade entre versões.
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Início: [050 - Visão Geral]()
+→ Próximo: [T02 - 051.2 Arquitetura de software]()

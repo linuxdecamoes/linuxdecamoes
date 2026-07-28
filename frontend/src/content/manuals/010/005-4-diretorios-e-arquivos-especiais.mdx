@@ -1,0 +1,230 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="Diretórios e ficheiros especiais"
+  code="010"
+  topicNumber="T19"
+  objective="5.4"
+  weight={1}
+  pages="Linux Essentials (010) - Version 4.1"
+  accent="sage"
+/>
+
+
+
+## Resumo Conciso
+
+### No Linux, tudo é ficheiro
+Alguns recebem tratamento especial — por causa do **local** onde estão (temporários) ou da forma como **interagem** com o sistema de ficheiros (links).
+
+### Diretórios de ficheiros temporários (FHS 3.0)
+
+| Diretório | Limpo no arranque? | Uso típico |
+|-----------|-------------------|------------|
+| `/tmp` | **Sim** (recomendado, não obrigatório) — não presumir que persiste entre execuções | Dados de curta duração (rascunhos, cache, conversões) |
+| `/var/tmp` | **Não** — persiste entre reinícios | Temporários que devem sobreviver a um reboot |
+| `/run` | **Sim** | Variáveis de runtime dos processos ativos (ex.: `*.pid`). Em sistemas antigos era `/var/run` (por vezes symlink para `/run`). |
+
+> Os programas **devem** seguir as convenções do FHS, embora nada os obrigue tecnicamente.
+
+### Sticky bit (proteção de diretórios partilhados)
+- Em diretórios **"graváveis por todos"** (como `/tmp`), o **sticky bit** impede que um utilizador apague/renomeie ficheiros **que não sejam seus**.
+- Mostra-se como um **`t`** no lugar do `x` nas permissões de *outros*: `drwxrwxrwt`.
+- O kernel **ignora** o sticky bit quando aplicado a ficheiros (só direciona para diretórios).
+- Ativar: numérico `chmod 1755 temp` (1º dígito = `1`) ou simbólico `chmod +t temp`.
+
+```bash
+$ ls -ld /tmp/ /var/tmp/
+drwxrwxrwt 25 root root ... /tmp/
+drwxrwxrwt 16 root root ... /var/tmp/   # ambos têm o 't' do sticky bit
+```
+
+### Links — dois tipos
+
+| | **Simbólico** (soft, symlink) | **Físico** (hardlink) |
+|---|-------------------------------|------------------------|
+| Comando | `ln -s alvo nome` | `ln alvo nome` |
+| Aponta para | **caminho** (nome) do alvo | **inode** (mesmos dados no disco) |
+| Atravessa partições? | **Sim** | **Não** (mesmo sistema de ficheiros) |
+| Pode apontar para diretórios? | **Sim** | **Não** (só ficheiros) |
+| Se apagares o alvo | Link **parte-se** (fica "broken") | Link **continua** a funcionar (dados ainda lá estão) |
+| Identificação em `ls -l` | `l` (1º char) + `-> alvo` | Ficheiro normal; **contagem de links** aumenta |
+| Permissões mostradas | sempre `rwxrwxrwx` (ilusório) | as reais |
+| Permissões efetivas | = as do **alvo** | = as do ficheiro |
+
+### Inodes e contagem de links
+- **Inode** (*index node*) = estrutura que guarda os atributos de um ficheiro (permissões, dono, blocos do disco), **exceto** o nome.
+- Vê-se com `ls -i` ou `stat`. Hardlinks para o mesmo ficheiro partilham o **mesmo número de inode**.
+- A **2ª coluna** de `ls -l` é a **contagem de links**: ficheiro normal = `1`, diretório = `2` (por `.` e `..`); cada hardlink soma 1. **Symlinks não aumentam** esta contagem.
+- "Apagar" = remover uma entrada da tabela que aponta para o inode; os dados só desaparecem quando a **última** entrada é removida.
+
+### Boa prática: caminho absoluto nos symlinks
+Um symlink com destino **relativo** parte-se se for movido. Usar **caminho completo** no alvo torna o link robusto:
+```bash
+ln -s /home/carol/Documents/original.txt softlink   # sobrevive a mv
+```
+Se omitires o nome do link, é criado um com o **mesmo nome** do alvo no diretório atual.
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+> Exercícios da autoria do agente, para praticares diretamente no terminal Linux. Consolidam o tópico 5.4 com comandos reais.
+> *Dica:* precisas de uma sessão Linux (física, VM ou WSL). As soluções estão em `<details>` para tentares primeiro.
+
+### Exploratório 1 — Inspecionar o sticky bit em `/tmp` vs. `/var/tmp`
+Confirma, **por comandos**, que ambos os diretórios temporários têm o sticky bit ativo e explica por que razão ele é indispensável aqui.
+
+
+
+<SolutionBlock>
+```bash
+# Listar atributos dos próprios diretórios (não do seu conteúdo)
+ls -ld /tmp /var/tmp /run
+#   espera ver 'drwxrwxrwt' -> o 't' no fim = sticky bit ativo
+```
+
+**Explicação:** `/tmp` e `/var/tmp` são "graváveis por todos" (`rwx` para user, grupo e outros). Sem o sticky bit, qualquer utilizador poderia apagar ficheiros alheios. Com o `t`, **só o dono do ficheiro (ou do diretório)** o pode remover/renomear — mesmo sendo o diretório público.
+
+**Confirmar só o bit especial (em octal):**
+```bash
+stat -c '%a %A %n' /tmp /var/tmp
+#   %a mostra 1777 (o '1' inicial = sticky bit)
+```
+</SolutionBlock>
+
+
+
+### Exploratório 2 — Criar temp seguro com `mktemp`
+*(Comando prático para além do manual.)* Em vez de adivinhar nomes únicos em `/tmp`, usa `mktemp` para criar ficheiros/diretórios temporários com nome aleatório e seguro.
+
+
+
+<SolutionBlock>
+```bash
+# Ficheiro temporário (criado em /tmp por omissão, permissões 600)
+TMPF=$(mktemp)
+echo "dados transitórios" > "$TMPF"
+ls -l "$TMPF"          # -rw------- ...  (só tu lês)
+
+# Diretório temporário (-d)
+TMPD=$(mktemp -d)
+cd "$TMPD"
+touch trabalho.tmp
+
+# Limpeza no fim
+rm -rf "$TMPF" "$TMPD"
+```
+
+**O que aprendeste:** `mktemp` garante um nome **único** e permissões restritas (`600`), evitando ataques de *symlink* e colisões de nome. É a forma correta de programas/scripts criarem temporários em `/tmp` em vez de `touch /tmp/meutemp`.
+</SolutionBlock>
+
+
+
+### Exploratório 3 — Hardlinks partilham inode
+Cria um ficheiro e um hardlink para ele. Demonstra, com `ls -i` e `stat`, que **ambos partilham o mesmo inode** e que apagar um não afeta o outro.
+
+
+
+<SolutionBlock>
+```bash
+mkdir -p hl && cd hl
+echo "conteudo original" > original.txt
+
+# Hardlink (sem -s)
+ln original.txt fisico.txt
+
+# Ver inodes (primeira coluna) e contagem de links (2ª de ls -l)
+ls -li
+#   espera: MESMO inode para ambos; contagem de links = 2 em cada
+stat original.txt fisico.txt      # mostra Inode igual, Links: 2
+
+# Editar por um dos nomes reflete-se no outro
+echo "linha extra" >> fisico.txt
+cat original.txt                  # vê as duas linhas
+
+# Apagar o "original" — o hardlink continua válido
+rm original.txt
+cat fisico.txt                    # ainda funciona; contagem desce para 1
+ls -l fisico.txt                  # -rw-r--r-- 1 ...
+```
+
+**Conclusão:** não há "original" vs. "cópia" — são **dois nomes** para os mesmos dados (mesmo inode). Os dados só somem quando a **última** entrada é removida.
+</SolutionBlock>
+
+
+
+### Exploratório 4 — Symlink: caminho absoluto vs. relativo (e links partidos)
+Cria um symlink **relativo** e um **absoluto** para o mesmo alvo. Move-os de diretório e observa qual parte. Depois localiza links partidos.
+
+
+
+<SolutionBlock>
+```bash
+mkdir -p sl && cd sl
+echo "alvo" > alvo.txt
+
+# Link RELATIVO (frágil)
+ln -s alvo.txt link_relativo
+# Link ABSOLUTO (robusto)
+ln -s "$(pwd)/alvo.txt" link_absoluto
+
+ls -l                              # vê 'l' e a seta '->'
+
+# Mover os links para o diretório pai
+cd ..
+mv sl/link_relativo sl/link_absoluto .
+
+# Testar ambos
+cat link_relativo      # ERRO: No such file or directory  (partiu-se)
+cat link_absoluto      # OK: ainda aponta para .../sl/alvo.txt
+
+# Encontrar TODOS os symlinks a partir daqui
+find . -type l
+# Encontrar só os PARTIDOS (broken)
+find . -xtype l
+```
+
+**O que aprendeste:** o destino de um symlink é interpretado **relativamente à localização do link**, não à de quem o criou. Por isso usa **sempre caminho absoluto** em symlinks que possam ser movidos. `find -type l` lista symlinks; `find -xtype l` lista os que apontam para nada.
+</SolutionBlock>
+
+
+
+### Exploratório 5 — Contagem de links e identificação hard vs. sym
+Dada uma lista de ficheiros, usa `ls` e `find` para determinar quais são hardlinks, quais são symlinks e quantos nomes apontam para o mesmo inode.
+
+
+
+<SolutionBlock>
+```bash
+mkdir -p lab && cd lab
+echo "dado" > base.txt
+ln base.txt hard1.txt            # hardlink (mesmo inode)
+ln base.txt hard2.txt            # outro hardlink
+ln -s base.txt soft.txt          # symlink
+
+# 1. Inode + contagem de links (flag -i)
+ls -li
+#   base.txt, hard1.txt, hard2.txt -> MESMO inode, contagem 3
+#   soft.txt -> inode DIFERENTE, tipo 'l'
+
+# 2. Mostrar tipo de cada entrada de forma explícita
+stat -c '%n: tipo=%F inode=%i links=%h' *
+#   %F = tipo de ficheiro  %i = inode  %h = contagem de links
+
+# 3. Quantos symlinks existem? E hardlinks?
+find . -type l | wc -l           # nº de symlinks
+find . -samefile base.txt        # todos os nomes do MESMO inode (hardlinks)
+```
+
+**Leitura:** a contagem de links (`%h`) = 3 indica **3 nomes** a apontar para esse inode (o ficheiro + 2 hardlinks). Os **symlinks não aumentam** esta contagem — têm o seu próprio inode e aparecem com `find -type l`.
+</SolutionBlock>
+
+
+
+---
+
+## 🔗 Ligações
+
+← Anterior: [T18 - Gerenciando permissões e donos de ficheiros]() / → Fim: [010 - Visão Geral]()

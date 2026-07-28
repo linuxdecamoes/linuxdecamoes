@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linux de Camões — Dashboard (Mockup)</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: oklch(0.97 0.005 80);
+    --fg: oklch(0.20 0.02 60);
+    --card: oklch(0.99 0.003 80);
+    --primary: oklch(0.70 0.18 45);
+    --primary-fg: oklch(0.99 0 0);
+    --accent: oklch(0.75 0.15 55);
+    --muted: oklch(0.94 0.008 80);
+    --muted-fg: oklch(0.50 0.02 60);
+    --border: oklch(0.88 0.01 80);
+    --secondary: oklch(0.93 0.01 80);
+
+    /* Extended warm palette for Bento */
+    --coral: oklch(0.72 0.14 30);
+    --coral-soft: oklch(0.93 0.04 30);
+    --amber: oklch(0.78 0.16 65);
+    --amber-soft: oklch(0.95 0.04 65);
+    --terracotta: oklch(0.62 0.12 40);
+    --terracotta-soft: oklch(0.92 0.04 40);
+    --sage: oklch(0.75 0.08 140);
+    --sage-soft: oklch(0.95 0.03 140);
+    --peach: oklch(0.85 0.08 55);
+    --cream: oklch(0.96 0.01 75);
+
+    --radius: 20px;
+    --radius-sm: 12px;
+    --radius-lg: 28px;
+  }
+
+  body {
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ═══════════════════ HEADER ═══════════════════ */
+  .header {
+    position: sticky; top: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px; padding: 0 32px;
+    background: oklch(0.99 0.003 80 / 0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .header-brand { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 18px; }
+  .header-brand .logo {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: var(--primary); color: var(--primary-fg);
+    display: grid; place-items: center; font-weight: 700; font-size: 16px;
+  }
+  .header-nav { display: flex; gap: 8px; }
+  .header-nav a {
+    padding: 8px 16px; border-radius: 10px; text-decoration: none;
+    font-size: 14px; font-weight: 500; color: var(--muted-fg); transition: all 0.2s;
+  }
+  .header-nav a:hover { background: var(--muted); color: var(--fg); }
+  .header-nav a.active { background: var(--primary); color: var(--primary-fg); }
+  .header-user {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--peach); border: 2px solid var(--primary);
+    display: grid; place-items: center; font-weight: 600; font-size: 14px; color: var(--primary);
+  }
+
+  /* ═══════════════════ MAIN ═══════════════════ */
+  .main { max-width: 1560px; margin: 0 auto; padding: 32px 48px 64px; }
+
+  /* ═══════════════════ HERO ═══════════════════ */
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 32px;
+    margin-bottom: 40px;
+    padding: 48px 48px 40px;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--coral) 60%, var(--accent) 100%);
+    color: var(--primary-fg);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: -80px; right: -60px;
+    width: 300px; height: 300px; border-radius: 50%;
+    background: oklch(1 0 0 / 0.12);
+  }
+  .hero::after {
+    content: '';
+    position: absolute; bottom: -40px; left: 30%;
+    width: 200px; height: 200px; border-radius: 50%;
+    background: oklch(1 0 0 / 0.08);
+  }
+  .hero-text { position: relative; z-index: 1; }
+  .hero-greeting {
+    font-size: 15px; font-weight: 500;
+    opacity: 0.85; text-transform: uppercase; letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  .hero h1 {
+    font-size: clamp(42px, 5vw, 64px);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -1.5px;
+  }
+  .hero h1 span { opacity: 0.6; font-weight: 400; }
+  .hero-sub {
+    margin-top: 16px;
+    font-size: 16px; font-weight: 400;
+    opacity: 0.8; max-width: 480px; line-height: 1.6;
+  }
+  .hero-stats {
+    position: relative; z-index: 1;
+    display: flex; flex-direction: column; gap: 16px;
+    min-width: 200px;
+  }
+  .hero-stat {
+    padding: 16px 24px;
+    background: oklch(1 0 0 / 0.15);
+    backdrop-filter: blur(8px);
+    border-radius: var(--radius);
+    border: 1px solid oklch(1 0 0 / 0.2);
+    text-align: center;
+  }
+  .hero-stat-value {
+    font-size: 36px; font-weight: 700; line-height: 1;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .hero-stat-label {
+    font-size: 12px; font-weight: 500;
+    text-transform: uppercase; letter-spacing: 1px;
+    opacity: 0.75; margin-top: 4px;
+  }
+
+  /* ═══════════════════ BENTO GRID ═══════════════════ */
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-auto-rows: minmax(0, auto);
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+
+  /* ── Card base ── */
+  .bento-card {
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .bento-card:hover { transform: translateY(-2px); box-shadow: 0 12px 40px oklch(0 0 0 / 0.08); }
+
+  .bento-card-label {
+    font-size: 12px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 1.5px;
+    opacity: 0.5; margin-bottom: 12px;
+  }
+  .bento-card-title {
+    font-size: 28px; font-weight: 700;
+    line-height: 1.15; letter-spacing: -0.5px;
+  }
+  .bento-card-desc {
+    font-size: 14px; line-height: 1.6;
+    opacity: 0.7; margin-top: 8px;
+  }
+
+  /* ── Card: Estudos (spans 4 cols) ── */
+  .card-studies {
+    grid-column: span 4;
+    background: var(--card);
+    border: 1px solid var(--border);
+    display: flex; flex-direction: column; justify-content: space-between;
+    min-height: 260px;
+  }
+  .card-studies .big-number {
+    font-size: 72px; font-weight: 700;
+    font-family: 'IBM Plex Mono', monospace;
+    line-height: 1; letter-spacing: -3px;
+    color: var(--primary);
+  }
+  .card-studies .card-footer {
+    display: flex; align-items: center; gap: 8px;
+    margin-top: auto; padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+  .card-studies .card-footer .badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 10px; border-radius: 100px;
+    background: oklch(0.70 0.18 45 / 0.1);
+    color: var(--primary); font-size: 12px; font-weight: 600;
+  }
+
+  /* ── Card: Terminal (spans 8 cols — big feature) ── */
+  .card-terminal {
+    grid-column: span 8;
+    background: linear-gradient(160deg, oklch(0.18 0.02 260) 0%, oklch(0.22 0.03 250) 100%);
+    color: oklch(0.95 0 0);
+    min-height: 260px;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .card-terminal .bento-card-label { color: oklch(0.95 0 0 / 0.5); }
+  .card-terminal .bento-card-title { color: oklch(0.98 0 0); }
+  .card-terminal .bento-card-desc { color: oklch(0.95 0 0 / 0.6); }
+  .card-terminal .terminal-visual {
+    margin-top: 20px; padding: 16px 20px;
+    background: oklch(0.12 0.01 260 / 0.6);
+    border-radius: var(--radius-sm);
+    border: 1px solid oklch(0.95 0 0 / 0.08);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px; line-height: 1.8;
+  }
+  .terminal-visual .prompt { color: var(--sage); }
+  .terminal-visual .cmd { color: oklch(0.95 0 0); }
+  .terminal-visual .output { color: oklch(0.75 0 0 / 0.6); }
+  .terminal-visual .cursor {
+    display: inline-block; width: 8px; height: 16px;
+    background: var(--sage); vertical-align: text-bottom;
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ── Card: Chat IA (spans 5 cols) ── */
+  .card-chat {
+    grid-column: span 5;
+    background: linear-gradient(160deg, var(--coral-soft) 0%, oklch(0.97 0.01 35) 100%);
+    border: 1px solid oklch(0.72 0.14 30 / 0.15);
+    min-height: 280px;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .card-chat .bento-card-title { color: var(--terracotta); }
+  .card-chat .chat-bubbles {
+    margin-top: 20px; display: flex; flex-direction: column; gap: 8px;
+  }
+  .chat-bubble {
+    max-width: 85%; padding: 10px 16px;
+    border-radius: 16px 16px 16px 4px;
+    font-size: 13px; line-height: 1.5;
+  }
+  .chat-bubble.ai {
+    background: var(--card); border: 1px solid oklch(0.72 0.14 30 / 0.12);
+    color: var(--fg);
+  }
+  .chat-bubble.user {
+    align-self: flex-end;
+    border-radius: 16px 16px 4px 16px;
+    background: var(--primary); color: var(--primary-fg);
+  }
+
+  /* ── Card: Quizzes (spans 3 cols) ── */
+  .card-quiz {
+    grid-column: span 3;
+    background: var(--amber-soft);
+    border: 1px solid oklch(0.78 0.16 65 / 0.15);
+    min-height: 280px;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .card-quiz .bento-card-title { color: oklch(0.55 0.14 55); }
+  .card-quiz .quiz-visual {
+    margin-top: 16px; display: flex; flex-direction: column; gap: 8px;
+  }
+  .quiz-option {
+    padding: 10px 16px; border-radius: var(--radius-sm);
+    background: oklch(1 0 0 / 0.6); font-size: 13px; font-weight: 500;
+    border: 1px solid oklch(0.78 0.16 65 / 0.1);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .quiz-option .letter {
+    width: 24px; height: 24px; border-radius: 6px;
+    background: var(--amber); color: var(--primary-fg);
+    display: grid; place-items: center;
+    font-size: 11px; font-weight: 700;
+  }
+  .quiz-option.correct { border-color: var(--sage); background: var(--sage-soft); }
+  .quiz-option.correct .letter { background: var(--sage); }
+
+  /* ── Card: Manuais (spans 4 cols) ── */
+  .card-manuals {
+    grid-column: span 4;
+    background: var(--card);
+    border: 1px solid var(--border);
+    min-height: 200px;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .card-manuals .manual-stack {
+    margin-top: 16px; display: flex; flex-direction: column; gap: 8px;
+  }
+  .manual-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 14px; border-radius: var(--radius-sm);
+    background: var(--bg); transition: background 0.2s;
+  }
+  .manual-item:hover { background: var(--muted); }
+  .manual-item-left { display: flex; align-items: center; gap: 10px; }
+  .manual-code {
+    padding: 3px 8px; border-radius: 6px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 600;
+  }
+  .mc-101 { background: oklch(0.70 0.18 45 / 0.12); color: var(--primary); }
+  .mc-102 { background: oklch(0.62 0.12 40 / 0.12); color: var(--terracotta); }
+  .mc-010 { background: oklch(0.75 0.08 140 / 0.12); color: var(--sage); }
+  .manual-item-name { font-size: 13px; font-weight: 500; }
+  .manual-item-count { font-size: 12px; color: var(--muted-fg); font-weight: 500; }
+
+  /* ── Card: Progresso (spans 4 cols) ── */
+  .card-progress {
+    grid-column: span 4;
+    background: linear-gradient(160deg, var(--sage-soft) 0%, oklch(0.97 0.005 140) 100%);
+    border: 1px solid oklch(0.75 0.08 140 / 0.15);
+    min-height: 200px;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .card-progress .bento-card-title { color: oklch(0.40 0.08 140); }
+  .card-progress .progress-bars { margin-top: 16px; display: flex; flex-direction: column; gap: 12px; }
+  .progress-row { display: flex; flex-direction: column; gap: 6px; }
+  .progress-row-header { display: flex; justify-content: space-between; font-size: 13px; }
+  .progress-row-header span:first-child { font-weight: 500; }
+  .progress-row-header span:last-child { color: var(--muted-fg); font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
+  .progress-track {
+    height: 8px; border-radius: 100px;
+    background: oklch(0.75 0.08 140 / 0.12);
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; border-radius: 100px;
+    background: linear-gradient(90deg, var(--sage), oklch(0.68 0.10 150));
+    transition: width 1s ease;
+  }
+
+  /* ── Card: Sequência / Streak (spans 4 cols) ── */
+  .card-streak {
+    grid-column: span 4;
+    background: var(--primary);
+    color: var(--primary-fg);
+    min-height: 200px;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .card-streak::before {
+    content: ''; position: absolute;
+    top: -30px; right: -30px;
+    width: 120px; height: 120px; border-radius: 50%;
+    background: oklch(1 0 0 / 0.12);
+  }
+  .card-streak .streak-flame {
+    font-size: 56px; line-height: 1;
+    filter: drop-shadow(0 4px 12px oklch(0 0 0 / 0.2));
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+  .card-streak .streak-number {
+    font-size: 64px; font-weight: 700;
+    font-family: 'IBM Plex Mono', monospace;
+    line-height: 1; margin-top: 8px; letter-spacing: -2px;
+  }
+  .card-streak .streak-label {
+    font-size: 14px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 2px;
+    opacity: 0.75; margin-top: 8px;
+  }
+
+  /* ── Section Header ── */
+  .section-header {
+    display: flex; align-items: baseline; gap: 16px;
+    margin: 48px 0 24px;
+  }
+  .section-header h2 {
+    font-size: 14px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 2px;
+    color: var(--muted-fg);
+  }
+  .section-header::after {
+    content: ''; flex: 1; height: 1px;
+    background: var(--border);
+  }
+
+  /* ═══════════════════ RESPONSIVE ═══════════════════ */
+  @media (max-width: 1024px) {
+    .bento { grid-template-columns: repeat(6, 1fr); }
+    .card-studies, .card-terminal, .card-chat,
+    .card-quiz, .card-manuals, .card-progress, .card-streak {
+      grid-column: span 6;
+    }
+    .hero { grid-template-columns: 1fr; }
+    .hero-stats { flex-direction: row; flex-wrap: wrap; }
+  }
+  @media (max-width: 640px) {
+    .main { padding: 20px 16px 48px; }
+    .hero { padding: 32px 24px; }
+    .hero h1 { font-size: 36px; }
+    .bento-card { padding: 24px; }
+    .bento-card-title { font-size: 22px; }
+    .card-studies .big-number { font-size: 56px; }
+    .header-nav { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ HEADER ═══════════ -->
+<header class="header">
+  <div class="header-brand">
+    <div class="logo">L</div>
+    <span>Linux de Camões</span>
+  </div>
+  <nav class="header-nav">
+    <a href="#" class="active">Dashboard</a>
+    <a href="#">Lab</a>
+    <a href="#">Manuais</a>
+  </nav>
+  <div class="header-user">JR</div>
+</header>
+
+<!-- ═══════════ MAIN ═══════════ -->
+<main class="main">
+
+  <!-- ═══ HERO ═══ -->
+  <section class="hero">
+    <div class="hero-text">
+      <div class="hero-greeting">Bom dia, Joao</div>
+      <h1>Tens <span>12 topicos</span><br>para explorar hoje</h1>
+      <p class="hero-sub">
+        Continua onde paraste. Tens 3 quizzes pendentes e 2 comandos novos
+        para praticar no Lab.
+      </p>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-value">87%</div>
+        <div class="hero-stat-label">Precisao Geral</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">12</div>
+        <div class="hero-stat-label">Topicos Hoje</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ BENTO GRID ═══ -->
+  <div class="bento">
+
+    <!-- Terminal — spans 8 cols (wide) -->
+    <div class="bento-card card-terminal">
+      <div>
+        <div class="bento-card-label">Laboratorio</div>
+        <div class="bento-card-title">Terminal Linux Real</div>
+        <div class="bento-card-desc">
+          Pratica comandos num ambiente K8s isolado. Sem instalacoes, sem risco.
+        </div>
+      </div>
+      <div class="terminal-visual">
+        <div><span class="prompt">kube@lab:~$</span> <span class="cmd">ls -la /etc/nginx/</span></div>
+        <div class="output">-rw-r--r-- 1 root root 2656 Jul 15 10:23 nginx.conf</div>
+        <div class="output">drwxr-xr-x 2 root root 4096 Jul 15 10:23 sites-available</div>
+        <div class="output">drwxr-xr-x 2 root root 4096 Jul 15 10:23 sites-enabled</div>
+        <div><span class="prompt">kube@lab:~$</span> <span class="cursor"></span></div>
+      </div>
+    </div>
+
+    <!-- Estudos — spans 4 cols -->
+    <div class="bento-card card-studies">
+      <div>
+        <div class="bento-card-label">Progresso</div>
+        <div class="bento-card-title">Topicos Estudados</div>
+        <div class="big-number">23</div>
+      </div>
+      <div class="card-footer">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span class="badge">+4 esta semana</span>
+      </div>
+    </div>
+
+    <!-- Chat IA — spans 5 cols -->
+    <div class="bento-card card-chat">
+      <div>
+        <div class="bento-card-label">Assistente IA</div>
+        <div class="bento-card-title">Chat Inteligente</div>
+        <div class="bento-card-desc">Perguntas respondidas com base nos manuais LPI.</div>
+      </div>
+      <div class="chat-bubbles">
+        <div class="chat-bubble ai">
+          O comando <code>chmod 755</code> da permissoes de leitura, escrita e execucao ao owner, e leitura/execucao a group e outros.
+        </div>
+        <div class="chat-bubble user">E o que e <code>chmod +x</code>?</div>
+      </div>
+    </div>
+
+    <!-- Quizzes — spans 3 cols -->
+    <div class="bento-card card-quiz">
+      <div>
+        <div class="bento-card-label">Quizzes</div>
+        <div class="bento-card-title">Testa os teus conhecimentos</div>
+      </div>
+      <div class="quiz-visual">
+        <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Qual e a saida de <code style="font-family:'IBM Plex Mono';font-size:12px;">echo $(( 5 + 3 * 2 ))</code>?</div>
+        <div class="quiz-option correct"><div class="letter">A</div> 11</div>
+        <div class="quiz-option"><div class="letter">B</div> 16</div>
+        <div class="quiz-option"><div class="letter">C</div> 13</div>
+      </div>
+    </div>
+
+    <!-- Manuais — spans 4 cols -->
+    <div class="bento-card card-manuals">
+      <div>
+        <div class="bento-card-label">Biblioteca</div>
+        <div class="bento-card-title">Manuais LPI</div>
+      </div>
+      <div class="manual-stack">
+        <div class="manual-item">
+          <div class="manual-item-left">
+            <span class="manual-code mc-101">101</span>
+            <span class="manual-item-name">LPIC-1 Parte 1</span>
+          </div>
+          <span class="manual-item-count">35 topicos</span>
+        </div>
+        <div class="manual-item">
+          <div class="manual-item-left">
+            <span class="manual-code mc-102">102</span>
+            <span class="manual-item-name">LPIC-1 Parte 2</span>
+          </div>
+          <span class="manual-item-count">28 topicos</span>
+        </div>
+        <div class="manual-item">
+          <div class="manual-item-left">
+            <span class="manual-code mc-010">010</span>
+            <span class="manual-item-name">Linux Essentials</span>
+          </div>
+          <span class="manual-item-count">18 topicos</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progresso por manual — spans 4 cols -->
+    <div class="bento-card card-progress">
+      <div>
+        <div class="bento-card-label">Analitica</div>
+        <div class="bento-card-title">Progresso por Topico</div>
+      </div>
+      <div class="progress-bars">
+        <div class="progress-row">
+          <div class="progress-row-header"><span>Topic 101</span><span>68%</span></div>
+          <div class="progress-track"><div class="progress-fill" style="width:68%"></div></div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-row-header"><span>Topic 102</span><span>42%</span></div>
+          <div class="progress-track"><div class="progress-fill" style="width:42%"></div></div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-row-header"><span>Topic 010</span><span>85%</span></div>
+          <div class="progress-track"><div class="progress-fill" style="width:85%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Streak — spans 4 cols -->
+    <div class="bento-card card-streak">
+      <div class="streak-flame">&#x1F525;</div>
+      <div class="streak-number">7</div>
+      <div class="streak-label">Dias Seguidos</div>
+    </div>
+
+  </div><!-- /bento -->
+
+  <!-- ═══ ATIVIDADE RECENTE ═══ -->
+  <div class="section-header"><h2>Atividade Recente</h2></div>
+  <div style="display:flex;flex-direction:column;gap:12px;">
+    <div style="display:flex;align-items:center;gap:16px;padding:16px 20px;border-radius:var(--radius);background:var(--card);border:1px solid var(--border);">
+      <div style="width:40px;height:40px;border-radius:10px;background:var(--sage-soft);display:grid;place-items:center;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="oklch(0.50 0.08 140)" stroke-width="2" stroke-linecap="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+      </div>
+      <div style="flex:1"><div style="font-size:14px;font-weight:500;">Quiz LPIC-1 101 concluido</div><div style="font-size:12px;color:var(--muted-fg);margin-top:2px;">Acertaste 8/10 perguntas — 80% de precisao</div></div>
+      <div style="font-size:12px;color:var(--muted-fg);white-space:nowrap;">Ha 2 horas</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px;padding:16px 20px;border-radius:var(--radius);background:var(--card);border:1px solid var(--border);">
+      <div style="width:40px;height:40px;border-radius:10px;background:var(--coral-soft);display:grid;place-items:center;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="oklch(0.55 0.10 30)" stroke-width="2" stroke-linecap="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+      </div>
+      <div style="flex:1"><div style="font-size:14px;font-weight:500;">Lab: Pratica de Permissoes</div><div style="font-size:12px;color:var(--muted-fg);margin-top:2px;">Executaste 14 comandos no terminal K8s</div></div>
+      <div style="font-size:12px;color:var(--muted-fg);white-space:nowrap;">Ha 5 horas</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px;padding:16px 20px;border-radius:var(--radius);background:var(--card);border:1px solid var(--border);">
+      <div style="width:40px;height:40px;border-radius:10px;background:var(--amber-soft);display:grid;place-items:center;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="oklch(0.55 0.12 65)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      </div>
+      <div style="flex:1"><div style="font-size:14px;font-weight:500;">Topico estudado: Gestao de Processos</div><div style="font-size:12px;color:var(--muted-fg);margin-top:2px;">Manual 101 — revisao espacada agendada para amanha</div></div>
+      <div style="font-size:12px;color:var(--muted-fg);white-space:nowrap;">Ontem</div>
+    </div>
+  </div>
+
+</main>
+</body>
+</html>

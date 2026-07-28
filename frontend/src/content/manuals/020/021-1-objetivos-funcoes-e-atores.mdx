@@ -1,0 +1,180 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="021.1 — Objetivos, Funções e Atores"
+  code="020"
+  topicNumber="T01"
+  objective="021.1"
+  weight={3}
+  pages="LPI Security Essentials (020) - Version 1.0"
+  accent="coral"
+/>
+
+
+
+## Resumo Conciso
+
+### Importância da Segurança de TI
+- Protege dados contra acesso, uso e distribuição não autorizados
+- Garante que informações sensíveis (pessoais, financeiras, proprietárias) permaneçam confidenciais
+- A crescente dependência de plataformas digitais torna a segurança de TI essencial
+
+### Tríade CIA
+
+| Conceito | Descrição | Exemplo de Proteção |
+|----------|-----------|---------------------|
+| **Confidencialidade** | Proteger informações contra acesso e divulgação não autorizados | Criptografia, controlo de acesso |
+| **Integridade** | Garantir que informações permaneçam inalteradas exceto por modificações autorizadas | Assinaturas digitais, hashes |
+| **Disponibilidade (Availability)** | Garantir que informações estejam acessíveis a utilizadores autorizados quando necessário | Redundância, backups, failover |
+
+- **Não-repúdio**: O remetente não pode negar sua participação numa transação; baseia-se na integridade e é suportado por assinaturas digitais
+
+### Funções Comuns na Segurança
+
+| Função | Responsabilidade Principal |
+|--------|---------------------------|
+| **CIO (Chief Information Officer)** | Responsável por todos os aspectos de tecnologia na organização; faz parte do C-Suite; gere orçamento e implementação de ativos tecnológicos |
+| **CISO (Chief Information Security Officer)** | Executivo sénior responsável pela estratégia de segurança da informação; desenvolve políticas, garante conformidade, lidera proteção contra ameaças cibernéticas |
+| **Enterprise Architect** | Responde ao CIO; responsável pelo sistema de TI físico e lógico; projecta a rede para atender requisitos de segurança |
+| **Network/System Administrator** | Projecta, implementa e mantém controlos de segurança técnica; implanta firewalls, IDS, criptografia |
+
+### Tipos de Hackers
+
+| Tipo | Características | Motivação |
+|------|----------------|-----------|
+| **Black Hat Hacker** | Explora vulnerabilidades com propósitos maliciosos; usa malware, phishing, engenharia social | Ganho financeiro, objetivos políticos, satisfação pessoal |
+| **White Hat Hacker** | Hackers éticos; identificam e corrigem vulnerabilidades; seguem código de ética | Proteger organizações, testes de penetração |
+| **Cracker** | Atividades ilegais: invadir sistemas, burlar palavras-passe, contornar licenças | Causar danos, roubar informações |
+| **Script Kiddies** | Falta de expertise; dependem de scripts e ferramentas pré-escritos | Perturbação, notoriedade |
+
+### Objetivos Comuns de Ataques
+
+| Objetivo | Descrição | Exemplo |
+|----------|-----------|---------|
+| Acesso, manipulação ou exclusão de dados | Roubo de informações sensíveis, alteração de dados, exclusão de registos | Ataque à Sony Pictures (2014) |
+| Interrupção de serviços e extorsão | DDoS, ransomware que criptografa dados e exige pagamento | WannaCry (2017) |
+| Espionagem industrial | Roubo de segredos comerciais e informações proprietárias | Operação Aurora (2010) |
+
+### Conceito de Atribuição
+- Identificar e atribuir responsabilidade a indivíduos pelas suas ações no espaço virtual
+- Funciona como uma "impressão digital de responsabilidade"
+- Desafios: atores mal-intencionados disfarçam identidades e ocultam localizações
+- Soluções de software e hardware ajudam a determinar atribuição em ambientes digitais
+
+## Exercícios Guiados
+
+### Exercício Guiado 1: Importância da Segurança de TI
+
+**Enunciado:** Por que a segurança de TI é crucial no contexto de transações digitais e armazenamento de dados?
+
+**Solução:** A segurança de TI é crucial porque protege informações sensíveis contra acesso não autorizado, uso indevido e distribuição. Com o aumento das tecnologias da internet, muitas atividades feitas presencialmente (como compras) são agora realizadas online. Essa mudança aumentou a quantidade de dados pessoais e financeiros armazenados e transmitidos pela internet, tornando essencial a proteção contra ameaças cibernéticas. Medidas eficazes de segurança garantem que os dados permaneçam confidenciais, mantenham a sua integridade e estejam disponíveis para utilizadores autorizados, prevenindo roubo de identidade, perdas financeiras e danos à reputação.
+
+### Exercício Guiado 2: A Tríade CIA
+
+**Enunciado:** Quais são os três objetivos principais da segurança da informação e por que são importantes?
+
+**Solução:** Os três objetivos principais são conhecidos como a Tríade CIA:
+
+- **Confidencialidade**: Garante que informações sensíveis sejam acessíveis apenas a quem está autorizado, protegendo-as contra acesso e divulgação não autorizados.
+- **Integridade**: Assegura que os dados permaneçam precisos e inalterados, exceto por utilizadores autorizados — essencial para manter a confiança nas informações.
+- **Disponibilidade (Availability)**: Garante que utilizadores autorizados tenham acesso oportuno às informações e recursos quando necessário, crucial para manter a continuidade dos negócios e a eficiência operacional.
+
+Juntos, esses objetivos ajudam a proteger dados contra violações, manter a confiança nas interações digitais e garantir a fiabilidade dos sistemas de TI.
+
+### Exercício Guiado 3: O Papel do CISO
+
+**Enunciado:** Qual é o papel de um Diretor de Segurança da Informação (CISO) e por que é importante numa organização?
+
+**Solução:** O CISO supervisiona e gere a estratégia geral de segurança da informação da organização. É responsável por desenvolver e implementar políticas e procedimentos de segurança, garantir a conformidade com regulamentações e liderar os esforços para proteger a organização contra ameaças cibernéticas. É importante porque alinha as iniciativas de segurança com os objetivos de negócios, comunica a importância da cibersegurança às partes interessadas e garante que a organização esteja preparada para responder e recuperar-se de incidentes de segurança. Ao gerir a postura de segurança, o CISO ajuda a proteger ativos digitais, manter a reputação e apoiar o sucesso operacional.
+
+### Exercício Guiado 4: Classificação de Hackers
+
+**Enunciado:** Qual é a diferença fundamental entre black hat hackers, white hat hackers e crackers?
+
+**Solução:**
+
+- **Black Hat Hackers** usam habilidades técnicas para explorar vulnerabilidades com propósitos maliciosos (roubo de dados, interrupção de serviços, danos a sistemas). Operam fora dos limites da lei, motivados por ganho financeiro, objetivos políticos ou satisfação pessoal.
+- **White Hat Hackers** (hackers éticos) utilizam as mesmas habilidades para ajudar organizações a identificar e corrigir vulnerabilidades. São contratados por empresas ou trabalham como consultores, seguindo um rigoroso código de ética e atuando dentro de estruturas legais.
+- **Crackers** envolvem-se em atividades ilegais (invadir sistemas, burlar palavras-passe, contornar licenças) com intenção de causar danos, roubar informações ou interromper serviços. São considerados mais maliciosos que os hackers éticos, pois suas ações são puramente motivadas pela exploração de sistemas.
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1: Sucesso de Ataques Cibernéticos
+
+**Enunciado:** Por que muitos ataques a recursos de informação digital são bem-sucedidos?
+
+
+
+<SolutionBlock>
+Há diversas razões para o sucesso dos ataques:
+
+1. **Custo baixo vs. lucro elevado**: Ataques pela internet têm custo relativamente baixo comparado a ataques físicos e são frequentemente extremamente lucrativos, atraindo um número crescente de atores maliciosos.
+2. **Falta de incentivo para proteger**: O custo e o dano reputacional causados por um ataque são frequentemente menores que o custo de o prevenir (embora o ransomware mude essa equação).
+3. **Escassez de pessoal especializado**: A falta de profissionais de segurança leva muitas organizações a subinvestirem em proteção.
+4. **Phishing**: Mensagens fraudulentas permitem entrar numa rede através de um funcionário relativamente mal treinado e desatento.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2: Publicação de Ferramentas de Hacking
+
+**Enunciado:** Existe uma razão legítima para publicar uma ferramenta de hacking online que possa ser usada por script kiddies para realizar ataques disruptivos e maliciosos?
+
+
+
+<SolutionBlock>
+Sim. Ferramentas de hacking são muito importantes para testar e verificar a segurança das redes. Hackers de chapéu branco utilizam essas ferramentas constantemente com o objetivo de proteger os ativos. Se ferramentas de intrusão de alta qualidade não estivessem disponíveis para utilizadores legítimos, o campo seria mais vulnerável a ataques realizados por ferramentas poderosas criadas por atores maliciosos.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3: Atribuição e Rastreabilidade
+
+**Enunciado:** Por que a atribuição é considerada uma "impressão digital de responsabilidade" e quais são os principais desafios de a implementar em ambientes digitais?
+
+
+
+<SolutionBlock>
+A atribuição é chamada de "impressão digital de responsabilidade" porque, tal como uma impressão digital identifica univocamente uma pessoa, os sistemas de registo, softwares especializados e protocolos de internet monitorizam e registam claramente as atividades de cada utilizador numa rede, tornando difícil para este negar as suas ações.
+
+**Desafios principais:**
+- A tecnologia permite que atores mal-intencionados disfarcem as suas identidades
+- É possível ocultar localizações físicas e obscurecer intenções verdadeiras
+- Criminosos habilidosos encontram frequentemente formas de contornar as ferramentas de rastreio
+
+**Soluções existentes:**
+- Software e hardware específicos para ajudar equipas de segurança a determinar atribuição
+- Registos de auditoria e logs detalhados
+- Ferramentas de análise forense
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4: Objetivos de Espionagem Industrial
+
+**Enunciado:** Quais são os principais objetivos da espionagem industrial e como a Operação Aurora (2010) ilustra esse tipo de ameaça?
+
+
+
+<SolutionBlock>
+**Objetivos da espionagem industrial:**
+- Roubar segredos comerciais para replicar o sucesso de um concorrente
+- Minar a posição de mercado de uma empresa ao aceder informações sensíveis
+- Sabotar operações, cadeias de suprimento ou processos de fabricação para causar perdas financeiras e danos à reputação
+
+**Operação Aurora (2010):**
+- Invasores visaram grandes empresas como Google e Adobe
+- Objetivo: roubar propriedade intelectual e informações confidenciais
+- Demonstrou que até empresas com recursos significativos podem ser vítimas de espionagem industrial
+- Frequentemente perpetrada por concorrentes ou por estados-nação em busca de vantagem económica
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Início: [020 - Visão Geral]()
+→ Próximo: [T02 - 021.2 Avaliação e Gestão de Riscos]()

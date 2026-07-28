@@ -1,0 +1,208 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="Escolhendo um Sistema Operacional"
+  code="010"
+  topicNumber="T12"
+  objective="4.1"
+  weight={1}
+  pages="Linux Essentials (010) - Version 4.1"
+  accent="sage"
+/>
+
+
+
+## Resumo Conciso
+
+### O que é um Sistema Operacional (SO)
+- **SO** = software central que reside no "coração" do computador e permite executar aplicações.
+- Contém **drivers** para aceder ao hardware (discos, ecrãs, teclados, placas de rede, etc.).
+- **Grupos principais** de SO disponíveis:
+  - **Linux** (empresarial / utilizador comum)
+  - **Unix** (BSD comerciais e livres)
+  - **macOS** (Apple)
+  - **Windows** (desktop/servidor Microsoft)
+
+### Kernel vs. Distribuição Linux
+- **Kernel** = o núcleo comum a **todas** as distribuições Linux. Mantido por uma equipa liderada por **Linus Torvalds**, sob o consórcio **The Linux Foundation** (desenvolvimento iniciado em **1991**, primeira versão GPL v2 em **1992**: 0.12).
+- **Distribuição** = kernel Linux + ambiente (shell Bash, comandos básicos, frequentemente desktop como **GNOME** ou **KDE**).
+- Ver versão do kernel em uso: `uname -r` (ex.: `4.15.0-1019-aws`).
+
+### Tipos de distribuições Linux
+| Categoria | Foco | Exemplos | Características |
+|-----------|------|----------|-----------------|
+| **Empresarial** | Estabilidade, hardware maduro, suporte longo | **RHEL**, **CentOS**, **SUSE Linux Enterprise Server**, **Debian**, **Ubuntu LTS** | Kernel mais antigo mas muito testado; atualizações de segurança retroportadas |
+| **Utilizador doméstico** | Hardware recente, drivers novos | **Fedora**, Ubuntu **não-LTS**, **openSUSE** | Kernel mais recente; suporte de comunidade mais curto |
+| **Experimental / hackers** | Vanguarda, rolling release | **Arch**, **Gentoo** | Software mais recente, pode quebrar; exige utilizador avançado |
+
+**Parentescos:** Ubuntu baseia-se em **Debian** (usa `dpkg`); **Fedora** é o "banco de testes" do RHEL.
+
+### Ciclo de vida e suporte
+- **Distribuições empresariais** têm vida longa — ex.: **RHEL 8** lançado maio/2019, suporte até **maio/2029** (10 anos).
+- **Ubuntu** usa versões datadas `YY.MM` (ex.: `19.04` = abril 2019). Versões normais: ~3 lançamentos de suporte. **LTS** (Long Term Support): **5 anos** de suporte (atual: 18.04 até 2023) — viável para empresas, com suporte comercial da **Canonical**.
+- **Beta vs. Stable:** distribuições experimentais (Arch, Gentoo) seguem modelo **rolling release** — atualizações contínuas, funcionalidade pode quebrar.
+
+### Linux em diferentes contextos
+- **Desktop** — ambientes como **GNOME** e **KDE** (preferência pessoal). Pequenas empresas e casa: fácil, sem custo de licença. Em grandes empresas pode haver resistência (equipas treinadas em Windows, software específico).
+- **Servidores** — uso muito comum no mundo empresarial; gerido por especialistas; o SO do servidor é transparente para os utilizadores finais.
+- **Nuvem** — provedores (AWS, Google Cloud, Rackspace, Azure) oferecem imagens de múltiplas distros prontas em minutos.
+
+### Sistemas operacionais não-Linux
+| SO | Notas |
+|----|-------|
+| **Unix** | Antecessor do Linux. Variantes comerciais (**AIX**, **HP-UX**, **Solaris** — este último extinto) e livres (**FreeBSD**, **NetBSD**, **OpenBSD**). Em declínio, substituído pelo Linux. |
+| **macOS** (Apple, desde 2001) | Inspirado no **BSD Unix**; traz o shell **Bash**. O comando `uname -s` reporta **`Darwin`**. Abre-se o Terminal para linha de comando. |
+| **Windows** (Microsoft) | Domina o mercado de desktop/laptop. Licença proprietária incluída no hardware. Como servidor, permite escolher entre **GUI** e modo só **linha de comando** (Server Core) — útil quando a GUI não é usada. |
+
+### GUI vs. Linha de comando
+- **GUI** (Graphical User Interface) — interface gráfica; mais amigável para o utilizador final.
+- **Linha de comando** (CLI) — mais eficiente para administração/servidores; consome menos recursos.
+- Nos servidores Windows modernos a GUI pode ser omitida; nos servidores Linux a CLI é a norma.
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+> Exercícios da autoria do agente para explorar o teu próprio sistema (Linux, macOS ou WSL) e comparar distros. Soluções em `<details>` para tentares primeiro.
+
+### Exploratório 1 — Identificar a tua distribuição
+Descobre o **nome e versão** da distro onde estás, a **família de pacotes** (Debian/Red Hat) e o **release do kernel**.
+
+
+
+<SolutionBlock>
+```bash
+# Nome e versão da distribuição (funciona em qualquer distro moderna)
+cat /etc/os-release
+
+# Alternativas mais legíveis
+lsb_release -a            # pode exigir o pacote lsb-release
+hostnamectl               # mostra OS, kernel e arquitetura
+
+# Família de pacotes
+which dpkg && echo "Família Debian (.deb)"
+which rpm  && echo "Família Red Hat/SUSE (.rpm)"
+
+# Release do kernel
+uname -r                  # ex.: 5.15.0-91-generic
+uname -a                  # tudo: kernel, hostname, arquitetura, data
+```
+
+**Como interpretar:** em `/etc/os-release`, `ID=ubuntu`/`debian` → Debian family; `ID=rhel`/`fedora`/`centos` → Red Hat family. O `uname -r` corresponde exatamente ao "kernel release" mencionado no manual.
+</SolutionBlock>
+
+
+
+### Exploratório 2 — Classificar distros (empresarial / doméstica / experimental)
+Cria um ficheiro `distros.txt` com 9 distribuições (3 de cada tipo) e usa `grep -E` para filtrar só as **empresariais**.
+
+
+
+<SolutionBlock>
+```bash
+cat > distros.txt <<'EOF'
+RHEL
+CentOS
+SUSE Linux Enterprise Server
+Fedora
+Ubuntu
+openSUSE
+Arch
+Gentoo
+Debian
+EOF
+
+# Empresariais (manual: RHEL, CentOS, SUSE LES, Ubuntu LTS, Debian)
+grep -E 'RHEL|CentOS|SUSE Linux Enterprise|Debian' distros.txt
+```
+
+**Classificação esperada (segundo o manual):**
+- **Empresarial:** RHEL, CentOS, SUSE Linux Enterprise Server, Debian, Ubuntu LTS
+- **Utilizador doméstico:** Fedora, Ubuntu (não-LTS), openSUSE
+- **Experimental / hackers:** Arch, Gentoo
+</SolutionBlock>
+
+
+
+### Exploratório 3 — Verificar hardware e memória (decidir tipo de distro)
+O manual afirma que hardware recente exige distros de utilizador doméstico; hardware maduro combina com distros empresariais. Verifica a tua **arquitetura de CPU**, **memória RAM** e **espaço em disco** para decidir que perfil de hardware tens.
+
+
+
+<SolutionBlock>
+```bash
+# Arquitetura do CPU
+uname -m
+#   x86_64    -> PC/servidor moderno (Intel/AMD 64 bits)
+#   aarch64   -> ARM (Raspberry Pi, Apple Silicon em VM, servidores AWS Graviton)
+
+# Memória RAM (forma legível)
+free -h
+
+# Espaço em disco / partições montadas
+df -h
+
+# Discos/blocos visíveis
+lsblk
+```
+
+**Reflexão (liga ao manual):** se tens hardware recente com bastante RAM e um kernel moderno (`uname -r` ≥ 5.x), uma distro de **utilizador doméstico** (Ubuntu, Fedora) aproveita melhor os drivers novos. Para servidores de produção com hardware maduro, prefere-se **RHEL/CentOS/Debian** pela estabilidade e suporte longo.
+</SolutionBlock>
+
+
+
+### Exploratório 4 — Comparar ciclo de vida (LTS vs. normal)
+Verifica a versão do teu Ubuntu e determina se é **LTS** ou normal, calculando a data de fim de suporte (LTS = 5 anos; normal = 9 meses). Usa a regra `YY.MM` do número de versão.
+
+
+
+<SolutionBlock>
+```bash
+# Versão do Ubuntu
+lsb_release -a 2>/dev/null
+# ou
+cat /etc/os-release | grep VERSION=
+
+# Exemplos de interpretação:
+#   22.04 (abril 2022)  → LTS, suporte até abril 2027
+#   24.04 (abril 2024)  → LTS, suporte até abril 2029
+#   23.10 (out. 2023)   → normal, EOL ~julho 2024
+```
+
+**Regra prática:** versões `YY.04` e `YY.10` de **anos pares** são LTS (abril). As restantes são de curto prazo. Isto justifica a recomendação do manual de usar **Ubuntu LTS em empresas** (suporte comercial da Canonical durante 5 anos).
+</SolutionBlock>
+
+
+
+### Exploratório 5 — Descobrir o SO em macOS / Unix
+Se tiveres acesso a um macOS (físico ou via SSH), confirma que o kernel reportado é **Darwin** e que o shell disponível é Bash/Zsh. Caso só tenhas Linux, compara a tua saída com o esperado.
+
+
+
+<SolutionBlock>
+```bash
+# No macOS (Terminal.app):
+uname -s          # Darwin
+uname -r          # ex.: 23.0.0 (versão do Darwin)
+echo $SHELL       # /bin/zsh (default desde macOS Catalina) ou /bin/bash
+
+# No Linux (comparação):
+uname -s          # Linux
+echo $SHELL       # /bin/bash (habitualmente)
+
+# Em FreeBSD/NetBSD/OpenBSD:
+uname -s          # FreeBSD / NetBSD / OpenBSD
+```
+
+**Reflexão:** apesar de `uname -s` reportar nomes diferentes (**Linux** vs **Darwin** vs **FreeBSD**), todos partilham herança **Unix** — daí a semelhança de comandos, shell e filosofia. Isto explica porque é que o macOS é "amigável para utilizadores Unix/Linux", como refere o manual.
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T11 - Transformando comandos em Scripts]()
+→ Próximo: [T13 - Entendendo o Hardware do Computador]()

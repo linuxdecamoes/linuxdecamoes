@@ -1,0 +1,346 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T07 — Formulários HTML"
+  code="030"
+  topicNumber="T07"
+  objective="032.4"
+  weight={2}
+  pages="LPI Web Development Essentials (030) - Version 1.0"
+  accent="amber"
+/>
+
+
+
+## Resumo Conciso
+
+### Estrutura básica de um formulário
+
+```html
+<form action="receive_form.php" method="get">
+  <label for="fullname">Nome completo:</label>
+  <input type="text" name="fullname" id="fullname">
+  <input type="submit" value="Enviar">
+</form>
+```
+
+### Elementos fundamentais
+
+| Elemento | Função |
+|----------|--------|
+| `<form>` | Contêiner do formulário (tags específicas devem estar dentro) |
+| `<input>` | Campo de entrada de dados (tipo controlado pelo atributo `type`) |
+| `<label>` | Rótulo descritivo associado a um campo (`for` = `id` do campo) |
+| `<textarea>` | Campo de texto multi-linha |
+| `<select>` | Controlo suspenso com lista de opções |
+| `<option>` | Item dentro de um `<select>` |
+| `<button>` | Botão de ação (submit, reset, genérico) |
+| `<fieldset>` | Agrupamento visual de campos |
+| `<legend>` | Título de um `<fieldset>` |
+
+### Atributos importantes de `<form>`
+
+| Atributo | Função | Exemplo |
+|----------|--------|---------|
+| `action` | URL do script que processa os dados | `action="receive_form.php"` |
+| `method` | Método HTTP para envio | `method="get"` ou `method="post"` |
+| `enctype` | Tipo MIME do conteúdo | `multipart/form-data` (para uploads) |
+
+### Métodos GET vs POST
+
+| Característica | GET | POST |
+|----------------|-----|------|
+| Dados na URL | Sim (query string) | Não (corpo do pedido) |
+| Limite de tamanho | Alguns milhares de caracteres | Sem limite prático |
+| Uso recomendado | Dados textuais pequenos | Campos grandes, binários, uploads |
+| Visibilidade | Visível na barra de endereços | Não visível |
+| Padrão | Sim (quando method não definido) | Não |
+
+**`enctype` padrão:** `application/x-www-form-urlencoded`
+**Para uploads:** `multipart/form-data`
+
+### Tipos de entrada (`<input type="...">`)
+
+| Tipo | Função | Exibição |
+|------|--------|----------|
+| `text` | Texto simples | Caixa de texto |
+| `password` | Texto confidencial | Texto oculto |
+| `email` | Endereço de email | Caixa de texto |
+| `url` | URL absoluta | Caixa de texto |
+| `tel` | Número de telefone | Caixa de texto |
+| `search` | Pesquisa | Caixa de texto |
+| `number` | Valor numérico | Caixa de texto + setas |
+| `range` | Controlo deslizante | Slider |
+| `date` | Data (ano, mês, dia) | Seletor de data |
+| `month` | Mês e ano | Seletor de mês |
+| `week` | Semana e ano | Seletor de semana |
+| `time` | Hora | Seletor de hora |
+| `datetime-local` | Data e hora | Seletor de data/hora |
+| `color` | Cor sRGB | Seletor de cores |
+| `checkbox` | Seleção múltipla | Caixa de seleção quadrada |
+| `radio` | Seleção única | Botão de opção redondo |
+| `file` | Upload de ficheiro | Botão "Browse" |
+| `submit` | Enviar formulário | Botão de envio |
+| `reset` | Limpar formulário | Botão de limpar |
+| `hidden` | Dados ocultos | invisível |
+| `image` | Imagem como botão | Imagem clicável |
+| `button` | Botão genérico | Botão |
+
+### Atributos dos campos de entrada
+
+| Atributo | Função |
+|----------|--------|
+| `name` | Identificador no contexto do formulário (enviado ao servidor) |
+| `id` | Identificador único no documento (usado pelo `<label>`) |
+| `value` | Valor padrão ou valor do campo |
+| `placeholder` | Texto de exemplo (desaparece ao digitar) |
+| `required` | Campo obrigatório (booleano) |
+| `autocomplete` | Sugestões automáticas (`on`/`off`) |
+| `checked` | Pré-selecionar (radio/checkbox) |
+| `selected` | Pré-selecionar opção em `<select>` |
+| `accept` | Tipos aceites em uploads (ex: `image/jpeg, image/png`) |
+
+### `<textarea>` — Texto multi-linha
+
+```html
+<label for="comment">Comentário:</label>
+<textarea id="comment" name="comment" rows="10" cols="50">
+  Texto pré-preenchido.
+</textarea>
+```
+
+- `rows` e `cols` definem o layout (não limitam o texto)
+- Possui alça de redimensionamento
+
+### Listas de opções
+
+**`<select>` (lista suspensa):**
+
+```html
+<select name="browser" id="browser">
+  <option value="firefox">Mozilla Firefox</option>
+  <option value="chrome" selected>Google Chrome</option>
+</select>
+```
+
+**`<input type="radio">` (seleção única):**
+
+```html
+<input type="radio" id="b1" name="browser" value="firefox" checked>
+<label for="b1">Firefox</label>
+```
+
+**`<input type="checkbox">` (seleção múltipla):**
+
+```html
+<input type="checkbox" id="b1" name="browser" value="firefox" checked>
+<label for="b1">Firefox</label>
+```
+
+**Regras importantes:**
+- Todos os radio do mesmo grupo partilham o mesmo `name`
+- `<label>` permite clicar no texto para selecionar o campo
+- `checked` pré-seleciona radio/checkbox; `selected` pré-seleciona `<option>`
+
+### `<fieldset>` e `<legend>`
+
+```html
+<fieldset>
+  <legend>Navegador favorito</legend>
+  <input type="checkbox" id="b1" name="b" value="ff" checked>
+  <label for="b1">Firefox</label>
+  <input type="checkbox" id="b2" name="b" value="gc">
+  <label for="b2">Chrome</label>
+</fieldset>
+```
+
+- `<fieldset>` desenha uma moldura visual
+- `<legend>` define o título da moldura
+- Definir `disabled` num `<fieldset>` desabilita todos os campos interiores
+
+### Campo hidden e upload de ficheiro
+
+**Campo hidden:**
+
+```html
+<input type="hidden" name="token" value="e730a375-b953-4393-847d-2dab065bbc92">
+```
+
+- Valor definido pelo servidor, invisível ao utilizador
+- Enviado como campo comum
+
+**Upload de ficheiro:**
+
+```html
+<label for="attachment">Anexo:</label>
+<input type="file" id="attachment" name="attachment" accept="image/jpeg, image/png">
+```
+
+- `accept` restringe tipos de ficheiro (ex: `application/pdf` para PDF)
+- Necessita de `enctype="multipart/form-data"` no `<form>`
+
+### Botões de ação
+
+```html
+<input type="submit" value="Enviar">
+<input type="reset" value="Limpar">
+<button>Enviar</button>
+<button type="reset">Limpar</button>
+```
+
+- `<button>` dentro de `<form>` envia por padrão
+- `<button>` tem tag de fechamento e conteúdo como rótulo
+
+## 🧭 Exercícios Guiados (resolvidos)
+
+### Exercício Guiado 1 — Associar label a input
+
+**Enunciado:** Qual a maneira correta de associar uma `<label>` a um `<input>`?
+
+**Solução passo a passo:**
+
+1. O atributo `for` da `<label>` deve conter o `id` do `<input>` correspondente
+2. Exemplo: `<label for="nome">Nome:</label>` com `<input id="nome" name="nome">`
+3. Isto melhora a acessibilidade (leitores de ecrã) e permite clicar no rótulo
+
+### Exercício Guiado 2 — Controlo deslizante
+
+**Enunciado:** Que tipo de entrada cria um controlo deslizante para valor numérico?
+
+**Solução passo a passo:**
+
+1. O tipo de entrada `range` cria um slider
+2. Permite selecionar um valor numérico dentro de um intervalo
+3. Pode ser complementado com atributos `min`, `max` e `step`
+
+### Exercício Guiado 3 — Atributo placeholder
+
+**Enunciado:** Qual a finalidade do atributo `placeholder`?
+
+**Solução passo a passo:**
+
+1. O `placeholder` contém um texto de exemplo que aparece dentro do campo vazio
+2. Desaparece assim que o utilizador começa a digitar
+3. O texto do placeholder **não** é enviado como valor se o campo ficar vazio
+
+### Exercício Guiado 4 — Pré-selecionar opção
+
+**Enunciado:** Como selecionar por padrão a segunda opção de um controlo `<select>`?
+
+**Solução passo a passo:**
+
+1. Adicionar o atributo `selected` ao segundo elemento `<option>`
+2. Exemplo: `<option value="chrome" selected>Google Chrome</option>`
+3. O primeiro `<option>` é selecionado por padrão se nenhum tiver `selected`
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+1. **Enunciado:** Como alterar uma entrada de ficheiro para aceitar apenas PDFs?
+   
+
+<SolutionBlock>
+```html
+   <label for="documento">Documento:</label>
+   <input type="file" id="documento" name="documento" accept="application/pdf">
+   ```
+
+   Explicação: O atributo `accept` com `application/pdf` restringe a selecção a ficheiros PDF.
+</SolutionBlock>
+
+
+
+2. **Enunciado:** Como informar o utilizador sobre campos obrigatórios?
+   
+
+<SolutionBlock>
+```html
+   <p>Os campos marcados com um * são obrigatórios.</p>
+   <label for="nome">Nome: *</label>
+   <input type="text" id="nome" name="nome" required>
+   ```
+
+   Explicação: Campos obrigatórios são marcados com asterisco (*) e o atributo `required` valida no navegador antes do envio.
+</SolutionBlock>
+
+
+
+3. **Enunciado:** Reúna três fragmentos de código num mesmo formulário, garantindo `name` e `id` únicos.
+   
+
+<SolutionBlock>
+```html
+   <form action="receive_form.php" method="get">
+     <h2>Informações pessoais</h2>
+     <label for="fullname">Nome completo:</label>
+     <p><input type="text" name="fullname" id="fullname"></p>
+     <p>
+       <label for="date">Data:</label>
+       <input type="date" name="date" id="date">
+     </p>
+     <p>Navegador favorito:</p>
+     <p>
+       <input type="checkbox" id="browser-firefox" name="browser" value="firefox" checked>
+       <label for="browser-firefox">Mozilla Firefox</label>
+     </p>
+     <p>
+       <input type="checkbox" id="browser-chrome" name="browser" value="chrome" checked>
+       <label for="browser-chrome">Google Chrome</label>
+     </p>
+     <p>
+       <input type="checkbox" id="browser-opera" name="browser" value="opera">
+       <label for="browser-opera">Opera</label>
+     </p>
+     <p>
+       <input type="checkbox" id="browser-edge" name="browser" value="edge">
+       <label for="browser-edge">Microsoft Edge</label>
+     </p>
+     <p><input type="reset" value="Limpar"></p>
+     <p><input type="submit" value="Enviar"></p>
+   </form>
+   ```
+
+   Explicação: Combina campo de texto, campo de data e caixas de seleção, cada um com `name` e `id` únicos para evitar conflitos.
+</SolutionBlock>
+
+
+
+4. **Enunciado:** Construa um campo `<select>` com `<optgroup>` para agrupar opções por categoria (ex.: "Navegadores" e "Sistemas operativos"), e um grupo de três `<input type="radio">` para escolher um único plano ("Básico", "Pro", "Empresarial"). Garanta que os `radio` partilham o mesmo `name` e que o plano "Pro" fica pré-selecionado.
+   
+
+<SolutionBlock>
+```html
+   <label for="produto">Produto preferido:</label>
+   <select name="produto" id="produto">
+     <optgroup label="Navegadores">
+       <option value="firefox">Mozilla Firefox</option>
+       <option value="chrome">Google Chrome</option>
+     </optgroup>
+     <optgroup label="Sistemas operativos">
+       <option value="linux">GNU/Linux</option>
+       <option value="windows">Windows</option>
+     </optgroup>
+   </select>
+
+   <fieldset>
+     <legend>Plano de subscrição</legend>
+     <input type="radio" id="plano-basico" name="plano" value="basico">
+     <label for="plano-basico">Básico</label>
+     <input type="radio" id="plano-pro" name="plano" value="pro" checked>
+     <label for="plano-pro">Pro</label>
+     <input type="radio" id="plano-empresarial" name="plano" value="empresarial">
+     <label for="plano-empresarial">Empresarial</label>
+   </fieldset>
+   ```
+
+   Explicação: O elemento `<optgroup label="...">` agrupa visualmente as `<option>` dentro do `<select>`, mas o seu `label` **não** é selecionável. Os três `radio` partilham `name="plano"`: como têm o mesmo nome, o navegador só permite marcar **um** de cada vez (seleção única). O atributo `checked` em "Pro" pré-seleciona essa opção.
+</SolutionBlock>
+
+
+
+## 🔗 Ligações
+
+← Anterior: [T06 — Referências e recursos incorporados do HTML]()
+→ Próximo: [T08 — Noções básicas de CSS]()

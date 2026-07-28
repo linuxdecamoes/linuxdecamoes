@@ -1,0 +1,299 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="103.8 Edição básica de ficheiros com o vi"
+  code="101"
+  topicNumber="T17"
+  objective="Editar ficheiros de texto básico usando o editor vi"
+  weight={2}
+  pages="LPIC-1 (101) - Version 5.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Conceitos básicos do vi
+
+- Editor de texto padrão em sistemas Linux
+- Trabalha em dois modos: **comando** e **inserção**
+- **Vim** é o aprimorado do vi (compatível com vi)
+- Para sair de qualquer modo: `<Esc>` para voltar ao modo comando
+
+### Modos do vi
+
+| Modo | Acesso | Descrição |
+|------|--------|-----------|
+| Comando | `<Esc>` | Navega, edita, copia, cola |
+| Inserção | `i`, `I`, `a`, `A`, `o`, `O` | Digita texto |
+| Edição de linha | `:` | Comandos ex (salvar, sair, substituir) |
+
+### Navegação no vi
+
+| Tecla | Descrição |
+|-------|-----------|
+| `h` | Esquerda |
+| `j` | Baixo |
+| `k` | Cima |
+| `l` | Direita |
+| `w` | Avança uma palavra |
+| `b` | Volta uma palavra |
+| `e` | Vai até o final da palavra |
+| `0` | Início da linha |
+| `$` | Fim da linha |
+| `gg` | Início do ficheiro |
+| `G` | Fim do ficheiro |
+| `<PgDown>` ou `<Ctrl>f` | Uma página para baixo |
+| `<PgUp>` ou `<Ctrl>b` | Uma página para cima |
+
+### Entrando no modo de inserção
+
+| Tecla | Descrição |
+|-------|-----------|
+| `i` | Insere antes do cursor |
+| `I` | Insere no início da linha |
+| `a` | Insere depois do cursor |
+| `A` | Insere no fim da linha |
+| `o` | Abre linha abaixo |
+| `O` | Abre linha acima |
+
+### Edição no modo comando
+
+| Tecla | Descrição |
+|-------|-----------|
+| `x` | Deleta caractere |
+| `dd` | Deleta linha |
+| `d$` | Deleta até fim da linha |
+| `yy` | Copia linha |
+| `p` | Cola abaixo |
+| `P` | Cola acima |
+| `u` | Desfaz alteração |
+| `<Ctrl>r` | Refaz alteração |
+| `dw` | Deleta palavra |
+| `yw` | Copia palavra |
+
+### Substituindo texto
+
+```
+:s/antigo/novo/          # Substitui primeira ocorrência na linha
+:s/antigo/novo/g         # Substitui todas na linha
+:%s/antigo/novo/g        # Substitui todas no ficheiro
+:%s/antigo/novo/gc       # Substitui com confirmação
+```
+
+### Navegação por expressão regular
+
+> Para uma referência completa de expressões regulares, ver T16 — Pesquisar usando expressões regulares.
+
+| Comando | Descrição |
+|---------|-----------|
+| `/padrao` | Pesquisa para frente |
+| `?padrao` | Pesquisa para trás |
+| `n` | Próxima ocorrência |
+| `N` | Ocorrência anterior |
+| `:` | Número de linha específica |
+
+### Salvando e saindo
+
+| Comando | Descrição |
+|---------|-----------|
+| `:w` | Salva (write) |
+| `:q` | Sai (quit) |
+| `:wq` | Salva e sai |
+| `:q!` | Sai sem salvar |
+| `ZZ` | Salva e sai (atalho) |
+| `:x` | Salva e sai |
+
+### Outros comandos úteis
+
+| Comando | Descrição |
+|---------|-----------|
+| `:set number` | Mostra números de linha |
+| `:set nonumber` | Oculta números de linha |
+| `~` | Troca maiúscula/minúscula |
+| `J` | Junta linha atual com próxima |
+| `r` | Substitui caractere |
+| `R` | Substitui caracteres (overwrite) |
+
+### Comando `cut` (mencionado na lição)
+
+```bash
+cut -c1-10 ficheiro.txt             # Imprime colunas 1 a 10
+cut -c5-10 ficheiro.txt            # Imprime colunas 5 a 10
+cut -c1-10 ficheiro.txt | head -5  # Primeiras 5 linhas
+cut -c1-10 ficheiro.txt | wc -l    # Conta linhas
+```
+
+## Exercícios Guiados
+
+### Exercício Guiado 1 — Atalhos e movimentação
+
+1. Crie uma cópia de `/etc/apt/sources.list`:
+   ```bash
+   $ cp /etc/apt/sources.list ~/sources.list
+   ```
+
+2. Abra o ficheiro com `vi` e edite cada linha removendo a opção `[arch=amd64]`:
+   ```bash
+   $ vi ~/sources.list
+   ```
+   - Use `Esc` para voltar ao modo comando
+   - Use `/[arch=amd64]` para pesquisar
+   - Use `dw` para deletar palavras
+
+### Exercício Guiado 2 — Copiar e colar
+
+1. Abra o ficheiro `/etc/apt/sources.list`:
+   ```bash
+   $ vi sources.list
+   ```
+
+2. Use `:set number` para ver números de linha
+
+3. Navegue para a linha 15, corte-a e cole após a linha 23:
+   ```
+   15G
+   dd
+   23G
+   p
+   ```
+
+4. Navegue para a linha 10 e copie-a para depois da linha 18:
+   ```
+   10G
+   yy
+   18G
+   p
+   ```
+
+5. Navegue para a linha 5 e copie de lá até o final:
+   ```
+   5G
+   y$
+   ```
+
+6. Navegue para a última linha e cole:
+   ```
+   G
+   p
+   ```
+
+7. Salve e saia: `:wq`
+
+### Exercício Guiado 3 — Substituir e salvar
+
+1. Abra o ficheiro `/etc/apt/sources.list`:
+   ```bash
+   $ vi sources.list
+   ```
+
+2. Substitua `deb-src` por `deb`:
+   ```
+   :%s/deb-src/deb/gc
+   ```
+
+3. Salve e saia: `:wq`
+
+### Exercício Guiado 4 — Edição com cut
+
+1. Imprima as primeiras 10 linhas do ficheiro `/usr/share/common-licenses/GFDL-1.1`:
+   ```bash
+   $ cut -c1-10 /usr/share/common-licenses/GFDL-1.1 | head -10
+   ```
+
+2. Conte as linhas de 1 a 10:
+   ```bash
+   $ cut -c1-10 /usr/share/common-licenses/GFDL-1.1 | head -10 | wc -l
+   ```
+
+3. Imprima coluna específica:
+   ```bash
+   $ cut -c5-10 /usr/share/common-licenses/GFDL-1.1 | head -10
+   ```
+
+## Exercícios Exploratórios
+
+1. **Criar e manipular ficheiro de texto:**
+   
+
+<SolutionBlock>
+```bash
+   $ cat > mytextfile.txt << EOF
+   This is line 1
+   This is line 2
+   This is line 3
+   This is line 4
+   EOF
+   $ vi mytextfile.txt
+   ```
+   - Aprenda a mover com `h`, `j`, `k`, `l`
+   - Use `dd` para deletar linhas
+   - Use `yy` e `p` para copiar/colar
+   - Use `:wq` para salvar e sair
+</SolutionBlock>
+
+
+
+2. **Pratique substituição de texto:**
+   
+
+<SolutionBlock>
+```bash
+   $ vi mytextfile.txt
+   ```
+   - Substitua "line" por "linha": `:%s/line/linha/gc`
+   - Desfaça: `u`
+   - Refaça: `<Ctrl>r`
+</SolutionBlock>
+
+
+
+3. **Navegue por expressão regular:**
+   
+
+<SolutionBlock>
+```bash
+   $ vi mytextfile.txt
+   ```
+   - Pesquise "line": `/line`
+   - Vá para próxima ocorrência: `n`
+   - Vá para ocorrência anterior: `N`
+</SolutionBlock>
+
+
+
+4. **Pratique copiar e colar blocos:**
+   
+
+<SolutionBlock>
+```bash
+   $ vi mytextfile.txt
+   ```
+   - Copie 3 linhas: `3yy`
+   - Cole 5 vezes: `5p`
+   - Delete 2 linhas: `2dd`
+</SolutionBlock>
+
+
+
+5. **Salve com diferente extensão:**
+   
+
+<SolutionBlock>
+```bash
+   $ vi mytextfile.txt
+   ```
+   - Salve como novo ficheiro: `:w newfile.txt`
+   - Salve como HTML: `:w newfile.html`
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T16 - 103.7 Pesquisar usando expressões regulares]()
+→ Próximo: [T18 - 104.1 Criar partições e sistemas de arquivos]()

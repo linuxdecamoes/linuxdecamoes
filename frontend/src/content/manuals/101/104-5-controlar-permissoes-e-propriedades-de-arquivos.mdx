@@ -1,0 +1,300 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="104.5 Controlar permissões e propriedades de arquivos"
+  code="101"
+  topicNumber="T21"
+  objective="Controlar permissões de acesso, propriedades e bits especiais de arquivos e diretórios"
+  weight={3}
+  pages="LPIC-1 (101) - Version 5.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Comandos Principais
+
+| Comando | Função |
+|---|---|
+| `ls` | Listar arquivos e informações |
+| `chmod` | Alterar permissões |
+| `chown` | Alterar proprietário e/ou grupo |
+| `chgrp` | Alterar grupo proprietário |
+| `umask` | Consultar/definir máscara de permissões padrão |
+
+### Parâmetros do ls
+
+| Parâmetro | Função |
+|---|---|
+| `-l` | Lista formato longo (com permissões) |
+| `-a` | Mostrar arquivos ocultos (começam com .) |
+| `-d` | Informações do diretório, não seu conteúdo |
+| `-i` | Mostrar número inode |
+
+### Saída de ls -l
+
+```
+drwxrwxr-x 2 carol carol 4096 Dec 10 15:57 Another_Directory
+│├──┤├──┤├──┤│    │     │
+││   ││   ││    │     └─ Tamanho
+││   ││   ││    └─ Grupo proprietário
+││   ││   │└─ Proprietário
+││   ││   └─ Permissões outros (o)
+││   │└─ Permissões grupo (g)
+││   └─ Permissões proprietário (u)
+│└─ Tipo de arquivo
+```
+
+### Tipos de Arquivo
+
+| Caractere | Tipo |
+|---|---|
+| `-` | Arquivo normal |
+| `d` | Diretório |
+| `l` | Link simbólico |
+| `b` | Dispositivo de bloco |
+| `c` | Dispositivo de caracteres |
+| `s` | Socket |
+
+### Permissões de Arquivos
+
+| Permissão | Significado | Valor Octal |
+|---|---|---|
+| `r` | Read (leitura) | 4 |
+| `w` | Write (escrita) | 2 |
+| `x` | Execute (execução) | 1 |
+| `-` | Sem permissão | 0 |
+
+### Permissões de Diretórios
+
+| Permissão | Significado | Valor Octal |
+|---|---|---|
+| `r` | Ler conteúdo (nomes de arquivos) | 4 |
+| `w` | Criar/excluir arquivos (precisa de x) | 2 |
+| `x` | Entrar no diretório | 1 |
+
+### Ordem de Verificação
+
+1. Verificar se o usuário é o **proprietário** → aplica permissões de proprietário
+2. Verificar se o usuário pertence ao **grupo** → aplica permissões de grupo
+3. Caso contrário → aplica permissões de **outros**
+
+> Se o usuário for proprietário, apenas as permissões do proprietário são efetivas.
+
+### chmod — Modo Simbólico
+
+| Componente | Valores |
+|---|---|
+| Quem | `u` (usuário), `g` (grupo), `o` (outros), `a` (todos) |
+| Ação | `+` (adicionar), `-` (remover), `=` (definir) |
+| Permissão | `r` (leitura), `w` (escrita), `x` (execução) |
+
+```bash
+chmod g+w text.txt          # Adicionar escrita ao grupo
+chmod u-r text.txt           # Remover leitura do proprietário
+chmod a=rw- text.txt         # Definir rw- para todos
+chmod u+rwx,g-x text.txt    # Múltiplas alterações com vírgula
+chmod -R u+rwx Another_Directory/  # Recursivo
+```
+
+### chmod — Modo Octal
+
+| Dígito | Representa |
+|---|---|
+| 1º (especial) | Sticky bit, SGID, SUID |
+| 2º | Permissões do proprietário (u) |
+| 3º | Permissões do grupo (g) |
+| 4º | Permissões de outros (o) |
+
+| Valor | rwx |
+|---|---|
+| 0 | `---` |
+| 1 | `--x` |
+| 2 | `-w-` |
+| 3 | `-wx` |
+| 4 | `r--` |
+| 5 | `r-x` |
+| 6 | `rw-` |
+| 7 | `rwx` |
+
+```bash
+chmod 660 text.txt    # rw-rw----
+chmod 0755 script.sh  # rwxr-xr-x
+chmod 0644 file.txt   # rw-r--r--
+```
+
+### chown
+
+```bash
+chown USERNAME:GROUPNAME FILENAME
+chown carol:students text.txt    # Alterar usuário e grupo
+chown carol: text.txt            # Alterar apenas usuário
+chown :students text.txt         # Alterar apenas grupo
+chgrp students text.txt          # Alternativa para alterar grupo
+```
+
+> A menos que seja root, não é possível mudar a propriedade para outro usuário/grupo ao qual não se pertence.
+
+### Consultar Grupos
+
+| Comando | Função |
+|---|---|
+| `getent group` | Listar todos os grupos |
+| `groups USERNAME` | Grupos de um usuário |
+| `groupmems -g GRUPO -l` | Membros de um grupo (requer root) |
+
+### umask
+
+```bash
+umask           # Exibir valor octal (ex: 0022)
+umask -S        # Exibir em modo simbólico (ex: u=rwx,g=rx,o=rx)
+umask u=rwx,g=rwx,o=  # Alterar para sessão atual
+```
+
+| umask | Permissões de Arquivo | Permissões de Diretório |
+|---|---|---|
+| 0 | rw- | rwx |
+| 1 | rw- | rw- |
+| 2 | r-- | r-x |
+| 3 | r-- | r-- |
+| 4 | -w- | -wx |
+| 5 | -w- | -w- |
+| 6 | --- | --x |
+| 7 | --- | --- |
+
+### Permissões Especiais
+
+| Permissão | Octal | Simbólico | Efeito |
+|---|---|---|---|
+| Sticky bit | 1 | `t` em outros | Impede exclusão de arquivos de outros usuários (diretório) |
+| Set GID (SGID) | 2 | `s` em grupo | Arquivos herdam grupo do diretório pai; processo roda com privilégios do grupo |
+| Set UID (SUID) | 4 | `s` em usuário | Processo roda com privilégios do proprietário |
+
+### Exemplos de Permissões Especiais
+
+```bash
+chmod 1755 Another_Directory   # Sticky bit
+chmod g+s test.sh              # SGID (modo simbólico)
+chmod 6755 test.sh             # SUID + SGID (modo octal)
+```
+
+### s maiúsculo vs minúsculo
+
+| Caractere | Significado |
+|---|---|
+| `s` minúsculo | Bit especial definido + permissão de execução ativa |
+| `S` maiúsculo | Bit especial definido + permissão de execução ausente |
+| `t` minúsculo | Sticky bit definido + outros têm execução |
+| `T` maiúsculo | Sticky bit definido + outros não têm execução |
+
+--`.
+
+### Exercício Guiado 4 — Interpretar permissões SUID
+
+**Enunciado:** Vamos supor que um arquivo chamado test.sh seja um script do shell com as seguintes permissões e propriedade: `-rwxr-sr-x 1 carol root 33 Dec 11 10:36 test.sh`. Quais são as permissões do proprietário do arquivo? Usando a notação octal, qual seria a sintaxe do chmod para "desfazer" a permissão especial concedida a este arquivo?
+
+**Solução:** As permissões do proprietário (2º ao 4º caracteres na saída de ls -l) são rwx, por isso a resposta é: "ler, escrever e executar o arquivo". Podemos "desfazer" as permissões especiais passando um 4º dígito, 0, para o chmod. As permissões atuais são 755, de modo que o comando seria `chmod 0755`.
+
+### Exercício Guiado 5 — Tipo de arquivo e permissões
+
+**Enunciado:** Considere este arquivo:
+```
+brw-rw---- 1 root disk 8, 17 Dec 21 18:51 /dev/sdb1
+```
+Que tipo de arquivo é sdb1? E quem pode escrever nele?
+
+**Solução:** O primeiro caractere da saída de ls -l mostra o tipo de arquivo. `b` é um dispositivo de bloco, normalmente um disco conectado à máquina. O proprietário (root) e todos os usuários do grupo disk podem escrever nele.
+
+### Exercício Guiado 6 — Notação numérica de 4 dígitos
+
+**Enunciado:** Considere os 4 arquivos a seguir e escreva as permissões em notação numérica de 4 dígitos:
+```
+drwxr-xr-t 2 carol carol 4,0K Dec 20 18:46 Another_Directory
+----r--r-- 1 carol carol    0 Dec 11 10:55 foo.bar
+-rw-rw-r-- 1 carol carol 1,2G Dec 20 18:22 HugeFile.zip
+drwxr-sr-x 2 carol users  4,0K Jan 18 17:26 Sample_Directory
+```
+
+**Solução:**
+- **Another_Directory:** `1755` — 1 para o sticky bit, 755 para as permissões regulares
+- **foo.bar:** `0044` — Nenhuma permissão especial, sem permissões para o usuário, somente leitura para grupo e outros
+- **HugeFile.zip:** `0664` — Nenhuma permissão especial, 6 (rw-) para o usuário e grupo, 4 (r--) para os outros
+- **Sample_Directory:** `2755` — 2 para o bit SGID, 7 (rwx) para o usuário, 5 (r-x) para o grupo e outros
+
+---
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — chmod interpreta "de trás pra frente"
+
+**Enunciado:** Crie um arquivo vazio com `touch emptyfile`. Agora "zere" as permissões com `chmod 000 emptyfile`. O que acontecerá se você usar `chmod 4 emptyfile`? E `chmod 44 emptyfile`? O que aprendemos sobre a maneira como chmod interpreta o valor numérico?
+
+
+
+<SolutionBlock>
+Com `chmod 4 emptyfile`, as permissões de outros foram alteradas (-------r--). Com `chmod 44 emptyfile`, as permissões de grupo e outros foram afetadas (----r--r--). Concluímos que no modo octal o chmod lê o valor "de trás pra frente", do dígito menos significativo (outros) para o mais significativo (usuário). Um dígito modifica outros; dois modificam grupo e outros; três modificam usuário, grupo e outros; quatro modificam usuário, grupo, outros e as permissões especiais.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Sticky bit em /tmp
+
+**Enunciado:** Considere as permissões do diretório temporário `/tmp`: `drwxrwxrwt`. Usuário, grupo e outros têm permissões totais. Mas um usuário regular pode excluir qualquer arquivo dentro deste diretório? Por quê?
+
+
+
+<SolutionBlock>
+/tmp é um diretório escrito por todos, mas o sticky bit foi definido (indicado pelo `t`). Graças a isso, um usuário pode excluir arquivos em /tmp, mas somente se tiver criado esses arquivos.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — S maiúsculo
+
+**Enunciado:** Um arquivo chamado test.sh tem permissões `-rwsr-xr-x`. Execute:
+```bash
+chmod u-x test.sh
+ls -l test.sh
+# -rwSr-xr-x
+```
+O que fizemos? O que significa o S maiúsculo?
+
+
+
+<SolutionBlock>
+Removemos as permissões de execução do usuário dono do arquivo. O `s` (ou `t`) toma o lugar do `x` na saída de ls -l. Um `S` maiúsculo indica que o usuário dono do arquivo não tem permissões de execução e que o bit SUID foi definido. O mesmo vale para SGID (grupo) e sticky bit (outros).
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Criar diretório com SGID e sticky bit
+
+**Enunciado:** Como criar um diretório chamado Box no qual todos os arquivos pertençam automaticamente ao grupo users e só possam ser removidos pelo usuário que os criou?
+
+
+
+<SolutionBlock>
+```bash
+mkdir Box
+chown :users Box/
+chmod g+wxs Box/
+chmod o+t Box/
+# ou em um único comando:
+chmod g+wxs,o+t Box/
+```
+As permissões resultantes: `drwxrwsr-t`
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T20 - 104.3 Controle da montagem e desmontagem]()
+→ Próximo: [T22 - 104.6 Criar e alterar links simbólicos e hardlinks]()

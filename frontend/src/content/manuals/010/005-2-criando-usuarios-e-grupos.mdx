@@ -1,0 +1,387 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="Criando Utilizadores e Grupos"
+  code="010"
+  topicNumber="T17"
+  objective="5.2"
+  weight={2}
+  pages="Linux Essentials (010) - Version 4.1"
+  accent="sage"
+/>
+
+
+
+## Resumo Conciso
+
+### Os 4 ficheiros de utilizadores e grupos (em `/etc`)
+
+| Arquivo | Campos | Conteúdo | Permissões |
+|---------|:------:|----------|------------|
+| `/etc/passwd` | **7** | Dados básicos do utilizador (**sem** a senha). | Legível por **todos** |
+| `/etc/group` | **4** | Dados básicos dos grupos. | Legível por **todos** |
+| `/etc/shadow` | **9** | **Hash** da senha + política de expiração. | **Só root** |
+| `/etc/gshadow` | **4** | Senha/administradores do grupo. | **Só root** |
+
+> **Nunca** editar estes ficheiros diretamente — usar sempre as ferramentas (`useradd`, `groupadd`, `passwd`, …). Os utilitários deixam ainda backups com sufixo `-` (ex.: `/etc/passwd-`).
+
+### Estrutura dos campos
+
+**`/etc/passwd`** — `USERNAME:PASSWORD:UID:GID:GECOS:HOMEDIR:SHELL`
+Ex.: `frank:x:1001:1001::/home/frank:/bin/bash`
+- `PASSWORD` → `x` significa que a senha está em **shadow**.
+
+**`/etc/group`** — `NAME:PASSWORD:GID:MEMBERS`
+Ex.: `developer:x:1002:`
+- `MEMBERS` é uma lista CSV; **não** inclui utilizadores cujo grupo **primário** seja este.
+
+**`/etc/shadow`** — 9 campos:
+`USERNAME:PASSWORD:LASTCHANGE:MINAGE:MAXAGE:WARN:INACTIVE:EXPDATE:RESERVED`
+- `PASSWORD` = `!` → conta **bloqueada**; `LASTCHANGE` = `0` → obrigação de **trocar a senha** no próximo login.
+- Datas em **dias desde 01/01/1970** (época POSIX).
+
+**`/etc/gshadow`** — `NAME:PASSWORD:ADMINS:MEMBERS`
+- Usada pelo `newgrp`; `!` no início da senha → ninguém pode entrar no grupo via `newgrp`.
+
+### Criar / remover utilizadores — `useradd` / `userdel`
+
+| Comando | Efeito |
+|---------|--------|
+| `useradd frank` | Cria o utilizador com config padrão. |
+| `useradd -m frank` | Cria **e** o diretório inicial (`/home/frank`), copiando `/etc/skel`. |
+| `passwd frank` | **Define a senha** (sem ela, a conta fica bloqueada). |
+
+Opções principais do `useradd`:
+
+| Opção | Significado |
+|-------|-------------|
+| `-c` | Comentário GECOS (ex.: nome completo) |
+| `-d` | Diretório inicial personalizado |
+| `-e` | Data de expiração da conta |
+| `-f` | Dias para desativação após expiração da senha |
+| `-g` | **GID primário** (grupo tem de existir) |
+| `-G` | Grupos **secundários** (lista CSV) |
+| `-m` / `-M` | Criar **com** / **sem** diretório inicial |
+| `-s` | Shell de login |
+| `-u` | UID específico |
+
+Após criar, inspecionar com `id frank` e `groups frank`. Para remover: `userdel -r frank` (o `-r` apaga também o diretório inicial e o spool de mail). Configuração de intervalos de UID/GID e `CREATE_HOME` em **`/etc/login.defs`**.
+
+### Diretório de esqueleto — `/etc/skel`
+Quando se cria o home com `-m`, este é preenchido com cópias de **`/etc/skel`**. Para dar a todos os novos utilizadores os mesmos ficheiros iniciais (perfis, atalhos), basta acrescentá-los a `/etc/skel`. Os ficheiros são habitualmente **ocultos** → listar com `ls -Al /etc/skel`.
+
+### Criar / remover grupos — `groupadd` / `groupdel`
+```bash
+groupadd -g 1090 developer   # cria grupo com GID específico
+groupdel developer           # remove (NÃO se pode se for grupo primário de alguém)
+```
+> Os grupos (primário e secundários) devem **existir antes** do `useradd`.
+
+### O comando `passwd` — senhas e envelhecimento
+- Qualquer utilizador muda a **sua** senha; **só root** pode mudar a de qualquer conta (e usar as opções abaixo).
+
+| Opção | Efeito |
+|-------|--------|
+| `-d` | Apaga a senha (conta sem senha) |
+| `-e` | Força a troca no próximo login |
+| `-l` | **Bloqueia** a conta (prefixa hash com `!`) |
+| `-u` | **Desbloqueia** (remove o `!`) |
+| `-S` | Mostra o **estado** da senha da conta |
+
+### Comandos-chave
+`useradd`, `userdel`, `groupadd`, `groupdel`, `passwd`, e ainda `usermod`/`gpasswd` para alterações e `id`/`groups` para inspeção.
+
+| `developer:x:1010:frank,grace,dave` | **`/etc/group`** | 4 campos: `nome:x:GID:membros`. |
+|---|---|---|
+| `root:x:0:0:root:/root:/bin/bash` | **`/etc/passwd`** | 7 campos com UID, GID, home e shell. |
+| `henry:$1$.AbCdEfGh…:18015:20:90:5:30::` | **`/etc/shadow`** | 9 campos, com **hash** e datas de envelhecimento. |
+| `henry:x:1000:1000:User Henry:/home/henry:/bin/bash` | **`/etc/passwd`** | 7 campos; `x` em vez do hash. |
+| `staff:!:dave:carol,emma` | **`/etc/gshadow`** | 4 campos: `nome:senha:admins:membros`. |
+
+### Guiado 2 — Sete questões a partir de 4 listagens
+
+**Enunciado:** *Observe esta saída para responder às sete questões a seguir:*
+```bash
+# cat /etc/passwd | tail -3
+dave:x:1050:1050:User Dave:/home/dave:/bin/bash
+carol:x:1051:1015:User Carol:/home/carol:/bin/sh
+henry:x:1052:1005:User Henry:/home/henry:/bin/tcsh
+# cat /etc/group | tail -3
+web_admin:x:1005:frank,emma
+web_developer:x:1010:grace,kevin,christian
+dave:x:1050:
+# cat /etc/shadow | tail -3
+dave:$6$AbCdEfGh123456789A1b2C3D4e5F6G7h8i9:0:20:90:7:30::
+carol:$6$q1w2e3r4t5y6u7i8AbcDeFgHiLmNoPqRsTu:18015:0:60:7:::
+henry:!$6$123456789aBcDeFgHa1B2c3d4E5f6g7H8I9:18015:0:20:5:::
+# cat /etc/gshadow | tail -3
+web_admin:!:frank:frank,emma
+web_developer:!:kevin:grace,kevin,christian
+dave:!::
+```
+
+**Solução (passo a passo):**
+
+**a) Qual o UID e GID de carol?**
+O UID e o GID são o 3.º e 4.º campos de `/etc/passwd`. Em `carol:x:1051:1015:...` → **UID = 1051**, **GID = 1015**.
+
+**b) Qual shell está configurado para dave e henry?**
+É o 7.º campo de `/etc/passwd`:
+- **dave** → `/bin/bash`
+- **henry** → `/bin/tcsh`
+
+**c) Qual o nome do grupo principal de henry?**
+O GID primário de henry é **1005** (4.º campo). Em `/etc/group`, a linha `web_admin:x:1005:frank,emma` tem GID 1005 → grupo principal = **`web_admin`**.
+
+**d) Membros e administradores do grupo web_developer?**
+- **Membros** (4.º campo de `/etc/group`): `grace`, `kevin`, `christian`.
+- **Administrador** (3.º campo de `/etc/gshadow`, em `web_developer:!:kevin:...`): apenas **`kevin`**.
+
+**e) Qual utilizador não pode fazer login?**
+Procura-se `!` no início do hash em `/etc/shadow` → `henry:!$6$...`. Logo, **`henry`** tem a conta **bloqueada** e não consegue autenticar-se.
+
+**f) Qual utilizador terá de mudar a senha no próximo login?**
+Quando o campo `LASTCHANGE` (3.º) é `0`, o sistema obriga à troca. A linha `dave:...:0:20:90:7:30::` tem `0` → **`dave`** terá de trocar a senha.
+
+**g) Quantos dias até ser exigida alteração de senha para carol?**
+O campo `MAXAGE` (5.º) é a idade máxima em dias. Em `carol:...:18015:0:60:7:::` → **60 dias**.
+
+### Guiado 3 — Criar utilizador com `useradd` e opções
+
+**Enunciado:** *Crie o utilizador `luis` com UID 1100, grupo primário `developers` (GID 1010), grupos secundários `sudo` e `audio`, shell `/bin/zsh`, comentário "Luis Silva" e diretório inicial `/home/luis`. Defina-lhe a senha e verifique o resultado.*
+
+**Solução passo a passo:**
+
+```bash
+# 1. Garantir que o grupo developers existe (com o GID pretendido)
+sudo groupadd -g 1010 developers
+
+# 2. Criar o utilizador com todas as opções
+sudo useradd -u 1100 -g developers -G sudo,audio -s /bin/zsh -c "Luis Silva" -m luis
+
+# 3. Definir a senha
+sudo passwd luis
+
+# 4. Verificar
+id luis
+# uid=1100(luis) gid=1010(developers) groups=1010(developers),27(sudo),29(audio)
+getent passwd luis
+# luis:x:1100:1010:Luis Silva:/home/luis:/bin/zsh
+ls -ld /home/luis
+```
+
+**Notas:**
+- O `-u 1100` define o UID manualmente; o `-g developers` define o grupo primário (tem de já existir).
+- O `-G sudo,audio` acrescenta grupos secundários.
+- O `-m` cria o diretório inicial com conteúdos de `/etc/skel`.
+
+### Guiado 4 — Alterar utilizador com `usermod`
+
+**Enunciado:** *O utilizador `luis` (criado no exercício anterior) precisa de ser alterado: mudar o shell para `/bin/bash`, adicionar o grupo `www-data` como secundário e bloquear a conta temporariamente. Mostre os comandos e confirme as alterações.*
+
+**Solução passo a passo:**
+
+```bash
+# 1. Mudar o shell para /bin/bash
+sudo usermod -s /bin/bash luis
+
+# 2. Adicionar www-data como grupo secundário (sem remover os existentes!)
+sudo usermod -aG www-data luis
+
+# 3. Bloquear a conta
+sudo passwd -l luis
+
+# 4. Verificar todas as alterações
+getent passwd luis   # verificar shell
+id luis              # verificar grupos
+sudo passwd -S luis  # verificar estado (L = locked)
+```
+
+**Notas:**
+- `-aG` (com `a`) **acrescenta** o grupo sem remover os anteriores. Sem `-a`, o utilizador ficaria **só** no grupo `www-data`.
+- `passwd -l` bloqueia a conta; `passwd -u` desbloqueia.
+
+---
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+> Exercícios da autoria do agente, para praticares diretamente no terminal Linux. Consolidam o tópico 5.2 (criar/remover utilizadores e grupos, `/etc/skel`, `passwd`, `gpasswd`, leitura dos 4 ficheiros).
+> *Dica:* precisas de uma sessão Linux (física, VM ou WSL) e de **privilégios root** (`sudo -i` ou `su -`). As soluções estão em `<details>` para poderes tentar primeiro.
+
+### Exploratório 1 — Criar um utilizador completo
+Cria o utilizador `ana`, com diretório inicial, comentário "Ana Costa", shell `/bin/bash` e grupos secundários `sudo,audio`. Define-lhe a senha e verifica o resultado.
+
+
+
+<SolutionBlock>
+```bash
+# 1. Garantir que os grupos existem (sudo já existe; audio costuma existir)
+getent group sudo audio
+
+# 2. Criar o utilizador
+sudo useradd -m -c "Ana Costa" -s /bin/bash -G sudo,audio ana
+
+# 3. Definir senha (pede confirmação)
+sudo passwd ana
+
+# 4. Verificar
+id ana
+groups ana
+getent passwd ana
+ls -ld /home/ana
+```
+
+**Como ler o `id`:**
+```
+uid=1001(ana) gid=1001(ana) groups=1001(ana),27(sudo),29(audio)
+```
+- O `-m` criou `/home/ana` (com conteúdos copiados de `/etc/skel`).
+- O grupo **primário** `ana` (GID = UID) foi criado automaticamente.
+</SolutionBlock>
+
+
+
+### Exploratório 2 — Personalizar /etc/skel e confirmar a cópia
+Cria em `/etc/skel` um ficheiro de boas-vindas e um diretório `projetos`. Depois cria um novo utilizador `bruno` (`-m`) e confirma que esses itens apareceram no home dele.
+
+
+
+<SolutionBlock>
+```bash
+# 1. Adicionar conteúdos ao esqueleto
+echo "Bem-vindo à tua conta!" | sudo tee /etc/skel/LEIAME.txt
+sudo mkdir /etc/skel/projetos
+
+# 2. Listar o esqueleto (atenção aos ficheiros ocultos)
+sudo ls -Al /etc/skel
+
+# 3. Criar novo utilizador com home
+sudo useradd -m -s /bin/bash bruno
+sudo passwd bruno
+
+# 4. Confirmar que os itens foram copiados
+sudo ls -Al /home/bruno
+sudo cat /home/bruno/LEIAME.txt
+```
+
+**Reflexão:** tudo o que estiver em `/etc/skel` no momento do `useradd -m` é replicado no novo home — é por isso que novos utilizadores já recebem `.bashrc`, `.profile`, etc.
+</SolutionBlock>
+
+
+
+### Exploratório 3 — Gerir grupos com groupadd e gpasswd
+Cria o grupo `devops` com GID 2000. Adiciona `ana` e `bruno` como membros e torna `ana` administradora do grupo. Por fim, lista os membros.
+
+
+
+<SolutionBlock>
+```bash
+# 1. Criar o grupo com GID fixo
+sudo groupadd -g 2000 devops
+getent group devops        # confirmar
+
+# 2. Adicionar membros (uma de duas formas equivalentes)
+sudo gpasswd -a ana devops
+sudo gpasswd -a bruno devops
+# alternativa: sudo usermod -aG devops ana bruno
+
+# 3. Tornar ana administradora do grupo
+sudo gpasswd -A ana devops
+
+# 4. Inspecionar
+getent group devops        # membros visíveis no 4.º campo
+sudo grep devops /etc/gshadow   # administradora no 3.º campo
+```
+
+**Saída esperada do `getent`:**
+```
+devops:x:2000:ana,bruno
+```
+**Saída esperada do `/etc/gshadow`:**
+```
+devops:!:ana:ana,bruno
+        │   │    └─ membros
+        │   └─ administradores (ana)
+        └─ senha (! = sem newgrp)
+```
+</SolutionBlock>
+
+
+
+### Exploratório 4 — Políticas de senha com passwd
+Para o utilizador `bruno`: força a troca de senha no próximo login, bloqueia a conta, consulta o estado e volta a desbloquear. Observa o efeito no `/etc/shadow`.
+
+
+
+<SolutionBlock>
+```bash
+# 1. Forçar troca no próximo login (LASTCHANGE = 0)
+sudo passwd -e bruno
+sudo grep bruno /etc/shadow        # o 3.º campo passa a 0
+
+# 2. Bloquear a conta (prefixa o hash com '!')
+sudo passwd -l bruno
+sudo grep bruno /etc/shadow        # aparece ! antes do $6$...
+
+# 3. Consultar o estado da senha
+sudo passwd -S bruno
+#  -> "bruno L ..."   (L = locked)
+
+# 4. Desbloquear
+sudo passwd -u bruno
+sudo passwd -S bruno
+#  -> "bruno P ..."   (P = password definida / utilizável)
+```
+
+**Estados do `passwd -S`:** `P` (senha ativa), `L` (locked/bloqueada), `NP` (sem senha).
+</SolutionBlock>
+
+
+
+### Exploratório 5 — Modificar com usermod e limpar tudo
+Move o utilizador `ana` para um novo grupo primário `devops`, muda-lhe o shell para `/bin/zsh`, renomeia-a para `ana.silva` e, no fim, remove todos os utilizadores e grupos criados (incluindo o home).
+
+
+
+<SolutionBlock>
+```bash
+# 1. Mudar o grupo PRIMÁRIO de ana para devops
+sudo usermod -g devops ana
+id ana                       # gid=2000(devops)
+
+# 2. Mudar o shell
+sudo usermod -s /bin/zsh ana
+getent passwd ana            # último campo passa a /bin/zsh
+
+# 3. Renomear o utilizador (e, com -l + -d -m, o home)
+sudo usermod -l ana.silva -d /home/ana.silva -m ana
+getent passwd ana.silva
+ls -ld /home/ana.silva
+
+# 4. Limpeza: remover utilizadores (com home) e grupo
+sudo userdel -r ana.silva
+sudo userdel -r bruno
+sudo groupdel devops
+
+# 5. Confirmar que ficou limpo
+getent passwd ana.silva bruno    # não deve devolver nada
+getent group devops
+ls -ld /home/ana.silva /home/bruno 2>/dev/null   # não devem existir
+```
+
+**Notas:**
+- `usermod -g` muda o **primário**; `-aG` (atenção ao `a`!) **acrescenta** secundários sem remover os existentes.
+- `userdel -r` só apaga o home e o spool de mail; ficheiros noutros locais têm de ser removidos manualmente.
+- `groupdel` falha se o grupo for **primário** de alguma conta — mudar essa conta antes de o apagar.
+</SolutionBlock>
+
+
+
+---
+
+## 🔗 Ligações
+
+← Anterior: [T16 - Segurança Básica e Identificação de Tipos de Utilizadores]() / → Próximo: [T18 - Gerenciando permissões e donos de ficheiros]()

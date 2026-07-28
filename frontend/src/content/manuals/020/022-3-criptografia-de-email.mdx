@@ -1,0 +1,255 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="022.3 — Criptografia de Email"
+  code="020"
+  topicNumber="T06"
+  objective="022.3"
+  weight={3}
+  pages="LPI Security Essentials (020) - Version 1.0"
+  accent="coral"
+/>
+
+
+
+## Resumo Conciso
+
+- **Criptografia de email**: usa criptografia de chave pública (assimétrica) para confidencialidade e assinaturas digitais para integridade e autenticidade
+- **Dois padrões principais**: OpenPGP (descentralizado) e S/MIME (centralizado, baseado em CAs)
+
+### Conceitos Fundamentais
+
+| Conceito | Descrição |
+|---|---|
+| **Confidencialidade** | Mensagem só é lida pelo destinatário pretendido (via criptografia) |
+| **Integridade** | Mensagem não é modificada durante o transporte (via assinaturas digitais) |
+| **Autenticidade** | Identidades do remetente e destinatário são verificadas (via assinatura + verificação) |
+
+### Chave Pública vs Chave Privada no Email
+
+| Característica | Chave Pública | Chave Privada |
+|---|---|---|
+| Disponibilidade | Compartilhada abertamente | Nunca compartilhada |
+| Uso no envio | Criptografa a mensagem (chave do destinatário) | — |
+| Uso no recebimento | — | Desencripta a mensagem |
+| Importação | Pode ser importada para o chaveiro | Permanece confidencial |
+
+### OpenPGP vs S/MIME
+
+| Característica | OpenPGP | S/MIME |
+|---|---|---|
+| Modelo de confiança | **Descentralizado** (utilizadores gerem as suas chaves) | **Centralizado** (CA emite certificados) |
+| Implementação de referência | GPG (GNU Privacy Guard) | Certificados X.509 |
+| Distribuição de chaves | Servidores de chaves públicas | Autoridades Certificadoras |
+| Algoritmos comuns | RSA, ECDSA, AES | RSA, AES |
+| Formato de chave | Par de chaves PGP | Certificado digital X.509 |
+| Associação ao email | Chave pública vinculada ao endereço no servidor | Certificado contém o endereço de email |
+
+### GPG — GNU Privacy Guard
+
+```bash
+# Criptografia simétrica
+$ echo "Hello world" > message_file.txt
+$ gpg --symmetric message_file.txt
+
+# Decriptação
+$ gpg --decrypt message_file.txt.gpg
+
+# Assinatura + criptografia simétrica
+$ gpg --sign --symmetric message_file.txt
+
+# Geração de par de chaves
+$ gpg --full-generate-key
+```
+
+| Comando GPG | Função |
+|---|---|
+| `--symmetric` | Criptografia simétrica (senha) |
+| `--decrypt` | Decriptação de ficheiro cifrado |
+| `--sign` | Assinar digitalmente |
+| `--full-generate-key` | Gerar par de chaves completo |
+| `--quick-generate-key` | Geração rápida de par de chaves |
+| `--help` | Ajuda com todas as opções |
+
+### Servidores de Chaves OpenPGP
+
+1. Carol cria par de chaves com GPG
+2. Carol mantém a chave privada
+3. Carol exporta chave pública para servidor de chaves
+4. John importa (baixa) a chave pública de Carol
+5. John pode assinar/criptografar mensagens para Carol
+
+### S/MIME e Certificados
+
+- Requer cliente de email compatível (Apple Mail, Outlook, Thunderbird)
+- Tanto remetente como destinatário devem ter certificado digital de CA confiável
+- Algumas CAs oferecem certificados S/MIME gratuitos (1 ano)
+- Alternativa: certificado autoassinado com OpenSSL
+
+### Thunderbird — Configuração OpenPGP
+
+1. Settings → Account Settings → End-To-End Encryption
+2. Clicar "Add key" → "Create new OpenPGP key"
+3. Configurar: expiração, tipo de chave, tamanho
+4. Confirmar criação → par de chaves gerado
+5. OpenPGP Key Manager: configurar servidor de chaves
+
+### Thunderbird — Configuração S/MIME
+
+1. Settings → Account Settings → End-To-End Encryption
+2. "Manage S/MIME Certificates" → importar certificado X.509
+3. Fornecer password se solicitado
+4. Selecionar certificado para assinatura e criptografia
+5. Selecionar segundo certificado para destinatários
+
+### Algoritmos de Assinatura Digital
+
+| Algoritmo | Descrição |
+|---|---|
+| **RSA** | Clássico; baseado em fatoração de números primos |
+| **DSA** | Digital Signature Algorithm; apenas assinatura |
+| **ECDSA** | Elliptic Curve DSA; chaves menores, mesma segurança |
+
+## Exercícios Guiados
+
+### Exercício Guiado 1: Chave Pública vs Chave Privada
+
+**Enunciado:** A criptografia de chave pública é baseada em um par de chaves. Indique a qual tipo de chave as afirmações a seguir correspondem.
+
+**Solução:**
+
+| Declaração | Chave pública ou privada? |
+|---|---|
+| Disponível para qualquer pessoa que deseja enviar email criptografado | **Chave pública** |
+| Não deve ser compartilhada com ninguém | **Chave privada** |
+| Aplicada a uma mensagem em texto simples para obter texto cifrado | **Chave pública** |
+| Usada para desencriptar email | **Chave privada** |
+| Pode ser importada para o seu chaveiro | **Chave pública** |
+
+### Exercício Guiado 2: Conceitos de Criptografia de Email
+
+**Enunciado:** Indique a qual dos seguintes conceitos as afirmações correspondem: criptografia simétrica, texto cifrado, autoridade certificadora, assinatura digital, Mozilla Thunderbird, ECDSA, confidencialidade, par de chaves, GPG, S/MIME.
+
+**Solução:**
+
+| Declaração | Conceito |
+|---|---|
+| Uma chave pública e sua correspondente chave privada | **Par de chaves** |
+| A mesma chave é usada para criptografar e desencriptar | **Criptografia simétrica** |
+| Uma terceira parte confiável que emite, revoga e gerencia certificados | **Autoridade certificadora** |
+| Usada para verificar autenticidade e integridade de documento digital | **Assinatura digital** |
+| Uma implementação gratuita do OpenPGP | **GPG** |
+| Algoritmo criptográfico para gerar e verificar assinaturas digitais | **ECDSA** |
+| Mensagem que foi tornada ininteligível | **Texto cifrado** |
+| Protocolo que garante criptografia de ponta a ponta | **S/MIME** |
+| Garante que mensagem seja lida apenas pelo destinatário pretendido | **Confidencialidade** |
+| Cliente de email gratuito e multiplataforma com criptografia E2E | **Mozilla Thunderbird** |
+
+### Exercício Guiado 3: Princípios do S/MIME
+
+**Enunciado:** Explique como o S/MIME garante confidencialidade, integridade e autenticidade no email.
+
+**Solução:** O S/MIME fornece segurança de ponta a ponta:
+- **Confidencialidade**: o remetente criptografa a mensagem com a chave pública do destinatário; apenas a chave privada do destinatário pode desencriptar
+- **Integridade**: o remetente cria assinatura digital criptografando um hash da mensagem com sua chave privada; o destinatário compara hashes para verificar
+- **Autenticidade**: verificação das assinaturas digitais confirma que a mensagem realmente veio do remetente alegado
+
+### Exercício Guiado 4: Geração de Par de Chaves GPG
+
+**Enunciado:** Descreva o processo de geração de um par de chaves GPG e os parâmetros envolvidos.
+
+**Solução:** O comando `gpg --full-generate-key` inicia o processo interativo:
+1. Selecionar tipo de chave (RSA and RSA é o padrão)
+2. Definir tamanho da chave (padrão 3072 bits; recomendado 4096 para segurança adicional)
+3. Definir expiração da chave (0 = não expira; pode definir dias/semanas/meses/anos)
+4. Inserir User ID: Nome Real, Email e Comentário
+5. Confirmar e gerar — o GPG cria chave pública e privada, e armazena em `~/.gnupg/`
+6. Ficheiro de revogação é gerado automaticamente em `openpgp-revocs.d/`
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1: Protocolos com Criptografia Assimétrica
+
+**Enunciado:** Cite dois protocolos de troca de dados que utilizam criptografia assimétrica além do email e explique como funcionam.
+
+
+
+<SolutionBlock>
+- **SFTP (Secure File Transfer Protocol)**: combina SSH para autenticação e criptografia de canal com transferência de arquivos; usa criptografia assimétrica na fase de autenticação e troca de chaves
+- **SSH (Secure Shell)**: permite acesso remoto seguro a terminais; usa criptografia assimétrica para autenticação do servidor e, opcionalmente, do cliente; estabelece sessão criptografada
+- **VPN**: oferece comunicação segura e autenticada entre dispositivos remotos através de redes inseguras; utiliza criptografia assimétrica na fase de autenticação
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2: Protocolos de Email Seguro
+
+**Enunciado:** Quais protocolos podem garantir uma troca segura de emails?
+
+
+
+<SolutionBlock>
+- **PGP (Pretty Good Privacy) / OpenPGP**: modelo descentralizado; chaves gerenciadas pelos utilizadores; distribuição via servidores de chaves públicas
+- **S/MIME**: modelo centralizado; certificados emitidos por CAs confiáveis; suportado pela maioria dos clientes de email comerciais
+
+Ambos garantem confidencialidade (criptografia), integridade (hash/assinatura) e autenticidade (assinatura digital).
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3: Protocolos de Navegação Segura
+
+**Enunciado:** Quais protocolos podem garantir uma navegação na web segura?
+
+
+
+<SolutionBlock>
+- **SSL (Secure Sockets Layer)**: predecessor do TLS; descontinuado devido a vulnerabilidades
+- **TLS (Transport Layer Security)**: padrão atual; handshake para autenticação + troca de chaves; criptografia simétrica para dados; integridade via MAC
+
+O HTTPS é a combinação de HTTP com TLS, sendo o protocolo padrão para navegação segura.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4: OpenPGP na Linha de Comando
+
+**Enunciado:** Demonstre como criptografar e desencriptar um ficheiro com GPG usando criptografia simétrica e assimétrica.
+
+
+
+<SolutionBlock>
+**Simétrica:**
+```bash
+# Criptografar
+echo "Mensagem secreta" > msg.txt
+gpg --symmetric msg.txt
+# Solicita senha → gera msg.txt.gpg
+
+# Descriptografar
+gpg --decrypt msg.txt.gpg
+# Solicita senha → imprime "Mensagem secreta"
+```
+
+**Assimétrica:**
+```bash
+# Gerar par de chaves
+gpg --full-generate-key
+
+# Criptografar para destinatário específico
+gpg --encrypt --recipient carol.doe@example.com msg.txt
+
+# Descriptografar (chave privada necessária)
+gpg --decrypt msg.txt.gpg
+```
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T05 - 022.2 Criptografia na Web]()
+→ Próximo: [T07 - 022.4 Criptografia de Armazenamento]()

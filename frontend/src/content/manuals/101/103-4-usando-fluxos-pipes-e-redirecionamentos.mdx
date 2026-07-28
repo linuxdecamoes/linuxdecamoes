@@ -1,0 +1,223 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="103.4 Usando fluxos, pipes e redirecionamentos"
+  code="101"
+  topicNumber="T13"
+  objective="Usar fluxos de entrada e saída, pipes e redirecionamentos para gerir dados entre comandos"
+  weight={2}
+  pages="LPIC-1 (101) - Version 5.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Fluxos de entrada e saída padrão
+
+- **Entrada padrão (stdin)** — Código 0, lê dados via teclado
+- **Saída padrão (stdout)** — Código 1, exibe dados na tela
+- **Erro padrão (stderr)** — Código 2, exibe mensagens de erro
+
+### Símbolos de redirecionamento
+
+| Símbolo | Descrição |
+|---------|-----------|
+| `>` | Redireciona stdout (sobrescreve) |
+| `>>` | Redireciona stdout (acrescenta) |
+| `<` | Redireciona stdin de ficheiro |
+| `2>` | Redireciona stderr para ficheiro |
+| `&>` | Redireciona stdout E stderr para ficheiro |
+| `\|` | Pipe: conecta stdout de um comando ao stdin do próximo |
+
+```bash
+ls > list.txt                    # Redireciona saída para ficheiro
+echo "texto" >> ficheiro.txt      # Acrescenta ao final
+grep "termo" ficheiro.txt | less  # Pipe para paginação
+ls 2> erros.txt                  # Redireciona apenas erros
+ls &> saida.txt                  # Redireciona tudo
+cat < ficheiro.txt                # Lê de ficheiro para stdin
+```
+
+### Usando pipes e tee
+
+```bash
+ls -l | wc -l                    # Conta ficheiros no directório
+echo "ola" | tee ficheiro.txt | cat  # Exibe E salva em ficheiro
+ls -l | tee saida.txt | wc -l   # Salva e continua o pipe
+```
+
+### Expressões de comando e processos
+
+```bash
+ps aux | grep bash                # Lista processos com bash
+cat /proc/cpuinfo | head -16     # Informações do processador
+free -h | grep Mem               # Uso de memória
+df -h | sort                     # Uso de disco ordenado
+```
+
+### Comandos de expressão
+
+```bash
+cal                              # Calendário do mês atual
+cal 01 2003                      # Calendário de janeiro de 2003
+cal 02 1990                      # Calendário de fevereiro de 1990
+```
+
+### Controle de processos (mencionado)
+
+```bash
+<ctrl> c                         # Interrupção (SIGINT)
+<ctrl> d                         # Término de entrada
+<ctrl> z                         # Suspensão (SIGTSTP)
+<ctrl> s                        # Congela o terminal
+<ctrl> q                        # Descongela o terminal
+```
+
+## Exercícios Guiados
+
+### Exercício Guiado 1 — Listar utilizadores com shell Bash
+
+**Enunciado:** Quantos utilizadores em `/etc/passwd` usam Bash como shell?
+
+**Solução:**
+```bash
+$ cat /etc/passwd | grep "bash" | wc -l
+```
+
+### Exercício Guiado 2 — Número de processadores
+
+**Enunciado:** Quantos processadores (núcleos lógicos) o sistema tem?
+
+**Solução:**
+```bash
+$ cat /proc/cpuinfo | grep "processor" | wc -l
+```
+
+### Exercício Guiado 3 — Contar linhas, palavras e caracteres
+
+**Enunciado:** Use wc para contar linhas, palavras e caracteres de um ficheiro de texto.
+
+**Solução:**
+```bash
+$ cat mytextfile.txt | wc
+```
+
+### Exercício Guiado 4 — Criar hash para verificação futura
+
+**Enunciado:** Gere um checksum SHA512 de `/etc/passwd` e guarde-o para verificação posterior.
+
+**Solução:**
+```bash
+$ sha512sum /etc/passwd > /tmp/passwd.hash
+```
+
+### Exercício Guiado 5 — Identificar a última atualização do sistema
+
+**Enunciado:** Descubra a data e hora da última execução do apt.
+
+**Solução:**
+```bash
+$ cat /var/log/apt/history.log | grep "Start-Date" | head -1
+```
+
+### Exercício Guiado 6 — Diferenciar processadores de núcleos
+
+**Enunciado:** Compare o número de processadores lógicos com o número de núcleos físicos e sockets.
+
+**Solução:**
+```bash
+$ cat /proc/cpuinfo | grep "processor" | wc -l
+$ cat /proc/cpuinfo | grep "core id" | sort -u | wc -l
+$ cat /proc/cpuinfo | grep "physical id" | sort -u | wc -l
+```
+
+## Exercícios Exploratórios
+
+1. **Redirecionar a lista de ficheiros para ficheiro:**
+   
+
+<SolutionBlock>
+```bash
+   $ ls > mylistofdocuments.txt
+   ```
+</SolutionBlock>
+
+
+
+2. **Verificar ficheiros diferentes entre dois directórios:**
+   
+
+<SolutionBlock>
+```bash
+   $ diff <(ls dir1/) <(ls dir2/)
+   ```
+</SolutionBlock>
+
+
+
+3. **Criar ficheiro com tamanho específico:**
+   
+
+<SolutionBlock>
+```bash
+   $ dd if=/dev/zero of=/tmp/mybigfile count=200000
+   ```
+</SolutionBlock>
+
+
+
+4. **Listar utilizadores com UID menor que 1000:**
+   
+
+<SolutionBlock>
+```bash
+   $ cat /etc/passwd | sort -t: -n -k3 | awk -F: '$3 < 1000 {print $1}'
+   ```
+</SolutionBlock>
+
+
+
+5. **Verificar mudanças no ficheiro de senhas:**
+   
+
+<SolutionBlock>
+```bash
+   $ sha512sum /etc/passwd > /tmp/passwd.hash
+   # Após mudanças:
+   $ sha512sum -c /tmp/passwd.hash
+   ```
+</SolutionBlock>
+
+
+
+6. **Gerar ficheiro de teste com tamanho específico:**
+   
+
+<SolutionBlock>
+```bash
+   $ dd if=/dev/zero of=/tmp/ficheiro count=30000
+   ```
+</SolutionBlock>
+
+
+
+7. **Calendário de fevereiro de 1990:**
+   
+
+<SolutionBlock>
+```bash
+   $ cal 02 1990
+   ```
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T12 - 103.3 Gerenciamento básico de arquivos]()
+→ Próximo: [T14 - 103.5 Criar, monitorar e eliminar processos]()

@@ -1,0 +1,305 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="Habilidades ICT e trabalhando no Linux"
+  code="010"
+  topicNumber="T04"
+  objective="1.4"
+  weight={2}
+  pages="Linux Essentials (010) - Version 4.1"
+  accent="sage"
+/>
+
+
+
+## Resumo Conciso
+
+### Interfaces de utilizador Linux
+O Linux é **modular**: diferentes partes (incluindo o ambiente desktop) vêm de projetos distintos. Ao contrário de Windows/macOS (um único desktop imposto), em Linux podes **instalar e escolher** o ambiente. **Dois desktops principais:**
+
+| Desktop | Filosofia | Toolkit (linguagem) | Terminal |
+|---------|-----------|---------------------|----------|
+| **GNOME** | **KISS** ("keep it simple, stupid") — apps simples e limpas | **GTK** (C) | **GNOME Terminal** |
+| **KDE** | Mais opções, **altamente configurável** pelo utilizador | **Qt** (C++) | **Konsole** |
+
+> Usar o **mesmo toolkit** em várias apps dá aparência coesa e **economiza memória**/tempo de carregamento (biblioteca partilhada carregada uma vez). Outros emuladores: **Xterm**, etc.
+
+### Como abrir a linha de comando
+- **Emulador de terminal gráfico** (GNOME Terminal, Konsole, Xterm) — abre uma janela dentro do desktop que dá acesso a um **shell**. "Emulam" os antigos **terminais seriais** (teletipos) clientes de uma máquina remota.
+- **TTY virtual** — combinação **`Ctrl + Alt + F#`** (F1–F7). Algumas teclas iniciais ficam associadas ao gestor de sessão/ambiente gráfico; as outras mostram um **prompt de login** textual (`hostname login:`) sem ambiente gráfico (sem rato, sem apps X/Wayland). Ex.: `Ctrl + Alt + F3` → `tty3`.
+
+### Apresentações e projetos
+| Ferramenta | Tipo | Notas |
+|------------|------|-------|
+| **LibreOffice Impress** | GUI | Substituto do PowerPoint; abre/guarda **PPT/PPTX** mas recomenda-se o nativo **ODP** (Open Document Format, padrão internacional, sem royalties) |
+| **Beamer** | Código (classe **LaTeX**) | Slides a partir de LaTeX; ideal para símbolos matemáticos (académico) |
+| **Reveal.js** | Código (pacote **NPM**/NodeJS) | Apresentações web (HTML/CSS/JS); adaptáveis a qualquer ecrã |
+| **GanttProject / ProjectLibre** | GUI | Substitutos do Microsoft Project; compatíveis com ficheiros `.project` |
+
+### Usos do Linux na indústria
+- ~**68% dos servidores web** da Internet rodam Unix, maioritariamente **Linux** (W3Techs) — devido a estabilidade, flexibilidade, desempenho, baixo custo e escalabilidade.
+- **Modelos de nuvem:**
+
+| Modelo | O que se fornece | Exemplo |
+|--------|------------------|---------|
+| **IaaS** (Infraestrutura) | **Máquinas virtuais** (SO convidado sobre um **hipervisor**) — pagas pela fração de recursos usada | AWS EC2, Azure VM |
+| **PaaS** (Plataforma) | Plataforma onde **implantas e corres a tua app** sem gerir SO/VM/containers | **Heroku** |
+| **SaaS** (Software) | Assinatura para **usar um software** já pronto (via browser, sem te preocupares com nada) | **Dropbox**, **Salesforce** |
+
+- **Virtualização** — o **hipervisor** segrega/gerencia os recursos da máquina hospedeira para os SO convidados. **3 hipervisores open source:** **Xen** (mais antigo), **KVM** (o mais relevante hoje, patrocinado pela Red Hat), **VirtualBox** (Oracle, fácil — escolhido por utilizadores finais).
+- **OpenStack** — coleção de software open source para construir um **IaaS privado completo** no local (usando diferentes hipervisores e ferramentas). Configuração não trivial.
+
+### Privacidade na internet
+O navegador é rastreado por muitos intermediários. Técnicas-chave:
+
+| Conceito | O que é | Limitação |
+|----------|---------|-----------|
+| **Cookies** | Pequenos ficheiros que um site guarda no cliente (ex.: carrinho de compras) | As **redes de anúncios** usam cookies de terceiros para te seguir entre sites (o mesmo fazem os botões "Curtir"/"Compartilhar") |
+| **DNT** (Do Not Track) | Flag `DNT: 1` no cabeçalho **HTTP** a pedir para não ser rastreado | **Não é garantido** — os sites decidem se respeitam; é só um pedido |
+| **Janela "anônima"/privada/incógnito** | Nova sessão sem dados do perfil; ao fechar, **apaga** histórico/cookies/senhas locais | Só é privada **no computador usado**; não oculta a navegação do ISP/sites; não protege de **malware/keyloggers** em PCs públicos |
+
+> **Atalhos:** Firefox `Ctrl + Shift + P`; Chrome `Ctrl + Shift + N`.
+
+### Escolha de senha
+- **Evitar:** `qwerty`, `123456`, datas de aniversário, códigos postais — são as primeiras tentativas de um invasor.
+- **Nunca reutilizar** senhas — se um serviço vazar, testam a mesma combinação noutros sites.
+- **Técnica da frase:** inventar uma frase e usar as primeiras letras (ex.: *"Eu ficaria feliz se tivesse 1000 amigos como o Claudemir"* → `Effst1000acoC`).
+- **Melhor abordagem — gestor de senhas:** guarda tudo **cifrado**, aberto com **uma senha mestra**.
+
+| Gerenciador | Armazenamento | Open source? |
+|-------------|---------------|--------------|
+| **KeePass** | Ficheiro cifrado no sistema de ficheiros | ✅ (transparência auditável); versões Windows/Linux/macOS/iOS/Android + plugins |
+| **Bitwarden** | Servidor **na nuvem** | ✅ (cliente **e** servidor open source — podes auto-hospedar) |
+
+> Boa prática: deixar o gestor **gerar senhas aleatórias únicas** para cada serviço.
+
+### Criptografia
+Dados em trânsito e em repouso devem ser cifrados antes de sair do dispositivo.
+
+| Tecnologia | Uso | Notas |
+|------------|-----|-------|
+| **TLS** (Transport Layer Security) | **Comunicações de rede** (sucessor do **SSL**, obsoleto; versão atual 1.3) | Usado no **HTTPS** (HTTP sobre TLS); simétrica + chave pública → privacidade **e** autenticidade. Sinal: ícone de **cadeado** na barra de endereços; clicar para ver o **certificado** |
+| **GnuPG** (GNU Privacy Guard) | **Email/ficheiros/partições** (implementa **OpenPGP**, RFC 4880) | Par de chaves **pública/privada**: a pública cifra, a privada decifra; a privada **assina** digitalmente (validada pela pública + hash contra alterações) |
+| **dm-crypt** (+ **LUKS**) | **Criptografia de bloco** (padrão de facto, nativo no kernel) | Tudo o que é escrito num dispositivo de bloco é cifrado; offline parece uma **massa aleatória**; metadados/tamanhos/tipos ficam cifrados. **Requer root** |
+| **EncFS** | **Criptografia empilhada** (sobre o sistema de ficheiros) | Ficheiros cifrados **antes** de serem guardados; nomes/conteúdo aparecem como dados aleatórios mas a estrutura (permissões, links) continua visível. **Não requer root** |
+| **VeraCrypt** | Multiplataforma | Sucessor do TrueCrypt; mídia/ficheiros cifrados usáveis em **Linux, macOS e Windows** |
+
+| Os ficheiros são criptografados **antes** de serem escritos no disco | **V** | O dm-crypt cifra no nível do bloco, antes de chegar ao dispositivo |
+|---|---|---|
+| O sistema de ficheiros inteiro se torna uma massa criptografada | **V** | Offline, o bloco parece dados aleatórios; nem o tipo de FS é reconhecível |
+| Apenas ficheiros/diretórios são cifrados, **não** os links simbólicos | **F** | Tudo é cifrado (incluindo metadados, estrutura, permissões, links) |
+| **Não requer acesso de root** | **F** | Requer **root** (é criptografia de bloco, abaixo do FS) |
+| É uma criptografia de **dispositivo de bloco** | **V** | É a definição mesma do dm-crypt (vs. EncFS, que é empilhada) |
+
+### Guiado 5 — O que é o Beamer?
+
+**Enunciado:** *(um mecanismo de criptografia / um hipervisor / um programa de virtualização / um componente do OpenStack / **uma ferramenta de apresentações em LaTeX**)*
+
+**Solução:** ✅ **Uma ferramenta de apresentações em LaTeX.**
+
+> **Beamer** é uma **classe LaTeX** que cria slides a partir de código LaTeX — ideal para documentos científicos com símbolos matemáticos complexos. Alternativas de apresentação: **Reveal.js** (web) e **LibreOffice Impress** (GUI).
+
+---
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+> Exercícios da autoria do agente, para praticares no terminal Linux. Consolidam o tópico 1.4 (desktop, virtualização, privacidade, senhas e criptografia).
+> *Dica:* precisas de uma sessão Linux (física, VM ou WSL). As soluções estão em `<details>`.
+
+### Exploratório 1 — Descobrir o teu ambiente desktop e terminal
+Descobre, **só por comandos**, qual é o teu ambiente desktop (GNOME? KDE?), o toolkit associado e que emulador de terminal estás a usar.
+
+
+
+<SolutionBlock>
+```bash
+# 1. Ambiente desktop atual
+echo "XDG_CURRENT_DESKTOP = $XDG_CURRENT_DESKTOP"
+echo "DESKTOP_SESSION    = $DESKTOP_SESSION"
+echo "XDG_SESSION_TYPE   = $XDG_SESSION_TYPE"   # x11 ou wayland
+
+# 2. Variante alternativa (mostra OS, desktop e kernel)
+hostnamectl
+
+# 3. Que emulador de terminal estás a usar? (descobrir o processo pai)
+ps -o comm= -p $PPID
+echo "TERM = $TERM"          # geralmente "xterm-256color"
+
+# 4. Há apps GTK e Qt instaladas?
+which gnome-terminal kgx konsole xterm 2>/dev/null
+```
+
+**O que aprendeste:** `$XDG_CURRENT_DESKTOP` (ex.: `GNOME`, `KDE`, `ubuntu:GNOME`) e `$DESKTOP_SESSION` identificam o ambiente; `$XDG_SESSION_TYPE` diz se usas **X11** ou **Wayland** (o sucessor do X). Se o ambiente for GNOME, espera ver apps **GTK**; se for KDE, apps **Qt** — exatamente a divisão do manual.
+</SolutionBlock>
+
+
+
+### Exploratório 2 — Encontrar e mudar para um TTY virtual
+Experimenta aceder a uma consola TTY **real** (não gráfica) e volta ao desktop. Em paralelo, lista os TTY ativos.
+
+
+
+<SolutionBlock>
+```bash
+# 1. Listar sessões ativas (TTYs e sessões gráficas)
+who
+w
+loginctl list-sessions
+
+# 2. Ver processos por TTY
+ps -e -o tty,comm | grep -E '^tty|^?' | head
+```
+
+**Parte prática (testar a combinação):**
+- Pressiona **`Ctrl + Alt + F3`** → aparece um prompt `login:`.
+- Entra com o teu utilizador e senha; estarás num terminal **sem ambiente gráfico**.
+- Corre `tty` — deve mostrar `/dev/tty3`.
+- **Voltar ao desktop:** `Ctrl + Alt + F1` (ou `F2`/`F7`, conforme a distro — a sessão gráfica ocupa uma destas teclas).
+
+**O que aprendeste:** os TTYs virtuais são **consolas independentes** do ambiente gráfico; o Linux oferece tipicamente 6 TTYs de texto + 1 para a sessão X/Wayland. É a forma "clássica" de chegar à linha de comando descrita no manual.
+</SolutionBlock>
+
+
+
+### Exploratório 3 — Auditar hipervisores e ferramentas de virtualização
+Verifica se a tua máquina tem algum dos hipervisores open source (**KVM**, **Xen**, **VirtualBox**) disponível ou a correr, e se o teu CPU suporta virtualização por hardware.
+
+
+
+<SolutionBlock>
+```bash
+# 1. O CPU suporta virtualização? (vmx = Intel, svm = AMD)
+grep -E -c '(vmx|svm)' /proc/cpuinfo
+
+# 2. Módulos KVM carregados?
+lsmod | grep -iE '^kvm'           # kvm, kvm_intel ou kvm_amd
+
+# 3. Binários de hipervisores instalados?
+which qemu-system-x86_64 vboxmanage xl xen 2>/dev/null
+
+# 4. VirtualBox instalado?
+dpkg -l 2>/dev/null | grep -i virtualbox   # ou: rpm -qa | grep -i virtualbox
+
+# 5. Há máquinas virtuais conhecidas a correr? (libvirt)
+which virsh >/dev/null 2>&1 && virsh list --all
+```
+
+**O que aprendeste:** `kvm` (com `kvm_intel`/`kvm_amd`) é o hipervisor Linux relevante referido no manual; o **VirtualBox** (`vboxmanage`) é a escolha de utilizador final; o **Xen** usa-se com o comando `xl`. A presença de `vmx`/`svm` em `/proc/cpuinfo` confirma que o CPU suporta VT-x/AMD-V — pré-requisito para virtualização eficiente.
+</SolutionBlock>
+
+
+
+### Exploratório 4 — Inspecionar um certificado TLS (HTTPS)
+Pratica a **reconhecer o uso de TLS** citado no manual, examinando o certificado de um site HTTPS a partir do terminal.
+
+
+
+<SolutionBlock>
+```bash
+# 1. Ver apenas a cadeia de certificados (resumo)
+echo | openssl s_client -connect www.lpi.org:443 -servername www.lpi.org 2>/dev/null \
+      | openssl x509 -noout -subject -issuer -dates
+
+# 2. Detalhes completos do certificado
+echo | openssl s_client -connect www.lpi.org:443 -servername www.lpi.org 2>/dev/null \
+      | openssl x509 -noout -text | head -n 40
+
+# 3. Que versão de TLS é negociada?
+echo | openssl s_client -connect www.lpi.org:443 2>/dev/null | grep -iE 'Protocol|Cipher'
+
+# 4. (Só cabeçalhos) O site redireciona para HTTPS?
+curl -sI http://www.lpi.org/ | head -n 5
+```
+
+**O que aprendeste:** o `openssl s_client` mostra o **certificado** do servidor ( assunto = entidade, emissor = CA, datas de validade) e a **versão do protocolo** (TLS 1.2/1.3). Isto é a base do "reconhecer o cadeado" descrito no manual — só que pela linha de comando. *Atenção: usa um site seguro que controles ou um público bem conhecido (ex.: www.lpi.org).*
+</SolutionBlock>
+
+
+
+### Exploratório 5 — Gerar senhas fortes e verificar fugas
+Sem instalar um gestor de senhas, gera **senhas aleatórias** com ferramentas do sistema e treina a verificação de fugas referida no manual (`haveibeenpwned`).
+
+
+
+<SolutionBlock>
+```bash
+# 1. Gerar 3 senhas aleatórias de 20 caracteres com OpenSSL (costuma estar instalado)
+openssl rand -base64 20
+openssl rand -hex 16
+for i in 1 2 3; do openssl rand -base64 18 | tr -d '/+=' | cut -c1-20; done
+
+# 2. Alternativa: pwgen (se instalado); se não estiver:
+which pwgen || echo "Instalar com: sudo apt install pwgen"
+pwgen -s 20 5            # 5 senhas simbólicas de 20 caracteres
+
+# 3. /dev/urandom — fonte "clássica" do sistema
+head -c 16 /dev/urandom | base64
+
+# 4. Verificar a entropia das tuas próprias senhas com uma ferramenta local
+which cracklib-check pwqcheck 2>/dev/null
+echo "Effst1000acoC" | cracklib-check 2>/dev/null    # se instalado
+
+# 5. (online) Consultar fugas — equivalente CLI ao haveibeenpwned via API HIBP (k-anonymidade)
+#    Verifica apenas o prefixo do hash SHA-1 da senha:
+echo -n "password123" | sha1sum
+# Depois consulta (no browser ou curl) https://api.pwnedpasswords.com/range/<primeiros-5-chars>
+```
+
+**O que aprendeste:** o Linux traz **várias fontes de aleatoriedade** (`/dev/urandom`, `openssl rand`) — base dos geradores de senhas do **KeePass/Bitwarden**. A técnica do Guiado de senha-por-frase (`Effst1000acoC`) é boa, mas uma senha **aleatória única por serviço** gerada por software é mais forte. A verificação de fugas (HIBP) confirma porque é que **nunca** se deve reutilizar senhas.
+</SolutionBlock>
+
+
+
+### Exploratório 6 — Verificar ferramentas de criptografia disponíveis
+Confirma se tens instaladas as ferramentas de criptografia citadas no manual (**GnuPG**, **dm-crypt/cryptsetup**, **EncFS**, **VeraCrypt**) e gera um par de chaves GPG de teste.
+
+
+
+<SolutionBlock>
+```bash
+# 1. Binários disponíveis?
+which gpg gpg2 cryptsetup encfs veracrypt 2>/dev/null
+
+# 2. Módulo de kernel dm-crypt carregado? (criptografia de bloco nativa)
+lsmod | grep -E 'dm_crypt|dm_mod'
+
+# 3. Versão do GnuPG
+gpg --version | head -n 3
+
+# 4. (Opcional, seguro) Gerar um par de chaves de TESTE (usa dados fictícios)
+gpg --batch --generate-key <<'EOF'
+Key-Type: RSA
+Key-Length: 2048
+Name-Real: Utilizador de Teste
+Name-Email: teste@example.com
+Expire-Date: 0
+%no-protection
+%commit
+EOF
+
+# 5. Listar chaves e cifrar/decifrar um ficheiro de teste
+echo "Mensagem secreta" > segredo.txt
+gpg --encrypt --recipient teste@example.com segredo.txt   # gera segredo.txt.gpg
+gpg --decrypt segredo.txt.gpg                              # volta a mostrar o texto
+
+# 6. Limpar o teste
+gpg --delete-keys teste@example.com
+gpg --delete-secret-keys teste@example.com
+rm -f segredo.txt segredo.txt.gpg
+```
+
+**O que aprendeste:** o `cryptsetup` é o **front-end** do `dm-crypt` (criptografia de bloco, requer root); o `encfs` faz criptografia empilhada (sem root); o `gpg` implementa **OpenPGP** com o par de chaves **pública/privada** do manual — cifrar com a pública, decifrar com a privada. Gera um par **apenas de teste** e depois apaga-o; em produção, a chave privada deve ser guardada com senha forte.
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Início: [010 - Visão Geral]()
+← Anterior: [T03 - Entendendo o Software Open Source e suas Licenças]()
+→ Próximo: [T05 - O básico sobre a linha de comando]()

@@ -1,0 +1,295 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="Seu Computador na Rede"
+  code="010"
+  topicNumber="T15"
+  objective="4.4"
+  weight={2}
+  pages="Linux Essentials (010) - Version 4.1"
+  accent="sage"
+/>
+
+
+
+## Resumo Conciso
+
+### Camadas de rede
+Os dispositivos trocam dados por **links** (cobre, fibra, rádio, laser) ligados a **interfaces**. Para comunicar para além de uma rede local, usam-se **roteadores**. O modelo de rede divide-se em três camadas:
+
+| Camada | Função |
+|--------|--------|
+| **Link** | Comunicação entre dispositivos **diretamente conectados** (ex.: Ethernet). |
+| **Rede** | **Roteamento** entre redes e endereçamento global (IP). |
+| **Aplicativo** | Liga programas entre si (sockets). |
+
+As redes modernas usam **comutação de pacotes** (cada pacote tem cabeçalho com origem/destino; vários dispositivos partilham o link), em vez da antiga comutação de circuitos.
+
+### Endereços da camada de link (MAC)
+- **Endereço MAC** = 48 bits; identifica a interface numa rede Ethernet.
+- **Não é globalmente único** nem serve para rotear para fora do link.
+- Pacotes de **broadcast** são aceites por todos na rede local.
+- Listar interfaces e MACs: `ip link show` (ex.: `lo` = loopback `00:00:...`, `ens33` = Ethernet).
+
+### IPv4
+- **32 bits** → ~4,3 mil milhões teóricos de endereços (menos úteis devido a reservas).
+- Formato: 4 grupos de 0-255 (ex.: `192.168.0.1`).
+- **Máscara de sub-rede** separa a parte de **rede** da parte de **host** (ex.: `255.255.255.0`).
+- **CIDR**: notação compacta que indica quantos bits são de rede — `192.168.0.1/24`.
+- **Endereços privados** (não roteáveis na Internet pública):
+  - `10.0.0.0/8`
+  - `172.16.0.0/12`
+  - `192.168.0.0/16`
+- **NAT / masquerading**: o roteador mapeia todos os endereços internos num único IP externo. **Não é um recurso de segurança** — ainda é preciso firewall.
+- **Configuração**: manual (`ip addr add`) ou automática via **DHCP** (que também entrega DNS, gateway, etc.).
+
+### Roteamento IPv4
+- Cada dispositivo mantém uma **tabela de roteamento**; uma **rota padrão** (default) encaminha tudo o que não coincide com outra rota.
+- Cada roteador percorrido = **hop**.
+- Comandos: `ip route show`, `sudo ip route add default via 192.168.0.1`.
+
+### IPv6
+- **128 bits** → endereços praticamente ilimitados; reduz a necessidade de masquerading.
+- Formato: 8 grupos de 4 dígitos hexadecimais (ex.: `2001:0db8:0000:abcd:0000:0000:0000:7334`).
+- Simplificações: omitir zeros à esquerda; substituir **uma** sequência de grupos de zeros por `::` → `2001:db8:0:abcd::7334`.
+- **Primeiros 64 bits** = prefixo de roteamento; **últimos 64 bits** = identificador de interface.
+- **Tipos de prefixo:**
+
+| Tipo | Prefixo | Roteável |
+|------|---------|----------|
+| **Global Unicast** | bloco global | Internet |
+| **Local Unicast** (ULA) | `fc`/`fd` | Internamente na organização (≈ privados IPv4) |
+| **Link-Local** | `fe80` | Só no link; toda a interface IPv6 tem um |
+
+- **Configuração automática**: **SLAAC** ( Stateless, via Neighbor Discovery Protocol) ou **DHCPv6** (controlo centralizado).
+- Atribuição manual: `sudo ip addr add 2001:db8:0:abcd::7334/64 dev ens33`.
+- Teste: `ping` (em alguns sistemas, `ping6`); para link-local há que indicar a interface: `ping6 -c 1 fe80::...%ens33`.
+
+### DNS — Domain Name System
+- Mapeia nomes amigáveis (`exemplo.com`) em endereços IP (uma "lista telefónica").
+- Resolvedores configurados em **`/etc/resolv.conf`** (`nameserver 192.168.0.1`, `search lpi`).
+- Antes de consultar o DNS, o sistema lê **`/etc/hosts`** (IP + nomes); se encontrar, retorna logo esse IP.
+- Consultas: `host` (saída condensada) e `dig` (saída detalhada, com tipo de registo — ex.: `A` para IPv4).
+
+### Sockets
+Um **socket** é o terminal de comunicação entre dois programas. Tipos:
+
+| Tipo | Uso |
+|------|-----|
+| **Unix** | Processos na **mesma máquina**. |
+| **UDP** | Rápido, **sem garantia** de entrega (ex.: jogos online). |
+| **TCP** | **Confiável**, dados pela ordem, com confirmação. |
+
+- TCP e UDP usam **portas** (HTTP=80, HTTPS=443, SSH=22); a porta de origem costuma ser aleatória.
+- **`ss`** inspeciona sockets. Opções úteis: `-p` (processo), `-s` (resumo), `-4`/`-6` (IPv4/IPv6), `-t`/`-u` (TCP/UDP), `-l` (à escuta).
+
+### Comandos-chave
+| Comando | Função |
+|---------|--------|
+| `ip link show` / `ip addr show` | Interfaces, MACs, endereços IP |
+| `ip addr add … dev …` | Adicionar endereço IP |
+| `ip route show` / `ip route add …` | Ver/adicionar rotas |
+| `ping` / `ping6` | Testar conectividade |
+| `host` / `dig` | Consultas DNS |
+| `ss` | Estado dos sockets |
+
+| `192.168.10.1` | **Sim** ✓ | Pertence a `192.168.0.0/16` |
+|---|---|---|
+| `120.56.78.35` | Não | Endereço público |
+| `172.16.57.47` | **Sim** ✓ | Pertence a `172.16.0.0/12` (172.16 — 172.31) |
+| `10.100.49.162` | **Sim** ✓ | Pertence a `10.0.0.0/8` |
+| `200.120.42.6` | Não | Endereço público |
+
+> Total: **3 endereços privados**.
+
+### Guiado 3 — Entrada em /etc/hosts
+
+**Enunciado:** *Qual item tu adicionarias ao ficheiro de hosts para atribuir `192.168.0.15` a `example.com`?*
+
+**Solução:**
+O formato de cada linha de `/etc/hosts` é `IP` seguido de um ou mais nomes:
+
+```
+192.168.0.15 example.com
+```
+
+> Assim, qualquer pesquisa a `example.com` devolverá `192.168.0.15` sem consultar o DNS.
+
+### Guiado 4 — Efeito de "ip -6 route add default via …"
+
+**Enunciado:** *Que efeito teria o comando a seguir?*
+```bash
+sudo ip -6 route add default via 2001:db8:0:abcd::1
+```
+
+**Solução:**
+O parâmetro `-6` força o comando a operar sobre **IPv6**. `route add default via …` define uma **rota padrão**: todos os pacotes IPv6 que não coincidam com outra rota serão enviados ao roteador/gateway `2001:db8:0:abcd::1`.
+
+> Em síntese: adiciona à tabela de roteamento uma rota padrão para IPv6 que entrega todo o tráfego ao gateway interno `2001:db8:0:abcd::1`.
+
+---
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+> Exercícios da autoria do agente, para praticares diretamente no terminal Linux. Consolidam o tópico 4.4 (redes, IPv4/IPv6, DNS, sockets).
+> *Dica:* precisas de uma sessão Linux (física, VM ou WSL). As soluções estão em `<details>` para poderes tentar primeiro.
+
+### Exploratório 1 — Mapear a tua própria rede (camadas link e rede)
+Descobre, **só por comandos**: quantas interfaces de rede tens, os respetivos **endereços MAC**, os **endereços IPv4 e IPv6** atribuídos e o **gateway padrão**.
+
+
+
+<SolutionBlock>
+```bash
+# Interfaces + MACs (camada de link)
+ip link show
+
+# Endereços IP atribuídos (IPv4 e IPv6, incluindo o link-local fe80::)
+ip addr show
+
+# Apenas um resumo legível de cada interface
+ip -brief addr show
+
+# Tabela de roteamento (procura a linha "default")
+ip route show
+ip -6 route show
+```
+
+**Como interpretar:**
+- `ip link show` → procura `link/ether XX:XX:...` (MAC) e o nome da interface (`ens33`, `eth0`, `wlan0`...).
+- `ip addr show` → linhas `inet` (IPv4) e `inet6` (IPv6); o link-local começa por `fe80::`.
+- `ip route show` → a linha `default via 192.168.x.1 dev ...` indica o teu gateway.
+</SolutionBlock>
+
+
+
+### Exploratório 2 — Testar conectividade com ping (IPv4 e IPv6)
+Verifica se o teu gateway e um host externo respondem, usando tanto IPv4 como IPv6.
+
+
+
+<SolutionBlock>
+```bash
+# Substitui 192.168.0.1 pelo teu gateway (de ip route show)
+ping -c 4 192.168.0.1
+
+# Ping a um servidor público por IPv4
+ping -c 4 1.1.1.1
+
+# Forçar resolução/uso de IPv6 (em alguns sistemas o comando é ping6)
+ping -6 -c 4 ipv6.google.com
+
+# Ping ao teu próprio endereço link-local (precisa da interface)
+ping -c 1 fe80::1%ens33        # troca fe80::1 e ens33 pelos teus valores
+```
+
+**O que observar:**
+- `-c N` limita o número de pacotes (sem `-c`, o ping corre para sempre → Ctrl+C).
+- `0% packet loss` = ligação saudável; perdas altas indicam problemas de rede.
+- O campo `time=` é o RTT (latência) em milissegundos.
+</SolutionBlock>
+
+
+
+### Exploratório 3 — Inspecionar sockets com ss
+Usa o `ss` para descobrir: que portas estão **à escuta** (`LISTEN`), que processo ocupa cada porta e qual o **resumo** global de sockets.
+
+
+
+<SolutionBlock>
+```bash
+# Todos os sockets TCP atualmente estabelecidos
+ss -t
+
+# Sockets UDP
+ss -u
+
+# Apenas os que estão À ESCUTA (serviços a aguardar ligações), TCP+UDP
+ss -tulpn
+
+# Resumo numerico de sockets por protocolo
+ss -s
+
+# Sockets só a usar IPv6
+ss -6
+```
+
+**Opções usadas:** `-t` (TCP), `-u` (UDP), `-l` (listening), `-p` (mostra o processo, exige root), `-n` (não resolve portas para nomes), `-s` (summary), `-6` (IPv6).
+
+**Reflexão:** o clássico `ss -tulpn` é a forma rápida de listar os serviços expostos na máquina — fundamental em segurança.
+</SolutionBlock>
+
+
+
+### Exploratório 4 — Resolução de nomes (DNS e /etc/hosts)
+Descobre que **resolvedor DNS** usas, consulta o teu `/etc/hosts`, e resolve nomes com `host`, `getent hosts` e `dig`.
+
+
+
+<SolutionBlock>
+```bash
+# Resolvedor configurado (procura "nameserver")
+cat /etc/resolv.conf
+
+# Entradas estáticas locais
+cat /etc/hosts
+
+# Resolver um nome (saída simples)
+host learning.lpi.org
+
+# O mesmo via getent (respeita /etc/hosts ANTES do DNS)
+getent hosts learning.lpi.org
+
+# Consulta detalhada, com tipo de registo e tempo de resposta
+dig learning.lpi.org
+dig +short learning.lpi.org     # só o IP
+```
+
+**Para experimentar /etc/hosts:** adiciona (precisa de `sudo`) uma linha como `127.0.0.1 meusite.local` a `/etc/hosts` e faz `getent hosts meusite.local` — verás que a resposta vem local, sem ir ao DNS.
+</SolutionBlock>
+
+
+
+### Exploratório 5 — Manipular endereços e rotas (laboratório seguro)
+Numa VM de testes, **adiciona** temporariamente um endereço IPv4 a uma interface, **verifica**, faz **ping** e depois **remove** o endereço.
+
+
+
+<SolutionBlock>
+```bash
+# 1. Adicionar endereço (substitui ens33 pela tua interface)
+sudo ip addr add 192.168.99.5/24 dev ens33
+
+# 2. Confirmar
+ip addr show dev ens33
+ip -brief addr show dev ens33
+
+# 3. Ping ao próprio endereço (testa a pilha IP local)
+ping -c 3 192.168.99.5
+
+# 4. Adicionar uma rota para uma sub-rede imaginária via um gateway
+sudo ip route add 10.50.0.0/16 via 192.168.99.1 dev ens33
+ip route show | grep 10.50
+
+# 5. Limpar (remover rota e endereço)
+sudo ip route del 10.50.0.0/16 via 192.168.99.1 dev ens33
+sudo ip addr del 192.168.99.5/24 dev ens33
+
+# 6. Confirmar que ficou como no início
+ip -brief addr show dev ens33
+```
+
+**Aviso:** alterações com `ip` são **voláteis** — perdem-se ao reiniciar. Para configuração persistente, usa o gestor de rede da distro (NetworkManager, netplan, etc.).
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T14 - Onde os dados são armazenados]()
+→ Próximo: [T16 - Segurança Básica e Identificação de Tipos de Usuários]()

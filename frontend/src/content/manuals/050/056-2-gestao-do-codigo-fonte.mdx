@@ -1,0 +1,211 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T17 — 056.2 Gestão do código-fonte"
+  code="050"
+  topicNumber="T17"
+  objective="056.2"
+  weight={3}
+  pages="LPI Open Source Essentials (050) - Version 1.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Conceitos fundamentais de SCM
+
+| Conceito | Descrição |
+|---|---|
+| **SCM (Source Code Management)** | Programas especiais para gestão de código-fonte; também conhecidos como VCS (Version Control System) ou RCS (Revision Control System) |
+| **Repositório de código-fonte** | Oficina digital do projeto; armazena todos os ficheiros, documentos e códigos; modelo cliente-servidor |
+| **Commit** | Instantâneo das alterações enviadas para o repositório; inclui autor, data/hora e mensagem descritiva |
+| **Tag** | Referência nomeada para commits específicos; demarca pontos significativos (lançamentos, marcos) |
+| **Branch (ramificação)** | Linha de desenvolvimento independente; permite trabalho isolado em recursos ou correções |
+| **Merge (mesclagem)** | Integração de um branch de volta ao branch principal de desenvolvimento |
+| **Pull request / Merge request** | Solicitação de inclusão de alterações de um branch noutro; decidida pelos desenvolvedores do branch de destino |
+
+### Repositórios e acessibilidade
+
+| Tipo | Descrição |
+|---|---|
+| **Repositório público** | Concede acesso de leitura a qualquer pessoa na internet |
+| **Repositório privado** | Limita o acesso ao proprietário e a indivíduos autorizados explicitamente |
+| **Repositório de organização** | Acesso restrito a membros específicos da organização |
+
+### Sub-repositórios (submódulos)
+
+- Código de outro projeto independente integrado ao repositório do projeto principal
+- Aparece como um diretório separado na árvore de diretórios
+- Permanece independente; pode ser atualizado a partir do repositório original
+- Útil para gerenciar dependências e integrar bibliotecas/frameworks de terceiros
+
+### Workflow típico de um sistema SCM
+
+1. Instalar o software SCM
+2. Clonar o projeto inteiro para o sistema local
+3. Trabalhar localmente (em branches, se necessário) e enviar alterações
+4. Fazer pull da versão mais recente antes da próxima sessão de trabalho
+
+### Tipos de branches
+
+| Tipo | Descrição |
+|---|---|
+| **Feature branch** | Branch de funcionalidade; trabalha em alterações isoladas sem afetar o código principal |
+| **Development branch** | Branch principal de desenvolvimento; ponto central para reunião e testes de novos recursos |
+| **Release branch** | Branch de lançamento; cria-se a partir do development branch para estabilizar, corrigir bugs e testar antes do lançamento |
+
+### Sistemas de controlo de versão
+
+| Sistema | Tipo | Características |
+|---|---|---|
+| **Git** | Distribuído (DVCS) | Cada desenvolvedor tem cópia completa da base de código; trabalho offline; criado para o kernel do Linux; amplamente utilizado |
+| **Subversion (SVN)** | Centralizado | Histórico de versões reside num servidor central; desenvolvedores conectam-se ao servidor para alterações |
+| **CVS** | Centralizado | Predecessor do Subversion; apresentava problemas de design |
+| **Mercurial** | Distribuído (DVCS) | Sistema de controlo de versão distribuído de código aberto; funcionalidades semelhantes ao Git |
+
+### Plataformas em nuvem
+
+| Plataforma | Descrição |
+|---|---|
+| **GitHub** | Serviço de nuvem baseado em Git; milhões de utilizadores; recursos extras como rastreadores, wikis e fóruns |
+| **GitLab** | Alternativa de código aberto ao GitHub; permite repositórios em nuvem ou configuração local |
+
+### Conflitos
+
+- O Git trata conflitos fornecendo um ficheiro com ambas as versões da linha alterada
+- O desenvolvedor deve decidir como resolver o conflito e registar uma versão coerente
+- Alguns VCSs não permitem check-in de ficheiros com conflitos sem resolução prévia
+
+## Exercícios Guiados
+
+### Exercício Guiado 1 — Características principais dos sistemas SCM
+
+**Enunciado:** Cite três características principais dos sistemas SCM.
+
+**Solução:**
+1. **Registo de alterações** no código-fonte ao longo do tempo
+2. **Gerenciamento de acesso** (simultâneo) ao código-fonte pelos desenvolvedores
+3. **Capacidade de restaurar** qualquer estado de desenvolvimento dos ficheiros ou de todo o projeto
+
+### Exercício Guiado 2 — Conceito de tags
+
+**Enunciado:** Descreva o conceito de tags nos sistemas de SCM e explique por que ele é importante para o gestão dos lançamentos de software.
+
+**Solução:** Marcação ou tagging é a prática de atribuir rótulos ou nomes descritivos a commits específicos dentro da base de código, servindo como marcadores para pontos significativos na história do projeto, como lançamentos ou marcos importantes. Essas tags são um meio conveniente de etiquetar versões específicas da base de código e monitorar a evolução do projeto ao longo do tempo.
+
+### Exercício Guiado 3 — Diferença entre branch e sub-repositório
+
+**Enunciado:** Qual é a diferença entre um branch e um sub-repositório num sistema SCM?
+
+**Solução:** Uma ramificação ou branch é uma linha de desenvolvimento paralela num projeto, por exemplo para correção de bugs ou desenvolvimento de novos recursos, e que geralmente é incorporada ao branch principal de desenvolvimento assim que a tarefa é concluída. Um sub-repositório ou submódulo é um projeto independente cujo repositório está integrado a um projeto que lhe permite aceder a sua base de código. O sub-repositório aparece como um diretório na árvore de diretórios do projeto e permanece independente.
+
+### Exercício Guiado 4 — Repositórios públicos vs. privados
+
+**Enunciado:** Qual é a diferença entre um repositório público e um repositório privado num sistema de nuvem?
+
+**Solução:** Os repositórios públicos concedem acesso de leitura a qualquer pessoa na internet. Os repositórios privados limitam o acesso exclusivamente ao proprietário, a indivíduos com quem o proprietário compartilhou explicitamente o acesso e, no caso de repositórios de organizações, a membros específicos da organização.
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Git vs. Subversion
+
+**Enunciado:** Compare o Git e o Subversion (SVN) em termos de arquitetura e fluxo de trabalho.
+
+
+
+<SolutionBlock>
+O Git é um sistema de controlo de versão distribuída (DVCS) que permite que cada desenvolvedor tenha uma cópia completa da base de código e trabalhe no código-fonte mesmo se estiver offline. O Git ganhou ampla popularidade devido à sua velocidade, flexibilidade e recursos robustos de ramificação e mesclagem. O SVN é um VCS centralizado, com o histórico de versões residindo num servidor central. Ele permanece popular em certos ambientes corporativos devido à sua natureza centralizada e ao seu conjunto de recursos maduros.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Index / Staging area no Git
+
+**Enunciado:** O que é o "index" ou "staging area" no Git?
+
+
+
+<SolutionBlock>
+O index ou staging area (área de transferência) é uma camada intermediária entre a cópia de trabalho local do projeto e a versão atual no servidor. É um ficheiro no qual são armazenadas todas as informações para o próximo commit de um utilizador. Permite selecionar quais alterações serão incluídas no próximo commit, dando mais controlo sobre o que é registado no histórico.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Clonar um repositório e registar alterações
+
+**Enunciado:** Descreva o fluxo de trabalho básico para clonar um repositório Git, criar um branch, efetuar um commit e enviar as alterações para o repositório remoto.
+
+
+
+<SolutionBlock>
+```bash
+# 1. Clonar o repositório remoto para o sistema local
+git clone https://github.com/exemplo/projeto.git
+
+# 2. Entrar no diretório do projeto
+cd projeto
+
+# 3. Criar e mudar para um novo branch de funcionalidade
+git checkout -b minha-funcionalidade
+
+# 4. Editar ficheiros e adicionar alterações ao staging area
+git add ficheiro1.py ficheiro2.py
+
+# 5. Registar as alterações com uma mensagem descritiva
+git commit -m "Adiciona funcionalidade X ao módulo Y"
+
+# 6. Enviar o branch para o repositório remoto
+git push origin minha-funcionalidade
+```
+
+Este fluxo é a base do trabalho colaborativo com Git: isola alterações em branches, regista o histórico de forma granular e sincroniza com o repositório central.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Resolver um conflito de merge e criar tags
+
+**Enunciado:** Após receber um pedido de merge, o Git deteta um conflito num ficheiro. Descreva como resolver o conflito e, posteriormente, como marcar um lançamento com uma tag.
+
+
+
+<SolutionBlock>
+**Resolver conflito de merge:**
+```bash
+# Atualizar o branch principal
+git checkout main
+git pull origin main
+
+# Tentar incorporar o branch da funcionalidade
+git merge minha-funcionalidade
+
+# Se houver conflitos, o Git indica os ficheiros em conflito
+# Abrir o ficheiro e escolher a versão correta (ou combinar)
+# Depois de resolver:
+git add ficheiro_com_conflito.py
+git commit -m "Resolve conflito de merge no ficheiro X"
+```
+
+**Criar uma tag de lançamento:**
+```bash
+# Marcar o commit atual como uma versão de lançamento
+git tag -a v1.0.0 -m "Versão 1.0.0 — lançamento inicial"
+
+# Enviar a tag para o repositório remoto
+git push origin v1.0.0
+```
+
+As tags são imutáveis e servem como marcos permanentes no histórico, permitindo a qualquer pessoa reproduzir exatamente o estado do código num lançamento específico.
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T16 - 056.1 Ferramentas de desenvolvimento]()
+→ Próximo: [T18 - 056.3 Ferramentas de comunicação e colaboração]()

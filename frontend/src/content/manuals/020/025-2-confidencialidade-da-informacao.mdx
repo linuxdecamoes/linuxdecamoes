@@ -1,0 +1,146 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="025.2 — Confidencialidade da Informação e Comunicação Segura"
+  code="020"
+  topicNumber="T16"
+  objective="025.2"
+  weight={3}
+  pages="LPI Security Essentials (020) - Version 1.0"
+  accent="coral"
+/>
+
+
+
+## Resumo Conciso
+
+- **Vazamento de dados** — exposição de informações sensíveis (acidental ou maliciosa); consequências: perda competitiva, roubo de identidade, multas legais
+- **Comunicações interceptadas** — dados transmitidos por canais não seguros podem ser captados por terceiros não autorizados
+- **Regulamentações relevantes:**
+
+| Região | Regulamentação |
+|--------|---------------|
+| União Europeia | GDPR (General Data Protection Regulation) |
+| Estados Unidos | CCPA (California Consumer Privacy Act) |
+| Brasil | LGPD (Lei Geral de Proteção de Dados Pessoais) |
+
+- **Phishing** — e-mails, SMS ou sites fraudulentos que imitam fontes legítimas para roubar credenciais
+- **Engenharia social** — manipulação psicológica para quebrar procedimentos de segurança (ex.: telefonema falso do departamento de TI)
+- **Roubo de identidade** — uso não autorizado de dados pessoais para fraude; prevenção com palavras-passe fortes, MFA e monitorização
+- **Golpes (scams)** — esquemas fraudulentos como golpes de suporte técnico
+- **Scareware** — malware que explora o medo com falsos alertas de vírus
+- **NDAs (Non-Disclosure Agreements)** — contratos legais de confidencialidade; limitação: não impedem todas as violações
+- **Classificação de informações:**
+
+| Nível | Descrição |
+|-------|-----------|
+| Público | Compartilhamento livre, sem risco |
+| Interno | Uso dentro da organização, risco baixo |
+| Confidencial | Danos se expostos (registos de funcionários, financeiros) |
+| Altamente confidencial | Consequências graves (segredos comerciais) |
+
+- **Spam e filtros** — análise de conteúdo, reputação do remetente, blacklist/whitelist; falsos positivos e negativos
+- **Anexos de e-mail** — tipos perigosos: `.exe`, `.vbs`, `.js`, `.bat`; manter antivírus atualizado
+- **Compartilhamento seguro** — e-mail encriptado (PGP), armazenamento em nuvem com permissões adequadas, serviços de mensagens com E2EE (Signal, WhatsApp, Telegram)
+
+## Exercícios Guiados
+
+### Exercício Guiado 1: NDAs — função e limitações
+
+**Enunciado:** Explique como os acordos de confidencialidade (NDAs) ajudam a proteger informações sensíveis em ambientes de negócios. Quais são algumas limitações dos NDAs?
+
+**Solução:** Os NDAs vinculam legalmente as partes envolvidas a manter os dados compartilhados confidenciais, descrevendo o escopo das informações protegidas, as obrigações de cada parte e as consequências do descumprimento. Essa estrutura legal ajuda a garantir que segredos comerciais e planos de negócios não sejam divulgados. No entanto, os NDAs têm limitações — não podem impedir violações acidentais ou intencionais por quem tem acesso às informações. O cumprimento exige vigilância, monitorização e uma forte cultura interna de segurança de dados.
+
+### Exercício Guiado 2: Relação entre phishing, engenharia social e roubo de identidade
+
+**Enunciado:** Qual é a relação entre phishing, engenharia social e roubo de identidade e como os indivíduos podem se proteger dessas ameaças?
+
+**Solução:** O phishing e a engenharia social são táticas usadas para manipular indivíduos a revelar informações pessoais que são depois usadas para roubo de identidade. O phishing envolve e-mails ou SMS fraudulentos que parecem ser de fontes legítimas. A engenharia social abrange táticas mais amplas, como personificação telefónica. Para se proteger: ser cauteloso com pedidos não solicitados de informações, evitar clicar em links suspeitos, usar palavras-passe fortes e únicas, habilitar MFA e monitorar regularmente as contas.
+
+### Exercício Guiado 3: Classificação de informações e seus níveis
+
+**Enunciado:** Por que a classificação de informações é importante para a proteção de dados e quais são os níveis comuns de classificação?
+
+**Solução:** A classificação permite às organizações aplicar medidas de segurança proporcionais à sensibilidade dos dados. Os níveis comuns são: Público (divulgação livre), Interno (uso interno, baixo risco), Confidencial (danos se expostos) e Altamente confidencial (consequências graves). Informações altamente confidenciais devem ser armazenadas em ambientes seguros com controlo de acesso rigoroso e transmitidas por canais encriptados. A classificação adequada ajuda também ao cumprimento de regulamentações.
+
+### Exercício Guiado 4: Métodos de filtragem de spam de e-mail
+
+**Enunciado:** Descreva os métodos utilizados na filtragem de spam de e-mail e as suas limitações.
+
+**Solução:** Os filtros utilizam análise de conteúdo, verificação de reputação do remetente, algoritmos de machine learning e filtragem por blacklist/whitelist. Operam em múltiplos níveis: servidor de e-mail, software cliente e serviços de terceiros. As limitações incluem falsos positivos (e-mails legítimos bloqueados) e falsos negativos (spam que chega à caixa de entrada). Os utilizadores devem rever regularmente a pasta de spam e ajustar configurações conforme necessário.
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1: Estudo de caso de vazamento de dados de alto perfil
+
+**Enunciado:** Pesquise sobre um recente vazamento ou violação de dados de alto perfil envolvendo uma organização bem conhecida. Descreva como o vazamento ocorreu, quais informações sensíveis foram expostas e o impacto que teve na empresa e em seus clientes. Discuta quais medidas a organização implementou após a violação.
+
+
+
+<SolutionBlock>
+Um exemplo é a violação de dados do Facebook em 2018, onde as informações pessoais de aproximadamente 87 milhões de utilizadores foram partilhadas indevidamente com a empresa de consultoria política Cambridge Analytica. A violação ocorreu devido a políticas frouxas de partilha de dados, onde uma aplicação de terceiros coletou dados de utilizadores e os partilhou sem consentimento. Os dados expostos incluíam detalhes pessoais, curtidas e até mensagens privadas. O impacto foi severo: escrutínio legal, queda no valor das ações e perda de confiança. Em resposta, o Facebook implementou políticas mais rígidas, melhorou práticas de privacidade e aumentou a transparência no acesso de terceiros.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2: Modelos de classificação de informações
+
+**Enunciado:** Investigue a eficácia de diferentes modelos de classificação de informações usados por organizações, como o sistema de classificação do governo dos EUA ou modelos comerciais. Compare como esses modelos ajudam a gerir a segurança de dados e o cumprimento de padrões legais.
+
+
+
+<SolutionBlock>
+O sistema de classificação do governo dos EUA categoriza informações como Confidencial, Secreto ou Top Secret, baseado no potencial de dano da divulgação não autorizada. É altamente estruturado e eficaz para dados sensíveis do governo, mas complexo de implementar. Modelos comerciais (Público, Interno, Confidencial, Altamente Confidencial) são mais flexíveis e fáceis de aplicar em diversas indústrias, ajudando a cumprir regulamentações como GDPR ou CCPA. No entanto, se não forem geridos corretamente, podem levar a inconsistências e proteção insuficiente de ativos críticos.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3: Técnicas de engenharia social
+
+**Enunciado:** Descreva três técnicas comuns de engenharia social utilizadas por cibercriminosos e como cada uma pode ser prevenida.
+
+
+
+<SolutionBlock>
+1. **Phishing por e-mail** — mensagens fraudulentas que imitam bancos ou serviços conhecidos. Prevenção: verificar o remetente, não clicar em links suspeitos, aceder aos sites diretamente pelo navegador.
+2. **Vishing (phishing por voz)** — telefonemas de golpistas a fazer-se passar por suporte técnico ou instituições financeiras. Prevenção: desligar e ligar de volta para o número oficial da entidade.
+3. **Pretexting** — criação de cenários falsos para obter informações. Prevenção: verificar a identidade do interlocutor, nunca fornecer dados sem confirmação independente.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4: Segurança de anexos de e-mail
+
+**Enunciado:** Quais tipos de ficheiros de anexo de e-mail são mais perigosos e quais precauções devem ser tomadas?
+
+
+
+<SolutionBlock>
+Os formatos mais perigosos são: `.exe` (executáveis), `.vbs` (scripts Visual Basic), `.js` (JavaScript) e `.bat` (lotes). Estes podem executar código malicioso diretamente no sistema. Precauções:
+- Não abrir anexos de remetentes desconhecidos ou inesperados
+- Verificar a legitimidade do e-mail antes de abrir qualquer anexo
+- Manter o software antivírus atualizado para escanear anexos automaticamente
+- Desconfiar de anexos comprimidos que contenham extensões executáveis
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 5: Criptografia de mensagens instantâneas
+
+**Enunciado:** Explique a diferença entre mensagens encriptadas de ponto a ponto (E2EE) e mensagens normais, e forneça exemplos de aplicativos que utilizam E2EE.
+
+
+
+<SolutionBlock>
+Mensagens normais podem ser transmitidas em texto simples e acessíveis pelo provedor do serviço ou por terceiros durante a transmissão. Com E2EE, apenas o remetente e o destinatário possuem as chaves de desencriptação — nem o provedor do serviço consegue ler o conteúdo. Exemplos de aplicativos com E2EE: **Signal**, **WhatsApp** (por defeito) e **Telegram** (nos "Secret Chats"). Recursos adicionais incluem mensagens autodestrutivas e proteção de ecrã. Manter a aplicação atualizada é essencial para corrigir falhas de segurança.
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T15 - 025.1 Identidade e Autenticação]()
+→ Próximo: [T17 - 025.3 Proteção da Privacidade]()

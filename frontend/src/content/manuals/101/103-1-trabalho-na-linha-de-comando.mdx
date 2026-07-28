@@ -1,0 +1,233 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="103.1 Trabalho na linha de comando"
+  code="101"
+  topicNumber="T10"
+  objective="Trabalhar na linha de comandos, incluindo obter informações do sistema, usar o histórico de comandos e gerir variáveis de ambiente"
+  weight={2}
+  pages="LPIC-1 (101) - Version 5.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Informações do sistema e comandos
+
+- `pwd` — Exibe o caminho para o directório de trabalho atual
+- `uname -a` — Exibe informações do sistema (kernel, distribuição, arquitetura)
+
+- `man <comando>` — Exibe a documentação (página man) de um comando
+- `apropos <termo>` — Pesquisa nomes e descrições das páginas man
+- `type <comando>` — Exibe a localização e tipo de um comando (binário, builtin, hashed)
+- `which <comando>` — Retorna apenas a localização absoluta de um comando
+- `hash -d` — Limpa a tabela de hash do shell
+
+Usando o histórico de comandos:
+- `history` — Exibe comandos executados anteriormente
+- `history | grep <termo>` — Pesquisa no histórico
+- `~/.bash_history` — Ficheiro oculto com o histórico persistido
+- Seta para cima/baixo — Navega pelo histórico na linha de comando
+
+### Variáveis de ambiente
+- `env` — Exibe todas as variáveis de ambiente
+- `set` — Exibe variáveis, funções e configurações do shell
+- `echo $VARIAVEL` — Exibe o valor de uma variável
+- `myvar=valor` — Cria uma variável local (sem espaços ao redor do `=`)
+- `export myvar` — Exporta a variável para shells filhos
+- `unset myvar` — Remove uma variável de ambiente
+
+Aspas e caracteres especiais:
+- `"..."` — Aspas duplas preservam todos os caracteres exceto `$`, `` ` ``, `\` e `!`
+- `'...'` — Aspas simples preservam o valor literal de todos os caracteres
+- `\` — Barra invertida escapa caracteres especiais
+
+## Exercícios Guiados
+
+### Exercício Guiado 1 — Consultar apropos no man
+
+**Enunciado:** Consultando o sistema man, descubra como fazer o apropos mostrar apenas uma explicação curta de seu uso e em seguida voltar ao shell.
+
+**Solução:** Rode `man apropos` e desça a sessão "Options" até encontrar o parágrafo `--usage`.
+
+### Exercício Guiado 2 — Licença do grep no man
+
+**Enunciado:** Use o sistema man para determinar qual licença de copyright é atribuída ao comando grep.
+
+**Solução:** Rode `man grep` e desça até a seção "Copyright" do documento. Note que o programa usa um copyright da Free Software Foundation.
+
+### Exercício Guiado 3 — Adicionar diretório ao PATH
+
+1. Use o comando export para adicionar um novo directório ao seu caminho (PATH) — ele não sobreviverá a uma reinicialização.
+   ```bash
+   $ export PATH="/home/yourname/myfiles:$PATH"
+   $ touch myfiles/myscript.sh
+   $ echo '#!/bin/bash' >> myfiles/myscript.sh
+   $ echo 'echo Hello' >> myfiles/myscript.sh
+   $ chmod +x myfiles/myscript.sh
+   $ myscript.sh
+   Hello
+   ```
+
+2. Use o comando unset para remover a variável PATH. Tente executar um comando (como `sudo cat /etc/shadow`) usando sudo. O que aconteceu? Por quê?
+   - O comando `unset PATH` apaga as configurações de caminho atuais. Não será possível invocar um binário sem seu endereço absoluto. A solução é usar o caminho absoluto: `/usr/bin/sudo /bin/cat /etc/shadow`, ou simplesmente sair do shell.
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Identificar arquitetura e kernel
+
+**Enunciado:** Identifique a arquitetura de hardware e a versão do kernel do Linux que estão sendo usadas no seu computador em um formato de saída fácil de ler.
+
+
+
+<SolutionBlock>
+```bash
+   $ uname -v
+   $ uname -m
+   ```
+   Use `uname -m` para arquitetura (ex: x86_64). O `-i` é obsoleto e pode devolver `unknown`.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Comparar histórico de comandos
+
+**Enunciado:** Imprima na tela as últimas vinte linhas do banco de dados dinâmico history e do ficheiro `.bash_history` para compará-los.
+
+
+
+<SolutionBlock>
+```bash
+   $ history 20
+   $ tail -n 20 .bash_history
+   ```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Descobrir tamanho de bloco
+
+**Enunciado:** Use a ferramenta apropos para identificar a página man na qual se encontra o comando necessário para mostrar o tamanho de um dispositivo de bloco físico conectado em bytes, ao invés de megabytes ou gigabytes.
+
+
+
+<SolutionBlock>
+```bash
+   $ apropos block
+   $ man lsblk
+   $ lsblk -b
+   ```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Caracteres especiais e escaping
+
+**Enunciado:** Procure na internet a lista completa de caracteres especiais e explore-os.
+
+
+
+<SolutionBlock>
+- Lista: `& ; | * ? " ' [ ] ( ) $ < > { } # / \ ! ~`
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 5 — Diferenças entre aspas
+
+**Enunciado:** Tente executar comandos usando strings compostas de caracteres especiais e diversos métodos para escapar deles. Existem diferenças de comportamento entre esses métodos?
+
+
+
+<SolutionBlock>
+```bash
+    $ echo "$mynewvar"    # Preserva valores especiais de cifrão, crase e barra invertida
+    $ echo '$mynewvar'    # Todos os caracteres são interpretados literalmente
+    ```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 6 — Descobrir tipo de comando
+
+**Enunciado:** Use o comando `type` para descobrir se `cd`, `ls` e `hash` são builtins do shell ou binários externos.
+
+
+
+<SolutionBlock>
+```bash
+$ type cd
+cd is a shell builtin
+$ type ls
+ls is aliased to `ls --color=auto'
+$ type hash
+hash is a shell builtin
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 7 — Localizar binários
+
+**Enunciado:** Use os comandos `which` e `whereis` para localizar os binários de `gcc` e `python3`, e compare os resultados.
+
+
+
+<SolutionBlock>
+```bash
+$ which gcc
+/usr/bin/gcc
+$ whereis gcc
+gcc: /usr/bin/gcc /usr/lib/gcc /usr/share/man/man1/gcc.1.gz
+$ which python3
+/usr/bin/python3
+$ whereis python3
+python3: /usr/bin/python3.8 /usr/bin/python3.8-config /usr/lib/python3.8 /usr/share/man/man1/python3.1.gz
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 8 — Navegar no info
+
+**Enunciado:** Use o comando `info` para obter documentação sobre o `coreutils` e navegue para encontrar a descrição do comando `ls`.
+
+
+
+<SolutionBlock>
+```bash
+$ info coreutils
+```
+No menu que aparece, navegue com as setas ou/Page Down/Page Up até encontrar a entrada relativa a `ls`. O `info` apresenta documentação em formato de nós hiperligados, ao contrário do `man` que é mais linear.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 9 — Exportar variável EDITOR
+
+**Enunciado:** Crie uma variável de ambiente `EDITOR` com o valor `/usr/bin/nano`, exporte-a e verifique que está disponível para shells filhos.
+
+
+
+<SolutionBlock>
+```bash
+$ EDITOR=/usr/bin/nano
+$ export EDITOR
+$ echo $EDITOR
+/usr/bin/nano
+$ bash -c 'echo $EDITOR'
+/usr/bin/nano
+```
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T09 - 102.6 Linux virtualizado]()
+→ Próximo: [T11 - 103.2 Processar fluxos de texto usando filtros]()

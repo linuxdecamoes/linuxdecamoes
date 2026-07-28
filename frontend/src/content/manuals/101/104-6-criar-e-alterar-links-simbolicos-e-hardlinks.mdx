@@ -1,0 +1,193 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="104.6 Criar e alterar links simbólicos e hardlinks"
+  code="101"
+  topicNumber="T22"
+  objective="Criar e gerenciar hard links e links simbólicos (soft links)"
+  weight={1}
+  pages="LPIC-1 (101) - Version 5.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Tipos de Links
+
+| Característica | Link Físico (Hard Link) | Link Simbólico (Soft Link) |
+|---|---|---|
+| Comando | `ln TARGET LINK_NAME` | `ln -s TARGET LINK_NAME` |
+| Aponta para | Mesmo inode (dados no disco) | Caminho de outro arquivo |
+| Mesma partição? | Sim (obrigatório) | Não (pode atravessar partições) |
+| Contagem de links | Aumenta a contagem do arquivo | Não aumenta |
+| Efeito de excluir destino | Dados persistem (outro link existe) | Link "quebra" |
+| Identificação no ls | Mesmo inode, contagem > 1 | Primeiro caractere `l`, seta `->` |
+| Permissões no ls | Permissões reais | Sempre `rwxrwxrwx` (irrelevante) |
+
+### Comandos Principais
+
+| Comando | Função |
+|---|---|
+| `ln TARGET LINK_NAME` | Criar link físico |
+| `ln -s TARGET LINK_NAME` | Criar link simbólico |
+| `ls -li` | Listar com número inode |
+| `ls -lh` | Listar com tamanhos legíveis |
+
+### Inode
+
+Um inode é uma estrutura de dados que armazena os atributos de um objeto (arquivo ou diretório) em um sistema de arquivos: permissões, proprietário, blocos do disco com os dados. Vem de "index node".
+
+### Gerenciando Links Físicos
+
+- Todos os nomes (links) são equivalentes e apontam para os mesmos dados
+- Alterar o conteúdo de um altera todos os outros
+- Excluir um nome não afeta os outros (enquanto houver pelo menos um)
+- Contagem de links: arquivo normal começa com 1; cada hard link incrementa
+- Diretórios começam com contagem 2
+- Só podem residir no mesmo sistema de arquivos
+
+### Gerenciando Links Simbólicos
+
+- Apontam para caminhos (não inodes)
+- Podem apontar para arquivos e diretórios
+- Podem atravessar partições e sistemas de arquivos
+- Podem ser removidos com `rm` e movidos com `mv`
+- Cuidado com caminhos relativos — podem "quebrar" se movidos
+
+### Criando Links
+
+```bash
+ln target.txt /home/carol/Documents/hardlink    # Hard link
+ln -s target.txt /home/carol/Documents/softlink  # Soft link
+```
+
+### Identificando Links no ls
+
+```
+lrwxrwxrwx 1 carol carol 12 Jun 7 19:23 softlink -> target.txt
+```
+
+- Primeiro caractere `l` = link simbólico
+- `-> target.txt` = destino do link
+- Permissões sempre `rwxrwxrwx` (as reais são as do destino)
+
+### Verificando Inodes
+
+```bash
+ls -li
+# 3806696 -r--r--r-- 2 carol carol 111702 Jun 7 10:13 hardlink
+# 3806696 -r--r--r-- 2 carol carol 111702 Jun 7 10:13 target.txt
+```
+
+Mesmo número de inode = hard link entre si.
+
+### Caminhos Absolutos vs Relativos
+
+```bash
+# RUIM (relativo) — pode quebrar se o link for movido
+ln -s original.txt softlink
+
+# BOM (absoluto) — funciona mesmo se movido
+ln -s /home/carol/Documents/original.txt softlink
+```
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Hard link e soft link para o mesmo arquivo
+
+**Enunciado:** Você cria um arquivo chamado recipes.txt, um hard link chamado receitas.txt e um soft link chamado rezepte.txt:
+```bash
+touch recipes.txt
+ln recipes.txt receitas.txt
+ln -s recipes.txt rezepte.txt
+```
+O que aconteceria com o link rezepte.txt se o nome receitas.txt fosse excluído? Por quê?
+
+
+
+<SolutionBlock>
+O link simbólico rezepte.txt continuaria funcionando normalmente, porque ele aponta para recipes.txt, e não para receitas.txt. A exclusão de receitas.txt não afeta rezepte.txt, já que receitas.txt é apenas um hard link para o mesmo inode de recipes.txt. Enquanto recipes.txt existir (ou outro hard link para o mesmo inode), o soft link rezepte.txt continuará apontando para o destino correto.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Hard link entre dispositivos
+
+**Enunciado:** Você tem um pendrive montado em /media/youruser/FlashA. Tenta criar um hard link:
+```bash
+ln /media/youruser/FlashA/esquema.pdf ~/schematics.pdf
+```
+O que aconteceria? Por quê?
+
+
+
+<SolutionBlock>
+O comando falharia. A mensagem de erro seria "Invalid cross-device link" (Link inválido entre dispositivos): os links físicos não podem apontar para um destino em uma partição ou dispositivo diferente. A única maneira é usar um link simbólico (`ln -s`).
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Interpretar contagem de links
+
+**Enunciado:** Considere a seguinte saída de `ls -lah`:
+```
+-rw-rw-r-- 1 carol carol 2,8M jun 17 15:45 compressed.zip
+-rw-r--r-- 4 carol carol  77K jun 17 17:25 document.txt
+-rw-r--r-- 1 carol carol 216K jun 17 17:25 image.png
+-rw-r--r-- 4 carol carol  77K jun 17 17:25 text.txt
+```
+Quantos links apontam para document.txt? Trata-se de links físicos ou simbólicos? Qual parâmetro passar para ls para ver o inode?
+
+
+
+<SolutionBlock>
+Todos os arquivos começam com 1 na contagem de links. Como a contagem de links de document.txt é 4, existem três links apontando para ele. São links físicos, já que links simbólicos não aumentam a contagem. O parâmetro é `-i`. O inode será mostrado na primeira coluna da saída.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Link simbólico relativo movido
+
+**Enunciado:** Você tem ~/Documents/clients.txt e ~/Documents/somedir/clients.txt. Cria um link em somedir:
+```bash
+cd somedir/
+ln -s clients.txt partners.txt
+```
+Depois move o link para ~/Documents e lista seu conteúdo. O link ainda funciona? Qual arquivo terá seu conteúdo listado?
+
+
+
+<SolutionBlock>
+O link funcionará e o arquivo listado será o que está em ~/Documents (contendo John, Michael, Bob). Lembre-se de que, como não especificamos o caminho completo para o alvo clients.txt ao criar o link, o destino será interpretado como relativo ao local do link. Quando movido de somedir para ~/Documents, coincidentemente existe um arquivo chamado clients.txt nesse diretório, então o link apontará para ele em vez do destino original.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 5 — Permissões de link simbólico
+
+**Enunciado:** Considere:
+```
+-rw-r--r-- 1 carol carol 19 Jun 24 11:12 clients.txt
+lrwxrwxrwx 1 carol carol 11 Jun 24 11:13 partners.txt -> clients.txt
+```
+Quais são as permissões de acesso de partners.txt? Por quê?
+
+
+
+<SolutionBlock>
+As permissões de acesso de partners.txt são `rw-r--r--`, já que os links sempre herdam as mesmas permissões de acesso do alvo.
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T21 - 104.5 Controlar permissões e propriedades de arquivos]()
+→ Próximo: [T23 - 104.7 Localização de arquivos de sistema]()

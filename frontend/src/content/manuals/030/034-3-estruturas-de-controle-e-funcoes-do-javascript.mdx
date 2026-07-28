@@ -1,0 +1,372 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T14 — 034.3 Estruturas de controle e funções do JavaScript"
+  code="030"
+  topicNumber="T14"
+  objective="034.3"
+  weight={4}
+  pages="LPI Web Development Essentials (030) - Version 1.0"
+  accent="amber"
+/>
+
+
+
+## Resumo Conciso
+
+### Valores verdadeiros e falsos
+
+O JavaScript avalia condições como verdadeiras se o valor for diferente de zero. `true` (literal) também é considerado verdadeiro.
+
+### Operadores de comparação
+
+| Operador | Descrição |
+|---|---|
+| `==` | Igualdade comum (compara valor, com coerção de tipo) |
+| `!=` | Desigualdade comum |
+| `===` | Igualdade estrita (compara tipo e valor) |
+| `!==` | Desigualdade estrita |
+| `<` | Menor que |
+| `>` | Maior que |
+| `<=` | Menor ou igual |
+| `>=` | Maior ou igual |
+
+**Comparação comum vs. estrita:**
+
+```javascript
+let a = "1";
+let b = 1;
+console.log(a == b);   // true  (coerção: "1" convertido para 1)
+console.log(a === b);  // false (tipos diferentes: string vs number)
+```
+
+### Operadores lógicos
+
+| Operador | Tipo | Descrição |
+|---|---|---|
+| `&&` | Binário (AND) | Verdadeiro se ambas as expressões forem verdadeiras |
+| `\|\|` | Binário (OR) | Verdadeiro se pelo menos uma expressão for verdadeira |
+| `!` | Unário (NOT) | Inverte o valor lógico |
+
+### Estruturas condicionais
+
+#### `if` / `else if` / `else`
+
+```javascript
+let my_number = 4;
+
+if (my_number == 3) {
+  console.log("The value of my_number is 3");
+} else {
+  console.log("The value of my_number is not 3");
+}
+```
+
+- Uma ou mais declarações entre `{}` formam uma **declaração de bloco**.
+- As estruturas `if` podem ser aninhadas.
+- É recomendado usar `{}` mesmo para uma única instrução.
+
+#### `switch` / `case` / `break`
+
+```javascript
+switch (language) {
+  case "en":
+    console.log("English");
+    break;
+  case "es":
+    console.log("Spanish");
+    break;
+  case "pt":
+    console.log("Portuguese");
+    break;
+  default:
+    console.log(language, " not found");
+}
+```
+
+- Usa comparação **estrita** (`===`).
+- `default` trata o caso sem correspondência.
+- Múltiplos `case` podem ser combinados (fall-through):
+
+```javascript
+case "en":
+case "en_US":
+case "en_GB":
+  console.log("English");
+  break;
+```
+
+### Laços (Loops)
+
+#### `while`
+
+Executa o bloco enquanto a condição for verdadeira:
+
+```javascript
+let factor = 2;
+while (factor < candidate) {
+  if (candidate % factor == 0) {
+    is_prime = false;
+    break;
+  }
+  factor++;
+}
+```
+
+#### `for`
+
+Permite inicialização, condição e expressão final numa só linha:
+
+```javascript
+for (let factor = 2; factor < candidate; factor++) {
+  if (candidate % factor == 0) {
+    is_prime = false;
+    break;
+  }
+}
+```
+
+#### `for...of` (iteração sobre arrays)
+
+```javascript
+let candidates = [111, 139, 293, 327];
+for (candidate of candidates) {
+  console.log(candidate);
+}
+```
+
+#### Controlo de fluxo em loops
+
+| Instrução | Efeito |
+|---|---|
+| `break` | Encerra o loop imediatamente |
+| `continue` | Pula o resto do bloco e inicia a próxima iteração |
+
+**Atenção:** Garantir que a condição do `while` muda a cada iteração para evitar loops infinitos.
+
+### Funções
+
+#### Declaração de função
+
+```javascript
+function test_prime(candidate) {
+  let is_prime = true;
+  let factor = 2;
+  while (factor < candidate) {
+    if (candidate % factor == 0) {
+      is_prime = false;
+      break;
+    }
+    factor++;
+  }
+  return is_prime;
+}
+```
+
+- O nome da função segue as mesmas regras de nomenclatura de variáveis.
+- Argumentos são separados por vírgulas entre parênteses.
+- Declarações de função podem ser chamadas antes ou depois da sua declaração.
+
+#### Expressão de função
+
+```javascript
+let test_prime = function(candidate) {
+  // corpo da função
+  return is_prime;
+};
+```
+
+- O nome `test_prime` é a variável que contém a função.
+- Só pode ser chamada **após** a sua inicialização (diferente da declaração de função).
+
+#### Passagem de argumentos
+
+| Tipo | Comportamento |
+|---|---|
+| Por valor | Argumentos primitivos são copiados; alterações não afetam a variável original |
+| Por referência | Objetos complexos são partilhados; alterações afetam o objeto original |
+
+#### Instrução `return`
+
+- Devolve o controlo e o valor à função de chamada.
+- Não é obrigatória — sem `return`, o valor de retorno é `undefined`.
+- Pode existir múltiplas instruções `return` (em blocos condicionais).
+
+#### Recursão
+
+Uma função pode chamar a si própria:
+
+```javascript
+function next_prime(from) {
+  if (from < 2) return 2;
+  if (from == 2) return 3;
+  if (from % 2 == 0) from--;
+
+  let candidate = from + 2;
+  for (let factor = 3; factor < candidate; factor = factor + 2) {
+    if (candidate % factor == 0) {
+      return next_prime(candidate);  // chamada recursiva
+    }
+  }
+  return candidate;
+}
+```
+
+- Cada invocação mantém as suas próprias variáveis isoladas na memória.
+- O empilhamento de chamadas continua até que o caso base seja atingido.
+
+## 🧭 Exercícios Guiados (resolvidos)
+
+### Exercício Guiado 1 — Operador AND lógico
+
+**Enunciado:** Quais valores da variável `my_var` correspondem à condição `my_var > 0 && my_var < 9`?
+
+**Solução passo a passo:**
+
+1. O operador `&&` (AND) requer que **ambas** as expressões sejam verdadeiras.
+2. A primeira expressão `my_var > 0` filtra números maiores que 0.
+3. A segunda expressão `my_var < 9` filtra números menores que 9.
+4. Resultado: valores inteiros de 1 a 8.
+
+### Exercício Guiado 2 — Operador OR lógico
+
+**Enunciado:** Quais valores da variável `my_var` correspondem à condição `my_var > 0 || my_var < 9`?
+
+**Solução passo a passo:**
+
+1. O operador `||` (OR) requer que **pelo menos uma** expressão seja verdadeira.
+2. Qualquer número será maior que 0 OU menor que 9.
+3. Resultado: todos os números correspondem.
+
+### Exercício Guiado 3 — Loop while infinito com continue
+
+**Enunciado:** Quantas vezes o loop while a seguir executa sua declaração de bloco?
+
+```javascript
+let i = 0;
+while (1) {
+  if (i == 10) { continue; }
+  i++;
+}
+```
+
+**Solução passo a passo:**
+
+1. A condição `while (1)` é sempre verdadeira.
+2. Quando `i` atinge 10, `continue` pula `i++` e volta ao início do loop.
+3. `i` permanece em 10 para sempre.
+4. Resultado: **infinitas vezes** (loop infinito).
+
+### Exercício Guiado 4 — Declaração vs. expressão de função
+
+**Enunciado:** Qual a principal diferença entre uma declaração de função e uma expressão de função?
+
+**Solução passo a passo:**
+
+1. Uma **declaração de função** pode ser chamada antes da sua declaração no código (hoisting).
+2. Uma **expressão de função** só pode ser chamada após a sua atribuição a uma variável.
+
+```javascript
+// Declaração — pode ser chamada antes
+test_prime(5); // funciona
+
+function test_prime(candidate) {
+  return true;
+}
+
+// Expressão — só funciona após a atribuição
+test_prime2(5); // ReferenceError
+
+let test_prime2 = function(candidate) {
+  return true;
+};
+```
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+1. **Enunciado:** O que acontece se o operador de atribuição `=` for usado em vez do operador de comparação `==`?
+
+   
+
+<SolutionBlock>
+```javascript
+   let a = 1;
+   let b = 2;
+   if (a = b) {
+     console.log("Executado"); // Este bloco será executado
+   }
+   console.log(a); // 2 (a recebeu o valor de b)
+   ```
+
+   Explicação: O operador `=` atribui o valor da direita à variável da esquerda. O resultado da atribuição (2) é avaliado como verdadeiro (diferente de 0), então o `if` executa. Isto é um erro comum e indesejado.
+</SolutionBlock>
+
+
+
+2. **Enunciado:** Escreva um fragmento de código usando a estrutura `if`, no qual uma comparação de igualdade comum retorne verdadeiro, mas uma comparação de igualdade estrita não.
+
+   
+
+<SolutionBlock>
+```javascript
+   let a = "1";
+   let b = 1;
+   if (a == b) {
+     console.log("Igualdade comum: verdadeiro");
+   }
+   if (a === b) {
+     console.log("Igualdade estrita: verdadeiro");
+   } else {
+     console.log("Igualdade estrita: falso");
+   }
+   ```
+
+   Explicação: `a == b` retorna `true` porque o JavaScript converte a string `"1"` para o número `1`. `a === b` retorna `false` porque os tipos são diferentes (string vs. number).
+</SolutionBlock>
+
+
+
+3. **Enunciado:** Reescreva a seguinte declaração `for` usando o operador lógico unário NOT na condição de loop, mantendo o mesmo resultado:
+
+   ```javascript
+   for (let factor = 2; factor < candidate; factor++)
+   ```
+
+   
+
+<SolutionBlock>
+```javascript
+   for (let factor = 2; !(factor >= candidate); factor++)
+   ```
+
+   Explicação: `factor < candidate` é equivalente a `!(factor >= candidate)`. O NOT inverte a condição original, mantendo a mesma lógica.
+</SolutionBlock>
+
+
+
+4. **Enunciado:** Escreva uma estrutura de loop que imprima todos os fatores inteiros de um determinado número `my_number`.
+
+   
+
+<SolutionBlock>
+```javascript
+   let my_number = 36;
+   for (let factor = 2; factor <= my_number; factor++) {
+     if (my_number % factor == 0) {
+       console.log(factor, "is an integer factor of", my_number);
+     }
+   }
+   ```
+
+   Explicação: O loop testa cada número de 2 até `my_number`. Se o resto da divisão for zero (`%`), o número é um fator inteiro e é impresso no console.
+</SolutionBlock>
+
+
+
+## 🔗 Ligações
+
+← Anterior: [T13 - 034.2 Estruturas de dados em JavaScript]()
+→ Próximo: [034.4 — Manipulação de conteúdo e estilo de websites com JavaScript](034-4-Manipulacao-de-conteudo-e-estilo-de-websites-com-JavaScript.md)

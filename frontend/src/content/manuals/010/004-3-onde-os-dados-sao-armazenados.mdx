@@ -1,0 +1,458 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="Onde os dados são armazenados"
+  code="010"
+  topicNumber="T14"
+  objective="4.3"
+  weight={3}
+  pages="Linux Essentials (010) - Version 4.1"
+  accent="sage"
+/>
+
+
+
+## Resumo Conciso
+
+> Para o Linux **"tudo é ficheiro"** — programas, ficheiros regulares, diretórios, dispositivos de bloco/caracteres, sockets, partições, links. A árvore começa em `/` (FHS — Filesystem Hierarchy Standard). Alguns caminhos são **discos reais** (persistentes); outros são **pseudo-sistemas de ficheiros** (em RAM, refletem o estado vivo do kernel).
+
+### Lição 1 — Programas, configuração, kernel, dispositivos, memória
+
+#### Programas e configuração
+- **Binários** distribuídos em **3 níveis**:
+
+| Nível | Conteúdo | `bin` (todos) | `sbin` (admin) |
+|-------|----------|---------------|----------------|
+| `/` | Necessários em **modo utilizador único** | `/bin` (`ls`, `mv`, `mkdir`) | `/sbin` (`parted`, `ip`) |
+| `/usr` | Maioria dos programas **multiutilizador** | `/usr/bin` (`free`, `sudo`, `man`) | `/usr/sbin` (`deluser`, `groupadd`) |
+| `/usr/local` | Software **compilado localmente** (fora do gestor) | `/usr/local/bin` | `/usr/local/sbin` |
+
+> Distros modernas substituem `/bin` e `/sbin` por **links simbólicos** para `/usr/bin` e `/usr/sbin`. `/opt` guarda apps opcionais de terceiros.
+> Utilizadores comuns podem ter programas em `~/bin` e `~/.local/bin`. **`echo $PATH`** mostra os diretórios pesquisados; **`which git`** localiza um executável.
+
+- **`/etc`** — diretório principal de configuração (texto puro). Padrões de nomenclatura:
+  - **Sem extensão / ad hoc:** `group`, `hostname`, `hosts`, `passwd`, `profile`, `shadow`.
+  - **`…rc`** (run command): `bash.bashrc`, `nanorc`.
+  - **`.conf`:** `resolv.conf` (DNS), `sysctl.conf` (variáveis do kernel).
+  - **`*.d`** (modular): ex. `logrotate.d`, `/etc/cron.d`, `/etc/apt/sources.list.d` — permite que pacotes adicionem configurações sem mexer no ficheiro principal.
+- **Dotfiles em `~`** (ficheiros ocultos começados por `.`): `.bash_history`, `.bash_logout`, `.bashrc` (shells não-login), `.profile` (shells de login), `.gitconfig`, `.ssh/`, `.emacs.d/`.
+
+#### Kernel e diretórios virtuais
+
+- **`/boot`** — kernel + ficheiros de arranque. Nomes incluem a **versão** (`vmlinuz-4.9.0-9-amd64`): **4** = versão, **9** = revisão principal, **0** = secundária, **9** = patch. Mantêm-se **vários kernels** por segurança (fallback).
+
+| Ficheiro | Conteúdo |
+|----------|----------|
+| `config-…` | Opções/módulos compilados no kernel |
+| `initrd.img-…` | Imagem RAM inicial (rootfs temporário no boot) |
+| `System-map-…` / `System.map` | Endereços de memória ↔ símbolos do kernel |
+| `vmlinuz-…` | Kernel comprimido (`vm` = memória virtual; `z` = comprimido) |
+| `grub/` | Configuração do GRUB2 |
+
+- O kernel é carregado numa **área protegida da memória**; lança o **PID 1** (hoje quase sempre `systemd`; antigamente `/sbin/init`, hoje ligado a `/lib/systemd/systemd`). O kernel aloca recursos a todos os processos.
+
+- **`/proc`** — pseudo-filesystem em RAM com estado atual do kernel:
+  - `/proc/cpuinfo` (CPU), `/proc/cmdline` (parâmetros de boot), `/proc/modules` (módulos carregados), `/proc/meminfo` (memória).
+  - `/proc/sys/` (configuração do kernel): subdiretórios `abi debug dev fs kernel net user vm`. Ex.: `/proc/sys/net/ipv4/ip_forward` (0/1 — router on/off); `/proc/sys/kernel/pid_max` (PID máximo). ⚠️ Alterar pode destabilizar o sistema.
+- **`/dev`** — ficheiros de dispositivo (nós):
+  - **Bloco** (`b`) — leitura/escrita em blocos: discos, partições (`/dev/sda1`), USBs, CD/DVD.
+  - **Caracter** (`c`) — sequencial, 1 char de cada vez: teclados, `/dev/console`, `/dev/ttyS0`, `/dev/tty*`.
+  - Especiais: `/dev/zero` (nulos), `/dev/null` (bit bucket), `/dev/urandom` (aleatórios).
+- **`/sys` (sysfs)** — desde kernel 2.6; informação sobre dispositivos em `/dev`, organizada por categoria. Ex.: `cat /sys/class/net/enp0s3/address` → MAC.
+
+#### Memória
+- **RAM física** — chips com células, cada uma com **endereço de memória** hexadecimal. Volátil.
+- **Swap** — memória de troca em disco, usada quando a RAM esgota. **Memória virtual** = abstração da memória total visível às aplicações (RAM + swap).
+
+```bash
+free          # em KiB por omissão
+free -h       # legível (GiB/MiB)
+# Opções: -b bytes, -m MiB, -g GiB, -h humano
+```
+
+Colunas: `total` (instalada), `used`, `free`, `shared` (tmpfs), `buff/cache` (kernel), `available` (estimativa para novos processos). KiB = 1024 bytes; KB = 1000 bytes.
+
+| `top` | Vista **dinâmica/interativa**. Ordenação: `M` (memória), `N` (PID), `T` (tempo), `P` (%CPU); `R` inverte; `k` mata; `m` barra de mem; `W` guarda config em `~/.config/procps/toprc`. |
+|---|---|
+| `htop` / `atop` | Alternativas mais ricas (instalar via gestor de pacotes). |
+| `ps` | Instantâneo **estático**. `-f` (full), `-uf` (árvore), `-v` (%MEM). |
+| `pstree` | Hierarquia em árvore (visual). |
+| `uptime` | Mostra **load average** dos últimos 1 / 5 / 15 min (processos à espera de CPU ou E/S). |
+
+- **`/proc/<PID>/`** — cada processo tem um subdiretório numerado com o seu PID. Ex.: `/proc/1/cmdline` → `/sbin/init`. `cat /proc/1/cmdline; echo` (o `echo` acrescenta nova-linha).
+
+#### Logs e mensagens do sistema
+- Logs são essenciais para **troubleshooting, segurança e estatísticas**.
+- **syslog** (tradicional) ou derivados **syslog-ng / rsyslog** — daemon que recolhe mensagens e as guarda em `/var/log`. Alguns serviços (ex.: Apache HTTPD) têm os seus próprios logs.
+- O **kernel** usa um **buffer de anel** em memória (tamanho fixo; mensagens antigas desaparecem).
+
+**Ficheiros típicos em `/var/log`:**
+
+| Ficheiro | Conteúdo |
+|----------|----------|
+| `auth.log` | Autenticação (logins, sudo) |
+| `kern.log` | Mensagens do kernel |
+| `syslog` | Informação do sistema |
+| `messages` | Sistema + aplicações |
+| `wtmp` (binário) | Logins bem-sucedidos → lê-se com `last` |
+| `btmp` (binário) | Tentativas falhadas → `lastb` |
+
+- **Formato de mensagem:** timestamp · hostname · programa · PID · descrição.
+- Alguns logs são **binários** — `file /var/log/wtmp` confirma o tipo; precisam de comando especial (`last`, `lastb`).
+- **Rotação (`logrotate`)** — move/renomeia/comprime (`error.log.1`, `error.log.2.gz`) e apaga logs velhos para não encher o disco.
+
+**Ler logs:**
+```bash
+less /var/log/messages       # paginador
+tail -f /var/log/messages    # seguir novas linhas em tempo real
+dmesg | grep boot            # buffer de anel do kernel + filtro
+dmesg | less
+```
+
+- **systemd** — desde ~2015 substituiu o SysV Init (como init, PID 1) na maioria das distros. O **systemd-journald** é o respetivo logger em formato binário, lê-se com `journalctl`. Compatível com syslog.
+
+```bash
+journalctl                   # diário inteiro
+journalctl -k                # ≡ dmesg (mensagens do kernel)
+journalctl --dmesg           # equivalente a -k
+journalctl -b                # informações da inicialização atual
+journalctl -u apache2.service# mensagens de uma unidade específica
+journalctl -f                # seguir (≡ tail -f)
+```
+
+---
+
+## 🧭 Exercícios Guiados (resolvidos)
+
+> Exercícios do manual (Lições 1 e 2) com **solução oficial**, passo a passo.
+
+### Guiado 1 — Localizar programas com `which` (Lição 1)
+
+**Enunciado:** *Use o comando `which` para descobrir a localização dos seguintes programas e indique se requer root.*
+
+**Solução:**
+
+| Programa | Comando | Caminho | Precisa de root? |
+|----------|---------|---------|------------------|
+| `swapon` | `which swapon` | `/sbin/swapon` | ✅ Sim |
+| `kill` | `which kill` | `/bin/kill` | ❌ Não |
+| `cut` | `which cut` | `/usr/bin/cut` | ❌ Não |
+| `usermod` | `which usermod` | `/usr/sbin/usermod` | ✅ Sim |
+| `cron` | `which cron` | `/usr/sbin/cron` | ✅ Sim |
+| `ps` | `which ps` | `/bin/ps` | ❌ Não |
+
+> **Regra prática:** caminhos em `sbin` (qualquer nível) → ferramentas de administração → root.
+
+### Guiado 2 — Onde estão os ficheiros? `/etc` vs `~` (Lição 1)
+
+**Enunciado:** *Onde se encontram os ficheiros seguintes?*
+
+**Solução:**
+
+| Ficheiro | `/etc` | `~` (home) |
+|----------|--------|------------|
+| `.bashrc` | | ✅ |
+| `bash.bashrc` | ✅ | |
+| `passwd` | ✅ | |
+| `.profile` | | ✅ |
+| `resolv.conf` | ✅ | |
+| `sysctl.conf` | ✅ | |
+
+> **Mnemónica:** dotfiles (com `.` à frente) são pessoais → `~`; os outros são de sistema → `/etc`.
+
+### Guiado 3 — Elementos numéricos do kernel `vmlinuz-4.15.0-50-generic` (Lição 1)
+
+**Enunciado:** *Explique os elementos numéricos do ficheiro do kernel.*
+
+**Solução:**
+
+| Elemento | Significado |
+|----------|-------------|
+| **4** | Versão do kernel |
+| **15** | Revisão principal (major) |
+| **0** | Revisão secundária (minor) |
+| **50** | Número do patch |
+
+### Guiado 4 — Listar discos e partições em `/dev` (Lição 1)
+
+**Enunciado:** *Qual comando usaria para listar todos os discos rígidos e partições em `/dev`?*
+
+**Solução:**
+
+```bash
+ls /dev/sd*
+```
+
+> O glob `*` expande para todos os dispositivos `sd` (SATA/SCSI) e respetivas partições (`sda`, `sda1`, `sdb`, `sdb1`…).
+
+### Guiado 5 — Analisar a saída de `top` (Lição 2)
+
+**Enunciado:** *Analise a lista de `top` e responda.* (saída do manual com `systemd` PID 1, `top` PID 887 da carol, `apache2` PID 444, etc.)
+
+**Solução passo a passo:**
+
+- **Quais processos foram iniciados pelo utilizador `carol`?** → Apenas um: `top`.
+- **Que diretório virtual de `/proc` visitar para dados do `top`?** → **`/proc/887`** (887 = PID do `top`).
+- **Qual processo correu primeiro? Como descobriste?** → `systemd`, porque tem **PID 1**.
+
+**Tabela — área de resumo vs. área de tarefas:**
+
+| Informação sobre… | Área de resumo | Área de tarefas |
+|-------------------|----------------|-----------------|
+| Memória | ✅ | ✅ |
+| Swap | ✅ | ❌ |
+| PID | ❌ | ✅ |
+| Tempo da CPU | ✅ | ✅ |
+| Comandos | ❌ | ✅ |
+
+### Guiado 6 — Comandos para ler registos binários (Lição 2)
+
+**Enunciado:** *Qual comando é usado para ler os registos binários seguintes?*
+
+**Solução:**
+
+| Ficheiro | Comando |
+|----------|---------|
+| `/var/log/wtmp` | **`last`** |
+| `/var/log/btmp` | **`lastb`** |
+| `/run/log/journal/.../system.journal` | **`journalctl`** |
+
+### Guiado 7 — Descobrir info do sistema com `grep` (Lição 2)
+
+**Enunciado:** *Em combinação com `grep`, que comandos usaria para descobrir…?*
+
+**Solução:**
+
+| Informação | Comando |
+|------------|---------|
+| Data da última reinicialização (wtmp) | `last \| grep reboot` |
+| Discos rígidos instalados (kern.log) | `less /var/log/kern.log` (ou `grep sd /var/log/kern.log`) |
+| Último login (auth.log) | `less /var/log/auth.log` (ou `grep session /var/log/auth.log`) |
+
+### Guiado 8 — Exibir o buffer de anel do kernel (Lição 2)
+
+**Enunciado:** *Quais dois comandos usaria para exibir o buffer de anel do kernel?*
+
+**Solução:**
+
+```bash
+dmesg
+# e equivalente via systemd:
+journalctl -k        # ou journalctl --dmesg
+```
+
+### Guiado 9 — A que log pertence cada mensagem? (Lição 2)
+
+**Enunciado:** *Indique o local a que pertencem as mensagens de log.*
+
+**Solução:**
+
+| Mensagem | Ficheiro |
+|----------|----------|
+| `dbus[…]: Successfully activated service 'org.freedesktop.nm_dispatcher'` | `/var/log/syslog` ✅ |
+| `kernel: […] usbhid: USB HID core driver` | `/var/log/kern.log` ✅ (e messages) |
+| `sudo: pam_unix(sudo:session): session opened for user root by carol(uid=0)` | `/var/log/auth.log` ✅ |
+| `NetworkManager[…]: NetworkManager (version 1.6.2) is starting…` | `/var/log/messages` ✅ |
+
+### Guiado 10 — `journalctl` para unidades systemd (Lição 2)
+
+**Enunciado:** *Use `journalctl` para encontrar informações sobre as unidades.*
+
+**Solução:**
+
+| Unidade | Comando |
+|---------|---------|
+| ssh | `journalctl -u ssh.service` |
+| networking | `journalctl -u networking.service` |
+| rsyslog | `journalctl -u rsyslog.service` |
+| cron | `journalctl -u cron.service` |
+
+---
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+> Exercícios originais para praticar no terminal. Consolidam o objetivo 4.3 com comandos reais (`ls /etc`, `ls /var/log`, `ps aux`, `top`/`htop`, `systemctl status`, `journalctl`, `ls /dev`, `cat /proc`, `lsmod`, `dmesg`).
+> *Dica:* precisa de sessão Linux (física, VM ou WSL). Soluções em `<details>`.
+
+### Exploratório 1 — Inventariar configurações em `/etc`
+Lista o conteúdo de `/etc` e identifica: (a) ficheiros de configuração clássicos (`passwd`, `hostname`, `fstab`), (b) pelo menos **dois** ficheiros `.conf` e (c) um diretório `*.d` que confirma a abordagem modular.
+
+
+
+<SolutionBlock>
+```bash
+# Conteúdo do diretório /etc
+ls /etc
+
+# Filtros por padrão de nome
+ls /etc/*.conf | head           # ficheiros .conf
+ls -d /etc/*.d                  # diretórios modulares .d
+
+# Exemplo prático: configuração modular do apt (Debian/Ubuntu)
+ls /etc/apt/sources.list /etc/apt/sources.list.d
+```
+
+**O que confirmar:**
+- `passwd`, `group`, `hostname`, `hosts`, `fstab`, `shadow`, `profile` — clássicos sem extensão.
+- `resolv.conf`, `sysctl.conf`, `logrotate.conf` — terminados em `.conf`.
+- `cron.d/`, `logrotate.d/`, `apt/sources.list.d/` — diretórios `*.d` onde pacotes deixam configurações isoladas.
+</SolutionBlock>
+
+
+
+### Exploratório 2 — Mapear a estrutura de binários em 3 níveis
+Confirma a divisão `/`, `/usr`, `/usr/local` listando os respetivos `bin` e `sbin`. Identifica para que serve cada um.
+
+
+
+<SolutionBlock>
+```bash
+# 3 níveis × {bin, sbin}
+ls /bin /sbin
+ls /usr/bin /usr/sbin
+ls /usr/local/bin /usr/local/sbin 2>/dev/null
+
+# Verificar se /bin e /sbin são symlinks (distros modernas)
+ls -ld /bin /sbin
+```
+
+**Como interpretar:**
+- Se `ls -ld /bin` mostrar `-> /usr/bin` (seta), confirma a tendência moderna de fundir os níveis.
+- Localiza um comando concreto e reflete sobre o porquê do seu nível:
+```bash
+which parted shutdown        # esperado: /sbin ou /usr/sbin  → admin essencial
+which ls mkdir bash          # esperado: /bin ou /usr/bin    → todos os utilizadores
+which free pstree man        # esperado: /usr/bin            → multiutilizador
+```
+</SolutionBlock>
+
+
+
+### Exploratório 3 — Instantâneo de processos com `ps` e `pstree`
+Obtém **todos** os processos do sistema, identifica o **PID 1** (init/systemd), o **teu shell** e a **hierarquia** até ele.
+
+
+
+<SolutionBlock>
+```bash
+# Todos os processos com cabeçalho completo
+ps aux
+ps -ef
+
+# Árvore hierárquica (processos pai → filho)
+pstree
+pstree -p     # com PIDs
+pstree -p $$  # árvore que leva ao teu shell atual
+
+# Confirmar quem é o PID 1
+ps -p 1 -o pid,ppid,comm
+cat /proc/1/cmdline; echo
+```
+
+**Leitura:**
+- `$$` = PID do shell atual; `pstree -p $$` mostra como ele descende do PID 1.
+- `ps -p 1` confirma se é `systemd`, `init` ou outro.
+- `cat /proc/1/cmdline; echo` revela o binário que iniciou a hierarquia (usa `; echo` para acrescentar nova-linha — `cmdline` usa caracteres nulos como separadores).
+</SolutionBlock>
+
+
+
+### Exploratório 4 — Explorar `top` em modo interativo
+Inicia `top` e executa as seguintes ações sem o abandonar: ordenar por memória, ligar **barras de progresso** de memória, matar um processo e **gravar** a configuração.
+
+
+
+<SolutionBlock>
+```bash
+top
+```
+
+Dentro do `top` primeiona (por esta ordem):
+1. **`M`** — ordenar por uso de memória (`%MEM`).
+2. **`m`** (uma ou duas vezes) — alternar entre números e **barras de progresso** para memória física e swap.
+3. **`k`** — mata processo: pede o PID e o sinal (ex.: `15` = SIGTERM, `9` = SIGKILL).
+4. **`W`** (maiúsculo, i.e. `Shift+W`) — **grava** a config em `~/.config/procps/toprc`.
+5. **`q`** — sair.
+
+```bash
+# Verificar o ficheiro de config criado (dotfile no home)
+ls -a ~/.config/procps/toprc
+```
+
+**Nota:** `~/.config/procps/toprc` é um dotfile (cf. Lição 1) — só aparece com `ls -a`.
+</SolutionBlock>
+
+
+
+### Exploratório 5 — Diagnosticar com `journalctl` e `systemctl`
+Sem ler ficheiros de log diretamente, descobre: (a) **erros** do último boot, (b) estado do serviço **SSH** e (c) as **últimas 20 linhas** do diário de uma unidade à tua escolha.
+
+
+
+<SolutionBlock>
+```bash
+# (a) Apenas prioridade de ERRO ou superior, do boot atual
+journalctl -b -p err
+
+# (b) Estado de um serviço (substitui 'ssh' por 'sshd' em distros Red Hat-like)
+systemctl status ssh.service
+systemctl status sshd.service
+
+# (c) Últimas 20 linhas do diário de uma unidade (ex.: cron)
+journalctl -u cron.service -n 20
+
+# Bónus: seguir em tempo real (≡ tail -f)
+journalctl -u cron.service -f
+```
+
+**Como interpretar:**
+- `-b` = "deste boot"; `-p err` filtra por **prioridade** (emerge/alert/crit/err/warning/notice/info/debug).
+- `systemctl status` mostra estado (active/inactive/failed), PID principal e últimas linhas de log.
+- `-n N` limita a N linhas mais recentes; útil porque o diário pode ser enorme.
+</SolutionBlock>
+
+
+
+### Exploratório 6 — Buffer de anel do kernel e dispositivos em `/dev` e `/sys`
+Usa `dmesg` para veres **mensagens recentes do kernel**, lista dispositivos de bloco em `/dev` e consulta o **MAC** de uma interface de rede em `/sys`.
+
+
+
+<SolutionBlock>
+```bash
+# Buffer de anel do kernel (últimas 20 linhas)
+dmesg | tail -n 20
+dmesg --since "10 min ago"   # alternativa temporal
+
+# Filtrar apenas dispositivos/armazenamento detetado
+dmesg | grep -iE 'sd|nvme|usb|tty'
+
+# Dispositivos de bloco vs. caracteres em /dev
+ls -l /dev/sd* 2>/dev/null      # 'b' no início → bloco
+ls -l /dev/tty* 2>/dev/null     # 'c' no início → caracter
+
+# MAC da placa de rede via /sys (substitui enp0s3 pelo teu ifname)
+ip link show                       # descobrir o nome da interface
+cat /sys/class/net/enp0s3/address  # endereço MAC
+
+# Bónus: módulos do kernel carregados
+lsmod | head
+```
+
+**Ligações ao manual:**
+- `dmesg` mostra o **buffer de anel** — quando ainda não havia syslog (boot).
+- `/dev` contém **nós** de dispositivo; a primeira letra (`b`/`c`) distingue bloco de caractere.
+- `/sys/class/net/.../address` exemplifica o sysfs: informação de hardware organizada por categoria.
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T13 - Entendendo o Hardware do Computador]()
+→ Próximo: [T15 - Seu Computador na Rede]()

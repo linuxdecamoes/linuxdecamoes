@@ -1,0 +1,192 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="025.3 — Proteção da Privacidade"
+  code="020"
+  topicNumber="T17"
+  objective="025.3"
+  weight={3}
+  pages="LPI Security Essentials (020) - Version 1.0"
+  accent="coral"
+/>
+
+
+
+## Resumo Conciso
+
+- **Informações pessoais** — dados que permitem identificar um indivíduo: nome, endereço, telefone, e-mail, número de seguro social, dados financeiros, histórico de navegação
+- **Riscos de publicar informações pessoais:**
+
+| Risco | Descrição |
+|-------|-----------|
+| Roubo de identidade | Uso de dados pessoais para obter crédito, contas ou serviços em nome da vítima |
+| Phishing direcionado | Golpes mais convincentes baseados em informações pessoais obtidas online |
+| Perseguição (cyberstalking) | Monitorização de movimentos e rotinas através de dados partilhados |
+| Cyberbullying / Cybermobbing | Intimidação cibernética individual ou em grupo |
+| Corretores de dados | Plataformas na dark web que vendem dados pessoais roubados |
+
+- **GDPR — Direitos fundamentais:**
+
+| Direito | Descrição |
+|---------|-----------|
+| Direito à informação | Saber quais dados são coletados, como são usados e com quem são partilhados |
+| Direito de acesso | Solicitar cópia dos dados pessoais mantidos por uma organização |
+| Direito à retificação | Corrigir dados incorretos ou incompletos |
+| Direito ao apagamento | "Direito ao esquecimento" — exclusão de dados em certas circunstâncias |
+| Direito à restrição | Limitar como os dados são processados |
+| Direito de oposição | Opor-se ao processamento para finalidades específicas (ex.: marketing) |
+| Direito à portabilidade | Obter dados num formato estruturado e transferi-los para outra organização |
+
+- **Notificação de violações** — organização deve notificar autoridades e indivíduos em até 72 horas
+- **Coleta de informações e rastreamento:**
+
+| Técnica | Mecanismo |
+|---------|-----------|
+| Cookies HTTP | Pequenos ficheiros de texto armazenados no dispositivo; cookies de terceiros rastreiam entre sites |
+| Fingerprinting de navegador | Combinação de dados do dispositivo (resolução, fontes, plugins) para criar identificador único |
+| Pixels de rastreamento | Imagens invisíveis em e-mails/páginas que enviam dados ao rastreador (IP, tipo de dispositivo) |
+
+- **Configurações de privacidade de perfil** — controlar visibilidade nas plataformas (Facebook: "Amigos apenas", "Listas de Amigos"; LinkedIn: restringir conexões visíveis)
+- **Ferramentas de proteção:**
+
+| Ferramenta | Função | Exemplos |
+|-----------|--------|----------|
+| Bloqueadores de scripts | Controlam quais scripts executam nos sites | NoScript, uMatrix |
+| Bloqueadores de anúncios | Bloqueiam anúncios e rastreadores associados | AdBlock Plus, uBlock Origin |
+| VPN | Mascaram atividade online e encriptam conexão | — |
+| Navegadores focados em privacidade | Minimizam recolha de dados | — |
+
+## Exercícios Guiados
+
+### Exercício Guiado 1: Gerir configurações de privacidade em redes sociais
+
+**Enunciado:** Descreva como gerir as configurações de privacidade em plataformas de redes sociais pode ajudar a proteger suas informações pessoais contra acesso não autorizado. Inclua exemplos específicos de configurações em plataformas como Facebook ou LinkedIn.
+
+**Solução:** Gerir configurações de privacidade ajuda a controlar quem vê informações pessoais, publicações e atividades. No Facebook, pode limitar a visibilidade do perfil para "Amigos" apenas, impedindo estranhos de ver dados pessoais. Usando "Listas de Amigos", pode partilhar publicações apenas com grupos selecionados (ex.: "Amigos Próximos", excluindo "Colegas de Trabalho"). No LinkedIn, definir o perfil para restringir quem vê a lista de conexões impede que recrutadores ou concorrentes acedam à rede. Estas configurações são essenciais para manter a privacidade e reduzir o risco de contacto indesejado.
+
+### Exercício Guiado 2: Bloqueadores de scripts e de anúncios
+
+**Enunciado:** Explique como bloqueadores de scripts e bloqueadores de anúncios podem melhorar a privacidade e segurança online. Discuta a diferença entre os dois tipos de ferramentas.
+
+**Solução:** Bloqueadores de scripts (ex.: NoScript) impedem a execução de scripts potencialmente maliciosos, permitindo ao utilizador escolher quais scripts são habilitados. Protegem contra rastreamento não autorizado e execução de código prejudicial. Bloqueadores de anúncios (ex.: AdBlock Plus) bloqueiam anúncios que contêm elementos de rastreamento e podem evitar malvertising. Enquanto os bloqueadores de scripts controlam código executável e os bloqueadores de anúncios focam em conteúdo visual indesejado, ambas as ferramentas combinadas minimizam a recolha de dados e previnem ameaças à segurança.
+
+### Exercício Guiado 3: Direitos sob o GDPR
+
+**Enunciado:** Quais são os principais direitos dos indivíduos sob o GDPR e como é que eles protegem a privacidade?
+
+**Solução:** Os principais direitos incluem: direito à informação (saber quais dados são coletados e como usados), direito de acesso (obter cópia dos dados mantidos), direito à retificação (corrigir dados incorretos), direito ao apagamento ("direito ao esquecimento"), direito à restrição de processamento, direito de oposição (especialmente a marketing direto) e direito à portabilidade (transferir dados para outra organização). Estes direitos dão aos indivíduos controlo total sobre os seus dados pessoais e obrigam as organizações a tratá-los de forma transparente e responsável.
+
+### Exercício Guiado 4: Impacto do fingerprinting de navegador na privacidade
+
+**Enunciado:** Explique o que é o fingerprinting de navegador e por que é mais difícil de prevenir do que o uso de cookies.
+
+**Solução:** O fingerprinting combina vários dados do dispositivo (resolução de ecrã, fontes instaladas, plugins, sistema operativo) para criar um identificador único do utilizador. Diferente dos cookies, que podem ser eliminados ou bloqueados, as impressões digitais não dependem de dados armazenados no dispositivo — são baseados nas características próprias do equipamento. Isto permite que rastreadores identifiquem e sigam utilizadores entre diferentes sites sem consentimento explícito, tornando esta técnica mais difícil de mitigar sem usar ferramentas especializadas de proteção contra rastreamento.
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1: Comparação de configurações de privacidade entre plataformas
+
+**Enunciado:** Pesquise e compare as configurações de privacidade disponíveis em duas plataformas de redes sociais diferentes. Identifique pelo menos três diferenças principais em como cada plataforma permite aos utilizadores gerir as suas informações pessoais.
+
+
+
+<SolutionBlock>
+**Facebook vs. LinkedIn:**
+
+1. **Visibilidade de publicações**: O Facebook permite definir visibilidade por publicação individual ("Público", "Amigos", "Amigos exceto...", "Apenas eu"), enquanto o LinkedIn foca mais na visibilidade do perfil como um todo e das atualizações de estado.
+
+2. **Listas de contactos**: O Facebook oferece "Listas de Amigos" granulares para partilhar conteúdo com grupos específicos. O LinkedIn organiza contactos em "Conexões" sem a mesma granularidade de partilha por grupo.
+
+3. **Dados de perfil visíveis**: No LinkedIn, informações profissionais (cargo, empresa, histórico) são frequentemente visíveis por defeito para fins de networking. No Facebook, o utilizador tem mais controlo sobre informações pessoais como localização, estado civil e interesses.
+
+Estas diferenças influenciam o tipo de informações a partilhar: no LinkedIn, dados profissionais são mais apropriados; no Facebook, deve restringir dados pessoais sensíveis.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2: Técnicas de rastreamento e métodos de mitigação
+
+**Enunciado:** Explique três técnicas diferentes de rastreamento de utilizadores online e descreva como cada uma pode ser mitigada.
+
+
+
+<SolutionBlock>
+1. **Cookies de terceiros** — rastreiam utilizadores entre sites para publicidade direcionada. Mitigação: bloquear cookies de terceiros nas definições do navegador, limpar cookies regularmente.
+
+2. **Fingerprinting de navegador** — identifica o utilizador por características do dispositivo. Mitigação: usar navegadores focados em privacidade (ex.: Tor Browser), usar extensões que uniformizam características do navegador, variar resolução e plugins.
+
+3. **Pixels de rastreamento** — imagens invisíveis em e-mails que confirmam a abertura e enviam dados do dispositivo. Mitigação: bloquear imagens automáticas em clientes de e-mail, usar clientes de e-mail com proteção contra rastreamento, desativar a carga de imagens externas.
+
+Ferramentas adicionais: VPNs para mascarar o endereço IP e bloqueadores de anúncios para interceptar pedidos de rastreamento.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3: Corretores de dados na dark web
+
+**Enunciado:** O que são "corretores de dados" e como é que os dados pessoais roubados são utilizados após serem compilados nessas plataformas?
+
+
+
+<SolutionBlock>
+Corretores de dados são plataformas, frequentemente encontradas na dark web, que agregam dados pessoais roubados de violações de dados, ataques de phishing e outras atividades ilícitas. Compilam informações como endereços de e-mail, palavras-passe, números de seguro social, detalhes de cartões de crédito e registos médicos em extensos bases de dados. Cibercriminosos compram estes conjuntos de dados para:
+- Roubo de identidade e abertura de contas fraudulentas
+- Fraude financeira e transações não autorizadas
+- Ataques de phishing mais direcionados e convincentes
+- Venda posterior a outros criminosos
+
+A prevenção envolve usar palavras-passe únicas, MFA, monitorar regularmente as contas e verificar periodicamente se os dados foram expostos (ex.: Have I Been Pwned).
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4: Impacto do cyberbullying e prevenção
+
+**Enunciado:** Descreva a diferença entre cyberbullying e cybermobbing, e sugira medidas que os utilizadores podem tomar para se proteger nas redes sociais.
+
+
+
+<SolutionBlock>
+**Cyberbullying** refere-se a ataques repetidos e intencionais (insultos, humilhação, ameaças) realizados por um indivíduo contra outro através de plataformas digitais, frequentemente usando perfis falsos. **Cybermobbing** é quando um grupo se junta para intimidar um indivíduo, amplificando o impacto.
+
+Medidas de proteção:
+- Limitar a quantidade de informações pessoais visíveis no perfil
+- Configurar a privacidade para restringir contactos a pessoas conhecidas
+- Bloquear e reportar utilizadores que pratiquem assédio
+- Não responder a provocações (o silêncio desencoraja o agressor)
+- Guardar evidências (capturas de ecrã) para eventual denúncia
+- Procurar apoio junto de familiares, amigos ou profissionais de saúde mental
+- Utilizar as ferramentas de moderação oferecidas pelas plataformas
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 5: Direito ao esquecimento — alcance e limitações
+
+**Enunciado:** Explique o "direito ao esquecimento" previsto no GDPR, as suas limitações e um exemplo prático de como pode ser exercido.
+
+
+
+<SolutionBlock>
+O direito ao apagamento ("direito ao esquecimento") permite que indivíduos solicitem a exclusão dos seus dados pessoais quando:
+- Os dados já não são necessários para o fim original da recolha
+- O utilizador retira o consentimento
+- Os dados foram processados ilicitamente
+
+**Limitações:**
+- Quando os dados são necessários para cumprir obrigações legais
+- Para fins de interesse público (saúde pública, investigação científica)
+- Para o estabelecimento, exercício ou defesa de direitos em tribunal
+
+**Exemplo prático:** Um utilizador pode solicitar a uma rede social a eliminação completa do seu perfil e dados associados. A organização deve responder num prazo de 30 dias. Se a solicitação for recusada, o utilizador pode apresentar reclamação à autoridade de proteção de dados do seu país.
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T16 - 025.2 Confidencialidade da Informação]()
+→ Fim: [020 - Visão Geral]()

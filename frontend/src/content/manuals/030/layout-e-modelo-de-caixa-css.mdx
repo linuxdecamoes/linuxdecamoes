@@ -1,0 +1,266 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T11 — Layout e modelo de caixa CSS"
+  code="030"
+  topicNumber="T11"
+  objective="033.4"
+  weight={2}
+  pages="LPI Web Development Essentials (030) - Version 1.0"
+  accent="amber"
+/>
+
+
+
+## Resumo Conciso
+
+### Modelo de Caixa
+
+Cada elemento visível em HTML é renderizado como uma **caixa retangular**. O modelo de caixa descreve como o CSS modifica as propriedades visuais dos elementos:
+
+```
+┌─────────────────────────┐
+│        margin           │
+│  ┌───────────────────┐  │
+│  │     border        │  │
+│  │  ┌─────────────┐  │  │
+│  │  │   padding   │  │  │
+│  │  │  ┌───────┐  │  │  │
+│  │  │  │conteúdo│  │  │  │
+│  │  │  └───────┘  │  │  │
+│  │  └─────────────┘  │  │
+│  └───────────────────┘  │
+└─────────────────────────┘
+```
+
+### Fluxo Normal
+
+O fluxo normal é a forma padrão como o navegador renderiza os elementos — de cima para baixo e da esquerda para a direita:
+
+| Tipo de Elemento | Comportamento | Tags Comuns |
+|-----------------|---------------|-------------|
+| **Bloco** | Ocupa toda a largura do pai, empilhados verticalmente | `h1`-`h6`, `p`, `ul`, `ol`, `table`, `li`, `div`, `section`, `form`, `aside` |
+| **Linha** | Posicionados horizontalmente, quebram linha quando não há espaço | `span`, `a`, `em`, `strong`, `img`, `input`, `label` |
+
+- Elementos de bloco irmãos são empilhados dentro do pai, de cima para baixo
+- A altura de um elemento depende do seu conteúdo
+- Contêineres comuns: `div`, `section`, `aside`
+
+### Propriedades margin e padding
+
+| Propriedade | Descrição | Abreviação |
+|------------|-----------|-----------|
+| `margin` | Espaço **externo** entre o elemento e os arredores | `margin-top`, `margin-right`, `margin-bottom`, `margin-left` |
+| `padding` | Espaço **interno** entre os limites do contêiner e os filhos | `padding-top`, `padding-right`, `padding-bottom`, `padding-left` |
+
+**Sintaxe da propriedade abreviada:**
+
+| Valores | Efeito |
+|---------|--------|
+| `margin: 10px` | 10px em todos os lados |
+| `margin: 10px 20px` | 10px superior/inferior, 20px esquerda/direita |
+| `margin: 10px 20px 10px 20px` | Topo, direita, baixo, esquerda (sentido horário) |
+
+- Margens automáticas são ignoradas em caixas flutuantes
+- O `body` tem margens por omissão que podem ser removidas com `margin: 0`
+
+### Propriedade width
+
+A propriedade `width` define um tamanho horizontal fixo (por omissão, os elementos de bloco esticam-se para ocupar toda a largura disponível):
+
+```css
+#first {
+  width: 6em;
+}
+```
+
+### Centralização Horizontal
+
+Para centralizar um elemento com largura fixa, usar margens automáticas:
+
+```css
+#first {
+  width: 6em;
+  margin: 0 auto;  /* margin-top/bottom: 0, margin-left/right: auto */
+}
+```
+
+### Elementos Flutuantes (float)
+
+A propriedade `float` remove um elemento do fluxo normal, permitindo que elementos de bloco irmãos compartilhem o mesmo espaço horizontal:
+
+| Propriedade | Valores | Efeito |
+|------------|---------|--------|
+| `float` | `left`, `right`, `none` | Faz a caixa "flutuar" sobre elementos de bloco seguintes |
+| `clear` | `left`, `right`, `both`, `none` | Impede que um elemento fique ao lado de flutuantes |
+
+- Conteúdo de linha ajusta-se em torno de elementos flutuantes (estilo revista/jornal)
+- `clear: right` — pula elementos flutuantes à direita
+- `clear: left` — pula elementos flutuantes à esquerda
+- `clear: both` — pula todos os elementos flutuantes
+
+### Propriedade position
+
+| Valor | Descrição | Propriedades de posicionamento |
+|-------|-----------|-------------------------------|
+| `static` | Padrão — fluxo normal | Nenhuma (top/right/bottom/left não se aplicam) |
+| `relative` | Segue o fluxo normal mas pode deslocar-se da posição original | `top`, `right`, `bottom`, `left` |
+| `absolute` | Ignora o fluxo normal, posiciona-se relativamente ao contêiner não estático mais próximo | `top`, `right`, `bottom`, `left` |
+| `fixed` | Ignora o fluxo normal, posiciona-se relativamente à janela de visualização (não rola) | `top`, `right`, `bottom`, `left` |
+| `sticky` | Segue o fluxo normal mas fixa-se na posição quando atinge o limite da viewport | `top`, `right`, `bottom`, `left` |
+
+**Notas importantes:**
+- Não é necessário usar todas as propriedades top/right/bottom/left
+- Se definir `top` e `height`, o navegador calcula `bottom` implicitamente
+- Elementos `sticky` são usados para menus sempre visíveis
+
+### Propriedade display
+
+| Valor | Efeito |
+|-------|--------|
+| `block` | Elemento comporta-se como bloco |
+| `inline` | Elemento comporta-se como linha |
+| `flex` | Transforma o elemento num contêiner **flexbox** (filhos lado a lado) |
+| `inline-flex` | O contêiner torna-se inline-level; os filhos continuam *flex items* |
+| `none` | Elemento desaparece completamente do documento renderizado |
+
+### Flexbox
+
+O flexbox foi criado para superar as limitações dos elementos flutuantes:
+
+```css
+#container {
+  display: flex;
+}
+```
+
+- Filhos imediatos do contêiner são renderizados lado a lado
+- Ideal para layouts em coluna/grade simples
+
+### CSS Grid
+
+O CSS Grid é um sistema mais poderoso que emprega linhas e colunas para criar layouts elaborados (mencionado como recurso avançado).
+
+### Design Responsivo e Media Queries
+
+O design responsivo adapta o layout ao tamanho do dispositivo. As **media queries** (`@media`) permitem aplicar regras CSS apenas quando critérios específicos são satisfeitos:
+
+```css
+@media (min-width: 600px) {
+  #container {
+    display: flex;
+  }
+}
+```
+
+- As regras dentro de `@media` são aplicadas apenas se o critério for verdadeiro
+- O navegador reavalia as consultas de média sempre que a janela de visualização muda
+- Permite layout diferente para desktop vs. dispositivos móveis
+
+## 🧭 Exercícios Guiados (resolvidos)
+
+### Exercício Guiado 1 — Posicionamento por omissão
+
+**Enunciado:** Se a propriedade `position` não for modificada, qual método de posicionamento será usado pelo navegador?
+
+**Solução passo a passo:**
+
+1. O valor padrão da propriedade `position` é `static`
+2. No posicionamento estático, o elemento segue o fluxo normal do documento
+3. As propriedades `top`, `right`, `bottom` e `left` não se aplicam a elementos estáticos
+4. **Resposta:** O método `static`
+
+### Exercício Guiado 2 — Propriedade clear
+
+**Enunciado:** Como ter certeza de que a caixa de um elemento será renderizada depois de qualquer elemento flutuante anterior?
+
+**Solução passo a passo:**
+
+1. Usar a propriedade `clear` no elemento que quer posicionar após os flutuantes
+2. Para garantir que pula flutuantes em ambos os lados, usar `both`
+3. **Resposta:** Definir `clear: both` no elemento
+
+### Exercício Guiado 3 — Propriedade abreviada margin
+
+**Enunciado:** Como usar a propriedade abreviada `margin` para definir as margens superior/inferior como 4px e as margens direita/esquerda como 6em?
+
+**Solução passo a passo:**
+
+1. Com dois valores, o primeiro define superior/inferior e o segundo esquerda/direita
+2. É possível misturar unidades diferentes
+3. **Resposta:** `margin: 4px 6em` ou `margin: 4px 6em 4px 6em`
+
+### Exercício Guiado 4 — Centralização horizontal
+
+**Enunciado:** Como centralizar horizontalmente um elemento de contêiner estático com largura fixa na página?
+
+**Solução passo a passo:**
+
+1. Definir a largura fixa com `width`
+2. Usar o valor `auto` nas margens esquerda e direita
+3. O navegador calcula automaticamente o espaço restante e distribui igualmente
+4. **Resposta:** `margin: 0 auto` (ou `margin-left: auto; margin-right: auto`)
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+1. **Enunciado:** Escreva uma regra de CSS que corresponda ao elemento `<div class="picture">` de forma que o texto dentro dos elementos de bloco seguintes se ajustem ao seu lado direito.
+
+   
+
+<SolutionBlock>
+```css
+   .picture {
+     float: left;
+   }
+   ```
+
+   Explicação: A propriedade `float: left` faz a caixa flutuar à esquerda, permitindo que os elementos de bloco seguintes ajustem o conteúdo à sua volta. Para o texto fluir ao lado direito da imagem, a imagem deve flutuar à esquerda.
+</SolutionBlock>
+
+
+
+2. **Enunciado:** Como a propriedade `top` afeta um elemento estático em relação ao seu elemento pai?
+
+   
+
+<SolutionBlock>
+A propriedade `top` não se aplica a elementos estáticos. No posicionamento estático (padrão), as propriedades de posicionamento `top`, `right`, `bottom` e `left` são ignoradas pelo navegador. É necessário alterar a propriedade `position` para `relative`, `absolute`, `fixed` ou `sticky` para que essas propriedades tenham efeito.
+</SolutionBlock>
+
+
+
+3. **Enunciado:** De que maneira o posicionamento de um elemento é afetado no fluxo normal quando a sua propriedade `display` é alterada para `flex`?
+
+   
+
+<SolutionBlock>
+O posicionamento do elemento em si não muda — ele continua a seguir o fluxo normal do documento. No entanto, os seus elementos filho imediatos são renderizados lado a lado horizontalmente, como células de uma linha de tabela. O efeito é sobre os filhos, não sobre o contêiner em si.
+</SolutionBlock>
+
+
+
+4. **Enunciado:** Qual recurso do CSS permite usar um conjunto separado de regras dependendo das dimensões do ecrã?
+
+   
+
+<SolutionBlock>
+As **consultas de média** (`media queries`) permitem ao navegador verificar as dimensões da janela de visualização antes de aplicar uma regra CSS. Exemplo:
+
+   ```css
+   @media (min-width: 600px) {
+     #container { display: flex; }
+   }
+   ```
+
+   As regras dentro de `@media` só são aplicadas se o critério for satisfeito. O navegador reavalia continuamente à medida que a janela é redimensionada.
+</SolutionBlock>
+
+
+
+## 🔗 Ligações
+
+← Anterior: [T10 — Estilização com CSS]()
+→ Próximo: [T12 — Introdução ao JavaScript]()

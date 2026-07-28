@@ -1,0 +1,289 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T12 — Execução e sintaxe de JavaScript"
+  code="030"
+  topicNumber="T12"
+  objective="034.1"
+  weight={1}
+  pages="LPI Web Development Essentials (030) - Version 1.0"
+  accent="amber"
+/>
+
+
+
+## Resumo Conciso
+
+### Executar JavaScript no navegador
+
+O JavaScript é uma linguagem de programação que permite ao navegador atualizar dinamicamente o conteúdo de um website. É executado pelo navegador que visualiza a página web e segue a especificação ECMAScript.
+
+**Inclusão direta no HTML:**
+
+```html
+<html>
+  <head></head>
+  <body>
+    <h1>Website Headline</h1>
+    <p>Content</p>
+    <script>
+      console.log('test');
+    </script>
+  </body>
+</html>
+```
+
+**Inclusão de ficheiro externo:**
+
+```html
+<html>
+  <head>
+    <script src="/button-interaction.js"></script>
+  </head>
+  <body></body>
+</html>
+```
+
+Quando se usa o atributo `src`, qualquer código entre `<script>...</script>` é ignorado.
+
+### Posicionamento do `<script>`
+
+| Localização | Quando usar |
+|---|---|
+| Final do `<body>` | Script depende do conteúdo da página (ex.: interação com botões) |
+| Dentro do `<head>` | Script precisa executar antes do corpo ser analisado |
+
+### Atributos da tag `<script>`
+
+| Atributo | Descrição |
+|---|---|
+| `src` | Define a localização do ficheiro JavaScript externo |
+| `async` | Busca o script em segundo plano sem bloquear o carregamento; executa assim que disponível |
+| `defer` | Busca o script em segundo plano; executa só após todo o HTML ser analisado |
+| `type` | Indica o tipo de script (por omissão na especificação HTML: `text/javascript`); pode desativar scripts com valores arbitrários |
+
+**Importante:** `async` executa na ordem do download, `defer` preserva a ordem das tags. `async` implica `defer` parcialmente — não é necessário usar ambos.
+
+### Console do navegador
+
+| Navegador | Atalho (Windows/Linux) | Atalho (Mac) |
+|---|---|---|
+| Chrome | Ctrl + Shift + J | Cmd + Option + J |
+| Firefox | Ctrl + Shift + K | Cmd + Option + K |
+| Safari | Ctrl + Shift + ? | Cmd + Option + ? |
+
+Também é possível aceder pelo inspetor (clique direito → "Inspecionar" → guia "Console").
+
+### Declarações em JavaScript
+
+- Cada declaração termina com `;` (ponto e vírgula).
+- Espaços em branco (espaços, novas linhas, tabulações) são ignorados.
+- O ECMAScript tenta inserir automaticamente `;` (ASI — Automatic Semicolon Insertion), mas é recomendado sempre os incluir.
+
+**Exemplo com duas declarações:**
+
+```javascript
+var message = "test";
+console.log(message);
+```
+
+### Comentários em JavaScript
+
+| Tipo | Sintaxe | Utilização |
+|---|---|---|
+| Multilinhas | `/* ... */` | Bloco de texto, metainformações |
+| De uma linha | `//` | Comentários pontuais |
+
+```javascript
+/*
+  This script was written in May, 2020.
+*/
+// First, we define a message.
+var message = "test";
+console.log(message); // Output to console
+```
+
+Comentários também servem para remover temporariamente código:
+
+```javascript
+// var message = "test";
+var message = "something else";
+```
+
+## 🧭 Exercícios Guiados (resolvidos)
+
+### Exercício Guiado 1 — Criar uma variável e atribuir um valor
+
+**Enunciado:** Crie uma variável chamada `ColorName` e atribua a ela o valor `RED`.
+
+**Solução passo a passo:**
+
+1. Usar a palavra-chave `var` (ou `let`) para declarar a variável.
+2. Atribuir o valor entre aspas duplas (string).
+3. Terminar a declaração com ponto e vírgula.
+
+```javascript
+var ColorName = "RED";
+```
+
+### Exercício Guiado 2 — Validar scripts JavaScript
+
+**Enunciado:** Quais dos scripts a seguir são válidos?
+
+```javascript
+// Script A
+console.log("hello")
+console.log("world");
+
+// Script B
+console.log("hello");
+console.log("world");
+
+// Script C
+// console.log("hello")
+console.log("world");
+
+// Script D
+console.log("hello");
+console.log("world") //;
+
+// Script E
+console.log("hello"); /*
+console.log("world") */
+```
+
+**Solução passo a passo:**
+
+1. **Script A — Válido:** O primeiro `console.log("hello")` não termina com `;`, mas como está no fim de uma linha e a declaração seguinte não dá continuidade válida à anterior, a ASI (*Automatic Semicolon Insertion*) insere automaticamente o `;` no fim da linha. A segunda declaração já tem `;` explícito.
+2. **Script B — Válido:** Todas as declarações terminam corretamente com `;`.
+3. **Script C — Válido:** O primeiro comando está comentado com `//`, logo é ignorado. `console.log("world");` é válido.
+4. **Script D — Válido:** A última declaração `console.log("world")` não tem `;`, mas o `//;` está dentro de um comentário e não conta. Como se trata da última declaração do script (fim do input), a ASI insere o `;` automaticamente.
+5. **Script E — Válido:** `console.log("hello");` é válido; o restante é um comentário multilinha `/* ... */` e é ignorado.
+
+> [!note] Embora A e D sejam sintaticamente válidos graças à ASI, a boa prática (descrita no resumo) é **terminar sempre** as declarações com `;` para evitar ambiguidades sutis.
+
+### Exercício Guiado 3 — `var`, `let` e `const`
+
+**Enunciado:** Qual é a diferença entre declarar uma variável com `var`, `let` e `const`? Qual deve ser preferida?
+
+**Solução passo a passo:**
+
+1. `var` declara uma variável com **escopo de função** (ou global se estiver fora de qualquer função) e permite reatribuição; é a forma mais antiga.
+2. `let` declara uma variável com **escopo de bloco** (entre `{ ... }`) e também pode ser reatribuída.
+3. `const` declara uma **constante** com escopo de bloco: não pode ser reatribuída após a inicialização (mas os conteúdos de objetos/arrays permanecem mutáveis).
+4. **Resposta:** Prefere-se `const` por omissão e `let` quando se precisa reatribuir; evita-se `var` em código moderno.
+
+```javascript
+const pi = 3.14159;   // não pode ser reatribuído
+let contador = 0;     // pode ser reatribuído
+contador = contador + 1;
+var antigo = "evitar em código moderno";
+```
+
+### Exercício Guiado 4 — Operador de igualdade estrita `===` vs. `==`
+
+**Enunciado:** Qual a diferença entre os operadores `==` e `===`? Dê um exemplo em que dão resultados diferentes.
+
+**Solução passo a passo:**
+
+1. O operador `==` (igualdade **ligeira**) compara valores convertendo os operandos a um tipo comum antes da comparação (**coerção de tipo**).
+2. O operador `===` (igualdade **estrita**) compara valor **e** tipo sem efetuar coerção.
+3. **Exemplo:** `"5" == 5` é `true` (a string é convertida a número), mas `"5" === 5` é `false` (tipos diferentes).
+4. **Resposta:** Recomenda-se usar sempre `===` (e `!==`), pois evita conversões implícitas difíceis de prever.
+
+```javascript
+console.log("5" == 5);   // true  (com coerção)
+console.log("5" === 5);  // false (sem coerção)
+console.log(0 === false); // false
+```
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+1. **Enunciado:** Quantas instruções JavaScript podem ser escritas em uma única linha sem usar um ponto e vírgula?
+   
+
+<SolutionBlock>
+```javascript
+   // Apenas uma declaração pode ser omitida o ponto e vírgula se estiver no final do script.
+   // Exemplo: a última declaração antes do fim do ficheiro pode omitir o ;
+   console.log("hello")
+   ```
+
+   Explicação: Se estivermos no final de um ficheiro/script, podemos escrever uma declaração sem `;` e ela será encerrada automaticamente. Caso contrário, não se pode escrever mais do que uma declaração sem `;` na mesma linha com a sintaxe básica.
+</SolutionBlock>
+
+
+
+2. **Enunciado:** Crie duas variáveis chamadas `x` e `y` e imprima a soma delas no console.
+   
+
+<SolutionBlock>
+```javascript
+   var x = 5;
+   var y = 10;
+   console.log(x + y);
+   ```
+
+   Explicação: Declaramos duas variáveis numéricas e usamos o operador `+` para somá-las dentro de `console.log()`.
+</SolutionBlock>
+
+
+
+3. **Enunciado:** Utilize o operador `typeof` para descobrir o tipo de cada um dos seguintes valores: `"Olá"`, `42`, `true`, `undefined` e `null`.
+   
+
+<SolutionBlock>
+```javascript
+   console.log(typeof "Olá");      // "string"
+   console.log(typeof 42);         // "number"
+   console.log(typeof true);       // "boolean"
+   console.log(typeof undefined);  // "undefined"
+   console.log(typeof null);       // "object" (nota histórica do JavaScript)
+   ```
+
+   Explicação: `typeof` devolve uma string com o nome do tipo do operando. O caso de `null` é uma peculiaridade histórica da linguagem: `typeof null` devolve `"object"` e não `"null"`, pelo que se costuma testar `valor === null` quando se quer distinguir o caso.
+</SolutionBlock>
+
+
+
+4. **Enunciado:** Escreva um script que declare uma variável `nome`, mostre uma saudação na consola com `console.log()` e também numa caixa de alerta com `alert()`. Comente o código com `//` para explicar cada passo.
+   
+
+<SolutionBlock>
+```javascript
+   // Declaração do nome do utilizador
+   let nome = "Maria";
+
+   // Saída na consola do navegador
+   console.log("Olá, " + nome);
+
+   // Caixa de alerta modal (bloqueia até fechar)
+   alert("Bem-vinda, " + nome);
+   ```
+
+   Explicação: `console.log()` escreve na consola de desenvolvimento (não visível na página) e é ideal para depuração; `alert()` abre uma caixa de diálogo modal sobre a página. Os comentários `//` documentam a intenção de cada instrução sem afetar a execução.
+</SolutionBlock>
+
+
+
+5. **Enunciado:** Sem executar o código, preveja o resultado de `"5" + 3` e de `"5" - 3`. Justifique a diferença com base na coerção de tipos.
+   
+
+<SolutionBlock>
+```javascript
+   console.log("5" + 3);  // "53"
+   console.log("5" - 3);  // 2
+   ```
+
+   Explicação: O operador `+`, na presença de uma string, converte o outro operando em string e efetua **concatenação**, pelo que `"5" + 3` resulta em `"53"`. Já o operador `-` não tem significado para strings, por isso o JavaScript converte `"5"` em número e faz subtração numérica, dando `2`. Esta assimetria é uma das razões para preferir conversões explícitas (ex.: `Number("5") + 3`).
+</SolutionBlock>
+
+
+
+## 🔗 Ligações
+
+← Anterior: [T11 — Layout e modelo de caixa CSS]()
+→ Próximo: [T13 — Estruturas de dados em JavaScript]()

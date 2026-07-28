@@ -1,0 +1,189 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="021.2 — Avaliação e Gestão de Riscos"
+  code="020"
+  topicNumber="T02"
+  objective="021.2"
+  weight={3}
+  pages="LPI Security Essentials (020) - Version 1.0"
+  accent="coral"
+/>
+
+
+
+## Resumo Conciso
+
+### Fontes de Informações de Segurança
+
+| Fonte | Descrição | Utilização |
+|-------|-----------|------------|
+| **CVE (Common Vulnerabilities and Exposures)** | Lista padronizada que identifica e categoriza vulnerabilidades em software e hardware | Ponto de referência mundial; linguagem comum para discutir vulnerabilidades |
+| **CVE ID** | Identificador único para cada vulnerabilidade no base de dados CVE | Rastrear vulnerabilidades específicas; inclui detalhes, sistemas afetados e impacto |
+| **CERT (Computer Emergency Response Team)** | Grupos especializados de cibersegurança dedicados a responder a incidentes | Alertas em tempo hábil, orientações de mitigação, partilha de informações |
+
+**Exemplo de entrada CVE:**
+```
+CVE-2024-29824
+Nome: Vulnerabilidade de Injeção de SQL no Ivanti Endpoint Manager (EPM)
+Pontuação: 9.6
+Gravidade: Crítica
+Versão: 3.0
+Fornecedor: Ivanti
+Produto: EPM
+```
+
+### Tipos de Vulnerabilidades
+
+| Tipo | Descrição | Nível de Perigo |
+|------|-----------|-----------------|
+| **Zero-day** | Falhas desconhecidas pelo fornecedor; sem patch disponível | Extremamente perigoso — exploração livre até deteção |
+| **Execução remota** | Permite executar código arbitrário num sistema-alvo a partir de localização remota | Muito alto — comprometimento total do sistema |
+| **Elevação de privilégios (Escalation of Privilege)** | Obtém permissões elevadas além do permitido | Crítico — vertical (níveis superiores) ou horizontal (outros utilizadores) |
+
+### Classificação de Ataques
+
+| Tipo | Características |
+|------|----------------|
+| **Ataques não direcionados** | Tentativas amplas e inespecíficas; oportunistas; usam scripts/ferramentas automatizadas; visam qualquer sistema vulnerável |
+| **Ameaças Persistentes Avançadas (APT)** | Altamente sofisticados e direcionados; infiltram organizações específicas por longo período; furtivos e persistentes; frequentemente patrocinados por estados |
+
+### Avaliações de Segurança e Perícia em TI
+
+| Prática | Descrição | Foco |
+|---------|-----------|------|
+| **Avaliações de segurança** | Análises sistemáticas para identificar vulnerabilidades e avaliar riscos | Vulnerabilidade, auditorias, testes de penetração |
+| **Teste de penetração (Pentesting)** | Simula ataques reais para identificar vulnerabilidades antes de exploração | Lacunas não evidentes em varreduras automáticas |
+| **Perícia em TI (Forense Digital)** | Investigação e análise de incidentes cibernéticos | Causa, alcance, impacto; coleta e preservação de evidências |
+
+### ISMS e Resposta a Incidentes
+
+| Componente | Descrição |
+|------------|-----------|
+| **ISMS (Information Security Management System)** | Estrutura sistemática para gerir dados sensíveis; segue padrão ISO/IEC 27001; abordagem holística (pessoas, processos, tecnologia) |
+| **IRP (Incident Response Plan)** | Procedimentos e ações em caso de violação; roteiro para deteção, análise, contenção, erradicação e recuperação |
+| **ISIRT (Information Security Incident Response Team)** | Equipa multidisciplinar (técnicos, jurídicos, comunicação); coordena processo de resposta a incidentes |
+
+**Ciclo de resposta a incidentes:**
+1. Deteção
+2. Análise
+3. Contenção
+4. Erradicação
+5. Recuperação
+
+## Exercícios Guiados
+
+### Exercício Guiado 1: Importância da Versão do Software
+
+**Enunciado:** Por que é importante verificar o número da versão do software para o qual uma vulnerabilidade foi reportada?
+
+**Solução:** É importante verificar a versão porque pode-se estar a utilizar uma versão que não é afetada pela falha, estando nesse caso protegido contra ela. Por outro lado, é importante evitar uma atualização automática para uma versão de software que contenha uma vulnerabilidade perigosa. A verificação da versão permite determinar com precisão se o sistema está exposto e qual a ação correta a tomar.
+
+### Exercício Guiado 2: Varredura vs. Teste de Penetração
+
+**Enunciado:** Qual é a diferença entre varredura de vulnerabilidades e teste de penetração?
+
+**Solução:** Uma varredura de vulnerabilidades apenas relata se há falhas conhecidas num sistema — é uma verificação passiva que identifica vulnerabilidades catalogadas. O teste de penetração é muito mais poderoso, pois tenta ativamente invadir o sistema, imitando as táticas, técnicas e procedimentos de invasores do mundo real para descobrir fraquezas que podem não ser evidentes em varreduras automáticas. O pentesting identifica lacunas de segurança que outras formas de teste podem não detetar.
+
+### Exercício Guiado 3: Papel dos Advogados na ISIRT
+
+**Enunciado:** Por que advogados são necessários numa Equipa de Resposta a Incidentes de Segurança da Informação (ISIRT)?
+
+**Solução:** As regulamentações determinam alguns aspectos da resposta a incidentes e frequentemente exigem que a organização apresente documentos legais sobre o ataque. Os advogados são necessários para garantir conformidade com requisitos regulatórios, orientar a organização sobre obrigações legais de notificação, gerir questões de responsabilidade civil e assegurar que todas as ações da equipa estejam dentro dos limites legais. Sem assessoria jurídica, a organização pode incorrer em multas ou ações legais adicionais.
+
+### Exercício Guiado 4: Função do ISMS
+
+**Enunciado:** Qual é o papel principal de um Sistema de Gestão de Segurança da Informação (ISMS) numa organização?
+
+**Solução:** O ISMS é uma estrutura sistemática para gerir os dados sensíveis de uma organização e garantir a sua segurança. O seu principal objetivo é proteger a confidencialidade, integridade e disponibilidade das informações, aplicando um processo de gestão de riscos. Envolve identificar possíveis ameaças, avaliar riscos e implementar controlos adequados. O ISMS assume responsabilidade de alto nível pela segurança, garante que administradores estejam cientes de todos os ativos, determina quem deve ter acesso a cada tipo de dado e designa pessoas para garantir que a tecnologia reflita essas políticas. Segue o padrão ISO/IEC 27001 e é dinâmico, permitindo adaptação a ameaças em evolução.
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1: Papéis Organizacionais no ISMS
+
+**Enunciado:** Liste os papéis organizacionais das pessoas que devem fazer parte da equipa responsável pelo desenvolvimento de um ISMS.
+
+
+
+<SolutionBlock>
+Os papéis essenciais incluem:
+
+1. **Administrador de sistemas de cada divisão principal** — para compreender os ativos dessa divisão
+2. **Líder de negócios** — para identificar ativos e determinar quem deve ter acesso
+3. **Gestores de segurança** — pela sua expertise técnica
+4. **Administradores responsáveis por testar a segurança** — para estar cientes de todos os sistemas que precisam de verificação e definir tipos e frequência de testes
+5. **Advogados** — para garantir conformidade legal
+6. **Recursos Humanos** — para garantir que todos os responsáveis pela segurança conheçam o seu papel e recebam treino
+7. **Gestor de nível C (C-level)** — para garantir que a gestão fornece os recursos necessários e priorizar sistemas após um ataque
+8. **Responsáveis pela segurança física** — para proteção da instalação
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2: Resposta da ISIRT a Compromisso de Base de Dados
+
+**Enunciado:** Imagine que um base de dados central foi comprometido por um invasor. Quais são algumas das ações que uma ISIRT poderia tomar?
+
+
+
+<SolutionBlock>
+Ações possíveis da ISIRT:
+
+1. **Isolamento de sistemas**: Remover da rede os sistemas que executam o base de dados, os sistemas conectados e os roteadores que os servem
+2. **Análise forense**: Escanear os sistemas para fins forenses
+3. **Notificação interna**: Notificar funcionários-chave que trabalham com o base de dados e a gerência; evitar anúncio geral até cronograma de recuperação estar pronto
+4. **Alteração de comunicações**: Parar de usar e-mails e dispositivos corporativos se o ataque comprometeu esses canais
+5. **Avaliação de dano**: Identificar a extensão do dano ao base de dados
+6. **Restauração**: Encontrar um backup comprovadamente correto e livre de malware; iniciar novo sistema
+7. **Conformidade**: Preencher formulários a reportar o incidente e notificar autoridades competentes
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3: Vulnerabilidades Zero-day
+
+**Enunciado:** Por que as vulnerabilidades zero-day são consideradas especialmente perigosas em comparação com outras vulnerabilidades de segurança?
+
+
+
+<SolutionBlock>
+As vulnerabilidades zero-day são especialmente perigosas porque:
+
+- São **falhas desconhecidas** pelo fornecedor ou desenvolvedor
+- **Não existe correção ou patch disponível**, permitindo exploração livre
+- Os sistemas permanecem **desprotegidos e altamente vulneráveis** até que sejam detetadas e resolvidas
+- Podem ser exploradas por invasores durante um período prolongado sem que a organização tenha conhecimento
+- Diferente de vulnerabilidades conhecidas, onde existem mitigações, o zero-day oferece **nenhuma defesa conhecida**
+- São frequentemente alvo de APTs e grupos patrocinados por estados
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4: Integração ISMS e Resposta a Incidentes
+
+**Enunciado:** Por que a integração entre o ISMS e o plano de resposta a incidentes é considerada essencial para uma postura de segurança resiliente?
+
+
+
+<SolutionBlock>
+A integração é essencial porque:
+
+- O **ISMS fornece a base proativa** — gestão de riscos, políticas, controlos e prevenção de incidentes
+- O **plano de resposta a incidentes garante a preparação reativa** — capacidade de reagir rapidamente e eficazmente quando um incidente ocorre
+- A **abordagem dupla** permite que as organizações minimizem a probabilidade de incidentes E mitiguem o impacto quando ocorrem
+- Protege simultaneamente a **reputação**, a **conformidade legal** e a **continuidade operacional**
+- Promove uma **cultura de conscientização** onde todos os funcionários compreendem as suas responsabilidades
+- Programas regulares de treino mantêm a equipa informada sobre ameaças recentes e protocolos a seguir
+
+Sem essa integração, uma organização pode ter políticas sólidas mas não estar preparada para responder eficazmente a um incidente, ou ter uma equipa de resposta mas não ter a estrutura de gestão para apoiar os seus esforços.
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T01 - 021.1 Objetivos, Funções e Atores]()
+→ Próximo: [T03 - 021.3 Comportamento Ético]()

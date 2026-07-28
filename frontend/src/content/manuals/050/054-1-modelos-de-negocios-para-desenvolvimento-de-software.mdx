@@ -1,0 +1,151 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T10 — 054.1 Modelos de negócios para desenvolvimento de software"
+  code="050"
+  topicNumber="T10"
+  objective="054.1"
+  weight={2}
+  pages="LPI Open Source Essentials (050) - Version 1.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Razões para lançar software sob licença aberta
+
+| Razão | Descrição |
+|---|---|
+| **Enriquecer projeto existente** | Compartilhar trabalho reduz custos de desenvolvimento e atrai contribuições |
+| **Inovação e contribuições do cliente** | Correções de bugs e novos recursos melhoram o software original |
+| **Confiança entre clientes** | Clientes podem verificar qualidade, segurança e continuar usar mesmo se a empresa desaparecer |
+| **Padrão da indústria** | Compartilhar código promove interoperabilidade e permite direcionar o futuro do projeto |
+
+### Modelos de negócios comuns
+
+| Modelo | Descrição |
+|---|---|
+| **Suporte** | Cobre instalação, configuração, correção de bugs e gestão; taxas de retenção pagas regularmente |
+| **Freemium** | Produto base gratuito com opção de pagar por mais recursos; variação do modelo razor and blades |
+| **Open Core (Núcleo aberto)** | Recursos básicos em código aberto, recursos adicionais proprietários pagos — geralmente decepciona |
+| **SaaS (Software as a Service)** | Serviço web com pagamento mensal/anual; pode complementar com anúncios ou venda de dados (ver modelos de nuvem) |
+| **Desenvolvimento sem receita direta** | Empresa abre código porque ganha com hardware ou outras ofertas proprietárias (ex.: Google, Amazon) |
+
+### Impacto das licenças nos modelos de negócios
+
+- Algumas licenças (copyleft) exigem distribuição do código-fonte alterado sob a mesma licença
+- Licenças permissivas permitem uso mais livre em produtos proprietários
+- A licença determina se o desenvolvedor pode manter alterações em segredo ou deve partilhá-las
+
+### Considerações do ponto de vista do cliente
+
+- **Confiança**: o software não depende de uma única empresa
+- **Verificação de qualidade e segurança**: código-fonte disponível para auditoria
+- **Suporte da comunidade**: fóruns ativos facilitam contratação de pessoas familiarizadas com o código
+- **Autonomia**: possibilidade de corrigir bugs ou contratar quem o faça
+
+### Estruturas de custos e investimentos
+
+- Programadores com conhecimento em grandes projetos de código aberto são muito procurados
+- Investimento necessário para adaptar código interno a uma comunidade global
+- Dívida técnica: código mal escrito é frágil e difícil de atualizar
+- Necessidade de eliminar segredos comerciais, palavras-passe e credenciais do código
+- Tempo necessário para educar, orientar e verificar contribuições externas
+
+## Exercícios Guiados
+
+### Exercício Guiado 1 — Confiança do cliente
+
+**Enunciado:** Como o código-fonte aberto melhora a confiança do cliente no software?
+
+**Solução:** Os clientes podem verificar a qualidade e a segurança do código. Eles também sabem que podem continuar usando o código mesmo se os desenvolvedores originais pararem de dar suporte a ele.
+
+### Exercício Guiado 2 — Núcleo aberto
+
+**Enunciado:** Por que as empresas são tentadas a experimentar um modelo de negócios de núcleo aberto e por que o modelo não consegue oferecer os benefícios do software de código aberto?
+
+**Solução:** À primeira vista, o núcleo aberto parece oferecer todas as vantagens do software de código aberto sem interferir no modelo de negócios proprietário de venda de licenças para usar o software. Na prática, porém, o modelo de negócios de núcleo aberto não proporciona as vantagens do código aberto, embora tenha os mesmos custos de desenvolvimento.
+
+### Exercício Guiado 3 — Ajuda a colaboradores externos
+
+**Enunciado:** Quais são os tipos mais comuns de ajuda que os desenvolvedores dão aos colaboradores externos em seus projetos de código aberto?
+
+**Solução:** Os desenvolvedores de um projeto normalmente educam e orientam os colaboradores externos e verificam se suas contribuições atendem aos padrões de qualidade e escrita de código da equipe.
+
+### Exercício Guiado 4 — Modelo de suporte
+
+**Enunciado:** Qual é a principal fonte de receita no modelo de suporte para software de código aberto e por que os clientes estão dispostos a pagá-la?
+
+**Solução:** No modelo de suporte, os clientes pagam por contratos que garantem ajuda oportuna para necessidades complexas, como instalação, configuração, correção de bugs e gestão de sistemas. Os clientes estão dispostos a pagarem porque a equipa de desenvolvimento é a fonte mais qualificada de suporte, já que conhece profundamente o código que escreveu.
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Fatores para adotar código aberto
+
+**Enunciado:** Você está considerando basear um produto proprietário em um projeto de código aberto. Quais fatores devem ser levados em consideração antes de tomar a decisão?
+
+
+
+<SolutionBlock>
+Primeiro, decida se o software de código aberto atende às suas necessidades. Verifique sua qualidade, as falhas de segurança relatadas publicamente e a saúde da comunidade ao redor dele. Verifique a licença cuidadosamente para ver se ela exige que tu partilhes as suas modificações no código. Determine o quanto tu quer participar da comunidade do projeto de código aberto e como definirá as funções que seus desenvolvedores desempenharão nessa comunidade.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Licença e contribuições
+
+**Enunciado:** Você construiu diversos produtos, pelos quais cobra uma assinatura, em cima de um projeto de código aberto. O que tu farás se a licença de código aberto exigir que todo o seu código seja devolvido para o projeto como contribuição? Além disso, tu adicionaste o suporte a alguns novos protocolos de comunicação ao projeto de código aberto para atender às suas necessidades proprietárias. Se tiveres escolha, tu pedirias ao projeto de código aberto para integrar esse suporte de protocolo ao código principal?
+
+
+
+<SolutionBlock>
+Se o projeto não exigir que tu partilhe as alterações no código, tu provavelmente não o fará, já que é mais fácil cobrar uma assinatura por um produto proprietário. Se tiver que partilhar seu código, ofereça uma assinatura para uma distribuição auto-hospedada. Mas mesmo que o partilha do código não seja obrigatório, seria interessante pedir ao projeto que integre seu suporte para protocolos de comunicação — assim, tu não serás forçado a reimplementar esse suporte toda vez que instalar uma nova versão do código aberto.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Software SaaS e código aberto
+
+**Enunciado:** Que vantagens e desvantagens existem em construir um serviço SaaS sobre software de código aberto?
+
+
+
+<SolutionBlock>
+**Vantagens:** redução de custos de desenvolvimento, possibilidade de contribuições da comunidade, maior segurança através da auditoria pública do código e facilidade de contratar pessoas familiarizadas com a base de código. **Desvantagens:** concorrência direta com outros provedores para o mesmo software, necessidade de oferecer valor acrescentado (suporte, segurança, escalabilidade) para justificar cobrança e risco de clientes optarem pela auto-hospedagem gratuita.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Dívida técnica
+
+**Enunciado:** O que é dívida técnica e por que é especialmente relevante em projetos de código aberto?
+
+
+
+<SolutionBlock>
+Dívida técnica refere-se a problemas acumulados de código mal escrito, frágil, difícil de atualizar e propenso a bugs complexos. Em projetos de código aberto, é especialmente relevante porque o código é exposto a potenciais contribuidores e clientes que avaliam a qualidade antes de adotá-lo. Código com muita dívida técnica repelle contribuintes e clientes, e corrige-lo o mais cedo possível beneficia todos os utilizadores do software.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 5 — Por que o código livre não é gratuito
+
+**Enunciado:** Muitas pessoas assume que software de código aberto é gratuito e sem custos. Explique por que esta afirmação é enganosa do ponto de vista de uma empresa que pretende usar ou contribuir para um projeto de código aberto.
+
+
+
+<SolutionBlock>
+Embora o software de código aberto não tenha custos de licenciamento, existem vários custos associados: programadores com conhecimento em grandes projetos são muito procurados e caros; é necessário investir tempo para adaptar código interno a uma comunidade global; código com dívida técnica exige correção antes de ser partilhado; segredos comerciais e credenciais devem ser eliminados do código; e a equipa precisa de dedicar tempo a educar, orientar e rever contribuições externas. Em resumo, código livre não é livre de custos — é simplesmente um modelo diferente de desenvolvimento.
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T09 - 053.3 Outras licenças de conteúdo aberto]()
+→ Próximo: [T11 - 054.2 Modelos de negócios para prestadores de serviços]()

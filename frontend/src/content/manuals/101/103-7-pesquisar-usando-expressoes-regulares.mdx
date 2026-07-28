@@ -1,0 +1,193 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="103.7 Pesquisar usando expressões regulares"
+  code="101"
+  topicNumber="T16"
+  objective="Pesquisar em texto e ficheiros usando expressões regulares e o comando grep"
+  weight={2}
+  pages="LPIC-1 (101) - Version 5.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Conceitos de expressões regulares
+
+| Símbolo | Significado |
+|---------|-------------|
+| `.` | Qualquer caractere (exceto quebra de linha) |
+| `*` | Zero ou mais vezes (pode não haver nenhuma ocorrência) |
+| `.*` | Qualquer caractere qualquer número de vezes |
+| `^` | Início da linha |
+| `$` | Fim da linha |
+| `\b` | Delimitador de palavra |
+| `\d` | Qualquer dígito |
+| `\w` | Caractere de palavra (letra, número ou _) |
+| `\` | Escapa caracteres especiais |
+| `[0-9]` | Qualquer dígito (intervalo) |
+| `[^0-9]` | Qualquer coisa que não seja dígito |
+| `[a-z]` | Qualquer letra minúscula (intervalo) |
+| `\|` | OU lógico |
+
+> [!note] `\d` e `\w` são classes PCRE (Perl). Com `grep -E` (ERE) são tratadas como literais (`d`, `w`). Para as utilizar empregue `grep -P`. Em ERE, use `[0-9]` no lugar de `\d` e `[A-Za-z0-9_]` no lugar de `\w`.
+
+### Comandos de pesquisa
+
+| Comando | Descrição |
+|---------|-----------|
+| `grep` | Pesquisa em ficheiros e saídas |
+| `-c` | Retorna número de linhas correspondentes |
+| `-i` | Ignora maiúsculas/minúsculas |
+| `-l` | Retorna apenas nomes de ficheiros |
+| `-n` | Mostra números das linhas |
+| `-r` | Pesquisa recursivamente em directórios |
+| `-v` | Inverte a correspondência (não correspondência) |
+| `-E` | Usa expressão regular estendida |
+| `-P` | Usa expressão regular Perl |
+
+### Usando grep
+
+```bash
+grep "root" /etc/passwd           # Busca "root" em ficheiro
+grep -c "bash" /etc/passwd        # Conta ocorrências
+grep -i "error" /var/log/syslog   # Ignora maiúsculas
+grep -r "iptables" /etc/          # Busca recursiva
+grep -n "root" /etc/passwd        # Mostra número da linha
+grep -v "^#" /etc/ssh/sshd_config # Remove comentários
+grep -E "^[A-Z].*:" mypasswd      # Regex estendida
+```
+
+### Uso no pipe
+
+```bash
+ls -l | grep "\.conf$"            # Ficheiros .conf
+cat /var/log/auth.log | grep -i "fail"
+cat /etc/passwd | grep -c "bash"
+ls -la | grep -v "^d" | grep -v "^t"
+```
+
+### Operadores lógicos em expressões
+
+```bash
+# OU (alternativa com pipe ou grep -E)
+grep -E "cavalo|gato|coelho" animals.txt
+
+# Qualquer dígito de 1 a 3 vezes
+grep -E "[0-9]{1,3}" ficheiro.txt
+```
+
+### Pesquisa em directórios inteiros
+
+```bash
+grep -r "password" /home/john/
+```
+
+### Resumo visual de metacaracteres
+
+| Metacaractere | Descrição |
+|---------------|-----------|
+| `.` | Qualquer caractere |
+| `*` | Zero ou mais vezes |
+| `^` | Início da linha |
+| `$` | Fim da linha |
+| `\b` | Delimitador de palavra |
+| `\d` | Qualquer dígito |
+| `\w` | Caractere de palavra |
+| `[0-9]` | Qualquer dígito |
+| `[^0-9]` | Qualquer coisa que não seja dígito |
+| `\|` | OU lógico |
+
+## Exercícios Guiados
+
+1. **Pesquisar e contar ocorrências:**
+   ```bash
+   $ grep -c "bash" /etc/passwd
+   ```
+
+2. **Pesquisar com pipe:**
+   ```bash
+   $ cat /etc/passwd | grep -c "bash"
+   ```
+
+3. **Pesquisar com regex:**
+   ```bash
+   $ grep -E "^[A-Z].*:" mypasswd | wc -l
+   ```
+
+4. **Pesquisa recursiva:**
+   ```bash
+   $ grep -r "password" /home/john/
+   ```
+
+5. **Pesquisar com delimitadores:**
+   ```bash
+   $ grep -E "^[A-Z].*:" mypasswd | cut -d: -f5 | cut -d, -f1
+   ```
+
+## Exercícios Exploratórios
+
+1. **Pesquisar erros em logs:**
+   
+
+<SolutionBlock>
+```bash
+   $ grep -i "error" /var/log/syslog | head -20
+   ```
+</SolutionBlock>
+
+
+
+2. **Pesquisar por IP em logs:**
+   
+
+<SolutionBlock>
+```bash
+   $ grep -E "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" /var/log/auth.log | head -5
+   ```
+</SolutionBlock>
+
+
+
+3. **Pesquisar por número de telefone:**
+   
+
+<SolutionBlock>
+```bash
+   $ grep -E "^[0-9]{3}-[0-9]{4}$" telefones.txt
+   ```
+</SolutionBlock>
+
+
+
+4. **Pesquisar por e-mail:**
+   
+
+<SolutionBlock>
+```bash
+   $ grep -E "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" emails.txt
+   ```
+</SolutionBlock>
+
+
+
+5. **Pesquisar por data:**
+   
+
+<SolutionBlock>
+```bash
+   $ grep -E "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" datas.txt
+   ```
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T15 - 103.6 Modificar prioridades de execução]()
+→ Próximo: [T17 - 103.8 Edição básica de arquivos com o vi]()

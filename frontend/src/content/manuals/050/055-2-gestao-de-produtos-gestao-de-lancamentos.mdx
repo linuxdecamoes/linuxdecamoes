@@ -1,0 +1,185 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T14 — 055.2 Gestão de produtos/Gestão de lançamentos"
+  code="050"
+  topicNumber="T14"
+  objective="055.2"
+  weight={2}
+  pages="LPI Open Source Essentials (050) - Version 1.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Características das versões
+
+| Conceito | Descrição |
+|---|---|
+| **Versão estável** | Funciona de forma confiável sem travar, corromper dados ou produzir resultados incorretos; interface compatível com versões anteriores |
+| **Versão instável** | Pode conter bugs significativos ou alterações na interface; útil para testes de novos recursos |
+| **Lançamento alfa** | Versão inicial para teste; não serve para trabalho real; bugs podem danificar dados |
+| **Lançamento beta** | Versão próxima da estabilidade; ainda apenas para teste |
+| **Release Candidate** | Versão estável pronta para lançamento; mostrada a principais clientes para planeamento |
+
+### Retrocompatibilidade
+
+| Nível | Compromisso |
+|---|---|
+| **API (Application Programming Interface)** | Código-fonte antigo continua a funcionar, mas pode ser necessário recompilar |
+| **ABI (Application Binary Interface)** | Executáveis de versões anteriores podem ser executados nas novas versões de hardware |
+
+- Os projetos procuram não remover recursos ou funções de versões antigas
+- Quando a retrocompatibilidade não pode ser preservada, o número da versão principal é alterado
+
+### Suporte e Fim de Vida (EOL)
+
+| Conceito | Descrição |
+|---|---|
+| **Suporte** | Compromisso de corrigir bugs e falhas de segurança numa versão |
+| **EOL (End Of Life)** | Data em que o suporte termina; utilizadores precisam atualizar |
+| **LTS (Long Term Support)** | Versões com suporte estendido por vários anos; valorizadas por grandes instituições |
+| **Sem suporte** | Lançamento sem compromisso de correção; utilizadores podem corrigir por conta própria (código aberto) |
+
+### Versionamento semântico
+
+| Número | Significado | Exemplo |
+|---|---|---|
+| **Versão principal** | Atualização muito significativa; quebra de retrocompatibilidade | **1**.0 |
+| **Versão secundária** | Novos recursos adicionados | 1.**2** |
+| **Patch** | Correção de bugs ou alterações menores | 1.0.**1** |
+
+- Versões 0.x indicam software instável sem garantia de retrocompatibilidade
+- Versões alfa: acréscimo de "a" ou "alpha" (ex.: 3.6alpha)
+- Versões beta: acréscimo de "b" ou "beta" (ex.: 3.6beta)
+- Agrupamento: "x" indica múltiplas versões (ex.: 1.x)
+
+### Ciclo de vida do produto de software
+
+| Etapa | Descrição |
+|---|---|
+| **Planejamento e roteiros** | Definição antecipada de mudanças; issue tracker para bugs e novos recursos |
+| **Roadmap** | Plano publicado de melhorias e mudanças; estende-se por múltiplos lançamentos (ver ciclo de vida do produto) |
+| **Milestone (Marco)** | Etapa associada ou não a uma data-alvo |
+| **Congelamento de recursos** | Parar de aceitar novos recursos e concentrar-se em estabilizar os existentes |
+| **Agendamento orientado por tempo** | Lançamentos em intervalos regulares (ex.: a cada seis meses) |
+| **Agendamento orientado por recursos** | Inclusão de certos recursos sem data fixa de lançamento |
+
+### Documentação para versões de produto
+
+| Documento | Conteúdo |
+|---|---|
+| **Roadmap** | Recursos planeados para cada lançamento |
+| **Changelog** | Lista de alterações: novos recursos, alterações, remoções, recursos obsoletos, correções de bugs |
+
+- Utilizadores devem prestar atenção especial a recursos removidos ou obsoletos
+- A documentação deve ser atualizada a cada lançamento
+
+## Exercícios Guiados
+
+### Exercício Guiado 1 — Versão estável vs. instável
+
+**Enunciado:** O que distingue uma versão estável de uma instável?
+
+**Solução:** As versões são consideradas estáveis de acordo com dois critérios: funcionam bem sem travar ou produzir resultados incorretos, e a interface apresentada aos utilizadores ou programadores é compatível com as versões anteriores. Versões instáveis podem conter bugs significativos ou alterações na interface.
+
+### Exercício Guiado 2 — Diferença entre patches
+
+**Enunciado:** Você esperaria uma diferença de recursos entre uma versão chamada 2.6.14 e uma chamada 2.6.15?
+
+**Solução:** **Não.** O terceiro número no versionamento semântico indica um patch, feito para corrigir um bug ou executar alguma outra tarefa menor, como uma reformatação. Uma alteração nos recursos engendraria o lançamento de uma nova versão secundária ou principal.
+
+### Exercício Guiado 3 — Beta vs. versão estável
+
+**Enunciado:** Você esperaria uma diferença de recursos entre uma versão chamada 2.6.0beta e uma chamada 2.6.0?
+
+**Solução:** **Não.** A versão beta é uma versão de teste que contém todos os recursos a serem incluídos na versão final. A diferença reside na estabilidade e testes, não no conjunto de funcionalidades.
+
+### Exercício Guiado 4 — Retrocompatibilidade entre 0.9 e 1.0
+
+**Enunciado:** Por que uma versão 1.0 pode não ser retrocompatível com a versão 0.9?
+
+**Solução:** O número 0.9 avisa explicitamente os potenciais utilizadores de que o software ainda está a ser projetado e muito provavelmente terá uma interface diferente quando for estabilizado como versão 1.0. Não há garantia de retrocompatibilidade até à versão 1.0.
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Utilizar software após EOL
+
+**Enunciado:** Vamos supor que tu queira continuar a usar uma versão de um software open source após o EOL, pois ele tem um recurso de que tu precisa. O que é possível fazer para mantê-lo operacional?
+
+
+
+<SolutionBlock>
+Após o EOL, os desenvolvedores do projeto não têm o compromisso de corrigir bugs, incluindo falhas de segurança. Portanto, é necessário:
+- Seguir o rastreador de bugs e as listas de discussão do projeto para descobrir novos bugs
+- Corrigir os bugs na sua versão (o código está disponível)
+- Opcionalmente, incorporar novos recursos, criando um fork (bifurcação) do original
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Critérios de priorização
+
+**Enunciado:** Descreva alguns critérios que podem fazer uma correção de bug ou um recurso ter prioridade sobre outros.
+
+
+
+<SolutionBlock>
+**Para correções de bugs:**
+- Gravidade do bug (atribuída no rastreador de bugs)
+- Número de utilizadores afetados
+
+**Para novos recursos:**
+- Número de utilizadores que desejam o recurso
+- Dificuldade de codificação
+- Impacto potencial sobre outras partes do programa
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Congelamento de recursos e lançamento
+
+**Enunciado:** Um projeto está prestes a lançar uma nova versão estável. Após o congelamento de recursos, um colaborador descobre uma falha de segurança crítica. O que deve ser feito com esta falha em relação ao lançamento planeado?
+
+
+
+<SolutionBlock>
+A falha de segurança crítica **deve ser corrigida antes do lançamento**, mesmo após o congelamento de recursos. O período entre o congelamento de recursos e o lançamento é precisamente pensado como um tempo para descobrir e corrigir falhas, incluindo falhas de segurança. A equipa deve:
+
+1. Avaliar a gravidade da falha e o número de utilizadores potencialmente afetados
+2. Criar um patch de segurança urgentemente
+3. Incluir o patch na versão a ser lançada
+4. Se a correção atrasar significativamente o lançamento, considerar atrasar a data em vez de lançar software com uma falha de segurança conhecida
+
+A segurança do utilizador deve sempre ter prioridade sobre o cumprimento de prazos de lançamento.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Escolha entre agendamento orientado por tempo e por recursos
+
+**Enunciado:** Imagine que gere um projeto de código aberto com colaboradores voluntários. Deve optar por lançamentos orientados por tempo (ex.: a cada 6 meses) ou orientados por recursos (lançar quando todos os recursos estiverem prontos)? Justifique a sua resposta.
+
+
+
+<SolutionBlock>
+A escolha depende do contexto, mas para um projeto com colaboradores voluntários, o **agendamento orientado por recursos** pode ser mais realista. As razões incluem:
+
+- **Voluntários têm disponibilidade irregular**: não se pode garantir que certos recursos estarão prontos numa data fixa
+- **Qualidade sobre pressa**: lançar quando os recursos estão prontos evita versões instáveis que desencorajam utilizadores
+- **FLEXIBILIDADE**: permite incluir contribuições externas sem pressão artificial de prazos
+
+No entanto, um híbrido pode ser a melhor abordagem: definir datas-alvo para lançamentos (orientado por tempo) mas ser flexível na inclusão de recursos, lançando apenas o que estiver pronto. O Ubuntu, por exemplo, combina lançamentos LTS com prazos fixos e lançamentos intermediários com os recursos disponíveis.
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T13 - 055.1 Modelos de desenvolvimento de software]()
+→ Próximo: [T15 - 055.3 Gestão da comunidade]()

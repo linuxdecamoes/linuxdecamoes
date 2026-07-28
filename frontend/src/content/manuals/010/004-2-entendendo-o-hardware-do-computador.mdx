@@ -1,0 +1,293 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="Entendendo o Hardware do Computador"
+  code="010"
+  topicNumber="T13"
+  objective="4.2"
+  weight={2}
+  pages="Linux Essentials (010) - Version 4.1"
+  accent="sage"
+/>
+
+
+
+## Resumo Conciso
+
+### Papel do Linux face ao hardware
+- Sem o hardware, o software "nada mais é do que literatura". O Linux fornece **interfaces padronizadas** que permitem ao software aceder ao hardware (processamento, armazenamento, E/S). Mesmo a nuvem assenta em hardware físico.
+- Os **padrões** (conectores, fatores de forma) são estáticos; **desempenho e capacidade** evoluem. Os conceitos da lição permanecem válidos apesar das mudanças físicas.
+
+### Fontes de alimentação e arrefecimento
+- **Fontes de alimentação** normalizam a eletricidade (tomada → tensões com tolerância estreita). Permitem componentes globais. Servidores usam **várias fontes** (redundância).
+- Energia = calor; calor excessivo abranda/interrompe componentes. Usa-se **ventoinhas** + **dissipadores de calor** (heatsinks), muitas vezes com ventoinha própria, sobre os processadores.
+
+### Placa-mãe
+- **Interliga** todo o hardware via conectores padronizados e fatores de forma; fornece configuração e necessidades elétricas.
+- **Firmware** (memória não-volátil) configura/inicializa o hardware antes do SO arrancar:
+  - **BIOS** — firmware original (Basic Input/Output System).
+  - **EFI** (Intel) → cedido a organismo de normalização → **UEFI** (Unified Extensible Firmware Interface). Hoje quase todas as placas usam UEFI. A maioria das pessoas ainda diz "BIOS".
+- Opção frequentemente alterada no firmware: ativar **extensões de virtualização**.
+
+### Memória do sistema (RAM)
+- Conserva dados e código dos programas em execução. Termos: **RAM, DIMM, SIMM, DDR**. Fisicamente em módulos na placa-mãe (2 GB – 64 GB cada).
+- **Mínimos típicos:** 4 GB (uso geral), 16 GB (workstation), 128-256 GB (servidores).
+- **Swap (espaço de troca):** área no disco para onde o Linux move aplicações inativas quando a RAM é insuficiente.
+- Sistemas sem vídeo dedicado usam parte da RAM (~1 GB) como memória de vídeo.
+- **Inspeção:**
+
+```bash
+free -m      # em MiB
+free -h      # legível (GiB/MiB)
+```
+Saída: `total / used / free / shared / buff/cache / available` (linha `Mem:`) e idem para `Swap:`.
+
+### Processadores (CPU)
+- **Processador** = termo geral; **CPU** = Unidade Central de Processamento de uso geral; **GPU** = processador gráfico. "Toda CPU é processador, nem todo processador é CPU."
+
+| Designação | Significado |
+|------------|-------------|
+| **i386** | Instruções 32 bits (Intel 80386) |
+| **x86** | 32 bits, sucessores do 80386 (80486, Pentium…) |
+| **x64 / x86-64** | Suporta 32 e 64 bits da família x86 |
+| **AMD64** | x64 da AMD |
+| **ARM** | CPU RISC, não-x86 (embarcados/móveis; Raspberry Pi) |
+
+- **Fatores a considerar:**
+  - **Tamanho do bit** — 32 vs. 64 bits. Sistemas 64 bits acedem >4 GB; apps 64 bits não correm em CPUs 32 bits.
+  - **Velocidade de clock** (MHz/GHz) — rapidez de execução; PCs desktop raramente passam 2-3 % de CPU ativa.
+  - **Cache** — memória ultra-rápida **dentro** do chip; camadas **L1, L2, L3, L4**.
+  - **Núcleos** — CPUs físicas; **HTT (Hyper-Threading)** = núcleo atua como vários. Mais núcleos ajudam em tarefas paralelas (renderização, VMs multiutilizador).
+
+```bash
+cat /proc/cpuinfo      # detalhe extenso
+lscpu                  # vista amigável (Architecture, CPU(s), cores, flags…)
+```
+
+### Armazenamento
+- **HDD** — discos magnéticos rotativos (físicos, herméticos). **SSD** — chips, sem partes móveis (versão evoluída das USBs).
+- **Comparação:** SSD 3-10× mais caro por GB; acesso **aleatório** vs. HDD tem latência rotacional; SSD 3-5× mais rápido, consome menos energia, mais fiável.
+- Capacidades comuns: HDD 5 TB, SSD 1 TB. Mas mais capacidade = maior perda em falha + backups mais longos.
+- **Interfaces:** SCSI ou SATA ligados à placa-mãe; a **ordem de boot** é definida no firmware.
+- **RAID** (Redundant Array of Independent Disks) — vários discos com cópias/paridade; níveis **0, 1, 5, 6, 10** (compromissos capacidade/desempenho/redundância). Transparente para o utilizador.
+
+```bash
+lsblk        # lista dispositivos de bloco e partições
+lsblk -f     # com FSTYPE/LABEL/UUID/MOUNTPOINT
+```
+
+### Partições
+- Mecanismo que diz ao Linux para tratar uma longa sequência de blocos como **uma ou várias** sequências independentes.
+- Cada partição funciona como dispositivo individual; mas **partilham o mesmo hardware físico** — se o disco falha, todas as partições falham.
+- Disco bruto precisa de ser **formatado** (sistema de ficheiros) antes de operações de ficheiros.
+- **Usos típicos:** gerir espaço, isolar encriptação, suportar vários sistemas de ficheiros, multi-boot.
+- **LVM** (Logical Volume Manager) — software que combina discos/partições numa única unidade lógica.
+
+### Periféricos
+- Fornecem **E/S e acesso ao mundo exterior** (teclado, rato, som, vídeo, rede).
+- Placas-mãe atuais integram: **Ethernet, HDMI, USB** (várias versões numa só placa). **Slots de expansão** para placas dedicadas (gráfica, som, rede, RAID, legados série/paralelo).
+- **SoC (System on a Chip)** — CPU+memória+SSD+controladores num único circuito integrado. Mais eficientes (energia, espaço, fiabilidade); usados em telemóveis, tablets, Raspberry Pi.
+- **Laptops / Tudo-em-Um** — periféricos incorporados de fábrica.
+
+### Drivers e ficheiros de dispositivo
+- **Driver** = aceita pedidos padronizados do SO e traduz nos controlos específicos de cada dispositivo → permite ignorar detalhes (HDD, SSD, USB, encriptado…).
+- **Ficheiros de dispositivo** em `/dev`:
+  - SCSI/SATA: prefixo **`sd`** + letra (a, b, c…) por dispositivo físico + número por partição.
+    - `/dev/sda` = dispositivo inteiro; `/dev/sda3` = partição 3 de `sda`.
+  - Cartões SD: prefixo **`mmcblk`** + `p` + dígito (`mmcblk0p1`, `mmcblk0p2`).
+- Ao listar `ls -l /dev/...` nota-se:
+  - **1ª letra:** `b` (block device) ou `c` (character device).
+  - **Campo "tamanho":** dois números separados por vírgula (driver + dispositivo).
+  - **Nome:** prefixo + identificador + sufixo partição.
+- O conteúdo de `/dev` é criado na instalação: **existem entradas para todos os drivers/dispositivos possíveis**, mesmo ausentes.
+
+| **Processador** | Termo geral que se aplica a **qualquer** tipo de processador. Frequentemente (e mal) usado como sinónimo de CPU. |
+|---|---|
+| **CPU** | **Unidade Central de Processamento** — unidade de processamento que suporta as tarefas computacionais de **uso geral**. |
+| **GPU** | **Unidade de Processamento Gráfico** — otimizada para suportar atividades relacionadas com a **apresentação de imagens**. |
+
+### Guiado 2 — Componentes críticos para edição de vídeo
+
+**Enunciado:** *Ao executar principalmente aplicativos de edição de vídeo (atividade intensiva em computação), quais componentes/characterísticas teriam o maior impacto na usabilidade: CPU cores · CPU speed · Available system memory · Storage system · GPU · Video display?*
+
+**Solução:**
+
+| Componente | Impacta? | Justificação |
+|------------|----------|--------------|
+| **Núcleos de CPU** | ✅ Sim | Múltiplos núcleos suportam tarefas **concorrentes** de apresentação e renderização. |
+| **Velocidade da CPU** | ✅ Sim | Renderização exige atividade computacional significativa. |
+| **Memória do sistema** | ⚠️ Provavelmente | Vídeo não-comprimido é grande; 16 ou 32 GB permitem mais quadros em RAM (8 GB é limitante). |
+| **Sistema de armazenamento** | ✅ Sim | Ficheiros são grandes; SSD local dá transferência eficiente; drives de rede lentos são contraproducentes. |
+| **GPU** | ❌ Não | Impacta sobretudo a **apresentação** do vídeo renderizado. |
+| **Exibição de vídeo** | ❌ Não | Idem — só afeta a apresentação do vídeo já renderizado. |
+
+### Guiado 3 — Nome do ficheiro `/dev` para a partição 3 do 3º drive SATA
+
+**Enunciado:** *Qual o nome do ficheiro de dispositivo `/dev` para a partição 3 do terceiro drive SATA? Opções: `sd3p3` · `sdcp3` · `sdc3`.*
+
+**Solução passo a passo:**
+
+1. **3º drive** → letra **`c`** (`a`=1º, `b`=2º, `c`=3º). Descarta `sd3p3` (3 não é letra).
+2. **Partição 3** → sufixo numérico **`3`** (sem `p`). Descarta `sdcp3` (usa `p3`).
+3. Combina prefixo `sd` + dispositivo `c` + partição `3`.
+
+```bash
+# resultado final
+/dev/sdc3
+```
+
+**Resposta: `sdc3` ✅**
+
+### Guiado 4 — Níveis de RAID e compromissos
+
+**Enunciado:** *Quais são os compromissos entre capacidade, desempenho e redundância nos níveis RAID 0, 1 e 5?*
+
+**Solução:**
+
+| RAID | Capacidade utilizável | Desempenho | Redundância | Notas |
+|------|----------------------|------------|-------------|-------|
+| **RAID 0** | 100% (N × disco) | **Alta** (striping) | ❌ Nenhuma | Falha de 1 disco = perda total de dados |
+| **RAID 1** | 50% (espelho) | Leitura alta; escrita igual ao disco | ✅ Sim (cópia completa) | Mínimo 2 discos; tolera N-1 falhas |
+| **RAID 5** | (N-1) × disco | Alta leitura; escrita com paridade | ✅ Sim (paridade distribuída) | Mínimo 3 discos; tolera 1 falha |
+
+> **Ligação ao manual:** RAID é transparente para o utilizador — o Linux vê uma única unidade de bloco (ex.: `/dev/md0`). A gestão é feita pelo firmware (hardware RAID) ou pelo kernel via `mdadm` (software RAID).
+
+---
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+> Exercícios originais para praticares no terminal Linux. Consolidam o objetivo 4.2 com comandos reais (`lscpu`, `free`, `lsblk`, `lspci`, `lsusb`, `cat /proc/cpuinfo`, `cat /proc/meminfo`, `df`, `dmidecode`).
+> *Dica:* precisa de uma sessão Linux (física, VM ou WSL). As soluções estão em `<details>` — tenta primeiro.
+
+### Exploratório 1 — Retrato completo do teu CPU
+Sem olhar para especificações, descobre: **arquitetura**, **nº de núcleos físicos vs. threads**, **frequência máx./mín.** e uma das **flags** suportadas (ex.: `vmx`/`svm` = virtualização).
+
+
+
+<SolutionBlock>
+```bash
+# Vista amigável do CPU
+lscpu
+
+# Detalhe por núcleo (inclui "flags" no final de cada bloco)
+cat /proc/cpuinfo
+
+# Confirmar suporte a virtualização (Intel=vmx, AMD=svm)
+grep -E 'vmx|svm' /proc/cpuinfo | head -1
+```
+
+**Como interpretar:**
+- `Architecture:` (ex.: `x86_64` ou `armv7l`) → arquitetura.
+- `CPU(s):` = threads totais; `Core(s) per socket:` × `Thread(s) per core:` permite confirmar hyper-threading.
+- `CPU max MHz:` / `CPU min MHz:` — escala de frequência.
+- Se `grep` devolver linha → virtualização ativa no CPU (podes ativar no firmware/BIOS).
+</SolutionBlock>
+
+
+
+### Exploratório 2 — Estado da memória RAM e swap
+Determina **quanta RAM física** tens, **quanta está disponível** para novos processos e se o **swap** está a ser usado.
+
+
+
+<SolutionBlock>
+```bash
+# Resumo legível em GiB/MiB
+free -h
+
+# Detalhe completo (procura MemTotal, MemAvailable, SwapTotal)
+cat /proc/meminfo | grep -E 'MemTotal|MemAvailable|SwapTotal|SwapFree'
+```
+
+**Leitura:**
+- `Mem:` → `total` (instalada) e `available` (estimativa para novos processos).
+- `Swap:` → se `used` > 0, o sistema já está a usar disco como RAM (sinal de pressão de memória).
+- `buff/cache` não é "memória perdida" — pode ser libertada; por isso se deve olhar para `available` e não `free`.
+</SolutionBlock>
+
+
+
+### Exploratório 3 — Mapa de discos e partições
+Identifica **todos os dispositivos de bloco**, as suas **partições**, os **pontos de montagem** e os **sistemas de ficheiros**. Distingue se há cartão SD (`mmcblk`) ou NVMe (`nvme`).
+
+
+
+<SolutionBlock>
+```bash
+# Árvore de dispositivos de bloco com tipo/size/mountpoint
+lsblk
+
+# Acrescenta FSTYPE, LABEL e UUID
+lsblk -f
+
+# Espaço usado por cada sistema de ficheiros montado
+df -h -T
+```
+
+**Convenções de nomes a procurar:**
+- `/dev/sda`, `/dev/sdb`… → SATA/SCSI.
+- `/dev/nvme0n1`, partições `nvme0n1p1`… → NVMe moderno.
+- `/dev/mmcblk0`, partições `mmcblk0p1`… → cartão SD (ex.: Raspberry Pi).
+- Coluna `TYPE` distingue `disk` / `part` / `lvm` / `rom`.
+</SolutionBlock>
+
+
+
+### Exploratório 4 — Inventariar periféricos PCI e USB
+Lista os **dispositivos PCI** (gráfica, rede, controladoras) e os **dispositivos USB** atualmente ligados.
+
+
+
+<SolutionBlock>
+```bash
+# Dispositivos PCI (gráfica, rede Wi-Fi/Ethernet, áudio…)
+lspci
+
+# Saída verbosa com drivers/kernels em uso
+lspci -k
+
+# Dispositivos USB ligados
+lsusb
+
+# Sumário hierárquico PCI → USB
+lspci -tv ; lsusb -t
+```
+
+**O que procurar:**
+- Linhas com `VGA compatible controller` → GPU.
+- `Ethernet controller` / `Network controller` → rede (cabo / Wi-Fi).
+- Se `lspci -k` mostrar `Kernel driver in use:`, o módulo/driver está carregado; se vazio, o dispositivo pode não ter driver.
+</SolutionBlock>
+
+
+
+### Exploratório 5 — Inspeção de hardware via DMI (SMBIOS)
+Descobre **fabricante e modelo da placa-mãe**, **versão do firmware (BIOS/UEFI)** e **quantos módulos de RAM** estão instalados (slots usados vs. livres).
+
+
+
+<SolutionBlock>
+```bash
+# Requer root; lê a tabela SMBIOS/DMI da placa-mãe
+sudo dmidecode -t baseboard     # fabricante + modelo da placa
+sudo dmidecode -t bios          # fornecedor e versão do firmware (UEFI/BIOS)
+sudo dmidecode -t memory | grep -E 'Size|Type:|Speed|Locator' | grep -v 'No Module'
+```
+
+**Como interpretar:**
+- `BIOS Information → Vendor` + `Version` → confirma UEFI vs BIOS antiga.
+- `Memory Device → Size` mostra cada módulo; linhas `No Module Installed` indicam **slots vazios** (ainda podes adicionar RAM).
+- Comando inválido ou vazio? Algumas VMs/máquinas expõem pouco DMI — nesse caso usa `lscpu`, `lspci` e `cat /proc/meminfo`.
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T12 - Escolhendo um Sistema Operacional]()
+→ Próximo: [T14 - Onde os dados são armazenados]()

@@ -1,0 +1,228 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="101.3 Alterar níveis de execução - destinos de energia"
+  code="101"
+  topicNumber="T03"
+  objective="Alterar níveis de execução e destinos de inicialização, e desligar ou reiniciar o sistema"
+  weight={1}
+  pages="LPIC-1 (101) - Version 5.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Daemons e Serviços
+
+- **Daemons/serviços**: processos responsáveis por funções específicas do sistema (HTTP, compartilhamento de arquivos, email, firewall, balanceamento de carga)
+- O gerenciador de serviços é o **primeiro programa** lançado pelo kernel → **PID 1**
+- Pode controlar quais daemons estão ativos dependendo da finalidade do sistema
+
+### SysVinit — Níveis de execução
+
+> Para mais detalhes sobre a sequência de inicialização, ver T02 — Inicialização do sistema.
+
+| Nível | Função |
+|---|---|
+| **0** | Encerramento do sistema (shutdown) |
+| **1**, **s** ou **single** | Modo de usuário único, sem rede (manutenção) |
+| **2**, **3** ou **4** | Modo multiusuário (2 e 4 pouco usados) |
+| **5** | Modo multiusuário + login gráfico |
+| **6** | Reinicialização do sistema (reboot) |
+
+### SysVinit — Arquivos e diretórios
+
+| Caminho | Função |
+|---|---|
+| `/sbin/init` | Programa de gerenciamento de níveis de execução (PID 1) |
+| `/etc/inittab` | Arquivo de configuração do init |
+| `/etc/init.d/` | Scripts de serviço reais |
+| `/etc/rc0.d/` a `/etc/rc6.d/` | Links simbólicos para scripts por nível de execução |
+| `/etc/shutdown.allow` | Usuários autorizados a reiniciar com Ctrl+Alt+Del |
+
+### /etc/inittab — Formato
+
+```
+id:runlevels:action:process
+```
+
+| Ação | Descrição |
+|---|---|
+| `boot` | Processo executado durante inicialização (runlevels ignorado) |
+| `bootwait` | Processo executado durante inicialização, init aguarda conclusão |
+| `sysinit` | Processo executado após inicialização (qualquer runlevel) |
+| `wait` | Processo executado nos runlevels dados, init aguarda conclusão |
+| `respawn` | Processo reiniciado caso seja encerrado |
+| `ctrlaltdel` | Processo executado ao pressionar Ctrl+Alt+Del |
+
+### SysVinit — Comandos
+
+| Comando | Função |
+|---|---|
+| `runlevel` | Mostra nível de execução anterior e atual |
+| `telinit <nível>` | Alterna para nível de execução diferente |
+| `telinit q` | Recarrega configuração do `/etc/inittab` |
+
+### Links simbólicos nos diretórios rcX.d
+
+- Primeira letra **K** → serviço será **encerrado** (kill) ao entrar no nível
+- Primeira letra **S** → serviço será **iniciado** (start) ao ingressar no nível
+
+### systemd — Tipos de unidades
+
+| Tipo | Descrição |
+|---|---|
+| **service** | Unidade mais comum (iniciar, interromper, recarregar) |
+| **socket** | Socket de sistema de arquivos ou rede |
+| **device** | Dispositivo de hardware identificado pelo kernel |
+| **mount** | Definição de ponto de montagem (semelhante a `/etc/fstab`) |
+| **automount** | Ponto de montagem automática |
+| **target** | Agrupamento de outras unidades |
+| **snapshot** | Estado salvo do gerenciador systemd |
+
+### systemd — Comandos do systemctl
+
+| Comando | Função |
+|---|---|
+| `systemctl start <unit>` | Inicia a unidade |
+| `systemctl stop <unit>` | Interrompe a unidade |
+| `systemctl restart <unit>` | Reinicia a unidade |
+| `systemctl status <unit>` | Mostra estado da unidade |
+| `systemctl is-active <unit>` | Exibe `active` ou `inactive` |
+| `systemctl enable <unit>` | Habilita unidade para iniciar na inicialização |
+| `systemctl disable <unit>` | Desabilita unidade de iniciar com o sistema |
+| `systemctl is-enabled <unit>` | Verifica se unidade inicia com o sistema |
+| `systemctl isolate <target>` | Alterna para destino diferente |
+| `systemctl set-default <target>` | Define destino padrão |
+| `systemctl get-default` | Exibe destino padrão atual |
+| `systemctl list-unit-files` | Lista unidades disponíveis |
+| `systemctl list-units` | Lista unidades ativas |
+| `systemctl suspend` | Modo de baixo consumo (mantém dados na RAM) |
+| `systemctl hibernate` | Copia dados da RAM para disco e desliga |
+| `systemctl reboot` | Reinicia o sistema |
+| `systemctl poweroff` | Desliga o sistema |
+
+### systemd — Destinos
+
+- Destinos correspondentes aos runlevels: `runlevel0.target` a `runlevel6.target`
+- `multi-user.target` ≈ nível de execução 3
+- `graphical.target` ≈ nível de execução 5
+- Destino padrão: link simbólico `/etc/systemd/system/default.target`
+- Nunca apontar para `shutdown.target` (equivale ao nível 0)
+
+### systemd — Arquivos importantes
+
+| Caminho | Função |
+|---|---|
+| `/lib/systemd/system/` | Arquivos de configuração das unidades |
+| `/etc/systemd/logind.conf` | Ações relacionadas a consumo de energia |
+| `/etc/systemd/logind.conf.d/` | Configurações extras de energia |
+
+### Upstart
+
+| Comando | Função |
+|---|---|
+| `initctl list` | Lista serviços e estado |
+| `start <serviço>` | Inicia um serviço |
+| `status <serviço>` | Verifica estado de um serviço |
+| `stop <serviço>` | Interrompe um serviço |
+
+- Scripts localizados em `/etc/init/`
+- Comandos legados `runlevel` e `telinit` ainda funcionam
+- Descontinuado pelo Ubuntu em 2015 (migrou para systemd)
+
+### Desligar e reiniciar
+
+| Comando | Função |
+|---|---|
+| `shutdown [opções] <tempo> [mensagem]` | Desligamento agendado com notificação |
+| `shutdown -h now` | Desligar imediatamente |
+| `shutdown -r now` | Reiniciar imediatamente |
+| `shutdown -c` | Cancelar shutdown agendado |
+| `shutdown +10 "Mensagem"` | Desligar em 10 minutos com aviso |
+| `wall [mensagem]` | Envia mensagem para todas as sessões de terminal |
+
+### Formatos de tempo para shutdown
+
+| Formato | Descrição |
+|---|---|
+| `hh:mm` | Hora específica (ex: `23:30`) |
+| `+m` | Minutos a esperar (ex: `+10`) |
+| `now` ou `+0` | Imediato |
+
+### ACPID
+
+- Principal gerenciador de energia do Linux
+- Permite ajustes refinados: fechar tampa do laptop, bateria fraca, níveis de carga
+- Conflita com o gerenciamento de energia do systemd
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Nível de execução incorreto no SysV
+
+**Enunciado:** Em um sistema baseado em SysV, suponha que o nível de execução padrão definido em `/etc/inittab` seja 3, mas o sistema sempre inicia no nível de execução 1. Qual é a causa provável disso?
+
+
+
+<SolutionBlock>
+Os parâmetros `1` ou `S` podem estar presentes na lista de parâmetros do kernel.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Symlink de /sbin/init no systemd
+
+**Enunciado:** Embora o arquivo `/sbin/init` possa ser encontrado nos sistemas baseados em systemd, ele é apenas um link simbólico para outro arquivo executável. Nesses sistemas, qual o arquivo apontado por `/sbin/init`?
+
+
+
+<SolutionBlock>
+O binário principal do systemd: `/lib/systemd/systemd`.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Verificar destino padrão do systemd
+
+**Enunciado:** Como se verifica o destino padrão do sistema em um sistema baseado em systemd?
+
+
+
+<SolutionBlock>
+O link simbólico `/etc/systemd/system/default.target` aponta para o arquivo da unidade definido como destino padrão. Também é possível usar o comando `systemctl get-default`.
+
+```bash
+systemctl get-default
+# ou
+ls -l /etc/systemd/system/default.target
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Cancelar shutdown agendado
+
+**Enunciado:** Como poderíamos cancelar uma reinicialização do sistema programada com o comando `shutdown`?
+
+
+
+<SolutionBlock>
+Usaríamos o comando `shutdown -c`.
+
+```bash
+shutdown -c
+```
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T02 - 101.2 Inicialização do sistema]() | → Próximo: [T04 - 102.1 Definir o esquema de partições do disco]()

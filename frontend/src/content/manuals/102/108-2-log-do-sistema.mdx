@@ -1,0 +1,278 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="108.2 Log do sistema"
+  code="102"
+  topicNumber="T10"
+  objective="Configurar e gerir o log do sistema"
+  weight={3}
+  pages="LPIC-1 (102) - Version 5.0"
+  accent="iris"
+/>
+
+
+
+## Resumo Conciso
+
+### Ficheiros de Log Importantes
+
+| Ficheiro | Conteúdo |
+|---|---|
+| `/var/log/auth.log` | Autenticações, sudo, cron jobs |
+| `/var/log/syslog` | Logs centralizados do rsyslogd |
+| `/var/log/kern.log` | Mensagens do kernel |
+| `/var/log/messages` | Mensagens informativas não-kernel |
+| `/var/log/daemon.log` | Daemons/serviços em segundo plano |
+| `/var/log/mail.log` | Servidor de email |
+| `/var/log/wtmp` | Logins bem-sucedidos |
+| `/var/log/btmp` | Tentativas de login malsucedidas |
+| `/var/log/faillog` | Tentativas de autenticação falhadas |
+| `/var/log/lastlog` | Data/hora dos logins recentes |
+
+### Comandos para Leitura de Logs
+
+| Comando | Função |
+|---|---|
+| `less` / `more` | Paginador para visualizar logs |
+| `zless` / `zmore` | Para logs compactados com gzip |
+| `tail -f` | Exibe últimas linhas e acompanha novas em tempo real |
+| `head` | Exibe primeiras linhas |
+| `grep` | Filtra por strings específicas |
+| `who` | Lê `/var/log/wtmp` (binário) |
+| `utmpdump` | Lê `/var/log/btmp` (binário) |
+| `faillog` | Lê `/var/log/faillog` |
+| `lastlog` | Lê `/var/log/lastlog` |
+
+### Facilities (Recursos) do rsyslog
+
+| Nº | Palavra-chave | Descrição |
+|---|---|---|
+| 0 | `kern` | Mensagens do kernel |
+| 1 | `user` | Mensagens no nível do utilizador |
+| 2 | `mail` | Sistema de email |
+| 3 | `daemon` | Daemons do sistema |
+| 4 | `auth`, `authpriv` | Segurança/autorização |
+| 9 | `cron` | Daemon do relógio |
+| 16-23 | `local0`-`local7` | Uso local 0-7 |
+
+### Prioridades do rsyslog
+
+| Código | Gravidade | Palavra-chave |
+|---|---|---|
+| 0 | Emergência | `emerg`, `panic` |
+| 1 | Alerta | `alert` |
+| 2 | Crítico | `crit` |
+| 3 | Erro | `err`, `error` |
+| 4 | Aviso | `warn`, `warning` |
+| 5 | Atenção | `notice` |
+| 6 | Informativo | `info` |
+| 7 | Debug | `debug` |
+
+### Formato de Regras rsyslog
+
+```
+<facility>.<priority> <action>
+```
+
+- Prioridades são hierarquicamente inclusivas
+- `-` antes do caminho omite `fsync` após cada mensagem (menos carga em disco)
+- Sem prefixo, é feito `fsync` após cada mensagem (persistência imediata)
+
+### Comandos journalctl (systemd-journald)
+
+| Opção | Função |
+|---|---|
+| `-r` | Exibe mensagens em ordem inversa |
+| `-f` | Acompanha novas mensagens em tempo real |
+| `-e` | Salta para o final do diário |
+| `-n <N>` | Exibe últimas N linhas |
+| `-k` / `--dmesg` | Mensagens do kernel (equivalente a `dmesg`) |
+| `-b` | Mensagens da inicialização atual |
+| `-b -1` | Mensagens da inicialização anterior |
+| `-p <prioridade>` | Filtra por prioridade |
+| `--since` / `--until` | Filtra por intervalo de tempo |
+| `/caminho/executavel` | Filtra por programa |
+| `-u <unidade>` | Filtra por unidade systemd |
+| `--disk-usage` | Espaço ocupado pelos ficheiros de diário |
+| `--vacuum-time=` | Remove logs antigos por tempo |
+| `--vacuum-size=` | Reduz logs arquivados por tamanho |
+| `--vacuum-files=` | Limita número de ficheiros arquivados |
+
+### Configuração do Storage no journald.conf
+
+| Valor | Comportamento |
+|---|---|
+| `volatile` | Armazena apenas na RAM (`/run/log/journal/`) |
+| `persistent` | Armazena em disco (`/var/log/journal/`), cria directório |
+| `auto` | Similar a persistent, mas não cria directório (padrão) |
+| `none` | Descarta dados, mas permite encaminhamento |
+
+### Logrotate — Opções Principais
+
+| Opção | Significado |
+|---|---|
+| `weekly` | Rotaciona semanalmente |
+| `rotate N` | Preserva N semanas de logs |
+| `compress` | Compacta com gzip |
+| `delaycompress` | Adia compactação para próximo ciclo |
+| `missingok` | Não emite erro se log ausente |
+| `notifempty` | Não rotaciona se vazio |
+| `postrotate`/`endscript` | Script executado após rotação |
+
+### Fluxo de Logs
+
+1. Aplicativos escrevem em `/dev/log` ou `/dev/kmsg`
+2. `rsyslogd` obtém informações dos sockets/buffers
+3. Conforme regras de `/etc/rsyslog.conf`, move para ficheiros em `/var/log`
+
+|---|
+| Ler `/var/log/syslog.7.gz` | `zless` ou `zmore` |
+| Ler `/var/log/syslog` | `less` ou `more` |
+| Filtrar "renewal" em `/var/log/syslog` | `grep` |
+| Ler `/var/log/faillog` | `faillog -a` |
+| Ler `/var/log/syslog` dinamicamente | `tail -f` |
+
+**Solução:** Conforme tabela acima.
+
+### Exercício Guiado 2 — Reordenar entrada de log
+
+**Enunciado:** Reorganize as partes para formar uma mensagem válida.
+
+Partes: `debian-server`, `sshd`, `[515]:`, `Sep 13 21:47:56`, `Server listening on 0.0.0.0 port 22`
+
+**Solução:**
+```
+Sep 13 21:47:56 debian-server sshd[515]: Server listening on 0.0.0.0 port 22
+```
+
+### Exercício Guiado 3 — Regras rsyslog
+
+**Enunciado:** Escreva as regras para cada tarefa.
+
+**Solução:**
+
+```bash
+# Todas as mensagens mail com prioridade crit e acima → /var/log/mail.crit
+mail.crit    /var/log/mail.crit
+
+# Mensagens mail com alert e emergency → /var/log/mail.urgent
+mail.alert   /var/log/mail.urgent
+
+# Todas exceto cron e daemon → /var/log/allmessages
+*.*;cron.none;daemon.none    /var/log/allmessages
+
+# Mensagens mail para host remoto via TCP:514
+mail.* @@192.168.1.88:514
+
+# Apenas warning (exatamente) → /var/log/warnings, sem sync em disco
+*.=warning    -/var/log/warnings
+```
+
+### Exercício Guiado 4 — Opções do logrotate
+
+**Enunciado:** Explique as opções do trecho `/etc/logrotate.d/samba`.
+
+**Solução:**
+
+| Opção | Significado |
+|---|---|
+| `weekly` | Rotaciona semanalmente |
+| `missingok` | Não emite erro se log ausente |
+| `rotate 7` | Preserva 7 semanas de logs |
+| `postrotate` | Executa script após rotação |
+| `endscript` | Fim do script postrotate |
+| `compress` | Compacta com gzip |
+| `delaycompress` | Adia compactação para próximo ciclo |
+| `notifempty` | Não rotaciona se vazio |
+
+---
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Filtro baseado em propriedades
+
+**Enunciado:** Traduza o filtro baseado em expressão para um filtro baseado em propriedades.
+
+Expressão: `if $FROMHOST-IP=='192.168.1.4' then ?RemoteLogs`
+
+
+
+<SolutionBlock>
+```
+:fromhost-ip, isequal, "192.168.1.4"
+?RemoteLogs
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Notificação de utilizadores via omusrmsg
+
+**Enunciado:** Escreva uma regra para enviar todas as mensagens de emergência para root e carol.
+
+
+
+<SolutionBlock>
+```
+*.emerg    :omusrmsg:root,carol
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Filtrar logs com journalctl
+
+**Enunciado:** Liste todas as mensagens de erro ou superior desde a última inicialização, emitidas pelo serviço `sshd`.
+
+
+
+<SolutionBlock>
+```bash
+journalctl -b -p err -u sshd
+```
+
+- `-b` limita à inicialização atual
+- `-p err` filtra prioridade `err` e acima (crit, alert, emerg)
+- `-u sshd` filtra pela unidade systemd do SSH
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Criar regra de logrotate personalizada
+
+**Enunciado:** Crie uma configuração de logrotate para o ficheiro `/var/log/meuapp.log` que rotacione diariamente, mantendo 14 ficheiros, compactando com atraso e ignorando se o ficheiro não existir.
+
+
+
+<SolutionBlock>
+Criar o ficheiro `/etc/logrotate.d/meuapp`:
+```
+/var/log/meuapp.log {
+    daily
+    rotate 14
+    compress
+    delaycompress
+    missingok
+    notifempty
+    create 0640 root adm
+}
+```
+
+- `daily` — rotação diária
+- `rotate 14` — mantém 14 ficheiros rotacionados
+- `compress` + `delaycompress` — compacta com gzip, adiando um ciclo
+- `missingok` — não emite erro se o ficheiro não existir
+- `create 0640 root adm` — cria novo ficheiro com permissões e grupo definido
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T09 - 108.1 Manutenção da data e hora do sistema]()
+→ Próximo: [T11 - 108.3 Fundamentos de MTA (Mail Transfer Agent)]()

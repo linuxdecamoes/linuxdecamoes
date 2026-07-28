@@ -1,0 +1,273 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="024.3 — Criptografia e Anonimato na Rede"
+  code="020"
+  topicNumber="T14"
+  objective="024.3"
+  weight={3}
+  pages="LPI Security Essentials (020) - Version 1.0"
+  accent="coral"
+/>
+
+
+
+## Resumo Conciso
+
+### Redes Privadas Virtuais (VPN)
+
+| Aspecto | Detalhe |
+|---------|---------|
+| **Função** | Cria túnel criptografado entre dispositivo e rede de destino |
+| **Protocolos** | IPsec, OpenVPN, WireGuard |
+| **Proteção** | Confidencialidade e integridade dos dados em trânsito |
+
+### Tipos de VPN
+
+| Tipo | Descrição | Autenticação |
+|------|-----------|-------------|
+| **VPN pública** | Para utilizadores individuais (privacidade, contornar censura) | Conta de utilizador |
+| **VPN de organização** | Acesso remoto seguro a rede corporativa | Credenciais, certificados ou MFA |
+| **VPN de acesso remoto** | Utilizador remoto conecta-se à rede da organização (baseada em extranet) | MFA + conformidade do dispositivo |
+| **VPN site-a-site** | Conecta redes inteiras entre locais (baseada em intranet) | Configuração em ambos os lados |
+
+### Comparação de Protocolos VPN
+
+| Protocolo | Camada | Criptografia | Pontos Fortes | Pontos Fracos |
+|-----------|--------|-------------|---------------|---------------|
+| **IPsec** | Rede (camada 3) | IPsec | Robusto, amplamente compatível | Complexo, custo de processamento |
+| **OpenVPN** | Aplicação | SSL/TLS | Configurável, contorna firewalls | Requer software cliente, mais lento |
+| **WireGuard** | Rede | Chave moderna | Rápido, código mínimo, simples | Integração ainda em curso |
+
+### Criptografia de Transferência vs. Ponta-a-Ponta
+
+| Tipo | O que protege | Limitação |
+|------|--------------|-----------|
+| **Transferência (em trânsito)** | Dados entre dispositivo e servidor VPN/TLS | Dados são desencriptados no servidor de destino |
+| **Ponta-a-ponta (E2EE)** | Dados no dispositivo do remetente até ao destinatário | Sem intermediários com acesso aos dados |
+
+- **HTTPS** = criptografia de transferência (servidor tem acesso aos dados)
+- **Mensagens E2EE** = criptografia ponta-a-ponta (só remetente e destinatário têm acesso)
+
+### Anonimato e Identificação
+
+| Identificador | Camada | Alcance | Risco de Rastreamento |
+|--------------|--------|---------|----------------------|
+| **Endereço MAC** | Enlace | Rede local apenas | Médio (dentro da LAN) |
+| **Endereço IP** | Rede | Global | Alto (servidores registam IP) |
+
+**Ferramentas de anonimato:**
+- **Tor** — rede de anonimato com múltiplos nós e criptografia em camadas
+- **VPN** — oculta IP real do utilizador (mas provedor pode ver)
+- **Proxy** — substitui IP pelo IP do servidor proxy
+
+### Tor (The Onion Router)
+
+| Aspeto | Detalhe |
+|--------|---------|
+| **Origem** | Laboratório de Pesquisa Naval dos EUA (anos 1990) |
+| **Código aberto** | Desde 2002 (licença gratuita) |
+| **Apoio** | Electronic Frontier Foundation (EFF) desde 2004 |
+| **Funcionamento** | Roteia tráfego por múltiplos nós voluntários, cada um com sua camada de criptografia |
+| **Acesso** | Tor Browser (versão modificada do Mozilla Firefox) |
+| **Serviços ocultos** | Domínios `.onion` — hospedagem anônima de sites |
+
+**Motores de busca Onion:** DuckDuckGo Onion, Ahmia, Torch
+
+**Riscos do Tor:**
+- Nós de saída maliciosos podem monitorar tráfego não criptografado
+- Atividades que revelem identidade (login, downloads) comprometem anonimato
+- Não é infalível — combinar com outras ferramentas de privacidade
+
+### Darknet
+
+- Parte da internet **intencionalmente oculta**, requer software especializado (Tor, I2P, Freenet)
+- Acessível apenas via Tor Browser ou software similar
+- Domínios `.onion` não são indexados por motores de busca tradicionais
+- **Usos legítimos:** comunicação segura, denúncia (SecureDrop), fóruns anónimos
+- **Usos ilegais:** mercados ilícitos, venda de drogas, documentos falsificados
+- **Acesso:** Tor Browser → sites `.onion`
+
+### Criptomoedas e Blockchain
+
+| Criptomoeda | Anonimato | Técnicas |
+|------------|-----------|---------|
+| **Bitcoin** | Pseudoanónimo | Endereços alfanuméricos, mas transações públicas e rastreáveis |
+| **Monero** | Alto anonimato | Assinaturas em anel, RingCT, endereços furtivos |
+| **Zcash** | Opção de privacidade | zk-SNARKs (transações protegidas opcionais) |
+
+**Blockchain:**
+- Livro-razão distribuído mantido por rede de nós
+- Cada bloco contém transações validadas por consenso (PoW ou PoS)
+- Transparência = transações públicas, mas identidades pseudónimas
+- **KYC (Know Your Customer)** em exchanges compromete anonimato
+- Ferramentas de análise de blockchain podem desanonimizar utilizadores
+
+## Exercícios Guiados
+
+### Exercício Guiado 1: VPN Site-a-site — Intranet vs. Extranet
+
+**Enunciado:** Quais são os principais fatos sobre os dois tipos de VPNs site-a-site?
+
+**Solução:** Quando existe uma conexão privada entre duas LANs corporativas remotas, diz-se que existe uma VPN site-a-site.
+
+| Tipo | Descrição |
+|------|-----------|
+| **VPN site-a-site baseada em intranet** | As duas LANs remotas são filiais da mesma organização |
+| **VPN site-a-site baseada em extranet** | As duas LANs remotas pertencem a duas partes diferentes que estão a colaborar |
+
+Ambas proporcionam um canal de comunicação seguro entre redes, permitindo comunicação e partilha de dados contínua sem expor o tráfego interno à internet pública.
+
+### Exercício Guiado 2: O que Torna uma Conexão VPN Privada
+
+**Enunciado:** O que torna uma conexão VPN privada?
+
+**Solução:**
+1. Um **canal privado** é configurado entre duas partes remotas que desejam comunicar
+2. Qualquer dado enviado através do canal privado é **encapsulado e criptografado**
+3. Isso resulta numa conexão VPN privada
+4. Qualquer pessoa tentando interceptar o canal privado **não será capaz de obter informações úteis**, pois os dados estão criptografados
+
+### Exercício Guiado 3: Tor e Anonimato
+
+**Enunciado:** Descreva como o Tor aprimora o anonimato do utilizador na internet. Explique o processo pelo qual o Tor obscurece a identidade do utilizador e o contexto histórico de seu desenvolvimento.
+
+**Solução:** O Tor aprimora o anonimato do utilizador roteando o tráfego de internet por uma rede de servidores operados por voluntários, cada um aplicando uma camada de criptografia — semelhante às camadas de uma cebola ("onion router"). À medida que o tráfego passa por vários nós, a origem e o destino originais dos dados tornam-se obscurecidos, tornando extremamente difícil rastrear as atividades do utilizador.
+
+**Contexto histórico:**
+- Desenvolvido no meio dos anos 1990 pelo Laboratório de Pesquisa Naval dos EUA
+- Objetivo original: proteger comunicações de inteligência
+- 2002: código-fonte liberado sob licença gratuita
+- 2004: Electronic Frontier Foundation (EFF) começou a apoiar o desenvolvimento
+- Evoluiu para recurso crítico para jornalistas, ativistas e indivíduos preocupados com privacidade
+
+### Exercício Guiado 4: Bitcoin vs. Monero — Anonimato
+
+**Enunciado:** Quais são as principais diferenças entre o Bitcoin e o Monero em termos de anonimato? Discuta as técnicas que cada criptomoeda usa para proteger a privacidade do utilizador.
+
+**Solução:**
+
+| Aspeto | Bitcoin | Monero |
+|--------|---------|--------|
+| **Classificação** | Pseudoanónimo | Anónimo |
+| **Transações** | Públicas e rastreáveis | Ocultas por design |
+| **Endereços** | Alfanuméricos, vinculáveis a identidades | Endereços furtivos (usados apenas uma vez) |
+| **Técnicas** | Endereços alfanuméricos | Assinaturas em anel, RingCT, endereços furtivos |
+
+O Bitcoin registra todas as transações num livro-razão público. Embora os utilizadores sejam representados por endereços alfanuméricos, é possível rastrear esses endereços até indivíduos com dados e análise suficientes. O Monero utiliza técnicas avançadas para ocultar remetente, destinatário e valor da transação, tornando muito mais difícil rastrear transações e vinculá-las a indivíduos específicos.
+
+### Exercício Guiado 5: Papel da Darknet
+
+**Enunciado:** Qual o papel da darknet no contexto do anonimato e como ela pode ser acessada? Explique tanto seus aspectos positivos quanto negativos.
+
+**Solução:** A darknet serve como uma parte da internet que oferece maior anonimato, exigindo software específico, como o Tor Browser, para acessar o conteúdo. Ela permite que os utilizadores naveguem por serviços ocultos e sites `.onion`, que não são indexados pelos motores de busca convencionais.
+
+**Aspectos positivos:**
+- Recurso vital para jornalistas, ativistas e denunciantes
+- Comunicação segura em regimes opressores
+- Plataformas como SecureDrop para denúncia anónima
+- Fóruns anónimos focados em privacidade
+
+**Aspectos negativos:**
+- Mercados ilegais (drogas, documentos falsificados, dados roubados)
+- Distribuição de conteúdo ilegal
+- Desafios éticos e legais significativos
+- Associação com atividades criminosas
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1: Protocolos VPN — IPsec vs. OpenVPN vs. WireGuard
+
+**Enunciado:** Explique as diferenças entre os seguintes protocolos de VPN: IPsec, OpenVPN e WireGuard. Inclua detalhes sobre seus casos de uso típicos, pontos fortes e fracos.
+
+
+
+<SolutionBlock>
+| Protocolo | Camada | Criptografia | Caso de Uso | Pontos Fortes | Pontos Fracos |
+|-----------|--------|-------------|-------------|---------------|---------------|
+| **IPsec** | Rede (L3) | IPsec | VPNs site-a-site e acesso remoto | Robusto, compatível com maioria dos dispositivos | Complexo de configurar, custo de processamento elevado |
+| **OpenVPN** | Aplicação | SSL/TLS | VPNs de acesso remoto | Altamente configurável, contorna firewalls | Requer software cliente, mais lento |
+| **WireGuard** | Rede | Chave moderna | VPNs de alto desempenho | Rápido, código mínimo, simples | Integração em curso, suporte limitado a IP dinâmico |
+
+**Recomendação:** Para ambientes corporativos, OpenVPN é a escolha mais madura. Para desempenho e simplicidade, WireGuard é cada vez mais popular. IPsec continua a ser o padrão para VPNs site-a-site em equipamentos de rede.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2: Configurar VPN de Acesso Remoto Segura
+
+**Enunciado:** Imagine que tu foste designado para configurar uma VPN de acesso remoto para os funcionários de uma empresa. Quais etapas tu tomarías para garantir uma configuração segura e eficaz? Inclua pelo menos três medidas de segurança que tu implementarias.
+
+
+
+<SolutionBlock>
+**Etapa 1 — Selecionar protocolo de VPN seguro:**
+Utilizar OpenVPN ou IPsec para garantir que todos os dados transmitidos entre os funcionários e a rede da empresa sejam criptografados.
+
+**Medidas de segurança:**
+1. **Autenticação Multifatorial (MFA):** Exigir MFA para todos os utilizadores ao conectar-se à VPN, adicionando uma camada adicional além de nomes de utilizador e palavras-passe
+2. **Controlo de acesso baseado em papéis:** Configurar políticas que restrinjam o acesso a recursos sensíveis com base no papel do utilizador e conformidade do dispositivo
+3. **Verificação de conformidade de dispositivos:** Permitir acesso apenas a dispositivos com software antivírus atualizado e patches de segurança instalados
+4. **Registo e monitorização:** Manter logs de conexões VPN para auditoria e deteção de atividade suspeita
+5. **Divisão de túnel (split tunneling):** Configurar cuidadosamente para não expor tráfego desnecessário à rede corporativa
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3: Desanonimização de Utilizadores do Tor
+
+**Enunciado:** Investigue os diversos métodos usados pelas agências de aplicação da lei para desanonimizar utilizadores do Tor. Identifique pelo menos duas técnicas ou tecnologias específicas empregadas em tais investigações e forneça estudos de caso onde esses métodos foram usados com sucesso.
+
+
+
+<SolutionBlock>
+**Técnicas de desanonimização:**
+
+1. **Análise de tráfego (traffic analysis):** Monitorização e correlação de padrões de tráfego entre entrada e saída da rede Tor. Se um agente conseguir observar tanto o tráfego de entrada como o de saída simultaneamente, pode correlacionar os padrões para identificar o utilizador.
+
+2. **Nós de saída comprometidos:** Configuração de nós de saída maliciosos que monitoram o tráfego não criptografado que sai da rede Tor, capturando dados em texto plano.
+
+3. **Explorações de navegador:** Vulnerabilidades no navegador (não no Tor em si) podem ser exploradas para revelar o IP real do utilizador, especialmente se o utilizador usa uma versão desatualizada do Tor Browser.
+
+4. **Análise de correlação temporal:** correlacionar o timing de ações do utilizador (ex.: login numa conta) com atividade observável na rede Tor.
+
+**Estudos de caso conhecidos:**
+- Operação Onymous (2014) — takedown de mercados na darknet usando análise de tráfego e nós de saída
+- Silk Road (2013) — utilização de erros de segurança do utilizador e análise forense
+
+**Conclusão:** O Tor não é infalível — a combinação de múltiplas técnicas e erros do utilizador podem levar à desanonimização.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4: Criptografia de Transferência vs. Ponta-a-Ponta
+
+**Enunciado:** Um utilizador está a comunicar com um colega utilizando um aplicativo de mensagens que utiliza criptografia de transferência (TLS). Outro utilizador utiliza um aplicativo com criptografia ponta-a-ponta (E2EE). Em que situações é que o segundo caso oferece proteção superior ao primeiro?
+
+
+
+<SolutionBlock>
+A criptografia de transferência (TLS/HTTPS) protege os dados entre o dispositivo do utilizador e o servidor, mas o servidor tem acesso aos dados desencriptados. A criptografia ponta-a-ponta (E2EE) garante que apenas o remetente e o destinatário conseguem ler o conteúdo.
+
+**Situações onde E2EE é superior:**
+
+1. **Comprometimento do servidor:** Se o servidor do provedor de serviço for atacado ou for compelido a fornecer dados por autoridades governamentais, os dados E2EE permanecem inacessíveis, enquanto dados com apenas TLS estão expostos
+
+2. **Confiança zero no intermediário:** Quando não se pode confiar no provedor de serviço (provedor de nuvem, empresa de mensagens), E2EE garante que o provedor nunca tem acesso ao conteúdo
+
+3. **Proteção contra vigilância em massa:** E2EE impede que agências governamentais ou atores maliciosos acedam ao conteúdo mesmo que interceptem o tráfego em múltiplos pontos
+
+4. **Dados sensíveis:** Para comunicações que contêm segredos comerciais, informações médicas ou dados pessoais altamente sensíveis, E2EE fornece uma garantia mais forte de que ninguém além do destinatário pode ler
+
+**Exemplo prático:** Signal, WhatsApp (com E2EE por defeito), e ProtonMail utilizam E2EE, enquanto a maioria dos websites utiliza apenas TLS.
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T13 - 024.2 Segurança de Rede e Internet]()
+→ Próximo: [T15 - 025.1 Identidade e Autenticação]()

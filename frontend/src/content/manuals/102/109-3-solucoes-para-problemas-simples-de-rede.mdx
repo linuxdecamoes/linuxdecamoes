@@ -1,0 +1,207 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="109.3 Soluções para problemas simples de rede"
+  code="102"
+  topicNumber="T15"
+  objective="Resolver problemas simples de rede"
+  weight={4}
+  pages="LPIC-1 (102) - Version 5.0"
+  accent="iris"
+/>
+
+
+
+## Resumo Conciso
+
+### Configuração de interfaces com `ip`
+
+| Tarefa | Comando |
+|---|---|
+| Ver endereços IP | `ip address` / `ip a` |
+| Ver interfaces link | `ip link` |
+| Adicionar IP | `ip addr add 192.168.5.5/24 dev enp0s8` |
+| Adicionar IPv6 | `ip addr add 2001:db8::10/64 dev enp0s8` |
+| Desativar interface | `ip link set dev enp0s8 down` |
+| Ativar interface | `ip link set dev enp0s8 up` |
+| Alterar MTU | `ip link set enp0s8 mtu 2000` |
+
+### Configuração com `ifconfig` (legado)
+
+| Tarefa | Comando |
+|---|---|
+| Ver interfaces | `ifconfig -a` |
+| Configurar IP | `ifconfig enp1s0 192.168.50.50/24` |
+| Configurar com netmask | `ifconfig eth2 192.168.50.50 netmask 255.255.255.0` |
+| Adicionar IPv6 | `ifconfig enp0s8 add 2001:db8::10/64` |
+
+### Tabela de roteamento
+
+| Comando | Função |
+|---|---|
+| `ip route` | Mostra rotas IPv4 |
+| `ip -6 route` | Mostra rotas IPv6 |
+| `route` | Mostra rotas (legado) |
+| `netstat -r` | Mostra rotas (legado) |
+
+### Gerenciamento de rotas
+
+| Tarefa | Comando (legado) | Comando (modern) |
+|---|---|---|
+| Adicionar rota IPv6 | `route -6 add 2001:db8:1::/64 gw 2001:db8::3` | `ip route add 2001:db8:1::/64 via 2001:db8::3` |
+| Remover rota IPv6 | `route -6 del 2001:db8:1::/64 gw 2001:db8::3` | `ip route del 2001:db8:1::/64 via 2001:db8::3` |
+| Adicionar rota padrão | `route add default gw 192.168.1.1` | `ip route add default via 192.168.1.1` |
+
+### Ferramentas de diagnóstico
+
+| Comando | Função |
+|---|---|
+| `ping -c 3 <destino>` | Testa conectividade ICMP (IPv4) |
+| `ping6 -c 3 <destino>` | Testa conectividade ICMP (IPv6) |
+| `traceroute <destino>` | Mostra rota (UDP, padrão) |
+| `traceroute -I <destino>` | Mostra rota (ICMP) |
+| `traceroute6 <destino>` | Mostra rota IPv6 |
+| `tracepath <destino>` | Mostra rota + MTU mínimo |
+| `tracepath6 <destino>` | Mostra rota IPv6 + MTU |
+| `nc -l 1234` | Cria ouvinte na porta 1234 |
+| `nc <host> 1234` | Conecta ao host na porta 1234 |
+
+### Visualização de conexões
+
+| Comando | Função |
+|---|---|
+| `ss -tulnp` | Mostra sockets TCP/UDP em escuta (modern) |
+| `netstat -tulnp` | Mostra sockets TCP/UDP em escuta (legado) |
+| `ip neighbour` | Mostra cache ARP |
+
+Opções comuns: `-a` (todos), `-l` (escuta), `-p` (processo), `-n` (sem DNS), `-t` (TCP), `-u` (UDP).
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Configurar VLAN
+
+**Enunciado:** Qual subcomando de `ip` configurar marcação de VLAN?
+
+
+
+<SolutionBlock>
+```bash
+ip link add link enp0s9 name enp0s9.20 type vlan id 20
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Configurar rota padrão
+
+**Enunciado:** Como configurar uma rota padrão?
+
+
+
+<SolutionBlock>
+```bash
+route add default gw 192.168.1.1
+# ou
+ip route add default via 192.168.1.1
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Cache ARP
+
+**Enunciado:** Como obter informações detalhadas sobre `ip neighbour` e o que acontece se executado sozinho?
+
+
+
+<SolutionBlock>
+```bash
+man ip-neighbour   # documentação
+ip neighbour       # exibe o cache ARP atual
+```
+
+Saída exibe IP, interface, endereço MAC e estado (ex: REACHABLE).
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Backup da tabela de rotas
+
+**Enunciado:** Como fazer backup e restaurar a tabela de roteamento?
+
+
+
+<SolutionBlock>
+```bash
+ip route save > /root/routes/route_backup
+ip route restore < /root/routes/route_backup
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 5 — Spanning tree
+
+**Enunciado:** Como criar uma bridge, ativar o Spanning Tree Protocol (STP) e definir a sua prioridade?
+
+
+
+<SolutionBlock>
+```bash
+# Criar a bridge
+ip link add name br0 type bridge
+
+# Ativar o STP (1 = ligado; 0 = desligado) — passo essencial
+ip link set dev br0 type bridge stp_state 1
+
+# Atribuir portas à bridge
+ip link set dev enp0s9 master br0
+
+# Definir a prioridade via utilitário bridge (múltipla de 4096)
+bridge link set dev enp0s9 priority 16
+```
+
+Nota importante: `ip link add ... type bridge priority 50` **cria** a bridge mas **não ativa** o STP — a ativação exige `stp_state 1`. A prioridade é gerida sobretudo pelo comando `bridge` (não pela diretiva `priority` na criação) e deve ser múltipla de 4096.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 6 — Solicitação HTTP com netcat
+
+**Enunciado:** Como usar o netcat para enviar uma solicitação HTTP?
+
+
+
+<SolutionBlock>
+```bash
+nc learning.lpi.org 80
+GET /index.html HTTP/1.1
+HOST: learning.lpi.org
+```
+
+Premir Enter duas vezes para enviar. O servidor responde com o conteúdo da página.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 7 — Motivos de falha no ping
+
+**Enunciado:** Por que o ping pode falhar?
+
+
+
+<SolutionBlock>
+Motivos possíveis: host remoto inativo, firewall bloqueando ICMP, ACL de roteador bloqueando, nome/endereço incorreto, configuração de rede incorreta em qualquer lado, interfaces desconectadas, componente de rede (switch/cabo/roteador) com defeito.
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T14 - 109.2 Configuração persistente de rede]()
+→ Próximo: [T16 - 109.4 Configurar DNS cliente]()

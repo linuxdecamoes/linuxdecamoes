@@ -1,0 +1,252 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="103.5 Criar, monitorar e eliminar processos"
+  code="101"
+  topicNumber="T14"
+  objective="Criar, monitorar e eliminar processos, incluindo sinais, foreground/background e daemons"
+  weight={2}
+  pages="LPIC-1 (101) - Version 5.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Criando processos
+
+- **Comandos interativos** — Um único processo em background com `&`
+- **Shell scripts** — Programas interpretados executados sequencialmente
+
+```bash
+command &                        # Executa comando em background
+xeyes &                          # Janela abre e terminal fica livre
+```
+
+### Sinais de processos
+
+| Sinal | Número | Descrição |
+|-------|--------|-----------|
+| SIGHUP | 1 | Término com reinício |
+| SIGINT | 2 | Interrompe o processo (Ctrl+C) |
+| SIGQUIT | 3 | Sai do processo |
+| SIGKILL | 9 | Mata o processo (forçado) |
+| SIGTERM | 15 | Termina o processo (gracioso) |
+| SIGTSTP | 20 | Suspende o processo (Ctrl+Z) |
+| SIGCONT | 18 | Continua processo suspenso |
+
+### Gerenciando processos em foreground e background
+
+| Comando | Descrição |
+|---------|-----------|
+| `<ctrl> z` | Coloca processo atual em background (suspendido) |
+| `jobs` | Lista processos em background |
+| `fg` | Retorna processo para foreground |
+| `bg` | Continua processo suspenso em background |
+
+### Monitorando processos
+
+| Comando | Descrição |
+|---------|-----------|
+| `ps` | Exibe processos do sistema |
+| `ps -ef` | Lista todos os processos |
+| `ps aux` | Lista processos com detalhes |
+| `ps -ef --forest` | Árvore de processos |
+| `top` | Monitor de processos em tempo real |
+| `htop` | Monitor interativo melhorado |
+| `pgrep` | Busca processos por nome |
+| `pkill` | Mata processos por nome |
+| `kill` | Envia sinal a um processo (por PID) |
+| `killall` | Envia sinal a todos os processos de um nome |
+| `xkill` | Mata janela clicando nela |
+
+```bash
+ps -ef | grep "Xorg"
+ps aux | grep "firefox"
+ps -ef --forest
+top -d 5                          # Atualiza a cada 5 segundos
+pgrep -u "fred"
+pkill -u "fred"
+kill -9 <PID>
+killall -9 firefox
+```
+
+### Gerenciando processos de terceiros (daemons)
+
+- Daemons terminados com `d` (ex: `crond`, `sshd`)
+- Controlados pelo `systemctl` (systemd) — ver T03 para comandos systemctl detalhados
+
+```bash
+systemctl start sshd
+systemctl stop sshd
+systemctl restart sshd
+systemctl reload sshd
+systemctl status sshd
+systemctl is-active sshd
+systemctl is-enabled sshd
+```
+
+### Detachando de um shell
+
+```bash
+screen                           # Inicia sessão screen
+screen -ls                       # Lista sessões
+screen -r <ID>                   # Reconecta a sessão
+```
+
+### Redirecionando saída de processos
+
+```bash
+cat myinputfile.txt | tee myoutputfile.txt > /dev/null
+```
+
+### Verificando processos com pgrep
+
+```bash
+pgrep -u "fred"                  # Lista PIDs de um utilizador
+pgrep -l "Xorg"                  # Lista PID e nome
+pgrep -a "Xorg"                  # Lista PID e argumentos
+```
+
+### Identificando processos
+
+```bash
+pgrep -P 1                       # Processos cujo processo PAI é 1 (init/systemd)
+pgrep -P $PPID                   # Processos cujo pai é o shell atual
+pgrep -d, -a                     # Lista PID e argumentos, separados por vírgula
+```
+
+### Usando kill e killall
+
+```bash
+kill -s "STOP" $(pgrep "Xorg")   # Para processo
+kill -s "CONT" $(pgrep "Xorg")   # Continua processo
+killall -u "fred" -s "SIGHUP"    # Envia SIGHUP a todos os processos de um utilizador
+```
+
+## Exercícios Guiados
+
+1. **Navegar no output do ps:**
+   ```bash
+   $ ps -ef --forest | grep "su"
+   ```
+
+2. **Processo e seu filho:**
+   ```bash
+   $ xeyes &
+   $ ps -ef | grep "xeyes"
+   $ top -d 5
+   $ kill -s "STOP" <xeyes PID>
+   # Mude para janela do Xeyes e pressione Ctrl+c
+   ```
+
+3. **Processo em background com pgrep:**
+   ```bash
+   $ xeyes &
+   $ pgrep -l "xeyes"
+   $ pgrep -u root "xeyes"
+   $ pgrep -a "xeyes"
+   ```
+
+4. **Matar com pkill e killall:**
+   ```bash
+   $ pkill -9 "xeyes"
+   $ pgrep -l "xeyes"
+   $ xeyes &
+   $ killall -9 xeyes
+   $ pgrep -l "xeyes"
+   ```
+
+## Exercícios Exploratórios
+
+1. **Gerar processos de shell para killall:**
+   
+
+<SolutionBlock>
+```bash
+   $ sleep 60 &
+   $ sleep 60 &
+   $ sleep 60 &
+   $ pgrep -l "sleep"
+   $ killall -9 "sleep"
+   $ pgrep -l "sleep"
+   ```
+</SolutionBlock>
+
+
+
+2. **Listar processos em foreground:**
+   
+
+<SolutionBlock>
+```bash
+   $ ps -e | grep tty
+   ```
+</SolutionBlock>
+
+
+
+3. **Processos de terceiros do utilizador:**
+   
+
+<SolutionBlock>
+```bash
+   $ pgrep -P 1 -u "fred"
+   $ pgrep -d, -a -P 1 -u "fred"
+   ```
+</SolutionBlock>
+
+
+
+4. **Iniciar daemon no boot:**
+   
+
+<SolutionBlock>
+```bash
+   $ systemctl enable sshd
+   ```
+</SolutionBlock>
+
+
+
+5. **Listar processos de um directório:**
+   
+
+<SolutionBlock>
+```bash
+   $ pgrep -d, -a -f "bash" | grep -E "/(home|etc)/fred"
+   ```
+</SolutionBlock>
+
+
+
+6. **Verificar processos com pgrep:**
+   
+
+<SolutionBlock>
+```bash
+   $ pgrep -d, -P 1 -u fred -a
+   ```
+</SolutionBlock>
+
+
+
+7. **Reiniciar daemon de logs:**
+   
+
+<SolutionBlock>
+```bash
+   $ sudo systemctl restart rsyslog
+   ```
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T13 - 103.4 Usando fluxos, pipes e redirecionamentos]()
+→ Próximo: [T15 - 103.6 Modificar prioridades de execução]()

@@ -1,0 +1,245 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="022.1 — Criptografia e Infraestrutura de Chaves Públicas (PKI)"
+  code="020"
+  topicNumber="T04"
+  objective="022.1"
+  weight={4}
+  pages="LPI Security Essentials (020) - Version 1.0"
+  accent="coral"
+/>
+
+
+
+## Resumo Conciso
+
+- **Criptografia**: transforma dados legíveis em formato ilegível por meio de algoritmos, garantindo que apenas quem possui a chave correta possa decifrar
+- **Função hash**: converte dados de qualquer tamanho numa sequência de tamanho fixo (hash/resumo); sensível a alterações; unidirecional (não reversível)
+- **Cifras**: algoritmos que convertem texto puro em texto cifrado
+
+| Conceito | Descrição |
+|---|---|
+| **Hash** | Saída de tamanho fixo; verifica integridade; unidirecional |
+| **Salting** | Valor aleatório adicionado à senha antes do hash; previne rainbow tables |
+| **MD5** | Hash descontinuado; vulnerável a ataques de colisão |
+| **SHA-256** | Hash da família SHA-2; 256 bits; amplamente utilizado |
+
+### Criptografia Simétrica vs Assimétrica
+
+| Característica | Simétrica (AES) | Assimétrica (RSA) |
+|---|---|---|
+| **Chaves** | Mesma chave para cifrar/decifrar | Par de chaves: pública e privada |
+| **Velocidade** | Rápida, baixo custo computacional | Mais lenta, maior custo computacional |
+| **Uso principal** | Criptografia de grandes volumes de dados | Troca segura de chaves, assinaturas digitais |
+| **Desafio** | Distribuição segura da chave | Verificação de autenticidade da chave pública |
+| **Exemplo** | AES-128/256, WPA2 | RSA, ECC, ECDH |
+
+### Criptografia Híbrida
+
+- Combina simétrica + assimétrica
+- Assimétrica troca a chave simétrica (chave de sessão); simétrica cifra os dados reais
+- Usado em SSL/TLS: Diffie-Hellman/ECDH para troca de chave + AES para dados
+
+### Sigilo Encaminhado Perfeito (PFS)
+
+- Gera chave efêmera única por sessão; descartada ao fim da sessão
+- Mesmo que a chave privada de longo prazo seja comprometida, sessões passadas não podem ser decifradas
+- Protocolos: Diffie-Hellman Efêmero (DHE) e Elliptic Curve Diffie-Hellman Efêmero (ECDHE)
+
+### E2EE vs Criptografia de Transporte
+
+| | E2EE (Ponta a Ponta) | Transporte (TLS) |
+|---|---|---|
+| **Escopo** | Origem até destinatário | Entre dois pontos (ex: cliente-servidor) |
+| **Acesso intermediário** | Nenhum (servidor não decifra) | Servidor decifra e pode armazenar |
+| **Exemplo** | WhatsApp | HTTPS |
+| **Complexidade** | Maior (gestão de chaves) | Menor |
+
+### PKI e Cadeia de Confiança
+
+- **PKI**: estrutura que gerencia certificados digitais e pares de chaves público-privada
+- **CA (Autoridade Certificadora)**: emite, valida e gerencia certificados
+- **Root CA**: topo da hierarquia; autoassinada; pré-instalada em SO e navegadores
+- **Cadeia de confiança**: Root CA → CA Intermediária → Certificado de Entidade Final
+
+### Certificados X.509
+
+| Campo | Descrição |
+|---|---|
+| **Subject** | Entidade para a qual o certificado foi emitido |
+| **Issuer** | CA que emitiu o certificado |
+| **Validity** | Período de validade (notBefore/notAfter) |
+| **Public Key** | Chave pública da entidade |
+| **Signature** | Assinatura digital da CA |
+| **Extensions** | Extensões (ex: subjectAltName, uso de chave) |
+
+### Processo de Emissão de Certificados
+
+1. Gerar CSR (Certificate Signing Request) com chave pública + informações de identidade
+2. Enviar CSR à CA para validação
+3. Tipos de validação: DV (domínio), OV (organização), EV (estendida)
+4. CA assina digitalmente o certificado com a sua chave privada
+5. Certificado emitido é instalado no servidor/dispositivo
+
+### Let's Encrypt
+
+- Certificados SSL/TLS **gratuitos** e **automatizados**
+- Emite certificados DV (Validação de Domínio)
+- Validade de **90 dias** → renovação automática essencial
+- Promoveu ampla adoção do HTTPS na web
+
+### Algoritmos Importantes
+
+| Algoritmo | Tipo | Uso |
+|---|---|---|
+| **AES** | Simétrico | Criptografia de dados (WPA2, FDE) |
+| **RSA** | Assimétrico | Certificados, e-mail seguro, SSH |
+| **ECDH/ECC** | Assimétrico | Troca de chaves eficiente (smartphones) |
+| **SHA-256** | Hash | Verificação de integridade, blockchain |
+| **MD5** | Hash | Descontinuado (vulnerável a colisões) |
+| **Diffie-Hellman** | Troca de chaves | PFS, sessões TLS |
+
+### Computação Quântica e Ameaças
+
+- Computadores quânticos podem fatorar números grandes eficientemente (algoritmo de Shor)
+- RSA e ECC ficariam vulneráveis
+- Pesquisa em algoritmos resistentes à computação quântica (post-quantum cryptography)
+
+## Exercícios Guiados
+
+### Exercício Guiado 1: Criptografia Simétrica vs Assimétrica
+
+**Enunciado:** Explique a diferença entre criptografia simétrica e assimétrica.
+
+**Solução:** A criptografia simétrica utiliza a mesma chave para encriptação e desencriptação, tornando-a eficiente, mas apresentando o desafio de distribuir a chave de forma segura. A criptografia assimétrica utiliza um par de chaves — uma pública e uma privada — onde a chave pública encripta os dados e apenas a chave privada correspondente pode desencriptá-los. Isso elimina a necessidade de compartilhar uma chave secreta, mas é computacionalmente mais exigente.
+
+### Exercício Guiado 2: Sigilo Encaminhado Perfeito (PFS)
+
+**Enunciado:** Descreva como o Sigilo Encaminhado Perfeito (PFS) aprimora a segurança de protocolos de comunicação, como SSL/TLS.
+
+**Solução:** O PFS garante que cada sessão de comunicação tenha uma chave de criptografia efêmera e única, que é descartada após o término da sessão. Isso significa que, mesmo que uma chave privada de longo prazo seja comprometida, as comunicações passadas não podem ser descifradas. Em protocolos como SSL/TLS, a PFS utiliza algoritmos como o Diffie-Hellman para gerar essas chaves temporárias, protegendo a confidencialidade dos dados e proporcionando segurança aprimorada para as comunicações na web.
+
+### Exercício Guiado 3: Funções Hash e Integridade
+
+**Enunciado:** Qual é o papel das funções hash na verificação da integridade dos dados? Forneça um exemplo de um cenário em que isso seja crucial.
+
+**Solução:** As funções hash geram um hash único de tamanho fixo a partir de uma entrada, que muda drasticamente mesmo com uma pequena alteração na entrada. Essa propriedade as torna ideais para verificar a integridade dos dados, pois qualquer modificação nos dados resulta em um hash diferente. Um cenário crucial é a verificação de downloads de software: os mantenedores do Linux e das ferramentas GNU fornecem um hash (como SHA-256) para seus arquivos, permitindo que os utilizadores verifiquem se os arquivos não foram alterados durante a transferência. Se o hash do ficheiro baixado corresponder ao hash fornecido, o arquivo é confirmado como íntegro.
+
+### Exercício Guiado 4: Cadeia de Confiança na PKI
+
+**Enunciado:** Explique o conceito de cadeia de confiança na PKI. Por que a cadeia de confiança é importante para estabelecer comunicações seguras?
+
+**Solução:** A cadeia de confiança na PKI refere-se à relação hierárquica entre a Root CA, as CAs intermediárias e os certificados de entidades finais. A Root CA, no topo da hierarquia, é confiável por sistemas operacionais e navegadores. Ela emite certificados para CAs intermediárias, que, por sua vez, emitem certificados para entidades finais (sites, servidores). Cada certificado na cadeia é validado pelo certificado acima dele. Se a cadeia for interrompida ou um certificado for comprometido, o sistema sinaliza a comunicação como insegura, protegendo os utilizadores contra ameaças.
+
+### Exercício Guiado 5: Papel da PKI nas Comunicações Digitais
+
+**Enunciado:** Descreva como a Infraestrutura de Chave Pública (PKI) estabelece confiança nas comunicações digitais.
+
+**Solução:** A PKI estabelece confiança por meio de uma cadeia de confiança envolvendo Autoridades Certificadoras (CAs). As CAs emitem certificados digitais que vinculam a chave pública de uma entidade à sua identidade verificada. As CAs Raiz, confiáveis para navegadores e sistemas operacionais, ancoram a cadeia de confiança, validando certificados emitidos por CAs intermediárias. Essa estrutura hierárquica garante comunicações seguras ao verificar a autenticidade dos certificados digitais.
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1: Criptografia Híbrida no HTTPS
+
+**Enunciado:** Pesquise e explique como a criptografia híbrida é implementada na navegação web segura por meio do protocolo HTTPS.
+
+
+
+<SolutionBlock>
+No HTTPS, a criptografia híbrida é implementada utilizando a criptografia assimétrica (tipicamente RSA) para trocar de forma segura uma chave de sessão simétrica entre o cliente e o servidor. Essa chave de sessão é então usada para criptografar toda a transmissão de dados subsequente utilizando criptografia simétrica (como o AES). A criptografia assimétrica garante que a chave de sessão seja trocada de forma segura mesmo em rede não confiável, enquanto a simétrica proporciona criptografia rápida e eficiente para a comunicação real. Essa combinação oferece segurança e desempenho ideais para navegação web.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2: Computação Quântica e Criptografia
+
+**Enunciado:** Investigue o conceito de computação quântica e como ela representa uma ameaça aos sistemas criptográficos atuais, especialmente à criptografia assimétrica como o RSA.
+
+
+
+<SolutionBlock>
+A computação quântica pode realizar cálculos complexos exponencialmente mais rápidos que computadores clássicos, representando uma ameaça significativa aos métodos de criptografia assimétrica. O RSA depende da dificuldade de fatorar grandes números primos, um problema que computadores quânticos poderiam resolver eficientemente usando o algoritmo de Shor. Para enfrentar isso, pesquisadores desenvolvem algoritmos resistentes à computação quântica (post-quantum cryptography) para proteger comunicações sensíveis, transações financeiras e dados governamentais.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3: Validação EV vs DV
+
+**Enunciado:** Pesquise o papel dos certificados de Validação Estendida (EV) na segurança da web e explique como eles diferem dos certificados DV e OV.
+
+
+
+<SolutionBlock>
+Os certificados EV oferecem o mais alto nível de garantia. Enquanto os certificados DV verificam apenas o controlo do domínio e os OV verificam detalhes básicos da organização, os certificados EV exigem verificações rigorosas: existência legal, localização física e status operacional da entidade. Os certificados DV são mais fáceis de obter e suficientes para necessidades básicas, enquanto os EV aumentam a confiança do utilizador durante transações sensíveis (bancos online, compras).
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4: Geração de CSR com OpenSSL
+
+**Enunciado:** Gere um CSR para o domínio www.example.com usando o OpenSSL. Forneça o comando e explique cada parte.
+
+
+
+<SolutionBlock>
+```bash
+openssl req -new -newkey rsa:2048 -nodes -keyout private.key -out example.csr -subj "/CN=www.example.com"
+```
+
+- `req -new`: inicia a criação de um novo CSR
+- `-newkey rsa:2048`: gera uma nova chave RSA de 2048 bits
+- `-nodes`: não encripta a chave privada (sem frase-senha)
+- `-keyout private.key`: indica o ficheiro onde gravar a chave privada gerada
+- `-out example.csr`: indica o nome do ficheiro CSR que será criado
+- `-subj "/CN=www.example.com"`: fornece o Common Name (CN) do domínio diretamente na linha de comando
+
+Após executar, será solicitado inserir informações como nome do domínio, organização e localização. O CSR pode então ser enviado a uma Autoridade Certificadora para solicitar um certificado X.509.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 5: Cifras Simétricas e AES na Prática
+
+**Enunciado:** Explique como o AES funciona como cifra simétrica, descrevendo o processo de encriptação e desencriptação com uma chave.
+
+
+
+<SolutionBlock>
+O AES (Advanced Encryption Standard) é uma cifra simétrica que usa a mesma chave para encriptar e desencriptar. Na prática, pode ser utilizado com o `openssl`:
+
+```bash
+# Encriptação
+echo -n "SensitiveData" | openssl enc -aes-256-cbc -pbkdf2 -pass pass:MinhaPass123 -base64
+
+# Resultado: string base64 com o texto cifrado
+```
+
+- O texto `SensitiveData` é encriptado com o algoritmo AES-256 no modo CBC
+- A senha `MinhaPass123` é derivada via KDF (`-pbkdf2` — Password-Based Key Derivation Function 2), o que gera uma chave AES válida independentemente do comprimento da senha
+- O resultado é apresentado em Base64 para ser facilmente copiado
+
+Para desencriptar:
+
+```bash
+# Desencriptação
+echo "resultado_base64_aqui" | base64 -d | openssl enc -d -aes-256-cbc -pbkdf2 -pass pass:MinhaPass123
+
+# Resultado: SensitiveData
+```
+
+- `-d` indica desencriptação
+- A mesma senha e KDF são necessários para reverter o processo
+
+O AES é amplamente utilizado em WPA2 (redes Wi-Fi), governos e organizações para proteção de informações confidenciais.
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T03 - 021.3 Comportamento Ético]()
+→ Próximo: [T05 - 022.2 Criptografia na Web]()

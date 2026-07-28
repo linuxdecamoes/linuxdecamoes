@@ -1,0 +1,369 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="Transformando comandos em Scripts"
+  code="010"
+  topicNumber="T11"
+  objective="3.3"
+  weight={4}
+  pages="Linux Essentials (010) - Version 4.1"
+  accent="sage"
+/>
+
+
+
+## Resumo Conciso
+
+### O que é um script
+- **Script** = ficheiro de texto com comandos que o Bash executa linha a linha. O Bash é, simultaneamente, um **shell** e uma **linguagem de programação**.
+- Criação típica: escrever comandos num ficheiro → tornar executável → chamar pelo nome.
+
+### Caminhos de execução (PATH)
+- O Bash procura comandos nos diretórios da variável de ambiente **`$PATH`** (separados por `:`). O diretório atual **não** costuma estar lá.
+- **3 soluções** para executar um script local:
+  1. Movê-lo para um diretório do PATH (ex.: `/bin`).
+  2. Acrescentar o diretório atual ao PATH: `PATH=$PATH:~/scripts`.
+  3. Chamar com caminho relativo: `./script.sh` (forma mais simples).
+
+### Permissões e shebang
+- Por defeito, um ficheiro de texto tem permissões `664` (leitura/escrita, sem execução).
+- **`chmod +x ficheiro`** adiciona execução para todos (torna-se `755`).
+- **Shebang** = primeira linha `#!/bin/bash` que indica ao sistema qual o intérprete. Recomendado em todos os scripts.
+- Sufixo `.sh` é mera convenção (não afeta a execução).
+
+### Editores de texto (linha de comando)
+| Editor | Notas |
+|--------|-------|
+| **vi / vim** | Presente em praticamente todo o Linux. **3 modos**: navegação (`H J K L`), inserção (`I` → escrever, `Esc` sai) e comando (`:w`, `:q`, `:wq`). Curva de aprendizagem elevada mas muito produtivo. |
+| **nano** | Mais recente, simples, sem modos. Escreve-se logo; atalhos com `Ctrl` no rodapé (`^O` gravar, `^X` sair, `^G` ajuda). |
+
+### Variáveis
+- Sintaxe de atribuição: **sem espaços** à volta do `=` → `username=Carol`.
+- Substituição pelo cifrão: `echo "Hello $username!"` (ou forma extensa `${username}`).
+- **Regras:** apenas alfanuméricos e `_`; *case-sensitive*; tipo implícito **string**.
+- **Aspas:**
+  - **Duplas (`"`)** — "fracas": **permitem** substituição de variáveis.
+  - **Simples (`'`)** — "fortes": **impedem** substituição (literal).
+  - Valor com espaços precisa de aspas: `username="Carol Smith"`.
+
+### Argumentos e variáveis especiais
+| Variável | Significado |
+|----------|-------------|
+| `$1`, `$2`, … `$9` | Argumentos posicionais 1 a 9 |
+| `$#` | Número total de argumentos passados |
+| `$@` / `$*` | Todos os argumentos (array) |
+| `$?` | Código de saída do último comando |
+| `$PWD` | Diretório atual |
+
+### Lógica condicional (`if`)
+```bash
+if [ CONDIÇÃO ]
+then
+    # comando(s) se verdade
+elif [ OUTRA_CONDIÇÃO ]
+then
+    # alternativa
+else
+    # se tudo falhar
+fi
+```
+- **Atenção aos espaços** dentro de `[ ]` — a sua omissão provoca erros.
+- **Operadores numéricos:** `-eq` (igual), `-ne` (diferente), `-gt` (maior), `-ge` (maior/igual), `-lt` (menor), `-le` (menor/igual).
+- **Comparação de strings:** `==` (ex.: `[ "$1" == "$PWD" ]`). Não confundir com `-eq`.
+
+### Lição 2 — Recursos avançados
+
+#### Códigos de saída (`exit` e `$?`)
+- Todo o comando devolve um **código de saída** guardado em `$?`:
+  - **`0`** = sucesso.
+  - **`1`-`255`** = erro (códigos distintos ajudam a diagnosticar).
+- Comando **`exit N`** termina o script imediatamente com o código `N` (ignora o resto do ficheiro).
+- Útil em depuração: `echo $?` após qualquer comando.
+
+#### `for` loops e arrays
+- Array implícito (separado por espaços): `FILES="/usr/sbin/accept /usr/sbin/pwck /usr/sbin/chroot"`.
+- **`for variavel in $LISTA`** … **`do`** … **`done`** itera sobre cada elemento.
+- **`shift`** remove o primeiro elemento dos argumentos (útil para formatar saídas).
+- **`echo -n`** suprime a nova linha final.
+
+#### Validação com `grep` e regex
+- Usar `grep` com expressões regulares para validar entradas:
+  - `"^[A-Za-z]*$"` — só letras (`^` início, `$` fim, `*` zero ou mais).
+  - `"^[0-9]*$"` — só dígitos.
+- Redirecionar saída para `/dev/null` (`> /dev/null`) para silenciar e testar apenas `$?`.
+- Ex.: `echo "$1" | grep "^[A-Za-z]*$" > /dev/null; if [ $? -ne 0 ]; then echo "Inválido"; fi`.
+
+| `./guided1.sh 3 0` | `$#=2`; `3 -lt 2`? Falso. `3 -gt 0`? Verdadeiro. | `Apples win!` |
+|---|---|---|
+| `./guided1.sh 2 4` | `2 -lt 2`? Falso. `2 -gt 4`? Falso. → `else`. | `Oranges win!` |
+| `./guided1.sh 0 1` | `$#=2`; `0 -lt 2`? Verdadeiro. | `This is like comparing Apples and Oranges!` |
+
+### Guiado 4 — Análise do `script1.sh` (Lição 2)
+
+**Enunciado (Lição 2, p. 247):** Dado o script:
+```bash
+#!/bin/bash
+if [ $# -lt 1 ]
+then
+    echo "This script requires at least 1 argument."
+    exit 1
+fi
+echo $1 | grep "^[A-Z]*$" > /dev/null
+if [ $? -ne 0 ]
+then
+    echo "no cake for you!"
+    exit 2
+fi
+echo "here's your cake!"
+exit 0
+```
+Qual a saída (incluindo `echo $?`) para: `./script1.sh`, `./script1.sh cake`, `./script1.sh CAKE`?
+
+**Solução:**
+| Comando | Saída | Código `$?` | Justificação |
+|---------|-------|-------------|--------------|
+| `./script1.sh` | `This script requires at least 1 argument.` | `1` | `$#=0` → `-lt 1` verdadeiro → `exit 1` |
+| `./script1.sh cake` | `no cake for you!` | `2` | `cake` falha regex `^[A-Z]*$` (só maiúsculas) → `exit 2` |
+| `./script1.sh CAKE` | `here's your cake!` | `0` | `CAKE` passa a regex → `exit 0` |
+
+### Guiado 5 — Interpretar o `script2.sh` (Lição 2)
+
+**Enunciado (Lição 2, p. 248):** Descreva a finalidade de:
+```bash
+for filename in $1/*.txt
+do
+    cp $filename $filename.bak
+done
+```
+
+**Solução:**
+O script **faz cópias de segurança (backup)** de todos os ficheiros `.txt` existentes no subdiretório indicado pelo **primeiro argumento** (`$1`).
+- O glob `$1/*.txt` lista todos os `.txt` desse diretório.
+- Para cada um, cria uma cópia com sufixo `.bak` (ex.: `notas.txt` → `notas.txt.bak`).
+
+---
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+> Exercícios da autoria do agente, para praticares **escrevendo scripts `.sh` reais**. Precisas de uma sessão Linux (física, VM ou WSL). Soluções em `<details>` para tentares primeiro.
+> *Convenção:* cria os scripts numa pasta de testes (ex.: `~/scripts`) e dá permissões com `chmod +x`.
+
+### Exploratório 1 — Primeiro script executável (Hello World + shebang)
+Cria um script `hello.sh` que imprima `Hello World!`. Torna-o executável e executa-o com `./hello.sh`. Confirma a necessidade do `chmod +x` e do `./`.
+
+
+
+<SolutionBlock>
+```bash
+# 1. Criar o ficheiro com shebang e comando echo
+cat > hello.sh <<'EOF'
+#!/bin/bash
+# O meu primeiro script
+echo "Hello World!"
+EOF
+
+# 2. SEM permissão de execução → erro Permission denied
+./hello.sh    # -bash: ./hello.sh: Permission denied
+
+# 3. Tornar executável e confirmar
+chmod +x hello.sh
+ls -l hello.sh        # deve mostrar -rwxr-xr-x ...
+
+# 4. Executar
+./hello.sh            # Hello World!
+```
+
+**O que aprendeste:** sem `chmod +x` o Linux recusa executar o ficheiro; o `./` é necessário porque o diretório atual não está no `$PATH`.
+</SolutionBlock>
+
+
+
+### Exploratório 2 — Variáveis, aspas e argumentos posicionais
+Escreve `greet.sh` que receba **1 argumento** (nome) e imprima `Olá, <nome>!`. Testa com `./greet.sh Maria`. Experimenta também passar um nome com espaço (`"Ana Silva"`) e observa o efeito de aspas duplas vs. simples.
+
+
+
+<SolutionBlock>
+```bash
+cat > greet.sh <<'EOF'
+#!/bin/bash
+# Sauda o utilizador cujo nome é passado como argumento
+username=$1
+echo "Olá, $username!"     # aspas duplas: $username é substituído
+echo 'Olá, $username!'     # aspas simples: texto literal
+EOF
+
+chmod +x greet.sh
+
+./greet.sh Maria
+# Olá, Maria!
+# Olá, $username!
+
+# Nome composto: SEM aspas no argumento → o "Silva" vira $2 e ignora-se
+./greet.sh Ana Silva
+# Olá, Ana!
+# Olá, $username!
+
+# Nome composto: COM aspas → $1 = "Ana Silva"
+./greet.sh "Ana Silva"
+# Olá, Ana Silva!
+```
+
+**O que aprendeste:** (1) `$1` é o 1.º argumento posicional; (2) aspas duplas permitem substituição, aspas simples não; (3) aspas na **chamada** preservam nomes com espaços como um único argumento.
+</SolutionBlock>
+
+
+
+### Exploratório 3 — `if`, `$#` e códigos de saída
+Cria `requerum.sh` que **exija exatamente 1 argumento**: se sim, saúda o utilizador (`exit 0`); se não, mostra erro (`exit 1`). Após cada execução, corre `echo $?` para confirmar o código de saída.
+
+
+
+<SolutionBlock>
+```bash
+cat > requerum.sh <<'EOF'
+#!/bin/bash
+# Exige exatamente 1 argumento; usa if/then/else/fi e exit codes
+if [ $# -eq 1 ]
+then
+    echo "Olá, $1!"
+    exit 0
+else
+    echo "Erro: passe exatamente um argumento. (Recebidos: $#)"
+    exit 1
+fi
+EOF
+
+chmod +x requerum.sh
+
+# Caso de erro: 0 argumentos
+./requerum.sh
+echo $?           # 1
+
+# Caso de erro: 2 argumentos
+./requerum.sh Ana Bruno
+echo $?           # 1
+
+# Caso de sucesso: 1 argumento
+./requerum.sh Ana
+echo $?           # 0
+```
+
+**O que aprendeste:** operador `-eq` para comparação numérica; `$#` conta argumentos; `exit N` define o código de saída; `echo $?` lê esse código — base de toda a automação e depuração em Bash.
+</SolutionBlock>
+
+
+
+### Exploratório 4 — `for`, `$@` e `shift` (saudar múltiplos utilizadores)
+Escreve `friendly.sh` que saude **todos** os argumentos passados, um por linha. Depois melhora-o para imprimir tudo numa só linha, no formato `Hello Carol, and Dave, and Henry!`.
+
+
+
+<SolutionBlock>
+```bash
+# Versão 1: um por linha com for + $@
+cat > friendly.sh <<'EOF'
+#!/bin/bash
+if [ $# -eq 0 ]
+then
+    echo "Diga pelo menos um nome."
+    exit 1
+fi
+for nome in $@
+do
+    echo "Hello $nome!"
+done
+exit 0
+EOF
+
+chmod +x friendly.sh
+./friendly.sh Carol Dave Henry
+# Hello Carol!
+# Hello Dave!
+# Hello Henry!
+
+
+# Versão 2: tudo na mesma linha com echo -n e shift
+cat > friendly.sh <<'EOF'
+#!/bin/bash
+if [ $# -eq 0 ]
+then
+    echo "Diga pelo menos um nome."
+    exit 1
+fi
+echo -n "Hello $1"      # primeiro nome sem "and"
+shift                    # remove o 1.º, $@ passa a conter o resto
+for nome in $@
+do
+    echo -n ", and $nome"
+done
+echo "!"                 # newline final
+exit 0
+EOF
+
+./friendly.sh Carol Dave Henry
+# Hello Carol, and Dave, and Henry!
+
+./friendly.sh Carol
+# Hello Carol!
+```
+
+**O que aprendeste:** `$@` comporta-se como array; `for x in $@` itera; `shift` remove o 1.º elemento (permite tratar o primeiro diferente dos restantes); `echo -n` suprime a nova linha.
+</SolutionBlock>
+
+
+
+### Exploratório 5 — Validar entradas com `grep` + regex
+Cria `so_letras.sh` que só aceite nomes compostos **exclusivamente por letras** (`[A-Za-z]`). Se um nome contiver dígitos ou símbolos, imprime erro e termina com código `2`.
+
+
+
+<SolutionBlock>
+```bash
+cat > so_letras.sh <<'EOF'
+#!/bin/bash
+# Valida cada argumento: só letras (A-Z, a-z). Erro → exit 2
+if [ $# -eq 0 ]
+then
+    echo "Uso: $0 <nome1> [nome2 ...]"
+    exit 1
+fi
+for nome in $@
+do
+    # grep silencioso (> /dev/null); testamos apenas o exit code em $?
+    echo "$nome" | grep "^[A-Za-z]*$" > /dev/null
+    if [ $? -ne 0 ]
+    then
+        echo "ERRO: '$nome' contém caracteres inválidos (só letras)."
+        exit 2
+    fi
+    echo "OK: $nome"
+done
+exit 0
+EOF
+
+chmod +x so_letras.sh
+
+./so_letras.sh Carol Dave Henry
+# OK: Carol / OK: Dave / OK: Henry
+echo $?             # 0
+
+./so_letras.sh 42abc Carol
+# ERRO: '42abc' contém caracteres inválidos (só letras).
+echo $?             # 2
+```
+
+**O que aprendeste:** padrão regex `"^[A-Za-z]*$"` força toda a string a ser só letras; redirecionar para `/dev/null` silencia o `grep`; usar `$?` logo a seguir para decidir o fluxo; **códigos de saída distintos** (0/1/2) permitem identificar o tipo de erro.
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T10 - Pesquisando e extraindo dados de arquivos]()
+→ Próximo: [T12 - Escolhendo um Sistema Operacional]()

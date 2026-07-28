@@ -1,0 +1,221 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T15 — 055.3 Gestão da comunidade"
+  code="050"
+  topicNumber="T15"
+  objective="055.3"
+  weight={2}
+  pages="LPI Open Source Essentials (050) - Version 1.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Funções nos projetos de código aberto
+
+| Função | Descrição |
+|---|---|
+| **Programadores** | Diferentes níveis de experiência; veteranos e novatos |
+| **Committer** | Verifica qualidade, utilidade e conformidade; tem privilégios para incluir código no repositório |
+| **Mentores** | Orientam novos colaboradores nos padrões e práticas do projeto |
+| **Líderes de projeto** | Tomam decisões cruciais; promovem projeto, resolvem divergências, obtêm financiamento |
+| **Ditador benevolente** | Único líder com grande autoridade e carisma (ex.: Linus Torvalds no Linux) |
+| **Comité de líderes** | Abordagem coletiva de liderança (preferida pela maioria dos projetos) |
+| **Gerente de comunidade** | Mantém comunicação aberta, integra colaboradores, resolve pendengas, protege contra abusos |
+| **Utilizadores** | Testam versões, oferecem suporte mútuo em fóruns |
+
+### Tarefas comuns nos projetos de código aberto
+
+- Testes de código (muitos projetos pedem aos utilizadores que testem cada nova versão)
+- Relato de bugs e definição de prioridades
+- Coleta de métricas (ex.: tempo para corrigir bug grave)
+- Comunicação online e assíncrona (diferente dos projetos proprietários com reuniões presenciais)
+- Recrutamento de pessoas para preencher lacunas na equipa
+
+### Tipos de contribuição
+
+| Tipo de contribuição | Exemplo |
+|---|---|
+| **Código** | Desenvolvimento de software e correções |
+| **Documentação** | Manuais, guias, textos |
+| **Relatórios de bugs** | Identificação e descrição de problemas |
+| **Forks (Bifurcações)** | Criação de versão separada quando há necessidades incompatíveis |
+| **Suporte** | Respostas em fóruns e assistência a utilizadores |
+| **Promoção** | Divulgação do projeto |
+| **Financeira** | Doações e captação de fundos |
+
+### Tipos de colaboradores
+
+| Tipo | Descrição |
+|---|---|
+| **Membros da equipa principal** | Contribuem regularmente e assumem responsabilidades de longo prazo |
+| **Colaboradores ocasionais** | Relatam bugs ou publicam dicas; não se espera responsabilidades |
+| **Profissionais** | Pagos ou não, são especialistas nas suas áreas |
+| **Entusiastas (amadores)** | Contribuem por paixão, sem serem profissionais |
+| **Indivíduos** | Colaboradores pessoais |
+| **Corporações** | Pagam funcionários para colaborar em projetos importantes |
+
+### Papel das organizações
+
+| Forma de apoio | Descrição |
+|---|---|
+| **Pagamento de funcionários** | Contratação de colaboradores altamente produtivos |
+| **Financiamento** | Marketing, conferências, infraestrutura |
+| **Consultoria** | Assessoria sobre direção e estratégia |
+| **Fundações** | Linux Foundation, Apache Software Foundation, Eclipse Foundation — suporte legal, registo de marca, licenciamento |
+
+- **Modelo de núcleo aberto**: divisão do projeto em partes abertas e proprietárias
+- **Fork (Bifurcação)**: versão separada criada quando há necessidades incompatíveis com a direção do projeto
+- Organizações não devem pressionar para adicionar recursos extras; devem criar as suas próprias extensões
+
+### Transferência de direitos
+
+| Mecanismo | Descrição |
+|---|---|
+| **CLA (Contributor License Agreement)** | Contrato de licença de colaborador; pode ceder todos ou alguns direitos ao projeto |
+| **Código cedido ao projeto** | Projeto detém propriedade e todos os direitos |
+| **Direitos preservados** | Colaborador mantém direitos para enviar código a outro projeto ou construir negócio |
+| **DCO (Developer Certificate of Origin)** | Colaborador declara ter direito legal de doar o código |
+
+- Escolha de licença única facilita distribuição e uso
+- Compatibilidade de licenças deve ser garantida quando há licenças mistas
+
+### Regras e diretrizes
+
+| Instrumento | Finalidade |
+|---|---|
+| **Código de conduta** | Define como interagir; deve ser aplicado pelo gerente da comunidade |
+| **Diretrizes de código** | Garantem que todo o código é formatado de forma similar |
+| **Regras de lançamento** | Prazos fixos (ex.: Ubuntu LTS a cada 2 anos) ou lista de recursos a incluir |
+
+### Diversidade, equidade, inclusão e não-discriminação (DEI)
+
+- Código de conduta deve acolher explicitamente pessoas de diferentes gêneros, raças, etc.
+- Resposta rápida a agressões para garantir que comunidade está do lado das minorias
+- Alcançar grupos sub-representados (tradução, acessibilidade, fóruns noutros idiomas)
+- Não sobrecarregar membros de minorias com a responsabilidade de explicar as necessidades das suas comunidades
+- Cada pessoa deve ter a mesma oportunidade de participar
+
+## Exercícios Guiados
+
+### Exercício Guiado 1 — Direitos dos colaboradores
+
+**Enunciado:** Por que nem todos os colaboradores doam seu código ao projeto e renunciam a todos os seus direitos sobre ele?
+
+**Solução:** O colaborador pode querer contribuir com o mesmo código para um projeto diferente ou lançar um produto baseado no código e, portanto, deseja manter alguns direitos. O CLA (Contributor License Agreement) pode preservar direitos individuais, permitindo flexibilidade ao colaborador.
+
+### Exercício Guiado 2 — Colaboração sem programação
+
+**Enunciado:** Se alguém quiser colaborar com o projeto, mas não sabe programar, de que maneiras pode ajudar?
+
+**Solução:** Há muitas funções para colaboradores além de escrever código:
+- Documentação e tradução
+- Testes e relatórios de bugs
+- Gestão da comunidade
+- Participação em fóruns de suporte
+- Promoção do projeto
+- Criação de ilustrações e design
+- Organização de eventos e conferências
+
+### Exercício Guiado 3 — Projeto associado a uma fundação
+
+**Enunciado:** Por que muitos projetos de código aberto se juntam a uma fundação?
+
+**Solução:** Uma fundação lida com muitas tarefas legais, financeiras e outras que a comunidade do projeto pode ter dificuldade em realizar: suporte legal (registo de marca, indenização, licenciamento), ajuda para arrecadar dinheiro, e infraestrutura (bancos de dados de bugs, sites). Exemplos: Linux Foundation, Apache Software Foundation, Eclipse Foundation.
+
+### Exercício Guiado 4 — Governança de uma comunidade de código aberto
+
+**Enunciado:** Quais são os elementos essenciais de um bom sistema de governança para uma comunidade de código aberto?
+
+**Solução:** Uma boa governança comunitária inclui: (1) um **código de conduta** que defina comportamentos aceitáveis e seja aplicado de forma consistente; (2) **diretrizes de contribuição** claras que expliquem como submeter código, testar e rever alterações; (3) uma **estrutura de liderança** transparente (seja ditador benevolente ou comité) com processos definidos para tomada de decisões; (4) **mecanismos de resolução de conflitos**, como mediação por um gerente de comunidade; e (5) **regras de lançamento** que estabeleçam prazos e critérios para novas versões. Estes elementos garantem previsibilidade, inclusão e sustentabilidade a longo prazo do projeto.
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Código formatado incorretamente
+
+**Enunciado:** Você é um committer no seu projeto. Alguém envia um código que foi retirado de outro projeto (mas o colaborador tem os direitos sobre ele). O código está formatado de um jeito completamente diferente do restante do código. O que tu faz?
+
+
+
+<SolutionBlock>
+As diretrizes de escrita de código do projeto devem explicar claramente como formatar o código. O passo a passo é:
+1. Agradecer ao colaborador
+2. Indicar os padrões de formatação do projeto
+3. Pedir para ele reformatar a contribuição
+4. Se possível, usar ferramentas automatizadas para reformatação
+5. Se o colaborador não tiver tempo, procurar um membro júnior disponível para esse trabalho
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Contribuir código proprietário para projeto aberto
+
+**Enunciado:** Você criou um produto de software proprietário e deseja contribuir com partes dele para um projeto de código aberto. Em que circunstâncias tu pode continuar a oferecer o seu produto proprietário?
+
+
+
+<SolutionBlock>
+A resposta depende do contrato de licença do colaborador (CLA):
+- Se o CLA exigir que o código seja entregue ao projeto, concedendo-lhe todos os direitos, pode não ser possível continuar oferecendo o produto proprietário
+- Se o contrato preservar os direitos do colaborador sobre o código, poderá lançá-lo sob a licença que desejar no seu produto proprietário
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Conflito na lista de e-mails
+
+**Enunciado:** Duas pessoas na sua lista de e-mails começam a trocar farpas sobre um recurso do seu código. A discussão vai ficando cada vez mais acalorada, até que uma pessoa chama a outra de idiota. Como tu poderia lidar com a situação?
+
+
+
+<SolutionBlock>
+Qualquer pessoa que perceba a subida de tom e o comentário agressivo deve reagir o mais rápido possível:
+1. O gerente da comunidade é o responsável final por reparar o dano
+2. Publicar um comentário para toda a lista afirmando que o comportamento viola o código de conduta
+3. Entrar em contacto com cada parte separadamente
+4. Garantir que ambas as partes estão satisfeitas com a resolução
+5. Ensinar a discutir desacordos de forma construtiva
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Diversidade e inclusão num projeto de código aberto
+
+**Enunciado:** Você é líder de um projeto de código aberto e nota que a maioria dos colaboradores ativos são do mesmo país e falam a mesma língua. Além disso, praticamente todos são programadores experientes. Que estratégias pode adotar para tornar a comunidade mais diversificada e inclusiva?
+
+
+
+<SolutionBlock>
+Para tornar a comunidade mais diversificada e inclusiva, pode adotar as seguintes estratégias:
+
+**Diversidade geográfica e linguística:**
+- Traduzir a documentação para outros idiomas
+- Criar fóruns ou canais de comunicação noutros idiomas
+- Agendar reuniões síncronas em horários que acomodem diferentes fusos horários
+- Usar vocabulário simples e acessível nas comunicações em inglês
+
+**Diversidade de habilidades:**
+- Criar tarefas "good first issue" acessíveis a novatos e não-programadores
+- Documentar formas de contribuir além do código (testes, documentação, design, suporte)
+- Oferecer mentoria a colaboradores menos experientes
+
+**Inclusão ativa:**
+- Assegurar que o código de conduta acolhe explicitamente pessoas de diferentes géneros, raças e origens
+- Responder rapidamente a qualquer comportamento exclusivo
+- Entrar em contacto com organizações que treinam pessoas de comunidades sub-representadas
+- Não sobrecarregar membros de minorias com a responsabilidade de representar as suas comunidades
+- Garantir que o site e as ferramentas são acessíveis a pessoas com deficiência
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T14 - 055.2 Gestão de produtos/Gestão de lançamentos]()
+→ Próximo: [T16 - 056.1 Ferramentas de desenvolvimento]()

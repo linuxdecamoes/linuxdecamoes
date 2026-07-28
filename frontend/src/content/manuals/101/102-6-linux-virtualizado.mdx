@@ -1,0 +1,265 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="Linux virtualizado"
+  code="101"
+  topicNumber="T09"
+  objective="Linux virtualizado"
+  weight={1}
+  pages="LPIC-1 (101) - Version 5.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Virtualização — Conceitos
+
+| Conceito | Descrição |
+|----------|-----------|
+| **Hipervisor** | Plataforma de software que executa sistemas virtuais emulados |
+| **Guest (Convidado)** | Máquina virtual em execução no hipervisor |
+| **Host (Hospedeiro)** | Máquina física que executa o hipervisor |
+| **Migração** | Mover VM de um hipervisor para outro |
+| **Migração ao vivo** | Migração com o convidado em execução |
+
+### Tipos de Hipervisores
+
+| Hipervisor | Tipo | Observações |
+|------------|------|-------------|
+| **Xen** | Tipo 1 (bare-metal) | Código aberto; não depende de SO subjacente |
+| **KVM** | Tipo 1 e Tipo 2 | Módulo do kernel Linux; usa `libvirt` e QEMU |
+| **VirtualBox** | Tipo 2 | Desktop multiplataforma (Linux, macOS, Windows); Oracle |
+
+### Tipos de Máquina Virtual
+
+| Tipo | Descrição | Desempenho |
+|------|-----------|------------|
+| **Totalmente virtualizado** | SO convidado não sabe que é VM; requer extensões Intel VT-x ou AMD-V | Normal |
+| **Paravirtualizado** | SO convidado está ciente da VM; usa kernel modificado + drivers convidados | Melhor |
+| **Híbrido** | Combina os dois; drivers paravirtualizados em SO totalmente virtualizado | Quase nativo (E/S) |
+
+### Drivers Convidados
+
+| Plataforma | Drivers |
+|------------|---------|
+| KVM | Projeto Virtio |
+| VirtualBox | Extensões de Convidado (ISO) |
+
+### Armazenamento de Disco de VMs
+
+| Formato | Descrição | Desempenho |
+|---------|-----------|------------|
+| **COW (qcow2)** | Copy-on-write; tamanho aumenta conforme dados são gravados; sparse images | Menor (sobrecarga de monitoramento) |
+| **RAW** | Espaço pré-alocado; arquivo = tamanho total desde o início | Maior |
+
+**Local padrão (KVM/libvirt):** `/var/lib/libvirt/images/`
+
+### D-Bus Machine ID
+
+- Número de identificação único gerado na instalação
+- Local: `/var/lib/dbus/machine-id` (link para `/etc/machine-id`)
+- **Duas VMs não devem ter o mesmo ID**
+
+```bash
+# Verificar se existe ID
+dbus-uuidgen --ensure
+
+# Obter ID atual
+dbus-uuidgen --get
+
+# Gerar novo ID (em clone)
+sudo rm -f /etc/machine-id
+sudo dbus-uuidgen --ensure=/etc/machine-id
+```
+
+### Cloud IaaS — Elementos-Chave
+
+| Elemento | Descrição |
+|----------|-----------|
+| **Instâncias de computação** | Tempo de CPU cobrado; número de VMs provisionadas |
+| **Armazenamento em bloco** | Níveis variados; acesso rápido = mais caro; dados repouso = barato |
+| **Rede** | Sub-redes, rotas, firewalls, DNS, VPN (conexão híbrida) |
+
+### Acesso Seguro (SSH)
+
+```bash
+# Gerar par de chaves
+ssh-keygen
+
+# Copiar chave pública para servidor
+ssh-copy-id -i <public_key> user@cloud_server
+```
+
+- Chave privada: `~/.ssh/` (permissão `0600`)
+- Chave pública: permissão `0644`
+
+### cloud-init
+
+- Ferramenta neutra (independente de fornecedor) para pré-configurar VMs
+- Arquivos de configuração em YAML (cloud-config)
+- Configura: rede, pacotes, chave SSH, contas de usuário, localidade
+
+**Exemplo de arquivo cloud-config:**
+```yaml
+#cloud-config
+timezone: Africa/Dar_es_Salaam
+hostname: test-system
+apt_update: true
+apt_upgrade: true
+packages:
+  - nginx
+```
+
+- **Importante:** Sem espaço entre `#` e `cloud-config` na primeira linha
+
+### Contêineres vs Máquinas Virtuais
+
+| Característica | Máquina Virtual | Contêiner |
+|----------------|-----------------|-----------|
+| Emulação | Computador inteiro | Apenas software necessário para o aplicativo |
+| Sobrecarga | Alta | Baixa |
+| Migração | Pode precisar desligar | Aplicativo permanece em execução |
+| Isolamento | Completo (hardware emulado) | Usa cgroups do kernel Linux |
+| Tecnologias | Xen, KVM, VirtualBox | Docker, Kubernetes, LXD/LXC, systemd-nspawn, OpenShift |
+
+### Exemplo de Configuração XML (KVM/libvirt)
+
+**Arquivo:** `/etc/libvirt/qemu/NOMEVM.xml`
+
+**Campos principais:**
+- `<memory>` — RAM atribuída
+- `<vcpu>` — Número de núcleos da CPU
+- `<disk>` — Imagem de disco rígido
+- `<graphics>` — Recursos de exibição (SPICE/VNC)
+- `<interface>` — Configuração de rede
+- `<emulator>` — Caminho para QEMU (`/usr/bin/qemu-system-x86_64`)
+
+**Rede padrão:** `/etc/libvirt/qemu/networks/default.xml`
+- Rede privada Classe C com NAT
+- DHCP: `192.168.122.2` a `192.168.122.254`
+
+### Comandos Essenciais
+
+| Comando | Função |
+|---------|--------|
+| `dbus-uuidgen --ensure` | Verificar/criar D-Bus machine ID |
+| `dbus-uuidgen --get` | Obter D-Bus machine ID atual |
+| `ssh-keygen` | Gerar par de chaves SSH |
+| `ssh-copy-id` | Copiar chave pública para servidor remoto |
+| `cloud-init` | Pré-configurar VMs/contêineres em nuvem |
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Verificar extensões de CPU
+**Enunciado:** Execute o seguinte comando para ver se seu sistema já tem extensões de CPU habilitadas para rodar uma máquina virtual:
+```bash
+grep --color -E "vmx|svm" /proc/cpuinfo
+```
+Dependendo da saída, `vmx` pode estar realçado (Intel VT-x) ou `svm` (AMD SVM).
+
+
+
+<SolutionBlock>
+Os resultados variam dependendo da sua CPU. Eis um exemplo de saída de um computador com uma CPU Intel com extensões de virtualização habilitadas no firmware UEFI:
+```bash
+$ grep --color -E "vmx|svm" /proc/cpuinfo
+flags       : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36
+clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc
+art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni
+pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1
+sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm
+3dnowprefetch cpuid_fault epb invpcid_single pti ssbd ibrs ibpb stibp tpr_shadow vnmi
+flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm
+mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat
+pln pts hwp hwp_notify hwp_act_window hwp_epp md_clear flush_l1d
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Instalar e configurar KVM
+**Enunciado:** Se o seu processador suporta virtualizações, procure a documentação da sua distribuição para executar um hipervisor KVM.
+
+
+
+<SolutionBlock>
+**Instalar pacotes KVM:**
+- Ubuntu: https://help.ubuntu.com/lts/serverguide/libvirt.html
+- Fedora: https://docs.fedoraproject.org/en-US/quick-docs/getting-started-with-virtualization/
+- Arch Linux: https://wiki.archlinux.org/index.php/KVM
+
+**Instalar virt-manager (desktop gráfico):**
+```bash
+sudo apt install virt-manager
+```
+
+**Criar VM:** Baixe uma ISO de distribuição Linux e crie uma nova VM usando `virt-manager` ou `virt-install` pela linha de comando.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Listar máquinas virtuais KVM
+**Enunciado:** Se tiver KVM/libvirt instalado, use os comandos da linha de comando para listar as máquinas virtuais disponíveis e mostrar o seu estado.
+
+
+
+<SolutionBlock>
+```bash
+# Listar todas as VMs (incluindo desligadas)
+sudo virsh list --all
+
+# Listar apenas VMs em execução
+sudo virsh list
+
+# Mostrar informações detalhadas de uma VM específica
+sudo virsh dominfo <nome-da-vm>
+
+# Listar as redes virtuais disponíveis
+sudo virsh net-list --all
+```
+
+O comando `virsh` é a ferramenta de linha de comando para gerenciar VMs no libvirt/KVM.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Verificar e gerar D-Bus Machine ID
+**Enunciado:** Verifique se o seu sistema tem um D-Bus Machine ID configurado e, se não tiver, gere um novo. Em seguida, verifique o resultado.
+
+
+
+<SolutionBlock>
+```bash
+# Verificar se já existe um machine-id
+ls -l /etc/machine-id
+
+# Obter o valor atual
+dbus-uuidgen --get
+
+# Garantir que o machine-id existe (cria se não existir)
+sudo dbus-uuidgen --ensure
+
+# Em um clone, gerar um novo ID único
+sudo rm -f /etc/machine-id
+sudo dbus-uuidgen --ensure=/etc/machine-id
+
+# Verificar o novo ID
+cat /etc/machine-id
+```
+
+Cada VM/clonada deve ter um D-Bus Machine ID único para evitar conflitos de identificação.
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T08 - 102.5 Uso e gerenciamento de pacotes com RPM]()
+→ Próximo: [T10 - 103.1 Trabalho na linha de comando]()

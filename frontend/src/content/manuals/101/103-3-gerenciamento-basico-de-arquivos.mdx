@@ -1,0 +1,241 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="103.3 Gestão básica de ficheiros"
+  code="101"
+  topicNumber="T12"
+  objective="Gerir ficheiros e directórios, incluindo criação, cópia, movimentação, remoção, links e pesquisa"
+  weight={2}
+  pages="LPIC-1 (101) - Version 5.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Criação e cópia de ficheiros e directórios
+
+| Comando | Descrição |
+|---------|-----------|
+| `cp` | Copia ficheiros e directórios |
+| `-p` | Preserva permissões, data/hora e proprietário |
+| `-i` | Pergunta antes de sobrescrever |
+| `-u` | Copia apenas se o ficheiro fonte for mais novo |
+| `-r` | Cópia recursiva de directórios |
+| `mkdir` | Cria directórios |
+| `-p` | Cria directórios pais intermediários se necessário |
+
+```bash
+cp file1 file2                    # Cópia simples
+cp -p file1 file2                 # Preserva atributos
+cp -r dir1/ dir2/                 # Cópia recursiva
+mkdir -p /usr/local/bin           # Cria directórios intermediários
+mkdir man/man1 man/man5           # Cria múltiplos directórios
+```
+
+### Movimentação e remoção de ficheiros e directórios
+
+| Comando | Descrição |
+|---------|-----------|
+| `mv` | Move ou renomeia ficheiros/directórios |
+| `-i` | Pergunta antes de sobrescrever |
+| `-f` | Força (não pergunta, ignora `-i`) |
+| `-u` | Move apenas se o ficheiro fonte for mais novo |
+| `rm` | Remove ficheiros |
+| `-i` | Pergunta antes de remover |
+| `-r` | Remove directórios recursivamente |
+| `-f` | Força (ignora `-i`) |
+
+**Perigo:** `rm -r /*` — Exclui todo o conteúdo do disco! Nunca execute como root.
+
+```bash
+mv file1 file2/file3              # Move ficheiro para directório
+mv file1 file2                    # Renomeia ficheiro
+rm file1                          # Remove ficheiro
+rm -r dir1/                       # Remove directório e conteúdo
+```
+
+### Encontrando ficheiros
+
+| Comando | Descrição |
+|---------|-----------|
+| `find` | Busca em directórios e subdirectórios |
+| `locate` | Busca no banco de dados `mlocate.db` |
+| `updatedb` | Atualiza o banco de dados do locate |
+
+```bash
+find / -name "xorg.conf" 2>/dev/null
+find . -name "log.txt" -mtime -7
+find . -type f -name "*.txt"
+locate -i "tutorial"
+find /home -user jo -name "*.pdf"
+```
+
+**Expressões de teste do find:** `-name`, `-type`, `-mtime`, `-user`, `-size`, `-perm`, `-o` (OR), `-a` (AND), `-not`, `-newer`, `-exec`, `-print`.
+
+### Links de ficheiros
+
+> Para uma cobertura completa de hard links e links simbólicos, ver T22 — Criar e alterar links simbólicos e hardlinks.
+
+| Comando | Descrição |
+|---------|-----------|
+| `ln` | Cria links físicos (hard links) |
+| `ln -s` | Cria links simbólicos (soft links) |
+
+```bash
+ln file1 file2                    # Hard link
+ln -s file1 file2                 # Soft link (atalho)
+ls -li file1 file2                # Verifica inodes iguais (hard)
+readlink file2                    # Mostra para onde aponta (soft)
+```
+
+- **Hard links** compartilham o mesmo inode, são independentes do original
+- **Soft links** possuem inodes próprios, dependem do caminho original
+
+## Exercícios Guiados
+
+### Exercício Guiado 1 — Copiar e preservar atributos
+
+**Enunciado:** Copie `/etc/hosts` para o diretório atual preservando a data/hora e o proprietário.
+
+**Solução:**
+```bash
+$ ls -l /etc/hosts
+$ cp -p /etc/hosts .
+$ ls -l hosts
+# Dados (data/hora) e proprietário preservados
+```
+
+### Exercício Guiado 2 — Criar directórios recursivamente
+
+**Enunciado:** Crie o caminho `/usr/local/bin` mesmo que os directórios intermédios não existam.
+
+**Solução:**
+```bash
+$ mkdir -p /usr/local/bin
+```
+
+### Exercício Guiado 3 — Mover com perguntas
+
+**Enunciado:** Mova `file1` para `file2` pedindo confirmação antes de sobrescrever.
+
+**Solução:**
+```bash
+$ mv -i file1 file2
+```
+
+### Exercício Guiado 4 — Remover directório recursivamente
+
+**Enunciado:** Remova o diretório `dir1/` e todo o seu conteúdo.
+
+**Solução:**
+```bash
+$ rm -r dir1/
+```
+
+### Exercício Guiado 5 — Procurar ficheiros modificados
+
+**Enunciado:** Encontre ficheiros com nome `log.txt` modificados nos últimos 7 dias.
+
+**Solução:**
+```bash
+$ find . -name "log.txt" -mtime -7
+```
+
+### Exercício Guiado 6 — Criar link simbólico
+
+**Enunciado:** Crie um link simbólico `file2` que aponte para `file1`.
+
+**Solução:**
+```bash
+$ ln -s file1 file2
+```
+
+## Exercícios Exploratórios
+
+1. Copiar `/etc/hosts` mantendo data/hora e proprietário:
+   
+
+<SolutionBlock>
+```bash
+   $ cp -p /etc/hosts /tmp/hosts
+   $ ls -l /tmp/hosts
+   ```
+</SolutionBlock>
+
+
+
+2. Criar directórios em cadeia:
+   
+
+<SolutionBlock>
+```bash
+   $ mkdir -p /tmp/teste/a/b/c
+   ```
+</SolutionBlock>
+
+
+
+3. Mover com sobrescrita forçada:
+   
+
+<SolutionBlock>
+```bash
+    $ mv -f file1 file2
+    ```
+</SolutionBlock>
+
+
+
+4. Listar apenas directórios:
+   
+
+<SolutionBlock>
+```bash
+   $ find . -type d
+   ```
+</SolutionBlock>
+
+
+
+5. Listar ficheiros modificados hoje:
+   
+
+<SolutionBlock>
+```bash
+   $ find . -type f -mtime -1
+   ```
+</SolutionBlock>
+
+
+
+6. Criar directório e subdirectórios de uma vez:
+   
+
+<SolutionBlock>
+```bash
+   $ mkdir -p man/man1 man/man5 man/man8
+   ```
+</SolutionBlock>
+
+
+
+7. Procurar ficheiros por tamanho:
+   
+
+<SolutionBlock>
+```bash
+   $ find . -type f -size +10M
+   ```
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T11 - 103.2 Processar fluxos de texto usando filtros]()
+→ Próximo: [T13 - 103.4 Usando fluxos, pipes e redirecionamentos]()

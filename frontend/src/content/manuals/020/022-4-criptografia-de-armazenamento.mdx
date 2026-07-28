@@ -1,0 +1,164 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="022.4 — Criptografia de Armazenamento"
+  code="020"
+  topicNumber="T07"
+  objective="022.4"
+  weight={3}
+  pages="LPI Security Essentials (020) - Version 1.0"
+  accent="coral"
+/>
+
+
+
+## Resumo Conciso
+
+- **Proteção de dados em repouso**: tão importante quanto proteger dados em trânsito; transforma dados legíveis em formato ilegível acessível apenas com a chave correta.
+- **Criptografia de ficheiros**: protege ficheiros individuais; útil para partilha ou armazenamento em dispositivos externos/nuvem.
+- **Criptografia de dispositivos de armazenamento**: criptografa mídias inteiras (discos rígidos, SSDs, pen drives USB); todos os dados são criptografados automaticamente à medida que são gravados.
+- **Criptografia de disco completo (FDE)**: subconjunto da criptografia de dispositivos; criptografa todo o conteúdo incluindo o sistema operacional; requer autenticação antes do arranque.
+- **Algoritmo recomendado**: AES (Advanced Encryption Standard), com chaves de 128 ou 256 bits.
+- **Gestão de chaves**: práticas inadequadas (palavras-passe fracas, falta de backup de chaves) comprometem a eficácia da criptografia.
+
+### Ferramentas Principais
+
+| Ferramenta | Tipo | Plataformas | Uso Principal |
+|---|---|---|---|
+| **VeraCrypt** | Código aberto | Windows, macOS, Linux | Contêineres criptografados e FDE multiplataforma |
+| **Cryptomator** | Código aberto | Windows, macOS, Linux, iOS, Android | Cofres criptografados para serviços de nuvem |
+| **BitLocker** | Nativo do Windows | Windows | FDE integrado com TPM |
+| **LUKS** | Código aberto | Linux | FDE padrão em sistemas Linux |
+| **eCryptfs** | Código aberto | Linux | Criptografia de directórios (montagem em camada) |
+
+### Comparação: Criptografia de Ficheiros vs. FDE
+
+| Característica | Criptografia de Ficheiros | Criptografia de Disco Completo (FDE) |
+|---|---|---|
+| Âmbito | Ficheiros individuais | Dispositivo inteiro (incluindo SO) |
+| Intervenção do utilizador | Manual (selecionar ficheiros) | Automática (transparente) |
+| Proteção contra roubo | Apenas ficheiros criptografados | Todo o dispositivo |
+| Uso típico | Documentos sensíveis, partilha | Laptops, desktops, ambientes corporativos |
+| Autenticação | Por ficheiro/senha | Pré-boot (PIN, chave USB, TPM) |
+
+## Exercícios Guiados
+
+### Exercício Guiado 1: Diferença entre Criptografia de Ficheiros e FDE
+
+**Enunciado:** Explique a principal diferença entre criptografia de ficheiros e criptografia de disco completo (FDE).
+
+**Solução:** A criptografia de ficheiros protege ficheiros individuais, garantindo que apenas utilizadores autorizados com a chave de desencriptação ou senha correta possam acedê-los. A criptografia de disco completo (FDE), por outro lado, encripta todo o dispositivo de armazenamento, incluindo o sistema operacional, tornando todos os dados no dispositivo inacessíveis sem autenticação. A FDE protege tudo no dispositivo, enquanto a criptografia de ficheiros se direciona a ficheiros específicos.
+
+### Exercício Guiado 2: Papel do TPM no BitLocker
+
+**Enunciado:** Qual é o papel de um Trusted Platform Module (TPM) na criptografia BitLocker?
+
+**Solução:** Na criptografia BitLocker, o Trusted Platform Module (TPM) é um componente de segurança baseado em hardware que armazena chaves de criptografia num ambiente seguro. Ele aprimora a segurança ao garantir que as chaves de criptografia estejam isoladas do sistema operacional e pode desbloquear automaticamente unidades criptografadas durante a inicialização, desde que a integridade do sistema não tenha sido comprometida.
+
+### Exercício Guiado 3: Segurança do Cryptomator na Nuvem
+
+**Enunciado:** Como o Cryptomator garante que os ficheiros armazenados em serviços de nuvem permaneçam seguros?
+
+**Solução:** O Cryptomator criptografa ficheiros localmente antes que sejam enviados para serviços de armazenamento em nuvem. Ele cria um cofre criptografado onde os ficheiros são armazenados com segurança e, uma vez que esses ficheiros são enviados, eles aparecem como blobs criptografados no armazenamento em nuvem. Isso garante que, mesmo que o serviço de nuvem seja comprometido, utilizadores não autorizados não possam ler os ficheiros criptografados.
+
+### Exercício Guiado 4: VeraCrypt vs. BitLocker
+
+**Enunciado:** Compare os recursos de segurança do VeraCrypt e do BitLocker. Quais são as principais diferenças em como eles lidam com a criptografia de disco completo e em quais cenários tu preferirias um em vez do outro?
+
+**Solução:** VeraCrypt é uma ferramenta de código aberto que oferece criptografia de disco completo multiplataforma e permite que os utilizadores criem contêineres criptografados. Ele proporciona mais opções de personalização e transparência porque é de código aberto. BitLocker, por outro lado, é integrado ao Windows e oferece gestão contínua com o Trusted Platform Module (TPM), que adiciona segurança baseada em hardware. BitLocker é geralmente preferido para ambientes corporativos devido à sua facilidade de integração e gestão através do Active Directory, enquanto VeraCrypt pode ser preferido por utilizadores que desejam software de código aberto com suporte a mais plataformas.
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1: Alternativas de Código Aberto ao BitLocker
+
+**Enunciado:** Pesquise alternativas de código aberto ao BitLocker, como LUKS e eCryptfs, comumente usadas em sistemas Linux. Compare essas ferramentas em termos de força de criptografia, facilidade de uso e mecanismos de recuperação de chave. Qual tu recomendarías para um utilizador que busca uma solução de criptografia flexível e transparente, e por quê?
+
+
+
+<SolutionBlock>
+LUKS (Linux Unified Key Setup) e eCryptfs ambos oferecem criptografia forte. LUKS, o padrão para Linux, proporciona criptografia robusta e suporta múltiplas chaves por partição. eCryptfs é mais amigável para o utilizador, mas pode não ser tão versátil para criptografia de disco completo. O LUKS seria a ferramenta recomendada por sua flexibilidade e compatibilidade com várias distribuições Linux, bem como sua capacidade de criptografar unidades inteiras.
+
+| Característica | LUKS | eCryptfs |
+|---|---|---|
+| Tipo de proteção | FDE (partição inteira) | Criptografia em camada (directório) |
+| Força de criptografia | AES-256, múltiplos algoritmos | AES, Blowfish |
+| Múltiplas chaves | Sim (até 8 chaves por partição) | Limitado |
+| Facilidade de uso | Requer configuração inicial | Simples (montagem transparente) |
+| Recuperação de chave | Frase de recuperação, chaves de backup | Dependente da chave de login |
+| Compatibilidade | Maioria das distribuições Linux | Principalmente Ubuntu/SUSE |
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2: Criptografia de Nuvem — Provedores vs. Cryptomator
+
+**Enunciado:** Explique como os provedores de armazenamento em nuvem, como Google Drive e Dropbox, implementam a criptografia para ficheiros armazenados na nuvem. Compare isso com a criptografia fornecida pelo Cryptomator. Quais são as vantagens de usar o Cryptomator junto com esses serviços?
+
+
+
+<SolutionBlock>
+Provedores de armazenamento em nuvem como Google Drive e Dropbox geralmente oferecem criptografia do lado do servidor, onde os dados são encriptados em repouso e em trânsito usando chaves gerenciadas pelo provedor. No entanto, eles ainda mantêm o controle sobre as chaves de criptografia, o que significa que eles poderiam potencialmente aceder aos seus ficheiros ou partilhá-los se exigido por lei. O Cryptomator, em contraste, fornece criptografia do lado do cliente, ou seja, o utilizador encripta os ficheiros localmente antes de serem enviados. Somente o utilizador possui as chaves de desencriptação, oferecendo mais privacidade e segurança.
+
+| Aspecto | Provedores de Nuvem | Cryptomator |
+|---|---|---|
+| Quem controla as chaves | O provedor | O utilizador |
+| Local da criptografia | Servidor (lado do servidor) | Dispositivo local (lado do cliente) |
+| Acesso do provedor aos dados | Potencialmente possível | Impossível |
+| Conformidade legal | Provedor pode ser obrigado a partilhar | Dados permanecem ilegíveis |
+| Transparência | Código fechado | Código aberto |
+| Sincronização | Integrada | Automática via pasta sincronizada |
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3: Processo de Criação de Contêiner no VeraCrypt
+
+**Enunciado:** Descreva, passo a passo, o processo de criação de um contêiner criptografado no VeraCrypt, desde a abertura da aplicação até a montagem do volume. Quais etapas são críticas para a segurança do contêiner?
+
+
+
+<SolutionBlock>
+1. **Abrir o VeraCrypt** — A tela principal mostra as slots de volume disponíveis.
+2. **Criar novo volume** — Selecionar "Create Volume" para iniciar o assistente.
+3. **Selecionar tipo de volume** — Escolher "Create an encrypted file container" para um contêiner ou "Encrypt a non-system partition" para FDE.
+4. **Selecionar ficheiro ou partição** — Escolher o ficheiro que atuará como contêiner (aparece como um único ficheiro no sistema).
+5. **Escolher algoritmo de criptografia** — AES é o recomendado devido ao alto nível de segurança.
+6. **Especificar tamanho do volume** — Definir a capacidade do contêiner criptografado.
+7. **Criar senha forte** — Etapa crítica; a segurança depende diretamente da força da senha.
+8. **Mover o cursor do mouse aleatoriamente** — O VeraCrypt usa movimentos do mouse para gerar entropia adicional para a chave de criptografia.
+9. **Formatar o volume** — Criar o sistema de ficheiros dentro do contêiner criptografado.
+10. **Montar o volume** — Selecionar uma slot, clicar em "Select File", escolher o contêiner e clicar em "Mount". Inserir a senha quando solicitado.
+
+**Etapas críticas para a segurança:** escolha do algoritmo (AES), criação de uma senha forte e geração de entropia adequada durante o processo de formatação.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4: Integração BitLocker com TPM e Autenticação Pré-boot
+
+**Enunciado:** Explique como o BitLocker utiliza o TPM em conjunto com a autenticação pré-boot para proteger dados. O que acontece se o TPM detectar uma alteração na configuração do sistema?
+
+
+
+<SolutionBlock>
+O BitLocker integra-se com o TPM (Trusted Platform Module) da seguinte forma:
+
+- **Armazenamento seguro de chaves**: O TPM armazena as chaves de criptografia num ambiente de hardware isolado do sistema operacional, tornando-as mais difíceis de extrair.
+- **Verificação de integridade**: Durante a inicialização, o TPM verifica se o sistema não foi adulterado (BIOS, boot loader, etc.).
+- **Desbloqueio automático**: Se a integridade do sistema estiver intacta, o TPM pode desbloquear automaticamente a unidade criptografada sem intervenção do utilizador.
+- **Autenticação pré-boot**: Para maior segurança, o BitLocker pode exigir um PIN ou uma chave USB de inicialização antes do arranque do sistema.
+
+**Se o TPM detectar alterações na configuração do sistema** (ex: alterações no BIOS, instalação de novo boot loader ou modificação no MBR), o BitLocker entra em **modo de recuperação** e solicita uma chave de recuperação de 48 dígitos. Isso protege contra ataques de "cold boot" e manipulação do processo de arranque.
+
+**Cenário corporativo**: O Active Directory pode armazenar chaves de recuperação do BitLocker, permitindo que os administradores de TI recuperem o acesso a dispositivos bloqueados.
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T06 - 022.3 Criptografia de Email]()
+→ Próximo: [T08 - 023.1 Segurança de Hardware]()

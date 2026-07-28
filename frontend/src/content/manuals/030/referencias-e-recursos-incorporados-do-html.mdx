@@ -1,0 +1,258 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T06 — Referências e recursos incorporados do HTML"
+  code="030"
+  topicNumber="T06"
+  objective="032.3"
+  weight={2}
+  pages="LPI Web Development Essentials (030) - Version 1.0"
+  accent="amber"
+/>
+
+
+
+## Resumo Conciso
+
+### Por que o HTML mantém recursos em ficheiros separados?
+
+- Evita transferências de dados desnecessárias (o navegador reutiliza imagens já descarregadas)
+- Facilita a personalização de conteúdo multimédia conforme as características do cliente (tamanho de ecrã, velocidade de ligação)
+
+### Imagens (`<img>`)
+
+```html
+<img src="logo.png" alt="Logótipo da empresa">
+<img src="../logo.png" alt="Logótipo">
+<img src="/images/logo.png" alt="Logótipo">
+<img src="https://cdn.example.com/logo.png" alt="Logótipo">
+<img src="logo.png" alt="Logótipo" width="300" height="100">
+```
+
+| Atributo | Função |
+|----------|--------|
+| `src` | Localização da imagem (caminho relativo ou absoluto) |
+| `alt` | Texto alternativo (acessibilidade e quando imagem não carrega) |
+| `width` | Largura em pixels |
+| `height` | Altura em pixels |
+
+**Caminhos:**
+
+| Tipo | Exemplo | Descrição |
+|------|---------|-----------|
+| Relativo | `logo.png` | Mesmo directório que o HTML |
+| Relativo (pai) | `../logo.png` | Directório pai |
+| Absoluto (servidor) | `/images/logo.png` | A partir da raiz do servidor |
+| Absoluto (URL) | `https://cdn.example.com/logo.png` | URL completa |
+
+### Formatos de imagem
+
+| Formato | Tipo | Melhor uso | Características |
+|---------|------|-----------|-----------------|
+| JPEG | Bitmap | Fotografias | Bom para sombras e fundos desfocados |
+| PNG | Bitmap | Cores sólidas | Conversão de vectorial para bitmap |
+| GIF | Bitmap | Animações | Qualidade mais baixa, mas suporta animações |
+| SVG | Vectorial | Gráficos, diagramas | Arestas bem definidas, escalável sem perda |
+
+**SVG vs Bitmap:**
+- SVG: informações gráficas em coordenadas numéricas, dimensionável sem distorção
+- Bitmap: armazena cor de cada pixel, geralmente compactado (JPEG, PNG, GIF)
+
+**Cuidados com width/height:**
+- Usar apenas para evitar quebras de layout durante carregamento
+- Redimensionar pode causar distorções (excepto SVG)
+- Imagens grandes reduzidas consomem mais banda
+
+### Áudio e vídeo
+
+```html
+<audio controls src="/media/recording.mp3">
+  <p>Não é possível reproduzir <em>recording.mp3</em></p>
+</audio>
+
+<video controls src="/media/video.mp4">
+  <p>Não é possível reproduzir <em>video.mp4</em></p>
+</video>
+```
+
+- `src`: localização do ficheiro ou URL de transmissão ao vivo
+- `controls`: exibe controles de reprodução (sem ele, sem controlo)
+- Conteúdo entre tags serve como alternativa para navegadores que não suportam
+
+### Conteúdo genérico — `<iframe>`
+
+```html
+<iframe name="viewer" src="gallery.html">
+  <p>Navegador não suportado</p>
+</iframe>
+```
+
+- `name`: permite referenciar o iframe para carregar conteúdo via links
+- `src`: documento HTML a incorporar
+- Atributos opcionais: `width`, `height`
+
+### Hiperlinks (`<a>`)
+
+```html
+<a href="contact.html">Informações de contacto</a>
+<a href="contact.html"><img src="contact.png" alt="Contacto"></a>
+<a href="mailto:info@lpi.org">Enviar email</a>
+<a href="tel:+123456789">Ligar</a>
+<a href="contact.html" target="_blank">Abrir em nova janela</a>
+```
+
+| Atributo | Função |
+|----------|--------|
+| `href` | Endereço de destino (caminho relativo/absoluto, mailto:, tel:) |
+| `target` | Onde abrir o link |
+
+**Valores de `target`:**
+
+| Valor | Comportamento |
+|-------|---------------|
+| `_self` | Substitui o documento atual (padrão) |
+| `_blank` | Abre em nova janela/guia |
+| `_parent` | Substitui o documento pai (dentro de `<iframe>`) |
+| `_top` | Substitui o documento principal na janela do navegador |
+
+**Links para dentro do iframe:**
+
+```html
+<a href="gallery.html" target="viewer">Abrir galeria</a>
+<iframe name="viewer" width="800" height="600"></iframe>
+```
+
+### Âncoras de URL (fragmentos)
+
+```html
+<!-- Na URL -->
+https://en.wikipedia.org/wiki/Internet#History
+
+<!-- No HTML - referência interna -->
+<a href="#History">História</a>
+
+<!-- Elemento correspondente -->
+<span id="History">História</span>
+```
+
+- O fragmento é a string após `#` na URL
+- O navegador rola até o elemento com `id` correspondente
+- O fragmento **não** é enviado ao servidor
+
+**Regras do atributo `id`:**
+- Não deve conter espaços em branco
+- Deve ser único no documento
+
+## 🧭 Exercícios Guiados (resolvidos)
+
+### Exercício Guiado 1 — Caminho absoluto de uma imagem
+
+**Enunciado:** O documento HTML em `http://www.lpi.org/articles/linux/index.html` tem uma `<img>` com `src="../logo.png"`. Qual o caminho absoluto?
+
+**Solução passo a passo:**
+
+1. A URL do HTML é `http://www.lpi.org/articles/linux/index.html`
+2. O `../` sobe um nível: de `linux/` para `articles/`
+3. O caminho resultante é: `http://www.lpi.org/articles/logo.png`
+
+### Exercício Guiado 2 — Importância do atributo `alt`
+
+**Enunciado:** Cite duas razões pelas quais o atributo `alt` é importante.
+
+**Solução passo a passo:**
+
+1. **Modo texto:** Navegadores em modo texto mostram o texto `alt` quando a imagem não é exibida
+2. **Acessibilidade:** Leitores de ecrã usam o atributo `alt` para descrever a imagem a utilizadores com deficiência visual
+
+### Exercício Guiado 3 — Formato de imagem ideal
+
+**Enunciado:** Que formato oferece boa qualidade e tamanho pequeno para fotografias com sombras e muitas cores?
+
+**Solução passo a passo:**
+
+1. O formato **JPEG** é o recomendado para fotografias
+2. O algoritmo de compactação JPEG produz bons resultados com sombras e fundos desfocados
+3. Para imagens com cores sólidas, PNG é mais apropriado
+
+### Exercício Guiado 4 — Incorporar vídeo nativo
+
+**Enunciado:** Qual tag permite incorporar vídeo sem provedores terceiros?
+
+**Solução passo a passo:**
+
+1. A tag `<video>` incorpora ficheiros de vídeo diretamente
+2. Suporta o atributo `src` para o ficheiro ou URL de transmissão
+3. O atributo `controls` exibe os controles de reprodução
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+1. **Enunciado:** Imagine um hiperlink `<a href="pic1.jpeg">First picture</a>` e um `<iframe name="gallery"></iframe>`. Como modificar o link para carregar a imagem dentro do iframe?
+   
+
+<SolutionBlock>
+```html
+   <a href="pic1.jpeg" target="gallery">First picture</a>
+   <iframe name="gallery"></iframe>
+   ```
+
+   Explicação: O atributo `target` do link aponta para o `name` do iframe, fazendo o conteúdo carregar dentro dele.
+</SolutionBlock>
+
+
+
+2. **Enunciado:** O que acontece quando se clica num hiperlink dentro de um iframe com `target="_self"`?
+   
+
+<SolutionBlock>
+O documento será carregado dentro do mesmo iframe (comportamento padrão).
+
+   Explicação: `_self` é o valor padrão do `target` e faz com que o link substitua o conteúdo do próprio iframe.
+</SolutionBlock>
+
+
+
+3. **Enunciado:** A âncora de URL para a segunda seção da sua página não funciona. Qual é a causa provável?
+   
+
+<SolutionBlock>
+O fragmento de URL após a cardinal `#` não corresponde ao atributo `id` do elemento correspondente, ou o atributo `id` não está presente nesse elemento.
+
+   Explicação: O navegador procura um elemento cujo `id` seja idêntico ao texto após `#`. Se não encontrar, nada acontece.
+</SolutionBlock>
+
+
+
+4. **Enunciado:** Crie uma página HTML que inclua uma imagem com caminho relativo, uma com caminho absoluto a partir da raiz do servidor e uma com URL completa. Inclua sempre o atributo `alt`.
+   
+
+<SolutionBlock>
+```html
+   <!DOCTYPE html>
+   <html>
+     <head>
+       <title>Exemplo de Imagens</title>
+     </head>
+     <body>
+       <h1>Exemplo de caminhos de imagem</h1>
+       <p>Imagem com caminho relativo (mesmo directório):</p>
+       <img src="logo.png" alt="Logótipo da empresa">
+       <p>Imagem com caminho absoluto a partir da raiz do servidor:</p>
+       <img src="/images/foto.jpg" alt="Fotografia do projeto">
+       <p>Imagem com URL completa (externa):</p>
+       <img src="https://cdn.example.com/banner.png" alt="Banner promocional">
+     </body>
+   </html>
+   ```
+
+   Explicação: O caminho relativo (`logo.png`) procura o ficheiro no mesmo directório do HTML. O caminho absoluto do servidor (`/images/foto.jpg`) parte da raiz do domínio. A URL completa (`https://...`) aponta para um recurso externo. O atributo `alt` deve estar sempre presente para acessibilidade.
+</SolutionBlock>
+
+
+
+## 🔗 Ligações
+
+← Anterior: [T05 — A semântica do HTML e a hierarquia de documentos]()
+→ Próximo: [T07 — Formulários HTML]()

@@ -1,0 +1,358 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="O básico sobre a linha de comando"
+  code="010"
+  topicNumber="T05"
+  objective="2.1"
+  weight={2}
+  pages="Linux Essentials (010) - Version 4.1"
+  accent="sage"
+/>
+
+
+
+## Resumo Conciso
+
+### O que é o shell
+- **Shell** = programa em modo texto que lê o input do utilizador e o interpreta como comandos para o sistema. Embora existam GUIs, um administrador precisa **sempre** da linha de comando.
+- Vários shells: **Bash** (o mais comum no Linux), **csh/tcsh**, **ksh**, **zsh**. Usamos **Bash** neste tópico.
+- **Prompt** típico: `username@hostname:current_directory$` (Debian/Ubuntu) ou `[user@host ~]$` (RHEL/CentOS). O `$` indica **utilizador comum**, `#` indica **root**. O `~` indica diretório **home**.
+
+### Estrutura de um comando
+```
+comando [opção(ões)/parâmetro(s)...] [argumento(s)...]
+```
+| Componente | Função | Exemplo (`ls -l /home`) |
+|------------|--------|--------------------------|
+| **Comando** | Programa a executar (única parte obrigatória) | `ls` |
+| **Opção/parâmetro** | Modifica o comportamento — forma curta (`-l`) ou longa (`--format=long`); várias abreviadas podem juntar-se (`-al` = `-a -l`) | `-l` |
+| **Argumento** | Dados adicionais (caminho, ficheiro) | `/home` |
+
+### Tipos de comando (`type`)
+| Tipo | Descrição | Exemplos |
+|------|-----------|----------|
+| **Interno (builtin)** | Faz parte do próprio shell (~30 comandos); executam tarefas dentro do shell | `cd`, `pwd`, `set`, `export`, `exit` |
+| **Externo** | Programa binário ou script separado; o shell procura-o nos diretórios do `PATH` | `ls`, `cat`, `man`, `mv` |
+
+```bash
+$ type echo          # echo is a shell builtin
+$ type man           # man is /usr/bin/man
+```
+
+### Quoting (citação)
+O shell atribui significado especial a espaços, `$`, `\`, `` ` ``. As aspas controlam a expansão:
+
+| Tipo | Símbolo | Comportamento |
+|------|---------|---------------|
+| **Aspas duplas** | `"..."` | Tudo é literal **exceto** `$`, `\` e `` ` `` → variáveis e substituição de comandos **continuam ativas** |
+| **Aspas simples** | `'...'` | **Todos** os caracteres perdem o significado especial (literal total) |
+| **Caráter de escape** | `\` | Anula o significado especial do **próximo** caráter |
+
+```bash
+$ echo "I am $USER"     # I am tom      ($USER expandido)
+$ echo 'I am $USER'     # I am $USER    (literal)
+$ echo \$USER           # $USER         (escape só do $)
+```
+> **Boa prática:** evitar espaços em nomes de ficheiros; preferir `_` ou `.`. Se inevitável, usar `"novo ficheiro"` ou `novo\ ficheiro`.
+
+### Variáveis (Lição 2)
+Espaços de armazenamento com nome. **Não são persistentes** — perdem-se ao fechar o shell (a menos que estejam num ficheiro de configuração como `~/.bashrc`).
+
+| Tipo | Escopo | Criação | Ver |
+|------|--------|---------|-----|
+| **Local** | Só o shell atual; **não** herdada por subprocessos | `VAR=valor` (**sem espaços** junto ao `=`) | `echo $VAR` |
+| **Ambiente** (exportada) | Shell atual **e** todos os subprocessos | `export VAR=valor` (ou `VAR=valor` + `export VAR`) | `env` (lista todas) |
+
+```bash
+$ greeting=hello
+$ echo $greeting                        # hello
+$ bash -c 'echo $greeting'              # (vazio) — local não passa
+$ export greeting=hey
+$ bash -c 'echo $greeting'              # hey — exportada passa
+$ unset greeting                        # remove a variável (sem $ !)
+```
+- Variáveis de ambiente costumam estar em **MAIÚSCULAS** (`PATH`, `USER`, `HOME`, `TZ`).
+- **Atribuição inline** antes do comando: `TZ=GMT date` (só afeta esse comando).
+
+### A variável `PATH`
+- Lista de **diretórios** (separados por `:`) onde o shell procura executáveis.
+- A **ordem importa**: o primeiro executável com o nome é o que corre.
+
+```bash
+$ echo $PATH
+/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+# Adicionar um diretório (preserva o conteúdo antigo)
+$ PATH=$PATH:/home/user/bin
+
+# Descobrir onde está um executável
+$ which nano          # /usr/bin/nano
+$ command -v nano     # alternativa POSIX
+```
+- Remover `/usr/bin` do `PATH` → comandos externos deixam de ser encontrados. Usar com **cautela**.
+
+### Comandos-chave
+| Comando | Função |
+|---------|--------|
+| `echo` | Imprime texto no terminal |
+| `type` | Mostra como um comando é interpretado (builtin/externo/alias) |
+| `export` | Promove variável local a variável de ambiente |
+| `unset` | Remove uma variável |
+| `env` | Lista todas as variáveis de ambiente |
+| `set` | Lista todas as variáveis (locais + ambiente) e funções |
+| `which` / `command -v` | Mostra o caminho do executável |
+| `bash` | Inicia um subshell |
+| `history` | Histórico de comandos |
+
+| `ls -l /etc` | `ls` | `-l` | `/etc` |
+|---|---|---|---|
+| `ls -l -a` | `ls` | `-l -a` | *(nenhum)* |
+| `cd /home/user` | `cd` | *(nenhuma)* | `/home/user` |
+
+**Notas:**
+- As opções abreviadas podem agrupar-se: `-l -a` ≡ `-la`.
+- O comando é a única parte **obrigatória**; `cd` sem argumentos leva ao home.
+
+### Guiado 2 (L1) — Tipo de comando (interno vs externo)
+
+**Enunciado:** *Descubra de que tipo são os comandos: `cd`, `cat`, `exit`.*
+
+**Solução:**
+
+| Comando | Tipo | Verificação |
+|---------|------|-------------|
+| `cd` | **Embutido no shell** (builtin) | `type cd` → `cd is a shell builtin` |
+| `cat` | **Comando externo** | `type cat` → `cat is /usr/bin/cat` |
+| `exit` | **Embutido no shell** (builtin) | `type exit` → `exit is a shell builtin` |
+
+> **Porquê:** internos executam tarefas do próprio shell; externos são ficheiros binários em `PATH`.
+
+### Guiado 3 (L1) — Resolver comandos com citações
+
+**Enunciado:** *Resolva: `touch "$USER"` e `touch 'touch'`.*
+
+**Solução:**
+
+| Comando | Resultado | Explicação |
+|---------|-----------|------------|
+| `touch "$USER"` | Cria um ficheiro com o nome do utilizador (ex.: `tom`) | Aspas duplas **permitem** a expansão de `$USER` |
+| `touch 'touch'` | Cria um ficheiro chamado **`touch`** | Aspas simples tratam `touch` como literal — não é interpretado como comando |
+
+### Guiado 4 (L2) — Criar variáveis locais e de ambiente
+
+**Enunciado:**
+1. *Crie uma variável local `number`.*
+2. *Crie uma variável de ambiente `ORDER`.*
+3. *Exiba o nome das variáveis e o seu conteúdo.*
+4. *Qual o escopo das variáveis criadas?*
+
+**Solução passo a passo:**
+
+1. **Variável local** (atribuição direta, sem espaços junto ao `=`):
+   ```bash
+   $ number=5
+   ```
+
+2. **Variável de ambiente** (via `export`):
+   ```bash
+   $ export ORDER=desc
+   ```
+
+3. **Exibir nome vs conteúdo** — atenção ao `$`:
+   ```bash
+   $ echo number        # number   (nome literal, sem $)
+   $ echo ORDER         # ORDER
+   $ echo $number       # 5        (conteúdo, com $)
+   $ echo $ORDER        # desc
+   ```
+
+4. **Escopo:**
+   - `number` → só o **shell atual** (local; subprocessos não a veem).
+   - `ORDER` → shell atual **e** todos os **subshells** gerados por ele (ambiente/exportada).
+
+---
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+> Exercícios da autoria do agente para praticares **diretamente no terminal** Linux. Consolidam o tópico 2.1.
+> *Dica:* precisas de uma sessão Bash (física, VM ou WSL). As soluções estão em `<details>` para poderes tentar primeiro.
+
+### Exploratório 1 — Diagnosticar o teu shell e o teu PATH
+Descobre, **com comandos**: que shell estás a usar, onde está o seu executável, qual o teu `PATH` (um diretório por linha) e onde fica o comando `ls`.
+
+
+
+<SolutionBlock>
+```bash
+# Que shell está ativo? ($SHELL mostra o shell de login por defeito)
+echo $SHELL                    # /bin/bash
+echo $0                        # bash (shell da sessão atual)
+
+# Onde está o executável do bash?
+which bash                     # /usr/bin/bash
+command -v bash                # alternativa POSIX
+
+# O teu PATH, um diretório por linha (usa tr para trocar : por newline)
+echo $PATH | tr ':' '\n'
+
+# Onde está o ls?
+type ls                        # ls is aliased to ... / ls is /usr/bin/ls
+which ls                       # /usr/bin/ls
+```
+
+**O que aprendeste:** `type` é mais completo que `which` — também revela **aliases** e builtins. `command -v` é o equivalente POSIX portátil.
+</SolutionBlock>
+
+
+
+### Exploratório 2 — Interno ou externo?
+Cria um ficheiro `~/tipos.txt` listando, para cada um destes comandos, se é **builtin** ou **externo**: `cd`, `pwd`, `echo`, `ls`, `cat`, `export`, `unset`, `man`, `history`, `type`. (Usa `type` para descobrir e redirecionamento `>>` para acumular no ficheiro.)
+
+
+
+<SolutionBlock>
+```bash
+# Limpar/criar o ficheiro
+> ~/tipos.txt
+
+for cmd in cd pwd echo ls cat export unset man history type; do
+  printf '%-10s -> %s\n' "$cmd" "$(type -t "$cmd" 2>/dev/null || echo desconhecido)" >> ~/tipos.txt
+done
+
+cat ~/tipos.txt
+```
+
+**Saída esperada (exemplo):**
+```
+cd         -> builtin
+pwd        -> builtin
+echo       -> builtin
+ls         -> file              (externo)
+cat        -> file              (externo)
+export     -> builtin
+unset      -> builtin
+man        -> file              (externo)
+history    -> builtin
+type       -> builtin
+```
+
+**O que aprendeste:** `type -t` devolve apenas o **tipo** (`builtin`, `file`, `alias`, `function`, `keyword`). Ligar isto ao quadro do manual: os builtins são ~30 e fazem tarefas internas do shell.
+</SolutionBlock>
+
+
+
+### Exploratório 3 — Comparar os três tipos de quoting
+Atribui `VAR="Linux Essentials"` e executa os **três** `echo` seguintes, prevendo a saída antes de correr:
+
+```bash
+echo "$VAR é fixe"
+echo '$VAR é fixe'
+echo $VAR é \$fixe
+```
+
+
+
+<SolutionBlock>
+```bash
+VAR="Linux Essentials"
+
+echo "$VAR é fixe"
+# → Linux Essentials é fixe        (aspas duplas: $VAR expande)
+
+echo '$VAR é fixe'
+# → $VAR é fixe                    (aspas simples: literal total)
+
+echo $VAR é \$fixe
+# → Linux Essentials é $fixe       (sem aspas, $VAR expande; \$ vira literal $)
+```
+
+**Comparação consolidada:**
+
+| Sintaxe | `$VAR` expande? |
+|---------|-----------------|
+| `"...$VAR..."` | ✅ Sim |
+| `'...$VAR...'` | ❌ Não (literal) |
+| `\$VAR` | ❌ Não (escape pontual) |
+
+**Bónus:** reparar que **sem aspas** o `VAR="Linux Essentials"` foi repartido em duas palavras — aqui `echo` ignora isso, mas `touch $VAR` criaria **dois** ficheiros. Por isso, em scripts usa-se quase sempre `"$VAR"`.
+</SolutionBlock>
+
+
+
+### Exploratório 4 — PATH e "comando não encontrado"
+Simula o cenário do manual em que o `PATH` perde um diretório. **Sem te tornar root** e dentro de um diretório de testes:
+
+1. Verifica onde está o `date`.
+2. **Guarda** o teu `PATH` atual numa variável `PATH_BACKUP`.
+3. Redefine `PATH=/tmp` (vazio de utilitários).
+4. Tenta correr `date` e `ls` — observa o erro.
+5. **Restaura** o `PATH` a partir do backup e confirma que volta a funcionar.
+
+
+
+<SolutionBlock>
+```bash
+# 1. Onde está o date?
+which date                     # /usr/bin/date
+
+# 2. Backup do PATH
+PATH_BACKUP=$PATH
+
+# 3. Reduzir o PATH
+PATH=/tmp
+
+# 4. Tentar correr — vão falhar
+date                           # bash: date: command not found
+ls                             # bash: ls: command not found
+
+# 5. Restaurar
+PATH=$PATH_BACKUP
+date                           # volta a funcionar
+```
+
+**Como evitar o desastre se o PATH se perder antes do backup:** chamar os comandos pelo caminho absoluto:
+```bash
+/usr/bin/date                  # funciona mesmo com PATH partido
+```
+
+**Ligação ao manual:** o shell só encontra executáveis nos diretórios do `PATH`; se o diretório não está lá, o comando “desaparece” — exatamente o que se passa com o `nano` no exemplo do manual (p. 92).
+</SolutionBlock>
+
+
+
+### Exploratório 5 — Variável que conta ficheiros (substituição de comandos)
+Cria uma variável de ambiente `ME` com o valor de `$USER`, acrescenta-lhe o valor de `$HOME` separado por `:`, e cria outra variável `NR_PASSWD` com o **número de linhas** de `/etc/passwd`. Exibe ambas.
+
+
+
+<SolutionBlock>
+```bash
+# Variável de ambiente ME = USER, depois concatena HOME com :
+export ME=$USER
+ME=$ME:$HOME
+echo $ME                       # ex.: dksdesign:/home/dksdesign
+
+# Substituição de comandos: $(...) é a forma moderna (`` é a antiga)
+NR_PASSWD=$(wc -l < /etc/passwd)
+echo "O /etc/passwd tem $NR_PASSWD linhas"
+```
+
+**Notas:**
+- `wc -l < /etc/passwd` (com `<`) devolve **só o número**, sem o nome do ficheiro — mais limpo que `wc -l /etc/passwd`.
+- **Diferença crítica** entre `ME=$ME:$HOME` (sem `$export` adicional) e `export ME=...`: a primeira **mantém** o estatuto (já exportada); a segunda também. Se `ME` ainda não fosse exportada, só a tornaria disponível no shell atual.
+- Lembra-te do manual: as variáveis **não são persistentes** — para as tornar permanentes, vão para `~/.bashrc` ou `~/.profile`.
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Início: [010 - Visão Geral]()
+← Anterior: [T04 - Habilidades ICT e trabalhando no Linux]()
+→ Próximo: [T06 - Usando a linha de comando para conseguir ajuda]()

@@ -1,0 +1,190 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T04 — 052.1 Conceitos de licenças de software de código aberto"
+  code="050"
+  topicNumber="T04"
+  objective="052.1"
+  weight={1}
+  pages="LPI Open Source Essentials (050) - Version 1.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Definições Fundamentais
+
+| Conceito | Descrição |
+|---|---|
+| **Software Livre** | Software que garante ao utilizador quatro liberdades essenciais (executar, estudar, redistribuir e distribuir versões modificadas). Defendido pela Free Software Foundation (FSF). |
+| **Software de Código Aberto** | Conceito formalizado pela Open Source Initiative (OSI) em 1998, com 10 critérios que priorizam a utilidade prática e a disseminação do software. |
+| **FOSS / FLOSS** | Siglas que combinam ambos os conceitos: Free/Libre and Open Source Software. |
+| **Licença** | Um contrato entre o autor de uma obra e quem pretende exercer direitos exclusivos do autor (copiar, modificar, distribuir, etc.). |
+| **Copyleft** | Princípio filosófico e legal que exige que as liberdades concedidas sejam preservadas em trabalhos derivados. |
+
+### Quatro Liberdades Essenciais do Software Livre
+
+1. **Liberdade 0** — Executar o programa como se desejar, para qualquer finalidade
+2. **Liberdade 1** — Estudar o funcionamento do programa e alterá-lo (requer acesso ao código-fonte)
+3. **Liberdade 2** — Redistribuir cópias para ajudar outras pessoas
+4. **Liberdade 3** — Distribuir cópias de versões modificadas a terceiros
+
+### Definição de Código Aberto (OSI) — 10 Critérios
+
+1. Redistribuição livre (sem royalties ou taxas)
+2. Disponibilidade do código-fonte
+3. Permissão para obras derivadas e modificações
+4. Integridade do código-fonte do autor (permite patches)
+5. Nenhuma discriminação contra pessoas ou grupos
+6. Nenhuma discriminação contra áreas de atuação (ex.: uso comercial)
+7. A licença acompanha o programa
+8. A licença não é específica para um produto
+9. A licença não restringe outros softwares
+10. A licença deve ser tecnologicamente neutra
+
+### Tipos de Software Monetariamente Gratuito
+
+| Tipo | Descrição |
+|---|---|
+| **Shareware** | Software proprietário com utilização gratuita limitada até compra |
+| **Freeware** | Software gratuito sem limitação, mas não necessariamente livre; código-fonte frequentemente não divulgado |
+| **Fonte disponível** | Código-fonte disponível mas com licença proprietária para uso em outros projetos |
+| **Fonte compartilhada** | Conceito introduzido pela Microsoft (2001); código disponível apenas para investigação e testes |
+| **Domínio público** | Software sobre o qual o autor renunciou a todos os direitos autorais |
+
+### Direitos Autorais
+
+- Protegem a **implementação** de uma ideia (não a ideia em si)
+- Existem sem necessidade de registo (Convenção de Berna, 1887)
+- Conferem direitos exclusivos: copiar, modificar, sublicenciar, distribuir e publicar
+- Programas de computador são protegidos como obras literárias (em muitas jurisdições)
+
+### Patentes
+
+- Protegem **invenções** (ideias) com aspeto técnico
+- Requerem registo explícito no serviço de patentes
+- Software pode ser patenteado dependendo da jurisdição (varia entre países)
+- Algumas licenças FOSS mencionam patentes (GPLv3: concessão explícita; BSD-3-Clause: não menciona; Creative Commons: exclui)
+
+### Conceitos-Chave de Licenciamento
+
+| Conceito | Descrição |
+|---|---|
+| **Distribuição** | Transmissão de uma cópia (modificada ou não), em mídia física ou por download. Maioria das obrigações de licenciamento surgem aqui. |
+| **Obras derivadas** | Resultado de incorporar código de outro projeto. Licenças copyleft exigem que a obra derivada mantenha a mesma licença. |
+| **Licenças permissivas** | Licenças que não impõem o requisito de reciprocidade (ex.: MIT, BSD). |
+| **Compatibilidade** | Capacidade de combinar software sob diferentes licenças sem violação. Nem sempre funciona nos dois sentidos. |
+| **Licenciamento duplo/múltiplo** | Disponibilizar software sob diversas licenças (ex.: copyleft + proprietária). |
+| **Licenciamento condicional** | Condições específicas que determinam qual licença se aplica. |
+| **Administrador de licença** | Pessoa ou organização (ex.: FSF) que gerencia versões de uma licença. |
+
+### Violações de Licença
+
+- Não cumprir as condições de distribuição viola o contrato de licenciamento
+- Consequências dependem da licença: desde cessação da licença até recall de produtos
+- Violações intencionais podem levar a acusações criminais
+- Algumas licenças oferecem período de 30 dias para correção após notificação
+
+## Exercícios Guiados
+
+### Exercício Guiado 1 — O que significa a sigla FOSS?
+
+**Enunciado:** O que significa a sigla FOSS?
+
+**Solução:** FOSS significa **Free/Libre and Open Source Software**, ou seja, software livre e de código aberto. É a expressão usada para abranger ambos os movimentos (software livre da FSF e código aberto da OSI) de forma unificada, reconhecendo que embora as motivações sejam distintas, o conteúdo prático das licenças é essencialmente o mesmo.
+
+### Exercício Guiado 2 — Liberdades essenciais do software livre
+
+**Enunciado:** Quais das opções a seguir estão explicitamente incluídas nas liberdades essenciais do utilizador de software livre?
+
+- Executar software
+- Estudar software
+- Copiar software
+- Alterar software
+- Publicar software
+- Redistribuir software
+
+**Solução:** As liberdades essenciais são **quatro** (numeradas de 0 a 3):
+
+1. **Executar software** (liberdade 0) ✅
+2. **Estudar software** (liberdade 1) ✅
+3. **Redistribuir software** (liberdade 2) ✅
+4. **Alterar software / distribuir versões modificadas** (liberdade 3) ✅
+
+Copiar software e publicar software **não** estão listados explicitamente como liberdades essenciais na definição da FSF.
+
+### Exercício Guiado 3 — Código-fonte sem informação de licença
+
+**Enunciado:** O código-fonte encontrado na internet sem informações de licenciamento é gratuito para modificação e distribuição por qualquer pessoa? Desenvolva a sua resposta.
+
+**Solução:** **Não.** O código-fonte, a partir de um certo grau de originalidade, está por padrão protegido por direitos autorais como uma obra literária. Dado que a modificação e distribuição constituem direitos exclusivos do autor, ninguém além do autor pode fazê-lo ou conceder permissão para isso. A ausência de informações de licenciamento não significa ausência de proteção legal — pelo contrário, desde a Convenção de Berna (1887), a proteção automática é a regra.
+
+### Exercício Guiado 4 — Patentes de software
+
+**Enunciado:** Um software pode ser patenteado?
+
+- Sim
+- Não
+- Depende
+
+**Solução:** **Depende.** A possibilidade de patentear software depende da jurisdição legal e da aplicação específica. Na Alemanha, programas de computador são geralmente excluídos da proteção de patentes, a menos que estejam combinados com um objeto físico (ex.: software que controla um sistema de freio automático). Nos EUA, podem ser concedidas patentes para programas de computador por si sós, dependendo da evolução da jurisprudência. A questão é sempre avaliada caso a caso.
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — O que é um administrador de licença?
+
+**Enunciado:** O que é um administrador de licença?
+
+
+
+<SolutionBlock>
+Um administrador de licença (ou mantenedor de licença) é uma pessoa ou organização que gere as versões de uma licença. Por exemplo, a FSF é a administradora da GPLv2 e da GPLv3, tendo o poder de publicar versões revisadas e/ou novas da licença. Os administradores também publicam FAQs e orientações para ajudar a resolver questões relacionadas às licenças. Não é o mesmo que um licenciante, nem alguém que gerencia uma empresa de software — é especificamente quem mantém e evolui o texto da licença.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Compatibilidade de licenças em dois sentidos
+
+**Enunciado:** A compatibilidade de licença sempre funciona nos dois sentidos?
+
+
+
+<SolutionBlock>
+**Não.** A compatibilidade de licenças nem sempre funciona nos dois sentidos. Em alguns casos, a licença A pode ser incluída num projeto sob a licença B, mas B pode não ser autorizada a ser distribuída sob a licença A. Por exemplo, componentes licenciados pelo MIT podem ser usados num projeto licenciado pela GPLv3, mas um componente licenciado pela GPLv3 nem sempre pode ser usado num projeto licenciado pelo MIT sem violar os termos da GPLv3. A compatibilidade é frequentemente unidirecional.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Compatibilidade GPLv2 e LGPLv2.1
+
+**Enunciado:** As licenças GPLv2 e LGPLv2.1 são compatíveis? Explique em poucas palavras.
+
+
+
+<SolutionBlock>
+Se o software A estiver licenciado sob a GPLv2 e o software B sob a LGPLv2.1, é possível usar B em A, uma vez que a LGPLv2.1 permite o uso sob as condições da licença GPLv2. Contudo, A não pode ser utilizado em B nos termos da LGPLv2.1 da mesma forma direta. A compatibilidade aqui é **unidirecional**: B → A é possível, mas a relação inversa requer atenção redobrada.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Licenças de conteúdo aberto para software
+
+**Enunciado:** Um software pode ser publicado sob licenças de conteúdo aberto (Open Content, como CC-BY)?
+
+
+
+<SolutionBlock>
+**Sim, mas não é recomendado.** As licenças Creative Commons (CC) podem ser aplicadas a qualquer obra protegida por direitos autorais, incluindo software, mas a própria Creative Commons e a Free Software Foundation (FSF) recomendam expressamente que **não se utilizem licenças CC para software**. As licenças CC não abordam questões específicas do desenvolvimento de software (como compilação, vinculação de bibliotecas, patentes, etc.). A única exceção amplamente aceite é a **CC0** (dedicação ao domínio público), que pode ser usada para software. Para código-fonte, utilize licenças específicas para software (MIT, Apache, GPL, etc.).
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T03 - 051.3 Computação local e em nuvem]()
+→ Próximo: [T05 - 052.2 Licenças de software Copyleft]()

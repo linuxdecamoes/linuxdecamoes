@@ -1,0 +1,254 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="104.1 Criar partições e sistemas de arquivos"
+  code="101"
+  topicNumber="T18"
+  objective="Criar e gerenciar partições e sistemas de arquivos em discos rígidos"
+  weight={2}
+  pages="LPIC-1 (101) - Version 5.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Tabelas de Partição
+
+| Característica | MBR | GPT |
+|---|---|---|
+| Tamanho máximo do disco | 2 TB | Sem limite prático |
+| Máximo de partições | 4 primárias | 128 (limitado pelo SO) |
+| Tipo de BIOS | BIOS (legada) | UEFI |
+| Ferramenta principal | fdisk | gdisk |
+| Código de tipo Linux | 83 | 8300 |
+| Código de swap | 82 | 8200 |
+
+### Comandos de Particionamento
+
+| Comando | Função |
+|---|---|
+| `fdisk /dev/sda` | Gerenciar partições MBR |
+| `gdisk /dev/sda` | Gerenciar partições GPT |
+| `parted /dev/sda` | Gerenciar partições (MBR e GPT) |
+
+### Comandos fdisk
+
+| Comando | Função |
+|---|---|
+| `p` | Imprimir tabela de partição |
+| `n` | Criar nova partição |
+| `d` | Remover partição |
+| `F` | Verificar espaço não alocado |
+| `t` | Mudar tipo da partição |
+| `l` | Listar códigos de tipo |
+| `w` | Gravar alterações no disco e sair |
+| `q` | Sair sem salvar |
+
+### Comandos gdisk
+
+| Comando | Função |
+|---|---|
+| `p` | Imprimir tabela de partição |
+| `n` | Criar partição |
+| `d` | Remover partição |
+| `s` | Reordenar partições |
+| `r` | Menu de recuperação |
+
+### Comandos parted
+
+| Comando | Função |
+|---|---|
+| `print` | Obter informações |
+| `print devices` | Listar dispositivos |
+| `print free` | Ver espaço livre |
+| `select /dev/sdb` | Mudar de disco |
+| `mklabel msdos` | Criar tabela MBR |
+| `mklabel gpt` | Criar Tabela GPT |
+| `mkpart PARTTYPE FSTYPE START END` | Criar partição |
+| `rm N` | Remover partição |
+| `rescue START END` | Recuperar partição |
+| `resizepart N END` | Redimensionar partição |
+
+> [!warning] Diferente de fdisk e gdisk, o parted faz alterações no disco imediatamente após o comando ser emitido.
+
+### Sistemas de Arquivos
+
+| Ferramenta | Sistema de Arquivos | Notas |
+|---|---|---|
+| `mkfs.ext2/ext3/ext4` | ext2, ext3, ext4 | Links para mke2fs |
+| `mkfs.xfs` | XFS | Alto desempenho, pacote xfsprogs |
+| `mkfs.fat` / `mkfs.vfat` | FAT16/FAT32, VFAT | VFAT = FAT16 + nomes longos |
+| `mkfs.exfat` | exFAT | Até 16 EB por arquivo |
+| `mkfs.btrfs` | Btrfs | Copy-on-write, snapshots, RAID |
+
+### Parâmetros mke2fs
+
+| Parâmetro | Função |
+|---|---|
+| `-b SIZE` | Tamanho do bloco (1024, 2048 ou 4096) |
+| `-c` | Verificar blocos defeituosos (dobro = verificação detalhada) |
+| `-d DIRECTORY` | Copiar conteúdo para raiz do novo FS |
+| `-F` | Forçar criação (perigoso; `-F -F` para dispositivos montados) |
+| `-L VOLUME_LABEL` | Definir rótulo (máx 16 caracteres) |
+| `-n` | Simular criação (teste) |
+| `-q` | Modo silencioso |
+| `-U ID` | Definir UUID (formato 8-4-4-4-12) |
+| `-V` | Mostrar versão e sair |
+
+### Parâmetros mkfs.xfs
+
+| Parâmetro | Função |
+|---|---|
+| `-b size=VALUE` | Tamanho do bloco (padrão 4096, mín 512, máx 65536) |
+| `-m crc=VALUE` | Habilitar/desabilitar CRC32c (padrão: habilitado) |
+| `-m uuid=VALUE` | Definir UUID |
+| `-f` | Forçar criação |
+| `-l logdev=DEVICE` | Log em dispositivo externo |
+| `-l size=VALUE` | Tamanho da seção de log |
+| `-q` | Modo silencioso |
+| `-L LABEL` | Rótulo (máx 12 caracteres) |
+
+### Parâmetros mkfs.fat
+
+| Parâmetro | Função |
+|---|---|
+| `-c` | Verificar blocos defeituosos |
+| `-C FILENAME BLOCK_COUNT` | Criar imagem de disco |
+| `-F SIZE` | Tamanho do FAT (12, 16 ou 32) |
+| `-n NAME` | Rótulo (máx 11 caracteres) |
+| `-v` | Modo detalhado |
+
+### Parâmetros mkfs.exfat
+
+| Parâmetro | Função |
+|---|---|
+| `-i VOL_ID` | ID do Volume (hex 32 bits) |
+| `-n NAME` | Rótulo (máx 15 caracteres) |
+| `-p SECTOR` | Primeiro setor da partição |
+| `-s SECTORS` | Setores físicos por cluster |
+
+### Btrfs
+
+> Para manutenção e verificação de sistemas de arquivos, ver T19 — Manutenção da integridade de sistemas de arquivos.
+
+| Comando/Função | Descrição |
+|---|---|
+| `mkfs.btrfs` | Criar sistema de arquivos |
+| `-d single -m single` | Concatenação (como RAID0) |
+| `-m raid1` | Espelhamento (RAID1) |
+| `btrfs subvolume create` | Criar subvolume |
+| `btrfs subvolume show` | Verificar subvolume |
+| `btrfs subvolume snapshot` | Criar snapshot |
+| `btrfs subvolume snapshot -r` | Snapshot somente leitura |
+| Compressão | ZLIB (padrão), LZO (mais rápido), ZSTD |
+
+### Partições de Troca
+
+| Comando | Função |
+|---|---|
+| `mkswap DEVICE` | Configurar partição como swap |
+| `swapon DEVICE` | Habilitar troca |
+| `swapoff DEVICE` | Desabilitar troca |
+| `dd if=/dev/zero of=myswap bs=1M count=1024` | Criar arquivo de troca |
+
+> Permissões recomendadas para swap: 0600, proprietário e grupo root.
+
+### Partições Primárias e Estendidas (MBR)
+
+- Máximo de 4 partições primárias
+- Partição estendida = contêiner para partições lógicas
+- Partição primária necessária para inicialização
+- Linux trata primárias e estendidas da mesma forma
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Lacunas em partições MBR
+
+**Enunciado:** Considere um disco de 2 GB com uma tabela de partição MBR e o seguinte layout:
+```
+Device     Boot   Start     End Sectors  Size Id Type
+/dev/sdb1          2048 1050623 1048576  512M 83 Linux
+/dev/sdb3       2099200 3147775 1048576  512M 83 Linux
+```
+É possível criar uma partição de 600 MB nele? Por quê?
+
+
+
+<SolutionBlock>
+Não, pois não há espaço contíguo suficiente. A primeira pista de que tem algo "errado" é a lista de dispositivos: temos /dev/sdb1 e /dev/sdb3, mas não /dev/sdb2. Então, algo está faltando. Em seguida, precisamos ver onde uma partição termina e onde a outra começa. A partição um termina no setor 1050623, e a partição 2 no 2099200. Há uma "lacuna" de 1048577 setores. Como cada setor tem 512 bytes, o total seriam 536.871.424 bytes. Dividindo por 1024, obtemos 524.288 Kilobytes. Dividimos por 1024 novamente e obtemos… 512 MB. Esse é o tamanho da "lacuna".
+
+Se o disco tem 2 GB, resta então um máximo de 512 MB após a partição 3. Mesmo que no total haja cerca de 1 GB não-alocado, o maior bloco contíguo tem 512 MB. Portanto, não há espaço para uma partição de 600 MB.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Reduzir partição com parted
+
+**Enunciado:** Em um disco em /dev/sdc, temos uma primeira partição de 1 GB contendo cerca de 256 MB de arquivos. Usando parted, como podemos reduzi-la para que tenha somente espaço suficiente para os arquivos?
+
+
+
+<SolutionBlock>
+Essa operação teria várias etapas. Primeiro, encolhemos o sistema de arquivos usando resize2fs. Ao invés de especificar o novo tamanho diretamente, podemos usar o parâmetro -M para que ele fique "grande o bastante":
+```bash
+resize2fs -M /dev/sdc1
+```
+Em seguida, redimensionamos a própria partição com o parted usando resizepart. Como se trata da primeira partição, podemos pressupor que ela começa em zero e termina em 241 MB:
+```bash
+parted) resizepart 1 241M
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Erro ao criar swap
+
+**Enunciado:** Imagine que você tem um disco em /dev/sdb e deseja criar uma partição swap de 1 GB no início dele. Assim, usando parted, você cria a partição com `mkpart primary linux-swap 0 1024M`. A seguir, você habilita o swap (troca) nesta partição com `swapon /dev/sdb1`, mas obtém a seguinte mensagem de erro: `swapon: /dev/sdb1: read swap header failed`. O que deu errado?
+
+
+
+<SolutionBlock>
+Você criou uma partição do tipo correto (linux-swap), mas lembre-se de que o mkpart não cria um sistema de arquivos. Você esqueceu de configurar a partição como espaço de troca com `mkswap` antes de usá-la.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Recuperar partição excluída
+
+**Enunciado:** Ao longo desta lição, você experimentou alguns comandos no parted mas, por engano, excluiu a 3ª partição do seu disco rígido. Você sabe que ela vinha depois de uma partição UEFI de 250 MB e de uma partição de troca de 4 GB, e tinha 10 GB de tamanho. Qual comando você pode usar para recuperá-la?
+
+
+
+<SolutionBlock>
+Não entre em pânico, você tem todas as informações necessárias para recuperar a partição. Basta usar rescue e fazer as contas. Você tinha 250 MB + 4096 MB (4*1024) antes, então o ponto inicial deve ser em torno de 4346 MB. Juntando com 10.240 MB (10*1024) de tamanho, ela deve terminar em 14.586 MB:
+```bash
+parted) rescue 4346m 14586m
+```
+Pode ser preciso dar um pouco de "folga" ao rescue, começando um pouco antes e terminando um pouco depois, dependendo da geometria do seu disco.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 5 — Transformar partição em swap com fdisk
+
+**Enunciado:** Imagine que você tenha uma partição não utilizada de 4 GB em /dev/sda3. Usando fdisk, qual seria a sequência de operações para transformá-lo em uma partição swap ativa?
+
+
+
+<SolutionBlock>
+Primeiro, altere o tipo de partição para "Linux Swap" (82), grave suas alterações no disco e saia. Depois, use `mkswap` para configurar a partição como área de troca. Em seguida, use `swapon` para habilitá-la.
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T17 - 103.8 Edição básica de arquivos com o vi]()
+→ Próximo: [T19 - 104.2 Manutenção da integridade de sistemas de arquivos]()

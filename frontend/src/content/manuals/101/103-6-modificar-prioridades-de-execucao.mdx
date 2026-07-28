@@ -1,0 +1,189 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="103.6 Modificar prioridades de execução"
+  code="101"
+  topicNumber="T15"
+  objective="Modificar prioridades de execução de processos usando nice e renice"
+  weight={1}
+  pages="LPIC-1 (101) - Version 5.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Conceitos de prioridade
+
+- **Prioridade padrão** (0): Comportamento normal do sistema
+- **Mito comum:** ao contrário do que se costuma afirmar, o **bash não** adiciona +10 a processos lançados com `&` — o job herda o nice do shell (normalmente 0). Esse comportamento existia em *csh* antigo; para reduzir a prioridade de um job em background no bash é preciso usar explicitamente `nice`
+- **NICE** — Define prioridade de processos (valores: -20 a +19)
+  - Valor menor = maior prioridade
+  - Utilizadores comuns: de 0 (nice) a 19 (menos nice)
+  - Superusuário: pode usar valores negativos (-20 a 0)
+
+### Comandos de prioridade
+
+| Comando | Descrição |
+|---------|-----------|
+| `nice` | Inicia processo com prioridade diferente |
+| `nice -n <valor>` | Define a prioridade do processo |
+| `nice -n -20 <comando>` | Inicia com prioridade máxima (requer root) |
+| `renice` | Altera prioridade de processo em execução |
+| `renice -n <valor> -p <PID>` | Altera prioridade por PID |
+| `renice -n <valor> -u <usuario>` | Altera prioridade por utilizador |
+| `top` | Exibe e altera nice de processos em execução |
+| `kill` | Altera prioridade via sinais SIGSTOP/SIGCONT |
+
+### Como o nice funciona
+
+- O valor de nice é somado ao valor de base 80
+- **Priority = nice + 80**
+- Nice 0 = Priority 80 (valor padrão)
+- Nice -20 = Priority 60 (máxima)
+- Nice 19 = Priority 99 (mínima)
+
+### Uso do top
+
+```bash
+top -d 5                          # Exibe nice em coluna "NI"
+r <PID> <nice_value>              # Altera nice de processo no top
+```
+
+### Combinando nice com sinais
+
+```bash
+nice -n 10 tar czf backup.tar.gz /home     # Backup com prioridade reduzida
+nice -n -20 cat ficheiro_grande > /tmp/out   # Processo com alta prioridade (root)
+renice 5 -p 12345                           # Altera nice de processo
+```
+
+## Exercícios Guiados
+
+1. **Iniciar processo com nice:**
+   ```bash
+   $ nice tar czf meusficheiros.tar.gz /etc/ssh/ /home/jane/
+   $ pgrep -l "tar"
+   $ ps -ef | grep "tar"
+   ```
+
+2. **Alterar prioridade com nice:**
+   ```bash
+   $ nice -n 10 tar czf meusficheiros.tar.gz /etc/ssh/ /home/jane/
+   $ pgrep -l "tar"
+   $ ps -ef | grep "tar"
+   ```
+
+3. **Iniciar processo em background com nice:**
+   ```bash
+   $ nice tar czf meusficheiros.tar.gz /etc/ssh/ /home/jane/ &
+   $ pgrep -l "tar"
+   $ ps -ef | grep "tar"
+   ```
+
+4. **Alterar com renice (root):**
+   ```bash
+   $ sudo renice -n -10 -p $(pgrep tar)
+   $ ps -ef | grep tar
+   ```
+
+5. **Iniciar Xeyes com nice diferente:**
+   ```bash
+   $ nice -n 10 xeyes &
+   $ ps -ef | grep xeyes
+   ```
+
+6. **Verificar alterações:**
+   ```bash
+   $ pgrep -l "xeyes"
+   $ sudo renice -n -20 -p $(pgrep xeyes)
+   $ ps -ef | grep xeyes
+   ```
+
+7. **Alterar todos os processos de um utilizador:**
+   ```bash
+   $ sudo renice -n 10 -u fred
+   ```
+
+## Exercícios Exploratórios
+
+1. **Iniciar processo e alterar com renice:**
+   
+
+<SolutionBlock>
+```bash
+   $ tar czf backups.tar.gz /home/john/ &
+   $ pgrep -l "tar"
+   $ sudo renice -n 10 -p $(pgrep tar)
+   $ ps -ef | grep tar
+   ```
+</SolutionBlock>
+
+
+
+2. **Iniciar Xeyes e alterar prioridade via kill:**
+   
+
+<SolutionBlock>
+```bash
+   $ xeyes &
+   $ pgrep -l "xeyes"
+   $ kill -s "STOP" <PID do xeyes>
+   # No terminal do Xeyes:
+   $ nice -n 10 tar czf meusficheiros.tar.gz /etc/ssh/ /home/jane/
+   $ kill -s "CONT" <PID do xeyes>
+   ```
+</SolutionBlock>
+
+
+
+3. **Verificar todos os processos com nice alterada:**
+   
+
+<SolutionBlock>
+```bash
+   $ ps -el | grep -v "80" | grep -v "NI"
+   ```
+</SolutionBlock>
+
+
+
+4. **Alterar nice em tempo real com o `top`:**
+   
+
+<SolutionBlock>
+No interior do `top`, prima a tecla `r` (renice). O `top` pede, por ordem:
+   1. o **PID** do processo a alterar;
+   2. o **novo valor de nice** (de -20 a 19; valores negativos requerem root).
+
+   ```bash
+   $ top
+   # dentro do top:  r  ->  <PID>  ->  <novo_nice>
+   ```
+    Pode confirmar o valor atual com `ps -o pid,ni,comm -p <PID>` ou, a partir da shell, usar `renice -n <valor> -p <PID>`.
+</SolutionBlock>
+
+
+
+5. **Lançar processo com nice e verificar no `top`:**
+   
+
+<SolutionBlock>
+```bash
+   $ nice -n 15 sleep 120 &
+   $ top
+   # Verifique a coluna NI (nice value) do processo sleep
+   ```
+   No `top`, a coluna `NI` mostra o valor nice (15 neste caso). Prima `q` para sair do top.
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T14 - 103.5 Criar, monitorar e eliminar processos]()
+→ Próximo: [T16 - 103.7 Pesquisar usando expressões regulares]()

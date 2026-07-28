@@ -1,0 +1,253 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T16 — Noções básicas de Node.js"
+  code="030"
+  topicNumber="T16"
+  objective="035.1"
+  weight={1}
+  pages="LPI Web Development Essentials (030) - Version 1.0"
+  accent="amber"
+/>
+
+
+
+## Resumo Conciso
+
+### O que é Node.js
+
+Node.js é um ambiente de tempo de execução que executa código JavaScript em servidores web (back-end), eliminando a necessidade de uma segunda linguagem para o lado do servidor. Permite usar apenas JavaScript em todo o aplicativo (front-end e back-end).
+
+### Características principais
+
+| Característica | Descrição |
+|---|---|
+| **Laço de eventos (event loop)** | Loop interno que verifica continuamente tarefas de entrada a serem computadas |
+| **Thread único** | Evita múltiplos encadeamentos; usa o event loop para gestão assíncrona |
+| **I/O assíncrono e sem bloqueio** | Operações longas não bloqueiam operações mais rápidas |
+| **Compilação just-in-time** | Código JavaScript é analisado e compilado dinamicamente |
+| **NPM** | Node Package Manager para gerir módulos externos |
+
+### REPL (Read-Eval-Print-Loop)
+
+O ambiente interativo do Node.js — basta digitar `node` no terminal:
+
+```javascript
+> let array = ['a', 'b', 'c', 'd'];
+> array.map( (element, index) => (`Element: ${element} at index: ${index}`));
+```
+
+Para sair: `.exit`
+
+### Executar scripts
+
+```bash
+$ node ./start.js
+```
+
+### Laço de eventos e thread único
+
+- O event loop funciona como um chef que gerencia várias tarefas em paralelo
+- Operações assíncronas longas não bloqueiam operações mais rápidas
+- Não é adequado para computação intensiva de CPU
+- Usa funções de retorno de chamada (callbacks) para processar resultados quando operações são concluídas
+
+### Módulos
+
+Módulos permitem dividir código em partes menores para melhor organização, abstração e testes.
+
+**Criar um módulo (`polyhedrons.js`):**
+
+```javascript
+const sphereVol = (radius) => {
+  return 4 / 3 * Math.PI * Math.pow(radius, 3);
+}
+module.exports = { sphereVol }
+```
+
+**Importar o módulo (`volumeCalculator.js`):**
+
+```javascript
+const polyhedrons = require('./polyhedrons.js');
+console.log(`A sphere with radius 3 has a ${polyhedrons.sphereVol(3)} volume.`);
+```
+
+- Todo ficheiro de código-fonte é considerado um módulo
+- `module.exports` exporta funções do módulo
+- `require()` importa módulos
+
+### Node Package Manager (NPM)
+
+| Comando | Função |
+|---|---|
+| `npm init` | Inicializa um repositório NPM (gera `package.json`) |
+| `npm init --yes` | Inicializa com valores por omissão |
+| `npm i [module_name]` | Instala um módulo (`i` = atalho para `install`) |
+| `npm install` | Instala todas as dependências de `package.json` |
+
+**Ficheiros importantes:**
+
+| Ficheiro | Função |
+|---|---|
+| `package.json` | Metadados do projeto (nome, versão, dependências, scripts) |
+| `package-lock.json` | Árvore de dependências com versões exatas (*lockfile*) |
+| `node_modules/` | Pasta com código real das bibliotecas (não é versionada no Git) |
+
+**Uso de módulos NPM:**
+
+```javascript
+const dayjs = require('dayjs');
+dayjs().format('YYYY MM-DDTHH:mm:ss')
+```
+
+### Funcionalidade do servidor HTTP
+
+O Node.js usa os módulos `http` e `url` para criar servidores web básicos:
+
+```javascript
+const http = require('http');
+const url = require('url');
+const hostname = '127.0.0.1';
+const port = 3000;
+
+const server = http.createServer((req, res) => {
+  const queryObject = url.parse(req.url,true).query;
+  let result = parseInt(queryObject.a, 10) + parseInt(queryObject.b, 10);
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'text/plain');
+  res.end(`Result: ${result}\n`);
+});
+
+server.listen(port, hostname, () => {
+  console.log(`Server running at http://${hostname}:${port}/`);
+});
+```
+
+> **Nota sobre `url.parse`:** A API `url.parse(...)` é considerada *legacy* (legada) e está desaconselhada para código novo. A partir do Node.js 11, o método recomendado é o construtor padrão **`new URL(...)`** ( WHATWG URL API), que além de não estar obsoleto valida automaticamente a URL. O exemplo acima, em forma moderna, ficaria:
+>
+> ```javascript
+> const queryObject = new URL(req.url, `http://${req.headers.host}`).searchParams;
+> let result = parseInt(queryObject.get('a'), 10) + parseInt(queryObject.get('b'), 10);
+> ```
+>
+> A API moderna usa `searchParams.get('chave')` e devolve sempre `string | null`, pelo que se deve sempre passar a base **10** ao `parseInt` para evitar inferências erradas a partir de strings com zero à esquerda.
+
+| Módulo | Função |
+|---|---|
+| `http` | Configura o servidor HTTP e processa solicitações |
+| `url` | Analisa parâmetros passados na URL |
+
+### Comandos essenciais
+
+| Comando | Função |
+|---|---|
+| `node [file.js]` | Executa um ficheiro JavaScript com Node.js |
+| `npm init` | Inicializa projeto NPM |
+| `npm install [module]` | Instala um módulo externo |
+
+## 🧭 Exercícios Guiados (resolvidos)
+
+### Exercício Guiado 1 — Razões para usar módulos
+
+**Enunciado:** Quais são as razões para se usar módulos em vez de escrever funções simples?
+
+**Solução passo a passo:**
+
+1. Ao optar por módulos, o programador cria uma base de código mais simples de ler
+2. Os módulos facilitam a manutenção do código
+3. Permitem escrever testes automatizados de forma mais organizada
+4. Permitem abstrair implementações e separar funcionalidades complexas
+
+### Exercício Guiado 2 — Popularidade do Node.js
+
+**Enunciado:** Por que o ambiente Node.js se tornou tão popular? Cite uma característica.
+
+**Solução passo a passo:**
+
+1. A principal razão é a flexibilidade da linguagem JavaScript, já amplamente utilizada no front-end
+2. O Node.js permite usar apenas uma linguagem de programação em todo o sistema (front-end e back-end)
+3. Outras características: I/O assíncrono sem bloqueio, laço de eventos eficiente e ecossistema NPM
+
+### Exercício Guiado 3 — Finalidade do package.json
+
+**Enunciado:** Qual é a finalidade do ficheiro package.json?
+
+**Solução passo a passo:**
+
+1. O `package.json` contém metadados para o projeto: nome, versão, dependências (bibliotecas), scripts
+2. Com este ficheiro, outras pessoas podem descarregar e instalar as mesmas bibliotecas
+3. Permite executar testes da mesma forma que o criador original
+
+### Exercício Guiado 4 — Por que não versionar node_modules
+
+**Enunciado:** Por que não é recomendado salvar e partilhar a pasta node_modules?
+
+**Solução passo a passo:**
+
+1. A pasta `node_modules` contém implementações de bibliotecas disponíveis em repositórios remotos
+2. A melhor forma de partilhar é indicar as dependências no `package.json`
+3. Outro utilizador pode executar `npm install` para recriar a pasta automaticamente
+4. Evita controlar versão para milhares de ficheiros do repositório NPM
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+1. **Enunciado:** Como pode executar aplicativos Node.js no seu computador?
+   
+
+<SolutionBlock>
+```bash
+   node PATH/FILE_NAME.js
+   ```
+
+   Explicação: Basta digitar `node` seguido do caminho e nome do ficheiro JavaScript no terminal.
+</SolutionBlock>
+
+
+
+2. **Enunciado:** Como delimitar parâmetros na URL ao fazer análises dentro do servidor?
+
+   
+
+<SolutionBlock>
+```bash
+   curl "http://127.0.0.1:3000/numbers?a=2&b=17"
+   ```
+
+   Explicação: O caractere `&` (e comercial) é usado para delimitar parâmetros na query string da URL.
+</SolutionBlock>
+
+
+
+3. **Enunciado:** Descreva um cenário em que uma tarefa específica pode ser um gargalo para um aplicativo Node.js.
+
+   
+
+<SolutionBlock>
+O Node.js não é adequado para processos intensivos de CPU, pois usa um único thread. Um cenário de computação numérica pesada (simulações, processamento de imagem) poderia bloquear todo o aplicativo. Nesses casos, é melhor usar outras ferramentas ou delegar a tarefa a um worker separado.
+</SolutionBlock>
+
+
+
+4. **Enunciado:** Como seria possível implementar um parâmetro para multiplicar ou somar dois números no exemplo do servidor?
+
+   
+
+<SolutionBlock>
+```javascript
+   let result = queryObject.operation == 'mult'
+      ? parseInt(queryObject.a, 10) * parseInt(queryObject.b, 10)
+      : parseInt(queryObject.a, 10) + parseInt(queryObject.b, 10);
+   ```
+
+   Explicação: Usa-se um operador ternário para verificar o parâmetro `operation`. Se for `'mult'`, retorna o produto; caso contrário, retorna a soma. Testar com `http://127.0.0.1:3000/numbers?a=2&b=17&operation=mult`.
+</SolutionBlock>
+
+
+
+## 🔗 Ligações
+
+← Anterior: [T15 - 034.4 — Manipulação de conteúdo e estilo de websites com JavaScript]()
+→ Próximo: [T17 - 035.2 — Noções básicas de NodeJS Express](T17%20-%20035.2%20Noções%20básicas%20de%20NodeJS%20Express.md)

@@ -1,0 +1,213 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T13 — 055.1 Modelos de desenvolvimento de software"
+  code="050"
+  topicNumber="T13"
+  objective="055.1"
+  weight={3}
+  pages="LPI Open Source Essentials (050) - Version 1.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Funções nos projetos de software
+
+| Função | Responsabilidade principal |
+|---|---|
+| **Gerente de Projeto** | Garantir conclusão no prazo, dentro do orçamento e com qualidade aceitável |
+| **Analista de Negócios (BA)** | Traduzir necessidades do cliente em documentação clara e inequívoca |
+| **Engenheiro de Requisitos (RE)** | Especificar requisitos com quantidades exatas e detalhadas |
+| **Arquiteto de Software** | Tomar ou aprovar as grandes decisões técnicas; conhecimento técnico superior |
+| **Desenvolvedor** | Implementar requisitos seguindo documentação e decisões de design |
+| **Testador** | Executar testes (unitários, integração, sistema, aceitação) e documentar resultados |
+
+### Fases do planejamento e programação
+
+- **Planejamento**: reuniões sobre objetivos, métodos e análise de risco
+- **Programação**: criação de marcos (milestones), cronograma considerando férias, feriados e licença médica
+- **Ferramentas comuns**: Sistema de Controlo de Versões (VCS) e plataforma ALM (Application Lifecycle Management)
+
+### Modelo em Cascata
+
+| Fase | Descrição |
+|---|---|
+| **Engenharia de Requisitos** | Reunião e documentação de todos os requisitos com partes interessadas |
+| **Análise Comercial** | Verificar alinhamento com metas, estudos de viabilidade e análise de custo-benefício |
+| **Design de Software** | Criação de especificação detalhada para os desenvolvedores |
+| **Desenvolvimento** | Escrita do código seguindo documentação e decisões de design |
+| **Teste** | Testes unitários, de integração, de sistema e de aceitação |
+| **Operações** | Implantação, configuração, treinamento e manutenção |
+
+**Vantagens**: estrutura clara, documentação meticulosa, previsibilidade, gestão simples
+**Desvantagens**: rigidez, testes tardios, pressuposição de requisitos perfeitos, falta de feedback do cliente
+
+### Desenvolvimento Ágil — Manifesto
+
+| Valorizamos mais | Mas reconhecemos valor em |
+|---|---|
+| Indivíduos e interações | Processos e ferramentas |
+| Software funcional | Documentação abrangente |
+| Colaboração com o cliente | Negociação de contrato |
+| Reagir às mudanças | Seguir um plano |
+
+### Scrum
+
+| Elemento | Descrição |
+|---|---|
+| **Sprint** | Fase de desenvolvimento de 2 a 4 semanas com tarefas previamente acertadas |
+| **Product Backlog** | Lista de prioridades com todo o trabalho desejado no projeto |
+| **Sprint Backlog** | Elementos escolhidos pela equipe durante o planejamento do sprint |
+| **Daily Scrum / Stand-up** | Reunião curta diária para discutir progresso e bloqueios |
+| **Incremento** | Meta alcançada durante um sprint; deve ser verificada por testes |
+| **Sprint Review** | Reunião para analisar resultado e obter feedback dos stakeholders |
+| **Sprint Retrospective** | Melhoria da qualidade e eficácia; lista de problemas e soluções |
+
+| Função Scrum | Responsabilidade |
+|---|---|
+| **Scrum Master** | Facilitar processos Scrum, remover obstáculos, atuar como coach |
+| **Product Owner** | Maximizar valor do produto; definir e priorizar o product backlog |
+| **Desenvolvedores** | Implementar requisitos do sprint backlog; colaboração e programação em pares |
+
+**Vantagens**: flexibilidade, envolvimento do cliente, qualidade aprimorada, colaboração em equipe
+**Desvantagens**: disciplina necessária, aumento do escopo, confusão de funções, intensidade de recursos
+
+### Kanban
+
+| Elemento | Descrição |
+|---|---|
+| **Quadro Kanban** | Ferramenta visual com colunas "A Fazer", "Em Andamento", "Concluído" |
+| **Limite WIP** | Limite de trabalho em andamento para evitar sobrecarga e melhorar foco |
+| **Membros da equipe** | Responsáveis por concluir tarefas e estabelecer fluxo suave |
+| **Facilitador do Kanban** | Supervisionar processo, facilitar reuniões e resolver problemas |
+
+**Vantagens**: fluxo visual, flexibilidade, limites de tarefas, melhoria contínua
+**Desvantagens**: falta de janela de tempo, menos estrutura, disciplina necessária, potencial de simplificação excessiva
+
+### DevOps
+
+| Conceito | Descrição |
+|---|---|
+| **Objetivo** | Integrar equipes de desenvolvimento (Dev) e operações (Ops) |
+| **Automação** | Tarefas repetitivas (integração, testes, implantação, infraestrutura) |
+| **CI/CD** | Integração contínua e entrega contínua |
+| **Monitoramento** | Sistemas abrangentes de monitoramento e registo |
+
+**Vantagens**: velocidade e eficiência, melhor colaboração, entrega contínua, alta confiabilidade
+**Desvantagens**: mudança cultural, complexidade, riscos de segurança, sobrecarga de ferramentas
+
+## Exercícios Guiados
+
+### Exercício Guiado 1 — Significado de agilidade
+
+**Enunciado:** O que significa agilidade?
+
+**Solução:** A agilidade expressa a capacidade de reagir e se mover rapidamente, tanto no mundo físico como no mental. No desenvolvimento de software, traduz-se em entregar pequenas melhorias de forma iterativa, coletando e implementando feedback durante o desenvolvimento.
+
+### Exercício Guiado 2 — Definição de Scrum
+
+**Enunciado:** Qual é a definição de Scrum, de acordo com o Scrum Guide?
+
+**Solução:** De acordo com o Scrum Guide, o Scrum é construído sobre os seguintes princípios:
+1. Um Product Owner organiza o trabalho para um problema complexo num Product Backlog
+2. O Scrum Team transforma uma seleção do trabalho num Incremento de valor durante um Sprint
+3. O Scrum Team e seus stakeholders inspecionam os resultados e fazem ajustes para o próximo Sprint
+4. Repetir
+
+### Exercício Guiado 3 — Feedback do cliente no Scrum vs. Cascata
+
+**Enunciado:** Por que o Scrum pode ter um desempenho melhor do que o modelo em cascata no que toca ao feedback do cliente?
+
+**Solução:** No Scrum, o feedback é coletado durante o desenvolvimento (através de Sprint Reviews e retrospectivas), permitindo ajustes contínuos. No modelo em cascata, o cliente só pode avaliar o produto na última fase, pelo que qualquer requisito mal compreendido só será detetado no final, quando as correções são mais dispendiosas.
+
+### Exercício Guiado 4 — Aspetos positivos do DevOps
+
+**Enunciado:** Quais são os aspetos positivos do DevOps?
+
+**Solução:** Os aspetos positivos do DevOps são:
+- **Velocidade e eficiência** — acelera ciclos de desenvolvimento e implantação por meio da automação
+- **Melhor colaboração** — preenche a lacuna entre equipes de desenvolvimento e operações
+- **Entrega contínua** — garante que o software esteja sempre num estado implantável
+- **Alta confiabilidade** — testes e monitoramento automatizados aumentam a confiabilidade
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Limitações do modelo em cascata
+
+**Enunciado:** Por que o modelo em cascata não é o melhor para usar num ambiente em rápida transformação?
+
+
+
+<SolutionBlock>
+O modelo em cascata coleta feedback apenas no final do desenvolvimento. Assim, qualquer requisito que tenha sido mal compreendido pelos desenvolvedores terá de ser corrigido no final. Se o ambiente costuma mudar muito rapidamente, este modelo não deve ser utilizado, já que não há um feedback previsto no meio do ciclo de desenvolvimento. A rigidez do fluxo linear impede adaptações durante o processo.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Scrum Master mal implementado
+
+**Enunciado:** O que pode acontecer quando o papel do Scrum Master é mal implementado?
+
+
+
+<SolutionBlock>
+Uma função de Scrum Master mal implementada pode prejudicar a capacidade da equipe de entregar produtos de alta qualidade de forma eficiente e desfazer os benefícios da adoção do Scrum. Os problemas incluem:
+- Falta de orientação adequada sobre práticas e princípios do Scrum
+- Aplicação inconsistente ou incorreta da estrutura
+- Impedimentos não resolvidos que retardam o progresso
+- Falta de comunicação entre membros da equipe e stakeholders
+- Diminuição do moral e da motivação
+- Reuniões mal conduzidas e revisões de sprint ineficazes
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Vantagens e desvantagens do Kanban face ao Scrum
+
+**Enunciado:** Um projeto de código aberto tem uma equipa pequena e distribuída geograficamente, sem possibilidade de manter sprints regulares. Que modelo de desenvolvimento seria mais adequado — Scrum ou Kanban — e porquê?
+
+
+
+<SolutionBlock>
+O **Kanban** seria mais adequado para este cenário. As principais razões são:
+
+- **Sem iterações fixas**: O Kanban não requer sprints de 2-4 semanas, o que é vantajoso quando a equipa está distribuída e os membros têm disponibilidade irregular
+- **Fluxo contínuo**: As tarefas avançam através do quadro (A Fazer → Em Andamento → Concluído) à medida que há disponibilidade, sem a pressão de deadlines de sprint
+- **Flexibilidade de priorização**: O product owner pode repriorizar tarefas a qualquer momento, sem esperar pelo próximo planeamento de sprint
+- **Menos reuniões síncronas**: As daily scrums e sprint reviews do Scrum exigem reuniões regulares que podem ser difíceis de coordenar entre fusos horários
+
+As desvantagens a considerar são a menor estrutura (o que pode levar a falta de foco) e a necessidade de disciplina para gerir os limites WIP. Para mitigar isso, a equipa pode definir limites WIP rigorosos e manter reuniões síncronas periódicas (semanais ou quinzenais).
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Papel do DevOps em projetos de código aberto
+
+**Enunciado:** Por que o modelo DevOps é especialmente relevante para projetos de código aberto que lançam versões com frequência, e quais práticas de DevOps podem ser mais difíceis de implementar nestes projetos?
+
+
+
+<SolutionBlock>
+O DevOps é especialmente relevante porque os projetos de código aberto beneficiam de **lançamentos frequentes** e **integração contínua**, permitindo que os muitos colaboradores vejam o impacto das suas contribuições rapidamente. A **automatização** de testes e implantação reduz erros quando múltiplas pessoas contribuem para o mesmo código.
+
+As práticas mais difíceis de implementar em projetos de código aberto incluem:
+
+- **Mudança cultural**: exige alinhamento entre uma comunidade distribuída e voluntária, o que é mais difícil do que numa organização com hierarquia definida
+- **Gestão de infraestrutura**: os custos de infraestrutura CI/CD podem ser elevados para projetos sem financiamento empresarial
+- **Monitoramento e segurança**: a implantação contínua requer sistemas de monitoramento robustos, que nem todos os projetos de código aberto conseguem manter
+
+Muitos projetos resolvem estes desafios juntando-se a fundações (como a Apache Software Foundation) ou obtendo patrocínio de empresas para custear infraestrutura DevOps.
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T12 - 054.3 Conformidade e redução de riscos]()
+→ Próximo: [T14 - 055.2 Gestão de produtos/Gestão de lançamentos]()

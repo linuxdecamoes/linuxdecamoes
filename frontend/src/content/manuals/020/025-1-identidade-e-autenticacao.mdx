@@ -1,0 +1,148 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="025.1 — Identidade e Autenticação"
+  code="020"
+  topicNumber="T15"
+  objective="025.1"
+  weight={3}
+  pages="LPI Security Essentials (020) - Version 1.0"
+  accent="coral"
+/>
+
+
+
+## Resumo Conciso
+
+- **Identidade digital** — forma como programas e serviços online identificam o utilizador para conceder acesso
+- **Autenticação** — validação de que a pessoa é quem diz ser; baseada em "algo que sabe", "algo que tem" ou "algo que é"
+- **Autorização** — determinação dos direitos de acesso a recursos após autenticação
+- **Contabilização (accounting)** — registo de ações para auditoria e deteção de atividade suspeita
+- **Segurança de palavras-passe:**
+
+| Aspeto | Recomendação |
+|--------|-------------|
+| Comprimento | ≥ 20 caracteres (idealmente mais) |
+| Complexidade | Mistura de maiúsculas, minúsculas, dígitos, caracteres especiais |
+| Unicidade | Senha diferente para cada serviço |
+| Alteração | Anualmente ou sempre que houver violação |
+| Compartilhamento | Nunca partilhar; nunca enviar por e-mail ou SMS |
+
+- **Gestores de palavras-passe** — KeePass2 (offline/open-source), LastPass/1Password/Dashlane (online/cloud)
+- **Single Sign-On (SSO)** — autenticação única que permite login noutro serviço com credenciais de um terceiro (Facebook, Google)
+- **MFA / 2FA** — autenticação multifator usando senha + OTP/TOTP, impressão digital, cartão ou aplicação autenticadora
+- **Hashing e salting** — proteção de palavras-passe no lado do servidor; rainbow table como vector de ataque
+- **Contas de e-mail** — porta de entrada para identidade digital; exigem MFA e monitorização regular
+- **Monitorização de vazamentos** — Have I Been Pwned, Google Password Checkup, alertas de browsers modernos
+- **Bancos online** — HTTPS, MFA, evitar computadores/rede públicos; usar VPN em Wi-Fi público
+
+## Exercícios Guiados
+
+### Exercício Guiado 1: Por que é importante que uma senha seja longa?
+
+**Enunciado:** Por que é importante que uma senha seja longa?
+
+**Solução:** Senhas longas (20 caracteres, ou idealmente ainda mais longas) são as mais resistentes a ataques de força bruta. A complexidade é importante, mas o comprimento é ainda mais relevante porque os invasores tentam combinações aleatórias de caracteres; uma senha curta, por mais complexa que seja, pode ser encontrada mais facilmente.
+
+### Exercício Guiado 2: O que fazer quando alguém pede a sua senha por telefone?
+
+**Enunciado:** O que tu deves fazer se alguém ligar da Microsoft e pedir sua senha para resolver um problema de segurança no seu sistema Windows?
+
+**Solução:** Desligue. Golpistas que se fazem passar pela Microsoft são comuns. Qualquer pessoa que peça a sua senha é um golpista. É útil ligar para a empresa que eles afirmam representar e avisar que alguém está a usar o nome da empresa para enganar clientes.
+
+### Exercício Guiado 3: Vantagens de usar um Gestor de palavras-passe
+
+**Enunciado:** Quais são algumas vantagens de usar um Gestor de palavras-passe?
+
+**Solução:** As palavras-passe são armazenadas de forma segura e encriptada, eliminando a necessidade de anotá-las em texto simples. O utilizador só precisa de lembrar a senha mestra. Assim, pode criar palavras-passe longas e complexas sem as digitar manualmente, reduzindo o risco de erros e ataques de força bruta.
+
+### Exercício Guiado 4: Como o hashing e o salting protegem palavras-passe no servidor?
+
+**Enunciado:** Como é que o hashing e o salting protegem as palavras-passe armazenadas nos servidores?
+
+**Solução:** O hashing transforma a senha numa sequência de caracteres de comprimento fixo e aleatório, de forma que ninguém pode reconstruir a senha original. O salting adiciona um valor aleatório único (sal) à senha antes do hashing — o sal é armazenado junto do hash e pode ser reutilizado para a mesma conta; impede que tabelas rainbow sejam usadas eficazmente. Cada senha fica com um hash diferente mesmo que o conteúdo original seja igual.
+
+### Exercício Guiado 5: Como funciona o Single Sign-On (SSO)?
+
+**Enunciado:** Descreva o funcionamento básico do Single Sign-On (SSO).
+
+**Solução:** O SSO permite que o utilizador faça login num serviço e utilize outros sem autenticar novamente. Após autenticar no primeiro serviço (ex.: Facebook), quando visita outro site, esse site solicita um token ao primeiro serviço. O token é uma mensagem aleatória e encriptada que autentica o utilizador. Se o utilizador não estiver logado no serviço de referência, é solicitado o login antes de emitir o token.
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1: Forma de autenticação adequada para hospitais
+
+**Enunciado:** Em hospitais, os clínicos normalmente circulam de um andar para outro e precisam fazer login com frequência para verificar os pacientes e inserir suas anotações. Qual forma de autenticação pode ser boa para um hospital usar?
+
+
+
+<SolutionBlock>
+Leitores de crachá são uma boa solução nesse tipo de ambiente. Cada clínico carrega um crachá com uma faixa contendo as suas informações de identificação. Cada estação de enfermagem tem um computador com um leitor de crachá. Para aceder aos registos eletrónicos, cada médico ou enfermeiro posiciona o seu crachá diante do leitor, e possivelmente também insere uma palavra-passe para autenticação em dois fatores. Se saírem sem fazer logout, a conta é desconectada automaticamente após um tempo de inatividade.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2: Serviços de publicação em redes sociais e palavras-passe
+
+**Enunciado:** Alguns profissionais delegam postagens em mídias sociais para um serviço que publica as postagens em horários planejados. Tu precisas fornecer a tua palavra-passe para esse serviço e permitir que ele tenha acesso completo à sua conta?
+
+
+
+<SolutionBlock>
+Não. Esses serviços têm acesso muito limitado à sua conta. O serviço utiliza a interface de programação de aplicativos (API) da rede social para publicar as suas publicações. O serviço tem a sua própria palavra-passe de API, então tu podes revogar o acesso sempre que quiseres. As operações permitidas ao serviço também podem ser limitadas.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3: Riscos do credencial stuffing
+
+**Enunciado:** O que é credential stuffing e como é que o uso de palavras-passe únicas o previne?
+
+
+
+<SolutionBlock>
+Credential stuffing é um ataque em que o invasor utiliza combinações de nome de utilizador e senha obtidos noutra violação para fazer login em vários serviços populares. Funciona porque muitas pessoas reutilizam palavras-passe. Usando palavras-passe únicas para cada serviço, mesmo que uma seja comprometida, o invasor não consegue aceder a outras contas do utilizador.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4: Proteção de contas de e-mail
+
+**Enunciado:** Quais medidas de segurança devem ser implementadas para proteger uma conta de e-mail?
+
+
+
+<SolutionBlock>
+- Usar autenticação multifator (MFA)
+- Monitorar regularmente a atividade da conta (logins incomuns, regras de encaminhamento não configuradas)
+- Alterar a senha imediatamente se houver suspeita de comprometimento
+- Utilizar um Gestor de palavras-passe para manter credenciais fortes e únicas
+- Verificar regularmente serviços como Have I Been Pwned para detetar vazamentos
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 5: Segurança em bancos online
+
+**Enunciado:** Quais são as melhores práticas para manter a segurança ao utilizar bancos online?
+
+
+
+<SolutionBlock>
+- Verificar sempre se o URL começa com `https://` e se há ícone de cadeado na barra de endereços
+- Ativar e utilizar a autenticação multifator oferecida pelo banco
+- Evitar usar computadores públicos ou partilhados para operações bancárias
+- Não aceder a contas bancárias em redes Wi-Fi públicas sem VPN
+- Manter o navegador e o sistema operacional atualizados
+- Desconfiar de e-mails ou mensagens que solicitem dados bancários (phishing)
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T14 - 024.3 Criptografia e Anonimato na Rede]()
+→ Próximo: [T16 - 025.2 Confidencialidade da Informação]()

@@ -1,0 +1,164 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T02 — 051.2 Arquitetura de software"
+  code="050"
+  topicNumber="T02"
+  objective="051.2"
+  weight={2}
+  pages="LPI Open Source Essentials (050) - Version 1.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Servidores e Clientes
+
+| Conceito | Descrição |
+|---|---|
+| Servidor | Computador especialmente projetado para funcionar 24/7, atendendo a solicitações de clientes |
+| Cliente (aplicativo) | Software que interage com o servidor remoto (ex.: navegador web) |
+| Comunicação cliente-servidor | Um servidor pode estabelecer múltiplos contatos com muitos clientes simultaneamente |
+
+### Thin Client vs. Fat Client
+
+| Característica | Thin Client | Fat Client |
+|---|---|---|
+| Processamento | Depende do servidor para computar e retornar informações | Armazena e processa a maioria das tarefas localmente |
+| Recursos locais | Baixa exigência de recursos | Maior exigência de GPU, RAM, CPU e espaço em disco |
+| Conexão de rede | Depende fortemente de conexão estável | Menos vulnerável a instabilidade de rede |
+| Atualizações | Mais fáceis de realizar | Mais difíceis de realizar |
+| Custos | Mais baixos | Mais elevados |
+| Exemplo | Navegador web (banco) | Aplicativo de jogos para desktop |
+
+### Aplicativos Web
+
+| Conceito | Descrição |
+|---|---|
+| Aplicativo web | Software executado em servidor que processa interações do utilizador, acessado via rede |
+| SPA (Single Page Application) | Aplicativo de página única — toda troca de dados ocorre sem redirecionamento |
+| MPA (Multi Page Application) | Aplicativo de páginas múltiplas — cada ação pode redirecionar para outra página |
+| Frontend | Camada de visualização com a qual o utilizador interage no navegador |
+| Backend | Lógica de negócios, handlers de comunicação, processamento e armazenamento de dados |
+
+**Exemplos:**
+- SPA: Google Mail (Gmail) — atualiza partes específicas da tela sem redirecionar
+- MPA: Amazon.com — cada item localizado numa página web distinta
+
+### API (Interface de Programação de Aplicativos)
+
+| Conceito | Descrição |
+|---|---|
+| API | Interface que permite a comunicação entre diferentes partes de software |
+| API RESTful | API que segue os princípios REST (Transferência de Estado Representacional) |
+| HTTP | Protocolo mais usado para comunicação em APIs de aplicações web |
+
+**Princípios REST (os 3 mais relevantes):**
+
+| Princípio | Descrição |
+|---|---|
+| Separação cliente-servidor | O cliente conhece apenas o URI do recurso; permite flexibilidade na alteração do backend |
+| Comunicações sem estado (statelessness) | Cada pedido é independente dos anteriores; o cliente deve enviar autenticação a cada pedido |
+| Arquitetura em camadas | O aplicativo é composto por múltiplas camadas, cada uma com sua própria lógica |
+
+### Arquiteturas Monolíticas vs. Microsserviços
+
+| Característica | Arquitetura Monolítica | Arquitetura de Microsserviços |
+|---|---|---|
+| Estrutura | Todos os serviços e recursos num único sistema | Vários serviços interdependentes, cada um com seu próprio base de dados e base de código |
+| Base de código | Centralizada num enorme bloco | Descentralizada em vários aplicativos menores |
+| Manutenção | Mais sobrecarga conforme o aplicativo cresce | Mais flexível, cada serviço gerenciado por uma equipa |
+| Colisões de código | Prováveis quando várias equipas trabalham na mesma base | Mínimas, equipas trabalham em domínios diferentes |
+| Banco de dados | Fonte de dados centralizada, evita duplicação | Múltiplas instâncias, possível duplicação |
+| Consumo de recursos | Menor (um servidor maior) | Maior (diversos servidores descentralizados) |
+| Resiliência | Ponto de falha único | Qualquer ponto de falha pode impactar todo o aplicativo |
+| Exemplo | Aplicativo bancário com toda a lógica num só sistema | Aplicativo bancário com microsserviços dedicados a pagamentos, empréstimos, etc. |
+
+## Exercícios Guiados
+
+### Exercício Guiado 1 — Diferenças entre fat client e thin client
+
+**Enunciado:** Quais as principais diferenças entre um fat client e um thin client?
+
+**Solução:** Um fat client não requer uma conexão constante com um servidor remoto que retorna informações críticas ao cliente em execução. O thin client depende bastante das informações processadas por uma fonte externa. Outra diferença é que um fat client é responsável pela maior parte do processamento de dados, exigindo, portanto, mais recursos computacionais do que seu equivalente thin.
+
+### Exercício Guiado 2 — Todo site é um aplicativo web?
+
+**Enunciado:** É correto presumir que todo site é um aplicativo web?
+
+**Solução:** Não. Existem sites que não são aplicações de software. Um aplicativo web interage com o utilizador, que pode inserir dados e utilizar funcionalidades web em tempo real. Sites simples, como anúncios de eventos sociais que funcionam como um banner, não são aplicações web. Esses sites não-interativos são mais fáceis de manuter e exigem poucos recursos de computação para hospedar e exibir as páginas web. Um aplicativo web requer muito mais recursos computacionais, servidores mais robustos e funcionalidades que atendam aos utilizadores, como acesso restrito e armazenamento permanente de dados.
+
+### Exercício Guiado 3 — O que é o modelo REST?
+
+**Enunciado:** O que é o modelo REST?
+
+**Solução:** O modelo REST é um modelo de arquitetura de software que fornece aos aplicações um guia de desenvolvimento para melhor usabilidade, clareza e facilidade de manutenção. Um dos princípios delineados no conjunto de diretrizes REST é a arquitetura em camadas, usada principalmente para coesão e para diminuir a dependência dos diversos componentes internos das APIs. As APIs que seguem os princípios REST são chamadas RESTful e, na web moderna, o design REST é seguido por muitos aplicações web.
+
+### Exercício Guiado 4 — Modelo preferido para aplicações web grandes
+
+**Enunciado:** Qual o modelo preferido para desenvolver aplicativos web grandes e modernos com múltiplas equipes de desenvolvimento? Por quê?
+
+**Solução:** O modelo de software de microsserviços fornece uma estrutura flexível na qual as equipas colaboram num mesmo aplicativo, facilitando a simultaneidade quando duas ou mais equipas mantêm um aplicativo web grande. Como a estrutura é descentralizada, cada equipa pode atualizar um domínio de negócios específico sem precisar atualizar os outros componentes.
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — O Perseverance Rover como fat client
+
+**Enunciado:** Em 2021, o Perseverance Rover da NASA pousou em Marte, tendo como um dos seus objetivos determinar se alguma vez existiu vida nesse planeta. Embora o Rover possa ser controlado à distância aqui na Terra, ele também pode controlar a si mesmo na maioria das situações. Por que é uma boa ideia projetar um veículo espacial como esse como um fat client?
+
+
+
+<SolutionBlock>
+O tempo que um sinal de comunicação leva para ser enviado da Terra e recebido em Marte pode variar dependendo das posições desses planetas, chegando a levar até vinte minutos. Assim, o comando e controle à distância de um rover em movimento torna-se impossível, especialmente levando em consideração situações inesperadas. Idealmente, o rover deveria comandar a si mesmo na maioria das situações. Isso é conseguido por meio de treinamento de inteligência artificial (aprendizado de máquina), para que o rover se torne mais independente de comandos manuais. Para depender menos de sinais distantes, o rover foi projetado para ter recursos próprios. A maior parte dos processos computacionais roda localmente, o que corresponde à definição de um fat client.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Carro autônomo: fat ou thin client?
+
+**Enunciado:** Imagine um carro autônomo moderno, que se conecta a um servidor externo para trocar dados. Ele deve ser um fat client ou um thin client?
+
+
+
+<SolutionBlock>
+Um veículo autônomo poderia delegar o processamento pesado de dados a um servidor externo e confiável, mas ele estaria suscetível a períodos offline em momentos nos quais o processamento de dados críticos seria necessário. Portanto, é imperativo que o veículo autônomo processe a maioria das tarefas — e isso exige que ele seja um fat client com redundância múltipla.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Protocolo de comunicação entre aplicações web
+
+**Enunciado:** Qual é o protocolo mais comumente usado para troca de dados entre aplicações web? Explique por que é tão amplamente utilizado.
+
+
+
+<SolutionBlock>
+HTTP é o protocolo mais utilizado para troca de dados e comandos entre servidores e clientes. O HTTP foi projetado para aplicações cliente-servidor, em que os recursos são solicitados de um servidor e retornados ao cliente pela rede usando uma estrutura predefinida. É amplamente utilizado porque é robusto, simples e encontra-se omnipresente no ambiente da World Wide Web. Além disso, é o protocolo quase universalmente usado no modelo REST devido à sua fiabilidade e compatibilidade.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Desvantagens dos MPA vs. SPA
+
+**Enunciado:** Cite duas desvantagens dos aplicativos de múltiplas páginas (MPA) em comparação aos aplicativos de página única (SPA).
+
+
+
+<SolutionBlock>
+1. **Desempenho:** Um aplicativo de múltiplas páginas recarrega todos os elementos da página web quando o utilizador dispara algumas ações, em vez de atualizar somente os elementos alterados. O desempenho sofre com esse design.
+2. **Interatividade:** Uma desvantagem de um MPA é uma interatividade mais desajeitada, na qual cada carregamento de página cria uma camada extra de dificuldade para o utilizador. Em contrapartida, o efeito visual seria contínuo numa SPA.
+
+Uma vantagem do MPA sobre o SPA é que a análise de dados (web analytics) é muito mais fácil de coletar e medir.
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T01 - 051.1 Componentes de software]()
+→ Próximo: [T03 - 051.3 Computação local e em nuvem]()

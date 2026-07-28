@@ -1,0 +1,212 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="A evolução do Linux e sistemas operacionais populares"
+  code="010"
+  topicNumber="T01"
+  objective="1.1"
+  weight={2}
+  pages="Linux Essentials (010) - Version 4.1"
+  accent="sage"
+/>
+
+
+
+## Resumo Conciso
+
+### Origem do Linux
+- **1991** — **Linus Torvalds** começa o Linux, inspirado no **Unix** (década de 70, Laboratórios AT&T). O Unix não existia para PCs x86; o Linux veio preencher essa lacuna.
+- Linux **reutiliza os princípios do Unix**, mas **não contém código Unix** (projeto independente).
+- Mantido por uma **comunidade internacional** (não por uma única empresa); gratuito e sem restrições de uso.
+
+### Distribuições (distros)
+Uma distribuição = **kernel Linux + seleção de aplicações** + ferramentas de instalação/administração, otimizadas para um público/fim específico. Classificam-se por **família** e pelo **gestor de pacotes / formato**:
+
+| Família           | Gestor/Formato    | Distros principais                                                                                                                                                                   | Notas                                                                     |
+| ----------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------- |
+| **Debian**        | `dpkg` / `.deb`   | **Debian GNU/Linux** (1993, Ian Murdock; máxima estabilidade, só software livre), **Ubuntu** (2004, Mark Shuttleworth; desktop fácil, lançamento a cada 6 meses + LTS a cada 2 anos) | Ubuntu é baseado num instantâneo do Debian                                |
+| **Red Hat**       | `.rpm`            | **RHEL** (comercial, servidores, pago/assinatura), **CentOS** (código livre do RHEL, sem suporte comercial), **Fedora** (2003; desktop, "banco de testes" de novas tecnologias)      | Red Hat adquirida pela **IBM** (anúncio 2018, concluída em julho de 2019) |
+| **SUSE**          | `.rpm` + **YaST** | **SUSE Linux Enterprise Server** (comercial), **openSUSE** (2004; gratuita)                                                                                                          | SUSE fundada em 1992 (Alemanha)                                           |
+| **Independentes** | —                 | **QubesOS** (segurança extrema), **Kali Linux** (pentest/vulnerabilidades), distros minúsculas para **containers** (ex.: Docker)                                                     | —                                                                         |
+
+### Sistemas Embarcados
+- Combinação de **hardware + software** para uma **função específica** dentro de um sistema maior (automóvel, médico, militar, dispositivos inteligentes).
+- Vantagens do Linux: **compatibilidade multi-fornecedor**, desenvolvimento, suporte e **ausência de licenças**.
+- **Dois projetos-chave:**
+  - **Android** — SO móvel da Google (comprou a Android Inc. em 2005). Base = **kernel Linux modificado** + open source (AOSP). Google acrescenta componentes proprietários (Maps, Chrome, Play Store). Versões para TV, smartwatch, Auto, etc.
+  - **Raspbian / Raspberry Pi** — Raspberry Pi = computador do tamanho de cartão de crédito, **processador ARM**, arranca por **cartão SD**, com pinos **GPIO** para eletrónica. **Raspbian** = distro baseada em Debian, otimizada para o Pi (>35 000 pacotes).
+
+### Linux na Nuvem
+- **Cloud computing** = consumir recursos de computação de um provedor público (ou nuvem privada).
+- Linux está em **~90% da carga de nuvens públicas** (2017). Oferecido por AWS, GCP e até **Microsoft Azure**.
+- Modelo **IaaS** (Infraestrutura como Serviço): máquinas virtuais prontas em minutos, com **imagens** de distros populares; o provedor adiciona ferramentas (ex.: expandir sistema de ficheiros ao disco real da VM).
+
+| **Usabilidade / público-alvo** | Para **utilizadores mais avançados** | **Recomendado a iniciantes** (fácil de usar, **sem configuração complexa** durante a instalação) |
+|---|---|---|
+| **Estabilidade vs. novidade** | **Mais estável** (menos atualizações, muito testadas) | Acesso a **software mais recente** e novas tecnologias |
+
+### Guiado 2 — 3 ambientes/plataformas onde o Linux é muito usado (com 1 distro cada)
+
+**Enunciado:** *Em quais ambientes/plataformas o Linux é mais usado? Cite três e dê uma distribuição para cada.*
+
+**Solução:**
+
+| Ambiente/Plataforma | Distribuição exemplo |
+|---------------------|----------------------|
+| **Smartphone** | **Android** |
+| **Desktop** | Debian, Ubuntu (ou Fedora, Linux Mint…) |
+| **Servidor** | CentOS, **RHEL** (ou Debian, Ubuntu Server) |
+
+### Guiado 3 — 4 fatores a considerar ao escolher uma distribuição
+
+**Enunciado:** *Você planeia instalar uma distribuição Linux. Cite quatro coisas a considerar.*
+
+**Solução:**
+
+| Fator | Descrição |
+|-------|-----------|
+| **Custo** | Licenças/assinaturas |
+| **Desempenho** | Requisitos de recursos do sistema |
+| **Escalabilidade** | Capacidade de crescer conforme a necessidade |
+| **Estabilidade** | Fiabilidade e testes das atualizações |
+| *(bónus)* **Exigências de hardware** | Requisitos mínimos do sistema |
+
+> Qualquer 4 destes é resposta válida.
+
+### Guiado 4 — 3 dispositivos com Android (além de smartphones)
+
+**Enunciado:** *Cite três dispositivos que rodam Android OS, além de smartphones.*
+
+**Solução:**
+
+| Dispositivo |
+|-------------|
+| **Smart TVs** |
+| **Tablets** |
+| **Android Auto** |
+| *(bónus)* **Smartwatches** |
+
+### Guiado 5 — 3 grandes vantagens da computação em nuvem
+
+**Enunciado:** *Explique três grandes vantagens da computação em nuvem.*
+
+**Solução:**
+
+| Vantagem | Descrição |
+|----------|-----------|
+| **Flexibilidade** | Fácil de implementar e **escalar** conforme as necessidades |
+| **Facilidade de recuperação** | Excelente para **backup/DR**; a empresa recupera-se rapidamente após um incidente, sem grandes repercussões |
+| **Baixo custo** | Modelo por **assinatura**, pagando apenas pelos recursos usados (reduz custos operacionais) |
+
+---
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+> Exercícios da autoria do agente, para praticares diretamente no terminal Linux. Consolidam o tópico 1.1 (conceitual, mas com comandos reais para te familiarizares com o sistema).
+> *Dica:* precisas de uma sessão Linux (física, VM ou WSL). As soluções estão em `<details>` para poderes tentar primeiro.
+
+### Exploratório 1 — Descobrir a tua própria distribuição
+Descobre, **apenas por comandos**, o nome e a versão da distro onde estás, a família de pacotes (Debian/Red Hat) e o kernel.
+
+
+
+<SolutionBlock>
+```bash
+# Nome e versão da distribuição (funciona em qualquer distro moderna)
+cat /etc/os-release
+
+# Alternativa legível
+lsb_release -a            # pode exigir o pacote lsb-release
+hostnamectl               # mostra OS, kernel e arquitetura
+
+# Família de pacotes: verificar se é .deb ou .rpm
+which dpkg && echo "Família Debian (.deb)"
+which rpm  && echo "Família Red Hat (.rpm)"
+
+# Versão do kernel e arquitetura
+uname -a
+```
+
+**Como interpretar:** `ID=debian`/`ID=ubuntu` → família Debian (`dpkg`). `ID=rhel`/`ID=centos`/`ID=fedora` → família Red Hat (`rpm`).
+</SolutionBlock>
+
+
+
+### Exploratório 2 — Mapear distros → famílias
+Cria um ficheiro `distros.txt` com 6 distribuições (uma por linha) e, **usando `grep`**, lista apenas as da família Red Hat (RHEL, CentOS, Fedora).
+
+
+
+<SolutionBlock>
+```bash
+# 1. Criar o ficheiro
+cat > distros.txt <<'EOF'
+Debian
+Ubuntu
+RHEL
+CentOS
+Fedora
+openSUSE
+EOF
+
+# 2. Filtrar só as da família Red Hat (RHEL, CentOS, Fedora)
+grep -E 'RHEL|CentOS|Fedora' distros.txt
+```
+
+**Resultado esperado:** `RHEL`, `CentOS`, `Fedora`.
+**O que aprendeste:** o padrão `grep -E 'A|B|C'` (expressão regular estendida) faz um **OU** entre várias alternativas — útil para agrupar itens por categoria.
+</SolutionBlock>
+
+
+
+### Exploratório 3 — Explorar o hardware (estilo Raspberry Pi)
+Sem olhares para a máquina, descobre: **arquitetura do CPU** (é ARM como o Pi, ou x86?), **quanta memória RAM** há e se existe **disco** ou apenas armazenamento removível.
+
+
+
+<SolutionBlock>
+```bash
+# Arquitetura do CPU (x86_64, aarch64/ARM, ...)
+uname -m
+#   x86_64  -> PC normal
+#   aarch64 / armv7l -> ARM (Raspberry Pi, mobile)
+
+# Memória RAM
+free -h
+
+# Discos/blocos (procura por mmcblk* = cartão SD estilo Raspberry Pi)
+lsblk
+```
+
+**Reflexão (liga ao manual):** o Raspberry Pi arranca por **cartão SD** (`/dev/mmcblk0p1`…). Se o teu `lsblk` só mostrar `mmcblk*` e o `uname -m` for `aarch64`, estás num dispositivo embarcado — exatamente o cenário descrito na Lição 1.1.
+</SolutionBlock>
+
+
+
+### Exploratório 4 — Simular uma decisão de "nuvem vs. local"
+Lê o enunciado e responde por escrito num ficheiro `resposta.txt` (pratica `echo`/redirecionamento, que verás a fundo no T10):
+
+> *A tua empresa precisa de um servidor web que recebe tráfego muito variável (picos imprevisíveis) e quer minimizar custos. Justifica em 2-3 linhas porque a nuvem (IaaS) é mais adequada que um servidor físico próprio.*
+
+
+
+<SolutionBlock>
+```bash
+echo "A nuvem (IaaS) permite escalar os recursos quase imediatamente durante os picos e reduzir durante as calmas, pagando-se apenas pelo que se usa (modelo por assinatura). Um servidor físico exige comprar capacidade de pico que fica subutilizada na maior parte do tempo, com custos fixos elevados." > resposta.txt
+cat resposta.txt
+```
+
+**Ligações ao manual:** flexibilidade/escala + baixo custo = 2 das vantagens da nuvem (Guiado 5).
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Início: [010 - Visão Geral]()
+→ Próximo: [T02 - Principais Aplicações Open Source]()

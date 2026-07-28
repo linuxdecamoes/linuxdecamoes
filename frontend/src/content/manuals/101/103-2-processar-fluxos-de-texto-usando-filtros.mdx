@@ -1,0 +1,221 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="103.2 Processar fluxos de texto usando filtros"
+  code="101"
+  topicNumber="T11"
+  objective="Processar fluxos de texto usando filtros e comandos de processamento de texto"
+  weight={2}
+  pages="LPIC-1 (101) - Version 5.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Revisão de redirecionamentos e pipes
+
+- Entrada padrão (stdin), saída padrão (stdout), erro padrão (stderr)
+- `>` — Redireciona stdout para ficheiro (sobrescreve)
+- `>>` — Redireciona stdout para ficheiro (acrescenta)
+- `<` — Redireciona ficheiro para stdin
+- `|` — Pipe: conecta stdout de um comando ao stdin do próximo
+- `cat` — Concatena e exibe conteúdo de ficheiros
+
+### Comandos de processamento de texto
+
+| Comando | Descrição |
+|---------|-----------|
+| `cat` | Concatena ou lê ficheiros de texto simples |
+| `bzcat` | Lê ficheiros comprimidos com bzip2 |
+| `xzcat` | Lê ficheiros comprimidos com xz |
+| `zcat` | Lê ficheiros comprimidos com gzip |
+| `less` | Pagina o conteúdo de um ficheiro com navegação |
+| `head` | Exibe as primeiras N linhas (padrão: 10) |
+| `tail` | Exibe as últimas N linhas; `-f` segue o ficheiro |
+| `wc` | Conta linhas (`-l`), palavras e caracteres |
+| `sort` | Ordena saída (alfabética, inversa `-r`, aleatória `-R`) |
+| `uniq` | Lista/conta linhas correspondentes (`-c` para contagem) |
+| `od` | Exibe ficheiro em notação octal (`-x` hex, `-c` caracteres) |
+| `nl` | Numera linhas |
+| `sed` | Editor de fluxo: buscar, substituir, deletar linhas |
+| `tr` | Substitui/remove caracteres |
+| `cut` | Imprime colunas de ficheiros de texto |
+| `paste` | Une ficheiros em colunas |
+| `split` | Divide ficheiros em menores |
+| `md5sum` | Calcula hash MD5 |
+| `sha256sum` | Calcula hash SHA256 |
+| `sha512sum` | Calcula hash SHA512 |
+
+### Operações comuns com sed
+
+```bash
+sed -n /cat/p < ftu.txt          # Listar linhas que contêm "cat"
+sed /cat/d < ftu.txt              # Remover linhas que contêm "cat"
+sed s/cat/dog/ < ftu.txt          # Substituir "cat" por "dog" (1ª ocorrência/linha)
+sed -i.backup s/cat/dog/ ftu.txt  # Editar in-place com backup
+```
+
+### Checksums (verificação de integridade)
+
+```bash
+sha256sum ficheiro.txt             # Calcula hash SHA256
+sha256sum ficheiro.txt > sha256.txt # Salva hash em ficheiro
+sha256sum -c sha256.txt           # Verifica integridade
+```
+
+## Exercícios Guiados
+
+### Exercício Guiado 1 — Contar processadores com grep e wc
+
+**Enunciado:** Quantos processadores/núcleos o sistema tem? Use grep e wc para contar.
+
+**Solução:**
+```bash
+$ grep processor /proc/cpuinfo | wc -l
+```
+
+### Exercício Guiado 2 — Contar processadores com sed
+
+**Enunciado:** Use sed em vez de grep para contar os processadores.
+
+**Solução:**
+```bash
+$ sed -n /processor/p /proc/cpuinfo | wc -l
+```
+
+### Exercício Guiado 3 — Utilizadores com shell Bash
+
+**Enunciado:** Liste os nomes dos utilizadores cujo shell termina em `/bin/bash`.
+
+**Solução:**
+```bash
+$ grep ":/bin/bash$" /etc/passwd | cut -d: -f1
+```
+
+### Exercício Guiado 4 — Utilizadores sem shell Bash
+
+**Enunciado:** Quantos utilizadores não usam `/bin/bash` como shell?
+
+**Solução:**
+```bash
+$ grep -v ":/bin/bash$" /etc/passwd | wc -l
+```
+
+### Exercício Guiado 5 — Número de utilizadores e grupos
+
+**Enunciado:** Quantos UIDs e GIDs diferentes existem em `/etc/passwd`?
+
+**Solução:**
+```bash
+$ cut -d: -f3 /etc/passwd | sort -u | wc -l  # Utilizadores
+$ cut -d: -f4 /etc/passwd | sort -u | wc -l  # Grupos
+```
+
+### Exercício Guiado 6 — Primeira, décima e última linha
+
+**Enunciado:** Use sed para imprimir a 1.ª, 10.ª e última linha de `/etc/passwd`.
+
+**Solução:**
+```bash
+$ sed -n -e '1p' -e '10p' -e '$p' /etc/passwd
+```
+
+### Exercício Guiado 7 — Utilizadores no grupo 1000
+
+**Enunciado:** Liste os nomes completos dos utilizadores cujo GID primário é 1000.
+
+**Solução:**
+```bash
+$ sed -n /:1000:[A-Z]/p mypasswd | cut -d: -f5 | cut -d, -f1
+```
+
+## Exercícios Exploratórios
+
+1. Rifa do Main Office:
+   
+
+<SolutionBlock>
+```bash
+   $ sed -n /'Main Office'/p mypasswd | cut -d: -f5 | cut -d, -f1 | sort -R | head -1
+   ```
+</SolutionBlock>
+
+
+
+2. Pessoas por departamento:
+   
+
+<SolutionBlock>
+```bash
+   $ sed -n /'Main Office'/p mypasswd | cut -d, -f2 | uniq -c
+   ```
+</SolutionBlock>
+
+
+
+3. Criar ficheiro CSV:
+   
+
+<SolutionBlock>
+```bash
+   $ sed -n /'Main Office'/p mypasswd | cut -d: -f5 | cut -d, -f1,2 | tr ' ' , > names.csv
+   ```
+</SolutionBlock>
+
+
+
+4. Garantir integridade com md5sum:
+   
+
+<SolutionBlock>
+```bash
+   $ md5sum names.csv
+   $ md5sum names.csv > names.md5
+   ```
+</SolutionBlock>
+
+
+
+5. Dividir livro em seções de 100 linhas:
+   
+
+<SolutionBlock>
+```bash
+   $ wget https://www.gutenberg.org/files/50461/50461-0.txt
+   $ split -l 100 -d 50461-0.txt melville
+   ```
+</SolutionBlock>
+
+
+
+6. Listar ficheiros e proprietários:
+   
+
+<SolutionBlock>
+```bash
+   $ ls -l /etc | tr -s ' ' | cut -d" " -f9,3
+   ```
+</SolutionBlock>
+
+
+
+7. Monitorar pendrive via syslog:
+   
+
+<SolutionBlock>
+```bash
+   $ tail -f /var/log/syslog | grep -i 'product\:\|blocks\|manufacturer'
+   ```
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T10 - 103.1 Trabalho na linha de comando]()
+→ Próximo: [T12 - 103.3 Gerenciamento básico de arquivos]()

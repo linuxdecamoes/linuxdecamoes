@@ -1,0 +1,203 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="109.2 Configuração persistente de rede"
+  code="102"
+  topicNumber="T14"
+  objective="Configurar a rede de forma persistente"
+  weight={4}
+  pages="LPIC-1 (102) - Version 5.0"
+  accent="iris"
+/>
+
+
+
+## Resumo Conciso
+
+### Nomenclatura de interfaces (systemd)
+
+| Prefixo | Tipo |
+|---|---|
+| `en` | Ethernet |
+| `ib` | InfiniBand |
+| `sl` | Serial line IP (slip) |
+| `wl` | WLAN (sem fio) |
+| `ww` | WWAN (longa distância sem fio) |
+
+Regras de prioridade: BIOS/firmware → slot PCI Express → endereço barramento → endereço MAC → legado (`eth0`).
+
+### Comandos para listar interfaces
+
+| Comando | Função |
+|---|---|
+| `ip link show` | Lista interfaces de rede |
+| `nmcli device` | Lista interfaces e estado |
+| `ls /sys/class/net` | Lista interfaces via sysfs |
+| `ifconfig -a` | Lista interfaces (legado) |
+
+### Ativação/desativação de interfaces
+
+| Ferramenta | Ativar | Desativar |
+|---|---|---|
+| `ifup`/`ifdown` | `ifup enp3s5` | `ifdown enp3s5` |
+| `ip` | `ip link set dev enp3s5 up` | `ip link set dev enp3s5 down` |
+| `ifconfig` (legado) | `ifconfig enp3s5 up` | `ifconfig enp3s5 down` |
+
+### Ficheiro `/etc/network/interfaces`
+
+```
+auto lo
+iface lo inet loopback
+
+auto enp3s5
+iface enp3s5 inet dhcp
+```
+
+- `auto` — ativa na inicialização
+- `iface <nome> inet <método>` — configuração (`dhcp` ou `static`)
+- Static: `address`, `gateway`
+
+### Configuração estática
+
+```
+iface enp3s5 inet static
+    address 192.168.1.2/24
+    gateway 192.168.1.1
+```
+
+### Hostname
+
+| Ficheiro/Comando | Função |
+|---|---|
+| `/etc/hostname` | Nome estático do host |
+| `hostnamectl set-hostname <nome>` | Define o hostname |
+| `hostnamectl status` | Exibe informações do host |
+| `hostnamectl --pretty set-hostname "<nome>"` | Hostname pretty (descritivo) |
+| `hostnamectl --transient set-hostname <nome>` | Hostname transiente |
+
+### Resolução de nomes
+
+| Ficheiro | Função |
+|---|---|
+| `/etc/nsswitch.conf` | Ordem de resolução de nomes |
+| `/etc/hosts` | Mapeamento local IP ↔ nome |
+| `/etc/resolv.conf` | Configuração DNS (nameserver, domain, search) |
+
+- Exemplo nsswitch.conf: `hosts: files dns` (primeiro ficheiros locais, depois DNS)
+
+### NetworkManager
+
+| Comando | Função |
+|---|---|
+| `nmcli general` | Status geral de conectividade |
+| `nmcli device wifi list` | Lista redes Wi-Fi disponíveis |
+| `nmcli device wifi connect <SSID> password <senha>` | Conecta a rede Wi-Fi |
+| `nmcli connection show` | Lista conexões salvas |
+| `nmcli connection up/down <nome>` | Ativa/desativa conexão |
+| `nmcli radio wifi on/off` | Liga/desliga adaptador Wi-Fi |
+
+### systemd-networkd
+
+- Directórios de configuração (por ordem de prioridade):
+  1. `/etc/systemd/network` (prioridade máxima)
+  2. `/run/systemd/network` (volátil)
+  3. `/lib/systemd/network` (sistema)
+- Sufixos: `.network` (endereços/rotas), `.netdev` (dispositivos virtuais), `.link` (baixo nível)
+- Seção `[Match]`: seleciona interface (`Name=`, `MACAddress=`)
+- Seção `[Network]`: configurações (`Address=`, `Gateway=`, `DHCP=yes`)
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Alterar hostname estático
+
+**Enunciado:** Como alterar apenas o nome de host estático para `firewall`?
+
+
+
+<SolutionBlock>
+```bash
+hostnamectl --static set-hostname firewall
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Campos modificáveis pelo hostnamectl
+
+**Enunciado:** Quais detalhes além dos nomes de host podem ser modificados pelo `hostnamectl`?
+
+
+
+<SolutionBlock>
+O `hostnamectl` também pode definir: ícone padrão da máquina (`--icon`), tipo de chassi (`--chassis`), localização (`--location`) e ambiente de implantação (`--deployment`).
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Entrada em /etc/hosts
+
+**Enunciado:** Qual entrada de `/etc/hosts` associa `firewall` e `router` com `10.8.0.1`?
+
+
+
+<SolutionBlock>
+```
+10.8.0.1 firewall router
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Alterar DNS no resolv.conf
+
+**Enunciado:** Como modificar `/etc/resolv.conf` para enviar todas as consultas DNS para `1.1.1.1`?
+
+
+
+<SolutionBlock>
+Adicionar como única entrada de nameserver:
+
+```
+nameserver 1.1.1.1
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 5 — Excluir conexão nmcli
+
+**Enunciado:** Como excluir uma conexão não utilizada chamada "Hotel Internet"?
+
+
+
+<SolutionBlock>
+```bash
+nmcli connection delete "Hotel Internet"
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 6 — Revarredura de redes Wi-Fi
+
+**Enunciado:** Como pedir ao NetworkManager para verificar novamente os pontos de acesso disponíveis?
+
+
+
+<SolutionBlock>
+```bash
+nmcli device wifi rescan
+```
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T13 - 109.1 Fundamentos de protocolos de internet]()
+→ Próximo: [T15 - 109.3 Soluções para problemas simples de rede]()

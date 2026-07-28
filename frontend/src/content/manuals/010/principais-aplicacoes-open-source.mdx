@@ -1,0 +1,315 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="Principais Aplicações Open Source"
+  code="010"
+  topicNumber="T02"
+  objective="1.2"
+  weight={2}
+  pages="Linux Essentials (010) - Version 4.1"
+  accent="sage"
+/>
+
+
+
+## Resumo Conciso
+
+### Gestão de pacotes
+As distros trazem um **repositório** de pacotes (catálogo de software) acedido por um **gestor de pacotes**, que resolve automaticamente as **dependências** (pacotes auxiliares necessários). Existem duas grandes famílias:
+
+| Família | Formato | Operar sobre ficheiro individual | Catálogos (pesquisar/instalar/remover/atualizar) | Distros |
+|---------|---------|----------------------------------|---------------------------------------------------|---------|
+| **Debian** | `.deb` | `dpkg` | `apt-get` / `apt` (+ `apt-cache` para pesquisar) | Debian, Ubuntu, Linux Mint |
+| **Red Hat** | `.rpm` | `rpm` | `yum` / `dnf` | RHEL, Fedora, CentOS |
+
+**Operações típicas (precisam de `sudo`):**
+
+| Ação | Debian (DEB) | Red Hat (RPM) |
+|------|--------------|---------------|
+| Pesquisar | `apt-cache search figlet` / `apt search figlet` | `yum search cowsay` / `dnf search cowsay` |
+| Instalar | `sudo apt-get install figlet` / `sudo apt install figlet` | `sudo yum install cowsay` / `sudo dnf install cowsay` |
+| Remover (mantém config) | `sudo apt-get remove figlet` | `sudo yum remove cowsay` |
+| Remover + configs | `sudo apt-get purge figlet` | — |
+
+> `dpkg` e `rpm` operam sobre **pacotes individuais**; na prática usam-se `apt`/`yum`/`dnf`, que lidam com repositórios e dependências.
+
+### Aplicações Desktop
+
+**Suítes de escritório** — Collections que incluem processador de texto, folha de cálculo, apresentações, etc.
+
+| Suíte | Origem | Licença | Formato nativo |
+|-------|--------|---------|----------------|
+| **OpenOffice.org** → **Apache OpenOffice** | StarOffice (Sun) → Apache Foundation | Apache License 2.0 | **ODF** (Open Document Format, padrão ISO) |
+| **LibreOffice** | Document Foundation (fork do OpenOffice) | **LGPLv3** | ODF |
+
+> **LibreOffice** é a suíte padrão na maioria das distros: a sua licença (LGPLv3) **pode incorporar melhorias do Apache OpenOffice**, mas o inverso não se verifica. Componentes: **Writer** (texto), **Calc** (folhas), **Impress** (apresentações), **Draw** (vetorial), **Math** (fórmulas), **Base** (BD).
+
+**Navegadores web** — O navegador é a aplicação mais importante para o utilizador médio (páginas web funcionam como apps completas).
+- **Mozilla Firefox** (Mozilla, sem fins lucrativos; raízes no Netscape; envolvido nos padrões abertos da web). Recurso de estudo: **MDN Web Docs** (`developer.mozilla.org`).
+- **Google Chrome** — baseado no open source **Chromium** (instalável via gestor de pacotes; compatível com o Chrome).
+- Cliente de email da Mozilla: **Thunderbird**.
+
+**Multimédia** (a edição/criação pesada ainda é melhor no desktop local):
+
+| App | Função |
+|-----|--------|
+| **Blender** | Renderização 3D / animação / exportação para impressão 3D |
+| **GIMP** | Editor de imagens bitmap (JPEG, PNG, GIF, TIFF…) — comparável ao Photoshop |
+| **Inkscape** | Editor de gráficos vetoriais (formato nativo **SVG**, padrão aberto) |
+| **Audacity** | Editor de áudio (MP3, WAV, OGG, FLAC) |
+| **ImageMagick** | Conversão/edição de imagens **na linha de comando** (e cria PDFs a partir de imagens) |
+| **VLC** / smplayer | Reprodução de vídeo |
+| Audacious, Banshee, Amarok | Reprodução/gestão de música |
+
+### Programas de servidor
+- **Cliente vs. servidor:** o navegador (cliente) pede informação a um computador remoto (servidor).
+- **Servidor HTTP** (Hyper Text Transfer Protocol) — envia páginas web. Mais populares: **Apache (HTTPD)**, **Nginx**, **lighttpd**.
+  - Conteúdo **estático** (ficheiros) vs. **dinâmico** (gerado a partir de fontes várias).
+  - Renderização: lado do **servidor** + lado do **cliente**. No servidor usa-se sobretudo **PHP**; no cliente, **JavaScript**.
+- **Servidor de base de dados** — armazena conteúdo formatado para leitura/escrita rápida. BD **relacional** (tabelas): **MariaDB** (derivado do MySQL) e **PostgreSQL**. O servidor HTTP consulta frequentemente a BD para montar páginas dinâmicas.
+
+**Stack LAMP** = **L**inux + **A**pache + **M**ySQL/MariaDB + **P**HP — solução web popular.
+
+### Partilha de dados
+
+| Tecnologia | Ambiente | Notas |
+|------------|----------|-------|
+| **NFS** (Network File System) | Só Linux/Unix | Padrão para partilhar sistemas de ficheiros entre máquinas Unix; permite até **thin clients** que arrancam da árvore NFS |
+| **Samba** | Heterogéneo (Linux + Windows) | Implementa o protocolo de partilha do Windows; partilha ficheiros **e impressoras**. Pode atuar como **cliente de Active Directory** (ou como **controlador de domínio** a partir da v4) |
+| **SSSD** | — | Subsistema de autenticação para associar estações Linux a um controlador de domínio |
+| **ownCloud / Nextcloud** | Web (HTTP/PHP) | Soluções de **nuvem própria**: ficheiros, calendário, contactos, email, colaboração. Nextcloud = fork do ownCloud (acrescenta áudio/vídeo-conferência). Instalam-se sobre um servidor web (ex.: Apache); usar **HTTPS** |
+
+### Administração de redes
+Dois serviços básicos geridos pelo roteador (configuráveis via interface web):
+
+| Serviço | Função |
+|---------|--------|
+| **DHCP** (Dynamic Host Configuration Protocol) | Atribui **endereço IP** automaticamente quando um dispositivo se liga (cabo ou Wi-Fi) |
+| **DNS** (Domain Name System) | Traduz **nomes de domínio** (`www.lpi.org`) em **endereços IP** (`203.0.113.165`) |
+
+> Sem DHCP, cada IP teria de ser configurado manualmente. O DNS do provedor pode ser trocado por terceiros (Google DNS, OpenDNS) para maior rapidez/funcionalidades.
+
+### Linguagens de programação
+Todo o programa começa como **código fonte** (texto). Em **linguagens compiladas**, um **compilador** converte o código num binário executável pelo processador; o binário só corre nesse processador. Em **linguagens interpretadas**, um interpretador lê e executa o código a cada execução (mais lento, mas desenvolvimento mais fácil/rápido — chamadas também de **linguagens de script**).
+
+| Linguagem | Tipo | Uso típico |
+|-----------|------|------------|
+| **C** | Compilada | Sistemas operativos (kernel!), qualquer programa; flexibilidade + velocidade; portátil à fonte |
+| **Java** | Compilada → **bytecode** (JVM) | O mesmo programa corre em diferentes SO (portável); sem relação com JavaScript |
+| **JavaScript** | Interpretada (script) | Web (cliente e servidor), apps complexas; linguagem de 1ª classe |
+| **Perl** | Interpretada | Processamento de texto, **expressões regulares**, filtragem/análise |
+| **Shell** (Bash) | Interpretada | Interface interativa + **shell scripts** para automatizar tarefas |
+| **Python** | Interpretada | Popular entre não-cientistas da computação; fácil de aprender |
+| **PHP** | Interpretada | Scripting do **lado do servidor** para gerar conteúdo web dinâmico (base do **LAMP**) |
+
+> O open source inclui **o código fonte**, pelo que o Linux oferece condições ideais para estudar/modificar/criar software.
+
+| `dpkg` | **Debian** (opera sobre ficheiros `.deb`) |
+|---|---|
+| `rpm` | **Red Hat** (opera sobre ficheiros `.rpm`) |
+| `apt-get` | **Debian** (catálogos/dependências) |
+| `yum` | **Red Hat** (catálogos/dependências) |
+| `dnf` | **Red Hat** (sucessor moderno do `yum`) |
+
+> **Dica de memorização:** `dpkg`/`apt-get`/`apt` → **D**ebian; `rpm`/`yum`/`dnf` → **R**ed Hat.
+
+### Guiado 2 — Instalar o Blender no Ubuntu e executá-lo
+
+**Enunciado:** *Qual comando poderia ser usado para instalar o Blender no Ubuntu? Após a instalação, como o programa pode ser executado?*
+
+**Solução:**
+1. **Instalar** (Ubuntu = família Debian, logo `apt-get`/`apt`; o nome do pacote **em minúsculas**):
+   ```bash
+   sudo apt-get install blender
+   ```
+2. **Executar**, de uma de duas formas:
+   - No **terminal**: digitar `blender`
+   - No **menu de aplicações** do ambiente desktop.
+
+### Guiado 3 — Componente da LibreOffice para planilhas
+
+**Enunciado:** *Qual aplicativo da suíte LibreOffice pode ser usado para trabalhar com planilhas eletrônicas?*
+
+**Solução:** **Calc** — o equivalente ao Microsoft Excel dentro da LibreOffice.
+
+### Guiado 4 — Base open source do Google Chrome
+
+**Enunciado:** *Qual navegador web de código aberto foi usado como base para o desenvolvimento do Google Chrome?*
+
+**Solução:** **Chromium** — projeto open source do qual o Chrome deriva; pode ser instalado diretamente pelo gestor de pacotes e é totalmente compatível com o Chrome.
+
+### Guiado 5 — Editor SVG popular no Linux
+
+**Enunciado:** *O SVG é um padrão aberto para gráficos vetoriais. Qual é o aplicativo mais popular para editar arquivos SVG em sistemas Linux?*
+
+**Solução:** **Inkscape** — editor de gráficos vetoriais cujo formato nativo é o **SVG** (padrão aberto, abrível em qualquer navegador).
+
+### Guiado 6 — Aplicação capaz de abrir/editar cada formato
+
+**Enunciado:** *Para cada formato de ficheiro, escreva o nome de uma aplicação capaz de abrir e editar o ficheiro: `png`, `doc`, `xls`, `ppt`, `wav`.*
+
+**Solução:**
+
+| Formato | Aplicação |
+|---------|-----------|
+| `png` | **GIMP** (editor de imagens bitmap) |
+| `doc` | **LibreOffice Writer** (texto) |
+| `xls` | **LibreOffice Calc** (folha de cálculo) |
+| `ppt` | **LibreOffice Impress** (apresentações) |
+| `wav` | **Audacity** (editor de áudio) |
+
+### Guiado 7 — Partilha de ficheiros Linux ↔ Windows
+
+**Enunciado:** *Que pacote de software permite a partilha de ficheiros entre máquinas Linux e Windows através da rede local?*
+
+**Solução:** **Samba** — implementa o protocolo de partilha de ficheiros originalmente pensado para o Windows, mas hoje compatível com todos os principais sistemas operativos. Além de ficheiros, partilha também **impressoras**.
+
+---
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+> Exercícios da autoria do agente, para praticares no terminal Linux. Consolidam o tópico 1.2 (aplicações open source e gestão de pacotes).
+> *Dica:* precisas de uma sessão Linux (física, VM ou WSL). As soluções estão em `<details>` para poderes tentar primeiro.
+
+### Exploratório 1 — Descobrir a tua família de pacotes e listar instalações
+Descobre, **por comandos**, se o teu sistema usa pacotes DEB ou RPM, e lista os **10 pacotes mais recentemente instalados** (pratica `dpkg`/`rpm` e a leitura de listagens).
+
+
+
+<SolutionBlock>
+```bash
+# 1. Descobrir a família
+which dpkg >/dev/null 2>&1 && echo "Família Debian (.deb)" || echo "Sem dpkg"
+which rpm  >/dev/null 2>&1 && echo "Família Red Hat (.rpm)" || echo "Sem rpm"
+
+# 2. Em Debian/Ubuntu — listar pacotes instalados (saída compacta)
+dpkg -l | tail -n +6 | head -n 10        # 10 primeiros da listagem
+# Alternativa: só nomes, ordenados
+dpkg -l | awk 'NR>5 {print $2}' | head -n 10
+
+# 3. Em Fedora/RHEL — equivalente
+rpm -qa | sort | head -n 10
+```
+
+**Como interpretar:** `dpkg -l` mostra estado (`ii` = instalado), versão, arquitetura e descrição. `rpm -qa` lista só `nome-versão-release`. A família determina que comando usas para instalar/remover.
+</SolutionBlock>
+
+
+
+### Exploratório 2 — Pesquisar e inspecionar um pacote sem o instalar
+Usa o gestor de pacotes para **pesquisar** o pacote `cowsay` (ou `figlet`), ver a sua **descrição/dependências**, e só depois decidir se instalas.
+
+
+
+<SolutionBlock>
+```bash
+# Em Debian/Ubuntu
+apt-cache search cowsay           # pesquisar por nome/descrição
+apt show cowsay                   # ver detalhes (descrição, depende, tamanho)
+apt depends cowsay                # listar dependências
+apt rdepends cowsay               # quem depende dele (reverso)
+
+# Em Fedora/RHEL
+dnf search cowsay
+dnf info cowsay
+dnf repoquery --requires cowsay
+
+# Instalar só se te convencer (precisa de sudo)
+sudo apt install cowsay      # ou: sudo dnf install cowsay
+cowsay "Aprendi a pesquisar pacotes!"
+```
+
+**O que aprendeste:** pesquisar **antes** de instalar é boa prática; `apt depends` revela as dependências (bibliotecas auxiliares) de que o pacote precisa — o conceito central da gestão de pacotes.
+</SolutionBlock>
+
+
+
+### Exploratório 3 — Mapear aplicações → ficheiros instalados
+Depois de instalares (ou se já tiveres) o `firefox` ou `vim`, descobre **que ficheiros** o pacote instalou no sistema e **onde** fica a sua documentação/licença.
+
+
+
+<SolutionBlock>
+```bash
+# Listar TODOS os ficheiros instalados por um pacote (Debian)
+dpkg -L firefox                 # ou: dpkg -L vim-tiny
+# Em RPM:
+rpm -ql firefox
+
+# Ver o copyright/licença do pacote (T03 aprofunda licenças!)
+ls /usr/share/doc/firefox/
+cat /usr/share/doc/firefox/copyright | head -n 30
+
+# Que pacote fornece um ficheiro já existente? (pesquisa inversa)
+dpkg -S /usr/bin/firefox        # ou: rpm -qf /usr/bin/vim
+```
+
+**O que aprendeste:** `/usr/share/doc/<pacote>/copyright` é onde a maioria das distros Debian guarda a **licença** de cada pacote — fundamental para o tópico 1.3. O `dpkg -S` (inverso de `-L`) descobre a que pacote pertence um ficheiro qualquer.
+</SolutionBlock>
+
+
+
+### Exploratório 4 — Reconhecer a stack LAMP no teu sistema
+Verifica se tens algum componente **LAMP** (Apache, MySQL/MariaDB, PHP) instalado e **a correr**, usando comandos genéricos de descoberta.
+
+
+
+<SolutionBlock>
+```bash
+# 1. Os binários existem?
+which apache2 httpd mysqld mariadbd php 2>/dev/null
+
+# 2. Há pacotes instalados com estes nomes?
+dpkg -l | grep -Ei 'apache2|mysql-server|mariadb-server|^ii  php' | head
+# Em RPM:
+# rpm -qa | grep -Ei 'httpd|mysql|mariadb|php'
+
+# 3. Serviços ativos do tipo "web/bd"?
+systemctl list-units --type=service --state=running | grep -Ei 'apache2|httpd|mysql|mariadb|php'
+
+# 4. (Opcional) O Apache responde no porto 80?
+curl -sI http://localhost/ | head -n 3
+```
+
+**O que aprendeste:** `systemctl list-units --type=service --state=running` revela os **serviços ativos**; filtrar por nomes conhecidos (apache2/httpd, mysql/mariadb, php-fpm) diz-te se a stack LAMP está operacional — a base de muitos servidores web descrita no manual.
+</SolutionBlock>
+
+
+
+### Exploratório 5 — Conversão de imagens com ImageMagick (multimédia em CLI)
+O manual recomenda o **ImageMagick** para converter imagens na linha de comando. Gera uma imagem PNG de teste e converte-a para JPEG, depois para PDF.
+
+
+
+<SolutionBlock>
+```bash
+# 1. Instalar (se necessário)
+sudo apt install imagemagick       # ou: sudo dnf install ImageMagick
+
+# 2. Gerar uma imagem PNG de teste (logotipo interno do ImageMagick)
+convert -size 200x100 xc:skyblue -gravity center -fill navy \
+        -annotate 0 "LPI 010" logo.png
+
+# 3. Converter formatos
+convert logo.png logo.jpg          # PNG -> JPEG
+convert logo.png logo.pdf          # PNG -> PDF (criar doc PDF de imagens)
+
+# 4. Confirmar os tipos de ficheiro gerados
+file logo.png logo.jpg logo.pdf
+```
+
+**Ligações ao manual:** o ImageMagick é a ferramenta de CLI citada para converter TIFF→JPEG e gerar PDFs a partir de imagens. A subcomenda `convert` é o coração do pacote (em versões recentes pode aparecer como `magick convert`).
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Início: [010 - Visão Geral]()
+← Anterior: [T01 - A evolução do Linux e sistemas operacionais populares]()
+→ Próximo: [T03 - Entendendo o Software Open Source e suas Licenças]()

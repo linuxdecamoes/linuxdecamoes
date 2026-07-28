@@ -1,0 +1,301 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="Instalar um gerenciador de inicialização"
+  code="101"
+  topicNumber="T05"
+  objective="Instalar um gerenciador de inicialização"
+  weight={2}
+  pages="LPIC-1 (101) - Version 5.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### GRUB Legacy vs GRUB 2
+
+| Característica | GRUB Legacy | GRUB 2 |
+|----------------|-------------|--------|
+| Última versão | 0.97 (2005) | Em desenvolvimento ativo |
+| Arquivo de configuração | `/boot/grub/menu.lst` | `/boot/grub/grub.cfg` |
+| Edição de configuração | Manual no `menu.lst` | Editar `/etc/default/grub` + executar `update-grub` |
+| Numeração de discos | hd0, hd1... | hd0, hd1... (igual) |
+| Numeração de partições | A partir de **zero** | A partir de **um** |
+| Suporte a temas/gráficos | Não | Sim |
+| Suporte a UUIDs | Limitado | Universal |
+| Inicialização de ISOs LiveCD | Não | Sim |
+
+### Onde Fica o Gerenciador de Inicialização
+
+- **MBR (Master Boot Record):** Primeiro setor de 512 bytes do disco. Contém tabela de partições + código bootstrap.
+- **Espaço entre MBR e 1ª partição:** ~32 KB para carregador secundário.
+- **UEFI/GPT:** GRUB carregado por firmware a partir de `grubia32.efi` (32 bits) ou `grubx64.efi` (64 bits) na partição ESP.
+
+### Conteúdo da Partição /boot
+
+> Para criar a partição /boot, ver T04 — Definir o esquema de partições do disco.
+
+| Arquivo | Descrição |
+|---------|-----------|
+| `config-VERSION` | Parâmetros de configuração do kernel (gerado automaticamente) |
+| `System.map-VERSION` | Tabela de símbolos → posição na memória (útil para kernel panic) |
+| `vmlinux-VERSION` / `vmlinuz-VERSION` | Kernel do Linux (vmlinuz = compactado) |
+| `initrd.img-VERSION` | Disco RAM inicial com sistema de arquivos raiz mínimo |
+| `/boot/grub/grub.cfg` | Arquivo de configuração do GRUB 2 |
+| `/boot/grub/menu.lst` | Arquivo de configuração do GRUB Legacy |
+| `/boot/grub/i386-pc/` | Módulos do GRUB |
+| `/boot/grub/locale/` | Arquivos de tradução |
+| `/boot/grub/fonts/` | Fontes do GRUB |
+
+### GRUB 2 — Configuração
+
+**Arquivo principal:** `/etc/default/grub`
+
+| Variável | Função |
+|----------|--------|
+| `GRUB_DEFAULT=` | Entrada de menu padrão (numérica, nome ou `saved`) |
+| `GRUB_SAVEDEFAULT=` | Se `true` + `GRUB_DEFAULT=saved`, usa última opção selecionada |
+| `GRUB_TIMEOUT=` | Tempo limite em segundos (0=inicializa direto, -1=aguarda eternamente) |
+| `GRUB_CMDLINE_LINUX=` | Opções de linha de comando para todas as entradas do kernel |
+| `GRUB_CMDLINE_LINUX_DEFAULT=` | Parâmetros extras apenas para entrada padrão |
+| `GRUB_ENABLE_CRYPTODISK=` | Se `y`, suporta discos criptografados |
+
+**Gerar configuração:** `update-grub` (atalho para `grub-mkconfig -o /boot/grub/grub.cfg`)
+
+**Entradas de menu personalizadas:** Adicionar em `/etc/grub.d/40_custom`
+
+**Sintaxe de uma entrada de menu (GRUB 2):**
+```
+menuentry "Nome" {
+    set root=(hd0,1)
+    linux /vmlinuz root=/dev/sda1 ro quiet splash
+    initrd /initrd.img
+}
+```
+
+**Busca por UUID:**
+```
+search --set=root --fs-uuid UUID
+search --set=root --label LABEL
+```
+
+**UUID de partições:** `ls -l /dev/disk/by-uuid/`
+
+### GRUB 2 — Instalação
+
+```bash
+# Listar partições do primeiro disco
+fdisk -l /dev/sda
+
+# Montar partição de inicialização
+mkdir /mnt/tmp
+mount /dev/sda1 /mnt/tmp
+
+# Instalar GRUB 2 (com partição dedicada)
+grub-install --boot-directory=/mnt/tmp /dev/sda
+
+# Instalar GRUB 2 (sem partição dedicada)
+grub-install --boot-directory=/boot /dev/sda
+```
+
+### GRUB 2 — Interação
+
+| Ação | Comando/Tecla |
+|------|---------------|
+| Exibir menu (se oculto) | `Shift` |
+| Editar entrada | Selecionar + `E` |
+| Inicializar após edição | `Ctrl+X` ou `F10` |
+| Voltar ao menu | `Esc` |
+| Entrar no shell GRUB 2 | `C` no menu |
+| Sair do shell | `Esc` |
+
+### GRUB 2 — Shell (Inicialização Manual)
+
+```bash
+# Listar discos/partições
+grub> ls
+
+# Verificar conteúdo de partição
+grub> ls (hd0,msdos1)/
+
+# Definir partição de inicialização
+grub> set root=(hd0,msdos1)
+
+# Carregar kernel
+grub> linux /vmlinuz root=/dev/sda1
+
+# Carregar initrd
+grub> initrd /initrd.img
+
+# Inicializar
+grub> boot
+```
+
+### GRUB 2 — Shell de Resgate (`grub rescue>`)
+
+```bash
+# Definir prefixo
+grub rescue> set prefix=(hd0,msdos1)/boot/grub
+
+# Carregar módulos
+grub rescue> insmod normal
+grub rescue> insmod linux
+
+# Depois: set root, linux, initrd, boot (como acima)
+```
+
+### GRUB Legacy — Instalação
+
+```bash
+# A partir do sistema em execução
+grub-install /dev/sda
+
+# Com diretório personalizado (--root-directory no GRUB Legacy 0.97)
+grub-install --root-directory=/boot /dev/sda
+```
+
+### GRUB Legacy — Shell
+
+```bash
+# Configurar dispositivo de inicialização
+grub> root (hd0,0)
+
+# Procurar /boot
+grub> find /boot/grub/stage1
+
+# Instalar no MBR
+grub> setup (hd0)
+```
+
+### GRUB Legacy — Entradas de Menu (`/boot/grub/menu.lst`)
+
+```
+# Comentário
+title Meu Linux
+root (hd0,0)
+kernel /vmlinuz root=/dev/hda1
+initrd /initrd.img
+```
+
+- Discos e partições numerados a partir de **zero**
+
+### GRUB Legacy — Módulos
+
+```
+module /boot/grub/i386-pc/915resolution.mod
+```
+
+### GRUB Legacy — Carregamento em Cadeia (Windows)
+
+```
+title Windows
+root (hd0,1)
+makeactive
+chainload +1
+boot
+```
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Erro de partição no GRUB Legacy
+**Enunciado:** Imagine um usuário configurando o GRUB Legacy para inicializar a partir da segunda partição do primeiro disco. Ele escreve a seguinte entrada de menu personalizada:
+```
+title My Linux Distro
+root (hd0,2)
+kernel /vmlinuz root=/dev/hda1
+initrd /initrd.img
+```
+No entanto, o sistema não inicializa. O que está errado?
+
+
+
+<SolutionBlock>
+A partição de inicialização está incorreta. Lembre-se de que, ao contrário do GRUB 2, o GRUB Legacy conta as partições a partir de zero. Portanto, o comando correto para a segunda partição do primeiro disco seria `root (hd0,1)`.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Descobrir partição de inicialização
+**Enunciado:** Imagine que você tenha um disco identificado como `/dev/sda` com diversas partições. Que comando pode ser usado para descobrir qual a partição de inicialização em um sistema?
+
+
+
+<SolutionBlock>
+Use `fdisk -l /dev/sda`. A partição de inicialização estará marcada na lista com um asterisco (`*`).
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — UUID de uma partição
+**Enunciado:** Qual o comando para descobrir o UUID de uma partição?
+
+
+
+<SolutionBlock>
+Use `ls -la /dev/disk/by-uuid/` e procure pelo UUID que aponta para a partição.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Entrada GRUB 2 com UUID
+**Enunciado:** Considere a seguinte entrada para o GRUB 2:
+```
+menuentry "Default OS" {
+    set root=(hd0,1)
+    linux /vmlinuz root=/dev/sda1 ro quiet splash
+    initrd /initrd.img
+}
+```
+Altere-a para que o sistema inicialize a partir de um disco com o UUID `5dda0af3-c995-481a-a6f3-46dcd3b6998d`
+
+
+
+<SolutionBlock>
+Será preciso alterar a declaração `set root`. Em vez de especificar um disco e uma partição, diga ao GRUB para buscar pela partição com o UUID desejado:
+```
+menuentry "Default OS" {
+    search --set=root --fs-uuid 5dda0af3-c995-481a-a6f3-46dcd3b6998d
+    linux /vmlinuz root=/dev/sda1 ro quiet splash
+    initrd /initrd.img
+}
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 5 — Timeout do GRUB 2
+**Enunciado:** Como configurar o GRUB 2 para aguardar 10 segundos antes de inicializar a entrada de menu padrão?
+
+
+
+<SolutionBlock>
+Adicionando o parâmetro `GRUB_TIMEOUT=10` a `/etc/default/grub`.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 6 — Instalar GRUB Legacy no segundo disco
+**Enunciado:** Em um shell do GRUB Legacy, quais são os comandos para instalar o GRUB na primeira partição do segundo disco?
+
+
+
+<SolutionBlock>
+```bash
+grub> root (hd1,0)
+grub> setup (hd1)
+```
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T04 - 102.1 Definir o esquema de partições do disco]()
+→ Próximo: [T06 - 102.3 Gerenciar bibliotecas compartilhadas]()

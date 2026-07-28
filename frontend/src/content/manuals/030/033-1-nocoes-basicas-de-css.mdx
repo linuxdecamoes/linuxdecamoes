@@ -1,0 +1,243 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T08 — Noções básicas de CSS"
+  code="030"
+  topicNumber="T08"
+  objective="033.1"
+  weight={1}
+  pages="LPI Web Development Essentials (030) - Version 1.0"
+  accent="amber"
+/>
+
+
+
+## Resumo Conciso
+
+### Introdução ao CSS
+
+O CSS (**Cascading Style Sheets**) é a linguagem utilizada para definir a apresentação dos documentos HTML. Enquanto o HTML cuida da estrutura e do conteúdo semântico, o CSS controla a aparência visual: fontes, cores, posicionamento e layout. O CSS permite que as páginas web se adaptem a diferentes dispositivos e tamanhos de ecrã.
+
+### Métodos de Incorporação de CSS
+
+Existem três formas de incluir CSS num documento HTML:
+
+| Método | Localização | Uso Recomendado |
+|--------|------------|-----------------|
+| Atributo `style` | Na tag do elemento | Testes rápidos, estilos pontuais |
+| Tag `<style>` | Secção `<head>` do HTML | Pequenos projetos, estilos específicos da página |
+| Ficheiro externo (`.css`) | Referenciado via `<link>` | Produção — reutilização e cache |
+
+### Atributo `style`
+
+O atributo `style` aplica estilos diretamente a um elemento HTML. As propriedades são separadas por ponto e vírgula:
+
+```html
+<p style="color: purple; font-size: larger">Texto estilizado</p>
+```
+
+- A sintaxe de cada propriedade é `property: value`
+- Propriedades múltiplas separam-se com `;`
+- Espaços em torno de `:` e `;` são opcionais mas melhoram a legibilidade
+
+### Regras de CSS
+
+Uma regra CSS combina um **seletor** com **declarações** (propriedades e valores):
+
+```css
+selector { property: value; property: value; }
+```
+
+Exemplo:
+
+```css
+p {
+  color: purple;
+  font-size: larger;
+}
+```
+
+- Aplica-se a todos os elementos `<p>` da página
+- Propriedades de elementos pai são herdadas pelos filhos
+- A regra para o elemento `body` propaga-se a todo o conteúdo
+
+### Posicionamento por Definição
+
+| Tipo | Comportamento | Exemplos de tags |
+|------|--------------|------------------|
+| **Bloco** | Ocupa toda a largura do pai, empilhados verticalmente | `p`, `div`, `section`, `h1`-`h6`, `ul`, `ol` |
+| **Linha** | Posicionados horizontalmente, quebram linha quando não há espaço | `span`, `em`, `a`, `strong` |
+
+### Tag `<style>`
+
+A tag `<style>` permite escrever regras CSS dentro da secção `<head>` do documento HTML:
+
+```html
+<head>
+  <style type="text/css">
+    p { color: purple; font-size: larger }
+  </style>
+</head>
+```
+
+- O atributo `type="text/css"` é opcional (valor por omissão dos navegadores)
+- O atributo `media` indica o tipo de média a que se aplicam as regras
+- Quebras de linha e recuo não alteram a interpretação das regras
+
+### Comentários CSS
+
+Os comentários são delimitados por `/* ... */`:
+
+```css
+/* Texto dentro de <p> é roxo e maior */
+p {
+  color: purple;
+  /* font-size: larger; */
+}
+```
+
+- Úteis para desabilitar temporariamente declarações durante depuração
+- Essenciais em folhas de estilo extensas para documentação
+- Devem ser abertos e fechados corretamente para evitar erros de interpretação
+
+### CSS em Ficheiros Externos
+
+O método mais comum e recomendado para associar CSS a HTML:
+
+```html
+<head>
+  <link href="style.css" rel="stylesheet">
+</head>
+```
+
+**Vantagens:**
+- Reutilização das mesmas regras em múltiplos documentos HTML
+- O navegador guarda o ficheiro em cache, acelerando carregamentos futuros
+
+**Características dos ficheiros `.css`:**
+- Sem estrutura hierárquica (`<head>`, `<body>`) — são apenas uma lista sequencial de regras
+- A relação CSS-HTML é definida apenas no lado do HTML
+- O atributo `href` indica o caminho (relativo ou absoluto) ao ficheiro CSS
+- O atributo `media` pode restringir as regras a tipos específicos de média
+
+### Acessibilidade
+
+O CSS pode alterar completamente a aparência de um elemento, mas é fundamental usar os elementos HTML apropriados para que tecnologias de acessibilidade (como leitores de ecrã) identifiquem correctamente as secções da página.
+
+## 🧭 Exercícios Guiados (resolvidos)
+
+### Exercício Guiado 1 — Métodos de incorporação de CSS
+
+**Enunciado:** Que métodos podem ser usados para alterar a aparência de elementos HTML usando CSS?
+
+**Solução passo a passo:**
+
+1. **Atributo `style`** — Escrever diretamente na tag do elemento: `<p style="color: red">`
+2. **Tag `<style>`** — Criar uma secção dentro do `<head>` do documento HTML
+3. **Ficheiro externo** — Criar um ficheiro `.css` e referenciá-lo com `<link href="style.css" rel="stylesheet">`
+
+### Exercício Guiado 2 — Repetição de estilos no atributo style
+
+**Enunciado:** Por que não é recomendado usar o atributo `style` na tag `<p>` se houver parágrafos irmãos que devem ter a mesma aparência?
+
+**Solução passo a passo:**
+
+1. Se houver vários parágrafos `<p>`, a declaração CSS terá de ser repetida em cada tag `<p>`
+2. Isto consome tempo, aumenta o tamanho do ficheiro HTML e dá margem a erros
+3. A solução recomendada é usar um seletor CSS (`p { ... }`) para aplicar o estilo a todos os parágrafos de uma vez
+
+### Exercício Guiado 3 — Posicionamento padrão do elemento div
+
+**Enunciado:** Qual é a política de posicionamento padrão para o elemento `div`?
+
+**Solução passo a passo:**
+
+1. O elemento `div` é tratado como um elemento de bloco por padrão
+2. Ocupa todo o espaço horizontal do seu elemento pai
+3. A sua altura depende da quantidade de conteúdo que contém
+
+### Exercício Guiado 4 — Atributo href no link
+
+**Enunciado:** Qual atributo da tag `<link>` indica a localização de um ficheiro CSS externo?
+
+**Solução passo a passo:**
+
+1. A tag `<link>` é colocada na secção `<head>` do documento HTML
+2. O atributo `href` indica o caminho (relativo ou absoluto) até ao ficheiro CSS
+3. Exemplo: `<link href="estilos.css" rel="stylesheet">`
+
+### Exercício Guiado 5 — Secção correta para o elemento link
+
+**Enunciado:** Qual a secção correta para a inclusão do elemento `<link>` dentro de um documento HTML?
+
+**Solução passo a passo:**
+
+1. O elemento `<link>` deve estar na secção `<head>` do documento HTML
+2. Não deve ser colocado dentro do `<body>`
+3. Exemplo completo: `<head><link href="style.css" rel="stylesheet"></head>`
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+1. **Enunciado:** Por que não é recomendado usar uma tag `<div>` para identificar uma palavra numa frase comum?
+
+   
+
+<SolutionBlock>
+A tag `<div>` cria uma separação semântica entre duas seções distintas do documento. Quando é usada para elementos de texto em linha, interfere nas ferramentas de acessibilidade (como leitores de ecrã), que esperam que `<div>` represente um bloco de conteúdo. Para delimitar texto em linha, deve usar-se `<span>`.
+</SolutionBlock>
+
+
+
+2. **Enunciado:** O que acontece se iniciar um comentário com `/*` no meio de um ficheiro CSS, mas esquecer de o fechar com `*/`?
+
+   
+
+<SolutionBlock>
+Todas as regras após o comentário aberto serão ignoradas pelo navegador, uma vez que este interpreta todo o restante conteúdo como parte do comentário. É essencial garantir que cada `/*` tenha um `*/` correspondente.
+</SolutionBlock>
+
+
+
+3. **Enunciado:** Escreva uma regra CSS para incluir um sublinhado em todos os elementos `em` do documento.
+
+   
+
+<SolutionBlock>
+```css
+   em { text-decoration: underline }
+   ```
+
+   Alternativamente: `em { text-decoration-line: underline }`. Ambas as formas são válidas e produzem o mesmo resultado visual.
+</SolutionBlock>
+
+
+
+4. **Enunciado:** Como podemos indicar que uma folha de estilo de uma tag `<style>` ou `<link>` deve ser usada somente por sintetizadores de fala?
+
+   
+
+<SolutionBlock>
+O valor do atributo `media` deve ser `speech`:
+
+   ```html
+   <style media="speech">
+     /* regras para sintetizadores de fala */
+   </style>
+   ```
+
+   Ou no caso de ficheiro externo:
+
+   ```html
+   <link href="speech.css" rel="stylesheet" media="speech">
+   ```
+</SolutionBlock>
+
+
+
+## 🔗 Ligações
+
+← Anterior: [T07 — Formulários HTML]()
+→ Próximo: [T09 — Seletores de CSS e aplicação de estilo]()

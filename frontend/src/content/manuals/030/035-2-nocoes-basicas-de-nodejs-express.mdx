@@ -1,0 +1,431 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T17 — Noções básicas de NodeJS Express"
+  code="030"
+  topicNumber="T17"
+  objective="035.2"
+  weight={4}
+  pages="LPI Web Development Essentials (030) - Version 1.0"
+  accent="amber"
+/>
+
+
+
+## Resumo Conciso
+
+### O que é o Express.js
+
+O Express é um framework popular que roda em Node.js para escrever servidores HTTP que lidam com solicitações de clientes de aplicativos web. Oferece suporte a diversas maneiras de ler parâmetros enviados por HTTP.
+
+### Script inicial do servidor
+
+```bash
+$ mkdir myserver && cd myserver/ && npm init
+```
+
+```javascript
+const express = require('express')
+const app = express()
+const host = "myserver"
+const port = 8080
+
+app.get('/', (req, res) => {
+  res.send('Request received')
+})
+
+app.listen(port, host, () => {
+  console.log(`Server ready at http://${host}:${port}`)
+})
+```
+
+| Elemento | Função |
+|---|---|
+| `express` | Módulo Express incluído |
+| `app` | Instância do Express que executa a aplicação |
+| `host` | Nome do servidor (localhost por omissão) |
+| `port` | Porta de comunicação (obrigatória) |
+| `app.get()` | Responde a solicitações HTTP GET |
+| `app.listen()` | Ativa o servidor com host e porta |
+
+**Iniciar o servidor:**
+
+```bash
+$ node index.js
+```
+
+**Testar com curl:**
+
+```bash
+$ curl http://myserver:8080 -v
+```
+
+### Rotas
+
+Uma rota especifica um método HTTP e define um caminho (URI). Componentes de uma rota:
+
+| Componente | Exemplo |
+|---|---|
+| Método HTTP | `get`, `post`, `delete` |
+| Caminho | `/`, `/echo`, `/ip` |
+| Função handler | `(req, res) => { ... }` |
+
+### Método POST
+
+Para enviar dados ao servidor, usa-se o método HTTP POST:
+
+```bash
+$ curl http://myserver:8080/echo --data message="This is the POST request body"
+```
+
+**Para processar dados POST, necessário incluir:**
+
+```javascript
+app.use(express.urlencoded({ extended: true }))
+```
+
+Depois os dados estão acessíveis via `req.body.message`:
+
+```javascript
+app.post('/', (req, res) => {
+  res.send(req.body.message)
+})
+```
+
+### Passar dados via HTTP GET
+
+| Método | Propriedade | Exemplo |
+|---|---|---|
+| Query string | `req.query` | `?message=hello` |
+| Parâmetros de rota | `req.params` | `/echo/:message` |
+| Cabeçalhos | `req.headers` | `req.headers['user-agent']` |
+| IP do cliente | `req.ip` | `req.ip` |
+
+```javascript
+// Query string
+app.get('/echo', (req, res) => {
+  res.send(req.query.message)
+})
+
+// Parâmetro de rota
+app.get('/echo/:message', (req, res) => {
+  res.send(req.params.message)
+})
+
+// IP do cliente
+app.get('/ip', (req, res) => {
+  res.send(req.ip)
+})
+```
+
+### Ajustes à resposta
+
+```javascript
+// Definir tipo de conteúdo
+res.type('text/plain')
+
+// Enviar resposta
+res.send('texto')
+
+// Enviar JSON
+res.json(objeto)
+
+// Enviar estado HTTP
+res.sendStatus(204)
+```
+
+### Cookies
+
+```bash
+$ npm install cookie-parser
+```
+
+```javascript
+const cookieParser = require('cookie-parser')
+app.use(cookieParser())
+```
+
+| Método | Função |
+|---|---|
+| `req.cookies.known` | Lê um cookie da solicitação |
+| `res.cookie('known', '1')` | Cria/envia um cookie ao cliente |
+
+```javascript
+app.get('/', (req, res) => {
+  res.type('text/plain')
+  if ( req.cookies.known === undefined ){
+    res.cookie('known', '1')
+    res.send('Welcome, new visitor!')
+  }
+  else
+    res.send('Welcome back, visitor')
+})
+```
+
+**Testar cookies com curl:**
+
+```bash
+$ curl http://myserver:8080/ -c cookies.txt -b cookies.txt -v
+```
+
+| Opção curl | Função |
+|---|---|
+| `-c cookies.txt` | Armazena cookies recebidos |
+| `-b cookies.txt` | Envia cookies armazenados |
+
+### Segurança dos cookies
+
+- **XSS (Cross-Site Scripting):** Inserção de código JavaScript malicioso em páginas
+- **CSRF (Cross-Site Request Forgery):** Roubo de cookies para personificar clientes
+- Usar middleware especializados: `express-session` ou `cookie-session`
+
+### Arquivos estáticos
+
+```bash
+$ mkdir server && cd server/ && npm init && npm install express
+```
+
+```javascript
+app.use(express.static('public'))
+```
+
+- O parâmetro `public` indica o diretório dos ficheiros estáticos
+- O cliente solicita apenas o nome do ficheiro (sem incluir `public`)
+- Exemplo: para `public/layout.css`, o cliente pede `/layout.css`
+
+### Saída formatada — JSON
+
+```javascript
+// Resposta JSON
+res.json(user_entries)
+```
+
+- JSON: formato de texto simples com chaves e valores
+- Útil para comunicação entre programas
+- Rejeitar solicitações sem `application/json` no cabeçalho `accept`
+
+### Modelos EJS (Embedded JavaScript)
+
+```bash
+$ npm install ejs
+```
+
+```javascript
+app.set('view engine', 'ejs')
+```
+
+```javascript
+res.render('index', {title: "My messages", messages: user_entries})
+```
+
+**Tags EJS:**
+
+| Tag | Função |
+|---|---|
+| `<% … %>` | Fluxo de controlo (loops, condições) — sem inserção de conteúdo |
+| `<%= … %>` | Insere conteúdo **escapado** da variável (previne XSS) |
+| `<%# … %>` | Comentário (ignorado pelo parser) |
+| `<%- … %>` | Insere conteúdo **sem escape** da variável |
+
+**Exemplo de modelo `views/index.ejs`:**
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/layout.css">
+</head>
+<body>
+  <form action="/" method="post">
+    <input type="text" name="message">
+    <input type="submit" value="Submit">
+  </form>
+  <ul>
+    <% messages.forEach( (message) => { %>
+      <li><%= message %></li>
+    <% }) %>
+  </ul>
+</body>
+</html>
+```
+
+**Configuração do diretório de views:**
+
+```javascript
+app.set('views', './templates')
+```
+
+### Resumo de funcionalidades Express
+
+| Funcionalidade | Método/Configuração |
+|---|---|
+| Rotas GET | `app.get(path, handler)` |
+| Rotas POST | `app.post(path, handler)` |
+| Corpo da solicitação POST | `req.body` (requer `express.urlencoded`) |
+| Query string | `req.query` |
+| Parâmetros de rota | `req.params` |
+| Arquivos estáticos | `app.use(express.static('public'))` |
+| Cookies | `req.cookies`, `res.cookie()` |
+| Resposta JSON | `res.json()` |
+| Modelos EJS | `res.render('template', data)` |
+| Resposta de texto | `res.send()` |
+
+## 🧭 Exercícios Guiados (resolvidos)
+
+### Exercício Guiado 1 — Ler campo de query string
+
+**Enunciado:** Como o conteúdo do campo `comment`, enviado dentro de uma string de consulta do método HTTP GET, pode ser lido em uma função de manipulação?
+
+**Solução passo a passo:**
+
+1. O campo `comment` é enviado na URL como `?comment=texto`
+2. O Express disponibiliza automaticamente os campos da query string no objeto `req.query`
+3. O campo está acessível na propriedade `req.query.comment`
+
+### Exercício Guiado 2 — Rota para user-agent
+
+**Enunciado:** Escreva uma rota que use o método HTTP GET e o caminho `/agent` para enviar de volta ao cliente o conteúdo do cabeçalho user-agent.
+
+**Solução passo a passo:**
+
+```javascript
+app.get('/agent', (req, res) => {
+  res.send(req.headers['user-agent'])
+})
+```
+
+1. Define-se a rota com `app.get('/agent', ...)`
+2. O cabeçalho `user-agent` está acessível em `req.headers['user-agent']`
+3. Usa-se `res.send()` para devolver o conteúdo ao cliente
+
+### Exercício Guiado 3 — Parâmetro de rota
+
+**Enunciado:** O Express.js tem um recurso chamado parâmetros de rota, onde um caminho como `/user/:name` pode ser usado para receber o parâmetro `name` enviado pelo cliente. Como o parâmetro `name` pode ser acessado de dentro da função de manipulação da rota?
+
+**Solução passo a passo:**
+
+1. O parâmetro `name` está acessível na propriedade `req.params.name`
+
+### Exercício Guiado 4 — Rota para formulário HTML
+
+**Enunciado:** Se o nome de host de um servidor é `myserver`, qual rota do Express receberia o envio do formulário `<form action="/contact/feedback" method="post">`?
+
+**Solução passo a passo:**
+
+```javascript
+app.post('/contact/feedback', (req, res) => {
+  ...
+})
+```
+
+1. O atributo `action="/contact/feedback"` define o caminho
+2. O atributo `method="post"` define o método HTTP
+3. Cria-se uma rota com `app.post('/contact/feedback', handler)`
+
+### Exercício Guiado 5 — Modelo EJS condicional
+
+**Enunciado:** Use tags de modelo EJS para escrever uma tag HTML `<h2></h2>` com o conteúdo da variável JavaScript `h2`. Essa tag deve ser renderizada somente se a variável `h2` não estiver vazia.
+
+**Solução passo a passo:**
+
+```html
+<% if ( h2 != "" ) { %>
+  <h2><%= h2 %></h2>
+<% } %>
+```
+
+1. Usa-se `<% if (...) { %>` para controlo de fluxo
+2. Usa-se `<%= h2 %>` para inserir o conteúdo escapado
+3. Fecha-se com `<% } %>`
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+1. **Enunciado:** Durante o desenvolvimento do servidor, o programador não consegue ler a propriedade `req.body`, mesmo depois de verificar se o cliente está a enviar o conteúdo corretamente através do método HTTP POST. Qual é a causa provável desse problema?
+
+   
+
+<SolutionBlock>
+O programador não incluiu o módulo `express.urlencoded`. É necessário adicionar antes das definições de rota:
+
+   ```javascript
+   app.use(express.urlencoded({ extended: true }))
+   ```
+
+   Explicação: Sem este middleware, o Express não consegue extrair e parsear o corpo das solicitações POST no formato `application/x-www-form-urlencoded`.
+</SolutionBlock>
+
+
+
+2. **Enunciado:** O que acontece quando o servidor tem uma rota definida para o caminho `/user/:name` e o cliente faz uma solicitação para `/user/`?
+
+   
+
+<SolutionBlock>
+O servidor emite uma resposta **404 Not Found**, porque a rota requer que o parâmetro `:name` seja fornecido pelo cliente.
+
+   ```bash
+   $ curl http://myserver:8080/user/
+   # Resposta: 404 Not Found
+   ```
+
+   Explicação: O parâmetro de rota `:name` é obrigatório; sem ele, a rota não corresponde.
+</SolutionBlock>
+
+
+
+3. **Enunciado:** Por padrão, os ficheiros de modelo do Express ficam no diretório `views`. Como essa configuração pode ser modificada para que os ficheiros de modelo sejam armazenados em `templates`?
+
+   
+
+<SolutionBlock>
+```javascript
+   app.set('views', './templates')
+   ```
+
+   Explicação: A configuração `views` do Express define o diretório onde os modelos EJS são procurados.
+</SolutionBlock>
+
+
+
+4. **Enunciado:** Suponha que um cliente recebe uma resposta em HTML sem título (`<title></title>`). Depois de verificar o modelo EJS, o desenvolvedor encontra a tag `<title><% title %></title>` na seção head do ficheiro. Qual é a causa provável do problema?
+
+   
+
+<SolutionBlock>
+A tag correta deve ser `<%= title %>` e não `<% title %>`. A tag `<% %>` é para controlo de fluxo e não insere conteúdo. A tag `<%= %>` é que insere o conteúdo escapado da variável.
+
+   ```html
+   <!-- Correto -->
+   <title><%= title %></title>
+
+   <!-- Incorreto -->
+   <title><% title %></title>
+   ```
+
+   Explicação: `<% %>` apenas executa JavaScript sem produzir saída HTML; `<%= %>` renderiza o valor da variável no HTML.
+</SolutionBlock>
+
+
+
+5. **Enunciado:** Como o `express.static` deve ser configurado para que os clientes possam solicitar ficheiros no diretório `assets`?
+
+   
+
+<SolutionBlock>
+```javascript
+   app.use(express.static('assets'))
+   ```
+
+   Explicação: Basta adicionar a chamada `app.use(express.static('assets'))` no script do servidor. Os clientes poderão solicitar ficheiros desse diretório diretamente pelo nome.
+</SolutionBlock>
+
+
+
+## 🔗 Ligações
+
+← Anterior: [T16 - 035.1 — Noções básicas de Node.js]()
+→ Próximo: [T18 - 035.3 — Noções básicas de SQL](T18%20-%20035.3%20Noções%20básicas%20de%20SQL.md)

@@ -1,0 +1,207 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="024.2 — Segurança de Rede e Internet"
+  code="020"
+  topicNumber="T13"
+  objective="024.2"
+  weight={3}
+  pages="LPI Security Essentials (020) - Version 1.0"
+  accent="coral"
+/>
+
+
+
+## Resumo Conciso
+
+### Camada de Link e Riscos de Acesso
+
+- A **camada de enlace** (camada 2 do modelo OSI) gerencia a transmissão de tramas entre dispositivos na mesma rede local
+- Protocolos nesta camada: **Ethernet**, **Wi-Fi**, **ARP**
+- Riscos de acesso não autorizado:
+  - **Packet sniffing** — captura e análise de pacotes de dados
+  - **Ataques man-in-the-middle** — interceptação e alteração de comunicações
+  - **ARP poisoning** — falsificação de mensagens ARP para associar MAC do atacante ao IP de outra vítima
+
+### Padrões de Criptografia Wi-Fi
+
+| Padrão | Ano | Criptografia | Estado |
+|--------|-----|-------------|--------|
+| **WEP** | 1999 | RC4 (fraca) | Obsoleto — **não usar** |
+| **WPA** | 2003 | TKIP | Vulnerável — **não usar** |
+| **WPA2** | 2004 | AES-CCMP | Padrão atual — usar |
+| **WPA3** | 2018 | AES-GCMP + SAE | Mais seguro — recomendado |
+
+### Interceptação de Tráfego
+
+| Tipo | Descrição | Detetável? | Exemplo |
+|------|-----------|-----------|---------|
+| **Passiva** | Escuta silenciosa do tráfego | Difícil | Packet sniffing com `tcpdump` ou `Wireshark` |
+| **Ativa** | Modificação/redirecionamento de dados | Possível | ARP spoofing, replay de dados de autenticação |
+
+### Ataques DoS e DDoS
+
+| Tipo | Descrição | Fontes |
+|------|-----------|--------|
+| **DoS** | Um único sistema sobrecarrega o alvo | 1 invasor |
+| **DDoS** | Múltiplos sistemas (botnet) atacam o alvo | N invasores |
+
+**Exemplos de ataques DoS:**
+- **SYN flooding** — explora o handshake TCP de 3 vias, inundando o servidor com solicitações SYN incompletas
+- **Ping of Death** — envia pacotes ICMP maiores que 65.535 bytes, causando falha no alvo
+
+### Botnets
+
+- **Bot** — software que executa tarefas sob controlo de outro programa
+- **Botnet** — rede de bots operados e controlados remotamente
+- Usos maliciosos: ataques DDoS, spyware/keyloggers, spam por email
+- Infecção frequentemente invisível ao utilizador
+
+### Filtros de Pacotes
+
+- Mecanismo de firewall que inspeciona pacotes na **camada de rede**
+- Analisa cabeçalhos IP e decide permitir ou bloquear com base em regras
+- Mitiga:
+  - **SYN flood** — limita solicitações SYN ou usa SYN cookies
+  - **DoS/DDoS** — identifica padrões de tráfego anormais e limita taxa
+  - **Botnets** — bloqueia tráfego de comando e controle (C2)
+  - **Man-in-the-middle** — aplica conexões HTTPS/SSL/TLS e descarta pacotes suspeitos
+
+### Ferramentas Úteis
+
+| Ferramenta | Função |
+|-----------|--------|
+| `tcpdump` | Captura e análise de pacotes na rede |
+| `Wireshark` | Análise detalhada de tráfego de rede |
+| `arp` | Visualização/modificação da tabela ARP |
+| `nmap` | Descoberta de hosts e portas na rede |
+
+## Exercícios Guiados
+
+### Exercício Guiado 1: DoS vs. DDoS
+
+**Enunciado:** Qual é a diferença entre um ataque DoS e um ataque DDoS?
+
+**Solução:** Enquanto um ataque de Denial of Service (DoS) usa um único sistema para atacar um alvo, o ataque de Distributed Denial of Service (DDoS) utiliza múltiplos computadores para realizar o ataque. No DDoS, o invasor infeta vários sistemas (formando uma botnet) e os faz executar funções maliciosas em seu nome simultaneamente, tornando o ataque muito mais difícil de mitigar.
+
+### Exercício Guiado 2: Riscos de Acesso à Camada de Link
+
+**Enunciado:** Quais são os riscos potenciais do acesso não autorizado à camada de enlace em uma rede e quais métodos de ataque específicos podem ser usados nessa camada?
+
+**Solução:** O acesso não autorizado à camada de enlace apresenta riscos significativos de segurança, pois os invasores podem interceptar, manipular ou injetar tráfego na rede. Métodos de ataque específicos incluem:
+- **Captura de pacotes (packet sniffing)** — o invasor captura e analisa os dados transmitidos pela rede
+- **Ataques man-in-the-middle** — o invasor intercepta e possivelmente altera as comunicações entre os dispositivos
+- **ARP poisoning** — o invasor falsifica mensagens ARP para associar seu endereço MAC ao endereço IP de outro dispositivo, permitindo que ele intercepte ou modifique o tráfego destinado a esse dispositivo
+
+### Exercício Guiado 3: WEP vs. WPA vs. WPA2
+
+**Enunciado:** Qual é a diferença entre os padrões de criptografia WEP, WPA e WPA2 e por que é importante usar os protocolos de criptografia mais recentes em redes Wi-Fi?
+
+**Solução:**
+
+| Padrão | Criptografia | Vulnerabilidades | Estado |
+|--------|-------------|-----------------|--------|
+| **WEP** | RC4 | Falhas que permitem quebra fácil | Obsoleto |
+| **WPA** | TKIP (muda chave por pacote) | Vulnerabilidades conhecidas | Deprecado |
+| **WPA2** | AES-CCMP | Mais robusto, mas não imune | Padrão atual |
+| **WPA3** | AES-GCMP + SAE | Proteção contra força bruta | Recomendado |
+
+É importante usar os protocolos mais recentes porque oferecem proteção aprimorada contra ataques de força bruta e outras ameaças avançadas, garantindo a confidencialidade e integridade dos dados em redes Wi-Fi. Atualizar regularmente roteadores e equipamentos de rede para suportar protocolos mais recentes é essencial.
+
+### Exercício Guiado 4: Filtros de Pacotes e Mitigação DoS/DDoS
+
+**Enunciado:** Como os filtros de pacotes podem ajudar a mitigar ataques DoS e DDoS e quais técnicas específicas eles usam para prevenir esses tipos de ataques?
+
+**Solução:** Os filtros de pacotes mitigam ataques DoS e DDoS ao analisar pacotes de entrada e saída na camada de rede e bloquear ou limitar o tráfego que corresponde a padrões suspeitos. Técnicas específicas incluem:
+- **SYN flooding** — limitar o número de solicitações SYN de entrada ou implementar SYN cookies para gerenciar mais conexões sem sobrecarregar o servidor
+- **DDoS** — identificar padrões de tráfego anormais (como alto volume de solicitações de um único IP ou de múltiplas fontes) e limitar/bloquear esse tráfego
+- **Tráfego legítimo** — permitir que solicitações normais continuem a ser processadas enquanto bloqueia tráfego malicioso
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1: Processo Suspeito — Possível Bot
+
+**Enunciado:** Enquanto Henry está trabalhando em seu computador, ele vê um rápido pop-up do prompt de comando que desaparece, após o qual tudo parece normal no computador. Mas, ao verificar os processos em execução no computador, ele vê um processo estranho sendo executado também. O que isso provavelmente é, e o que ele pode fazer imediatamente?
+
+
+
+<SolutionBlock>
+Trata-se provavelmente de um **bot** — software que executa tarefas sob controlo de outro programa, frequentemente sem o conhecimento do utilizador. O computador deve ser analisado por software antivírus imediatamente.
+
+**Ações imediatas:**
+1. Não desligar o computador (para preservar evidências)
+2. Executar uma verificação completa com software antivírus/anti-malware atualizado
+3. Verificar os processos em execução e terminar processos suspeitos
+4. Verificar as definições de arranque para aplicações suspeitas
+5. Atualizar o sistema operacional e todos os softwares
+6. Mudar todas as palavras-passe a partir de outro dispositivo limpo
+7. Considerar comunicar ao departamento de TI ou autoridades competentes
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2: Interceptação de Tráfego Criptografado
+
+**Enunciado:** Henry tenta bisbilhotar o tráfego de rede entre Dave e Carol, embora a comunicação deles esteja criptografada. Isso é possível?
+
+
+
+<SolutionBlock>
+**Sim**, é possível obter informações a partir do tráfego criptografado, embora o conteúdo das mensagens permaneça ilegível. Mesmo com criptografia, um invasor pode extrair informações valiosas através de:
+- **Análise de tráfego (traffic analysis)** — padrão de comunicação (quando, com que frequência, quanto dados)
+- **Tipo de protocolo** — identificar que protocolo está a ser utilizado
+- **Tempo do tráfego** — correlacionar temporização com eventos conhecidos
+- **Tamanho dos pacotes** — inferir tipo de conteúdo pelo tamanho das mensagens
+
+Estas técnicas podem revelar informações como: quem está a comunicar com quem, a frequência da comunicação, e aproximadamente quando as comunicações ocorrem.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3: Tipo de Interceptação
+
+**Enunciado:** Que tipo de interceptação de tráfego é o ataque descrito no exercício anterior?
+
+
+
+<SolutionBlock>
+A escuta do tráfego de rede é um **ataque de interceptação de tráfego passivo**. Neste tipo de ataque:
+- O invasor apenas **escuta** as transações de rede entre hosts
+- Não **modifica** os dados transmitidos
+- Permanece geralmente **indetectável**, pois os dados entre os hosts parecem inalterados
+- É **difícil de detetar** porque não altera o tráfego
+
+**Proteção:** A principal defesa contra interceptação passiva é a **criptografia**, que torna os dados ilegíveis mesmo que sejam capturados.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4: Ataque ARP Spoofing
+
+**Enunciado:** Um administrador de rede deteta que um utilizador está a receber tráfego que deveria ser encaminhado para outro dispositivo da rede. Ao analisar a tabela ARP do utilizador afetado, verifica-se que o endereço MAC associado ao gateway padrão corresponde ao endereço MAC de outro computador na mesma rede. Que tipo de ataque está a ocorrer e quais passos deve tomar para o mitigar?
+
+
+
+<SolutionBlock>
+Trata-se de um **ataque de ARP spoofing (ARP poisoning)**, um tipo de interceptação ativa de tráfego. O invasor está a falsificar mensagens ARP para associar o seu endereço MAC ao endereço IP do gateway, redirecionando assim o tráfego da vítima através do seu próprio computador.
+
+**Passos de mitigação:**
+1. **Desligar o dispositivo comprometido** da rede imediatamente
+2. **Limpar a tabela ARP** do dispositivo afetado (`arp -d *`)
+3. **Implementar Dynamic ARP Inspection (DAI)** nos switches da rede
+4. **Configurar segurança de porta** em switches para limitar endereços MAC por porta
+5. **Utilizar ARP estático** (entries) para dispositivos críticos
+6. **Monitorizar a rede** com ferramentas como `arpwatch` para detetar alterações na tabela ARP
+7. **Segmentar a rede** em VLANs para limitar o alcance de ataques futuros
+8. **Atualizar firmware** dos switches e roteadores
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T12 - 024.1 Redes, Serviços de Rede e Internet]()
+→ Próximo: [T14 - 024.3 Criptografia e Anonimato na Rede]()

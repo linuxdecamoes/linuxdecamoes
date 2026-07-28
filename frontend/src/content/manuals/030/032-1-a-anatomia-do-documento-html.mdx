@@ -1,0 +1,287 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T04 — A anatomia do documento HTML"
+  code="030"
+  topicNumber="T04"
+  objective="032.1"
+  weight={2}
+  pages="LPI Web Development Essentials (030) - Version 1.0"
+  accent="amber"
+/>
+
+
+
+## Resumo Conciso
+
+O HTML (HyperText Markup Language) é uma linguagem de marcação que instrui os navegadores como estruturar e exibir páginas web. Desde 2019, o HTML é um *living standard* (padrão vivo, sem versões numeradas fixas como o antigo "HTML 5.0") mantido pela **WHATWG**; o W3C deixou de publicar versões autónomas do HTML e passou a referenciar a especificação da WHATWG.
+
+### Estrutura básica de um documento HTML
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My HTML Page</title>
+    <!-- Cabeçalho do documento -->
+  </head>
+  <body>
+    <!-- Conteúdo da página -->
+  </body>
+</html>
+```
+
+### Componentes fundamentais
+
+| Elemento | Função |
+|----------|--------|
+| `<!DOCTYPE html>` | Instrução ao navegador sobre a versão do HTML (não é uma tag) |
+| `<html>` | Elemento raiz que envolve todo o documento |
+| `<head>` | Contém metainformações sobre o documento |
+| `<body>` | Contém o conteúdo visível da página |
+| `<title>` | Título do documento (obrigatório, único por documento) |
+
+### Tags, elementos e atributos
+
+- **Tag**: parênteses angulares ao redor do nome (ex: `<title>`). O W3C recomenda minúsculas.
+- **Elemento**: composto por tag de abertura + conteúdo + tag de fechamento (ex: `<title>Texto</title>`)
+- **Elementos vazios**: não precisam de tag de fechamento (ex: `<meta>`, `<br>`, `<hr>`)
+- **Atributo**: especifica detalhes do elemento, definido na tag de abertura
+
+```html
+<tag attribute-a="value-a" attribute-b="value-b">
+```
+
+### Comentários HTML
+
+```html
+<!-- Comentário de uma linha -->
+
+<!--
+  Comentário
+  de múltiplas linhas
+-->
+```
+
+- O texto entre `<!--` e `-->` é ignorado pelo navegador
+- Comentários **não** podem ser aninhados
+
+### Atributos genéricos (válidos para qualquer elemento)
+
+| Atributo | Função |
+|----------|--------|
+| `title` | Dica de contexto exibida ao passar o cursor |
+| `id` | Identificador único dentro do documento |
+| `style` | Propriedades CSS do elemento |
+| `class` | Uma ou mais classes CSS para o elemento |
+| `lang` | Idioma do conteúdo (código ISO-639) |
+| `data-*` | Dados personalizados do utilizador |
+
+### Elemento `<head>` e metadados
+
+**Título (`<title>`):**
+- Obrigatório em todo documento HTML
+- Aparece na barra de título do navegador
+- Usado como título nos resultados de mecanismos de busca
+
+**Metadados (`<meta>`)** — elemento de auto-fechamento:
+
+| Atributo | Função |
+|----------|--------|
+| `name` | Nome do metadado (author, description, keywords) |
+| `content` | Valor associado ao name ou http-equiv |
+| `http-equiv` | Cabeçalho HTTP (ex: refresh) |
+| `charset` | Codificação de caracteres do documento |
+
+**Exemplos de metadados:**
+
+```html
+<meta name="author" content="Nome Autor">
+<meta name="description" content="Descrição da página">
+<meta name="keywords" content="HTML, Exemplo, Teste">
+<meta charset="utf-8">
+<meta http-equiv="refresh" content="30">
+<meta http-equiv="refresh" content="30; url=http://www.lpi.org">
+```
+
+### Codificação de caracteres
+
+`<meta charset="utf-8">` — Unicode Transformation Format 8-bit, suporta praticamente qualquer caractere de qualquer idioma. Evita problemas de exibição comparado ao ISO-8859-1.
+
+### Hierarquia do documento
+
+O documento HTML é como uma árvore: `<html>` é a raiz, `<head>` e `<body>` são os primeiros galhos, e os elementos são aninhados dentro de outros.
+
+**Regra importante:** Todos os elementos devem estar fechados corretamente e em ordem (não sobrepor tags).
+
+## 🧭 Exercícios Guiados (resolvidos)
+
+### Exercício Guiado 1 — Tags de fechamento correspondentes
+
+**Enunciado:** Para cada uma das seguintes tags, indique a tag de fechamento correspondente:
+`<body>`, `<head>`, `<html>`, `<meta>`, `<title>`
+
+**Solução passo a passo:**
+
+1. `<body>` → `</body>` — elemento de bloco com conteúdo
+2. `<head>` → `</head>` — contém metainformações
+3. `<html>` → `</html>` — elemento raiz do documento
+4. `<meta>` → Não existe — é um elemento de auto-fechamento (vazio)
+5. `<title>` → `</title>` — contém o título do documento
+
+### Exercício Guiado 2 — Diferença entre tag e elemento
+
+**Enunciado:** Qual é a diferença entre uma tag e um elemento? Use `<title>HTML Page Title</title>` como referência.
+
+**Solução passo a passo:**
+
+1. Um **elemento** HTML consiste em uma tag de abertura + conteúdo + tag de fechamento
+2. `<title>HTML Page Title</title>` é um **elemento** HTML completo
+3. `<title>` é a **tag de abertura**
+4. `</title>` é a **tag de fechamento**
+5. "HTML Page Title" é o **conteúdo** do elemento
+
+### Exercício Guiado 3 — Tags de comentários
+
+**Enunciado:** Quais são as tags que indicam um comentário?
+
+**Solução passo a passo:**
+
+1. Os comentários são delimitados por `<!--` (abertura) e `-->` (fechamento)
+2. Podem estar em uma única linha ou estender-se por múltiplas linhas
+3. O navegador ignora completamente o texto entre essas tags
+
+### Exercício Guiado 4 — Atributos da tag `<meta>`
+
+**Enunciado:** Explique o que é um atributo e dê alguns exemplos para a tag `<meta>`.
+
+**Solução passo a passo:**
+
+1. Um **atributo** especifica mais precisamente um elemento HTML, sendo definido na tag de abertura
+2. O atributo `name` + `content` informa o autor: `<meta name="author" content="Nome">`
+3. O atributo `charset` especifica a codificação: `<meta charset="utf-8">`
+4. O atributo `http-equiv` pode configurar redirecionamentos: `<meta http-equiv="refresh" content="30">`
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+1. **Enunciado:** Crie um documento HTML5 simples com o título "My first HTML document" e um parágrafo no corpo com "Hello World".
+   
+
+<SolutionBlock>
+```html
+   <!DOCTYPE html>
+   <html>
+     <head>
+       <title>My first HTML document</title>
+     </head>
+     <body>
+       <p>Hello World</p>
+     </body>
+   </html>
+   ```
+
+   Explicação: Estrutura básica com DOCTYPE, `<html>`, `<head>` com `<title>`, e `<body>` com `<p>` para o parágrafo.
+</SolutionBlock>
+
+
+
+2. **Enunciado:** Adicione o autor (Kevin Author) e a descrição (This is my first HTML page.) ao documento anterior.
+   
+
+<SolutionBlock>
+```html
+   <!DOCTYPE html>
+   <html>
+     <head>
+       <title>My first HTML document</title>
+       <meta name="author" content="Kevin Author">
+       <meta name="description" content="This is my first HTML page.">
+     </head>
+     <body>
+       <p>Hello World</p>
+     </body>
+   </html>
+   ```
+
+   Explicação: Elementos `<meta>` adicionados no `<head>` com os pares `name`/`content` para autor e descrição.
+</SolutionBlock>
+
+
+
+3. **Enunciado:** Adicione palavras-chave (HTML, Example, Test, Metadata) ao documento.
+   
+
+<SolutionBlock>
+```html
+   <!DOCTYPE html>
+   <html>
+     <head>
+       <title>My first HTML document</title>
+       <meta name="author" content="Kevin Author">
+       <meta name="description" content="This is my first HTML page.">
+       <meta name="keywords" content="HTML, Example, Test, Metadata">
+     </head>
+     <body>
+       <p>Hello World</p>
+     </body>
+   </html>
+   ```
+
+   Explicação: Tag `<meta>` com `name="keywords"` contendo palavras separadas por vírgula.
+</SolutionBlock>
+
+
+
+4. **Enunciado:** Adicione `<meta charset="ISO-8859-1">` e mude o texto para japonês (こんにちは世界). O que acontece? Como resolver?
+   
+
+<SolutionBlock>
+```html
+   <!DOCTYPE html>
+   <html>
+     <head>
+       <title>My first HTML document</title>
+       <meta charset="ISO-8859-1">
+     </head>
+     <body>
+       <p>こんにちは世界</p>
+     </body>
+   </html>
+   ```
+
+   Explicação: O texto em japonês não é exibido corretamente porque ISO-8859-1 suporta apenas o alfabeto latino. A solução é mudar para `<meta charset="utf-8">`.
+</SolutionBlock>
+
+
+
+5. **Enunciado:** Redirecione a página para https://www.google.com após 30 segundos, com um comentário explicativo.
+   
+
+<SolutionBlock>
+```html
+   <!DOCTYPE html>
+   <html>
+     <head>
+       <title>My first HTML document</title>
+       <meta charset="utf-8">
+       <!-- Redirecionamento para Google após 30 segundos -->
+       <meta http-equiv="refresh" content="30; url=https://www.google.com">
+     </head>
+     <body>
+       <p>Hello World</p>
+     </body>
+   </html>
+   ```
+
+   Explicação: O atributo `http-equiv="refresh"` com `content="30; url=..."` redireciona após o tempo especificado em segundos.
+</SolutionBlock>
+
+
+
+## 🔗 Ligações
+
+← Anterior: [T03 — Noções básicas de HTTP]()
+→ Próximo: [T05 — A semântica do HTML e a hierarquia de documentos]()

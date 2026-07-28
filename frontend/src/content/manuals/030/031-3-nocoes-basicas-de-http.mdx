@@ -1,0 +1,313 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T03 — 031.3 Noções básicas de HTTP"
+  code="030"
+  topicNumber="T03"
+  objective="031.3"
+  weight={3}
+  pages="LPI Web Development Essentials (030) - Version 1.0"
+  accent="amber"
+/>
+
+
+
+## Resumo Conciso
+
+### O que é HTTP
+
+O HTTP (HyperText Transfer Protocol) define como um cliente solicita um recurso ao servidor. O cliente cria uma mensagem de solicitação e envia-a ao servidor; o servidor avalia e envia uma mensagem de resposta com o recurso solicitado.
+
+**Componentes da mensagem HTTP:**
+- **Cabeçalho:** Detalhes do recurso e informações de contexto
+- **Corpo de dados (carga):** Conteúdo do recurso (presente principalmente na resposta)
+
+### A Solicitação do Cliente
+
+**Elementos de uma URL:** `https://learning.lpi.org/pt/`
+1. **Protocolo:** `https` (HTTP criptografado com TLS)
+2. **Nome do host:** `learning.lpi.org`
+3. **Caminho do recurso:** `/pt/`
+
+**Processo de resolução:**
+1. O cliente converte o nome do domínio em endereço IP via **DNS**
+2. Conecta-se à porta HTTP (80) ou HTTPS (443) via **TCP**
+3. Envia a mensagem de solicitação
+
+### Exemplo de Mensagem de Solicitação
+
+```
+GET /pt/ HTTP/1.1
+Host: learning.lpi.org
+User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:87.0) Gecko/20100101 Firefox/87.0
+Accept: text/html
+```
+
+**Campos de cabeçalho importantes:**
+
+| Campo | Função |
+|---|---|
+| `Host` | Identifica o host virtual de destino (múltiplos sites no mesmo servidor) |
+| `User-Agent` | Informação sobre o programa cliente |
+| `Accept` | Formato do recurso solicitado |
+| `Content-Length` | Tamanho do corpo de dados em bytes |
+| `Content-Type` | Formato do corpo de dados |
+
+### Métodos HTTP
+
+| Método | Uso |
+|---|---|
+| **GET** | Solicitar um recurso; parâmetros na URL |
+| **POST** | Enviar dados no corpo da mensagem |
+| **PUT** | Atualizar um recurso existente |
+| **DELETE** | Apagar um recurso |
+
+**GET vs. POST:**
+- **GET:** Parâmetros no cabeçalho (URL), menor latência, adequado para consultas
+- **POST:** Dados no corpo da mensagem, necessário para dados maiores ou operações de escrita
+
+**Parâmetros GET:**
+```
+GET /cgi-bin/receive.cgi?name=LPI&email=info@lpi.org HTTP/1.1
+```
+
+### Códigos de Estado (Resposta)
+
+| Classe | Significado |
+|---|---|
+| **1xx** | Informativo — processo em curso |
+| **2xx** | Sucesso — solicitação aceite |
+| **3xx** | Redirecionamento — ações adicionais necessárias |
+| **4xx** | Erro do cliente — sintaxe incorreta ou não atendida |
+| **5xx** | Erro do servidor — solicitação válida não atendida |
+
+**Códigos mais comuns:**
+
+| Código | Descrição |
+|---|---|
+| **200 OK** | Sucesso |
+| **301 Moved Permanently** | Recurso movido para nova URL permanente |
+| **302 Found** | Recurso temporariamente noutra URL |
+| **401 Unauthorized** | Credenciais de autenticação inválidas |
+| **403 Forbidden** | Servidor configurado para não fornecer o recurso |
+| **404 Not Found** | Recurso não encontrado |
+| **500 Internal Server Error** | Erro inesperado no servidor |
+| **502 Bad Gateway** | Resposta inválida de servidor upstream |
+
+### Conteúdo Estático vs. Dinâmico
+
+| Tipo | Descrição |
+|---|---|
+| **Estático** | Caminho na solicitação corresponde a um ficheiro no sistema de arquivos |
+| **Dinâmico** | Servidor encaminha a solicitação para um script que gera a resposta a partir de múltiplas fontes |
+
+**Servidores HTTP comuns:**
+
+| Servidor | Configuração de raiz |
+|---|---|
+| **Apache** | Diretiva `DocumentRoot` em secção `<VirtualHost>` |
+| **NGINX** | Diretiva `root` em secção `server` |
+
+### Cache
+
+| Tipo | Descrição |
+|---|---|
+| **Cache compartilhada** | Servida por caches geográficos distribuídos (CDN); clientes da mesma região recebem a mesma resposta |
+| **Cache privada** | Criada pelo próprio navegador para uso exclusivo do cliente |
+
+**Controlo de cache:**
+- **Data de expiração:** Servidor indica quando o recurso expira
+- **ETag:** Identificador da versão do recurso; cliente verifica se a versão local ainda é válida
+- Por padrão, apenas respostas a **GET** com códigos conclusivos (200, 206, 301, 404) são armazenadas em cache
+
+### Cookies e Sessões
+
+**Cookies:** Etiqueta de identificação fornecida pelo servidor e incluída no cabeçalho HTTP.
+
+```
+# Servidor envia cookie:
+HTTP/1.1 200 OK
+Set-Cookie: client_id=62b5b719-fcbf
+
+# Cliente devolve cookie:
+GET /en/ HTTP/1.1
+Host: learning.lpi.org
+Cookie: client_id=62b5b719-fcbf
+```
+
+**Funcionalidades:**
+- Preservar informações entre solicitações (logins, carrinho de compras, preferências)
+- Rastrear navegação (requer permissão do utilizador)
+- Múltiplos cookies podem ser definidos para o mesmo cliente
+
+**Riscos:** Cookies podem ser transferidos para outro cliente (sequestro de sessão), dando acesso a informações confidenciais. É imprescindível adotar mecanismos de proteção.
+
+### HTTPS e TLS
+
+O HTTPS encapsula toda a comunicação HTTP com TLS (Transport Layer Security), criptografando dados e cabeçalhos. Computadores intermediários entre cliente e servidor não conseguem ler nem identificar o recurso solicitado.
+
+### WebSockets
+
+Protocolo de nível inferior ao HTTP, mais eficiente para comunicação bidirecional em tempo real (chamadas de áudio/vídeo, jogos multiplayer).
+
+## 🧭 Exercícios Guiados (resolvidos)
+
+### Exercício Guiado 1 — Método HTTP
+
+**Enunciado:** Qual o método HTTP utilizado pela mensagem de solicitação a seguir?
+
+```
+POST /cgi-bin/receive.cgi HTTP/1.1
+Host: learning.lpi.org
+User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:87.0) Gecko/20100101 Firefox/87.0
+Accept: */*
+Content-Length: 27
+Content-Type: application/x-www-form-urlencoded
+```
+
+**Solução passo a passo:**
+
+1. A primeira palavra da primeira linha indica o método HTTP.
+2. Neste caso, a primeira palavra é **POST**.
+3. O POST é usado quando o cliente envia dados no corpo da mensagem.
+
+**Resposta:** O método POST.
+
+### Exercício Guiado 2 — Host virtual
+
+**Enunciado:** Quando um servidor HTTP hospeda muitos sites, como ele identifica para qual deles é feita uma solicitação?
+
+**Solução passo a passo:**
+
+1. O campo `Host` no cabeçalho da solicitação indica o website de destino.
+2. O servidor HTTP usa este campo para encaminhar a solicitação para a configuração correta do host virtual.
+
+**Resposta:** O campo Host no cabeçalho da solicitação informa o website de destino.
+
+### Exercício Guiado 3 — Parâmetros de URL
+
+**Enunciado:** Qual parâmetro é fornecido pela string de solicitação da URL `https://www.google.com/search?q=LPI`?
+
+**Solução passo a passo:**
+
+1. Os parâmetros vêm após o `?` na URL.
+2. O formato é `chave=valor`, separados por `&`.
+3. Neste caso, `q=LPI`: chave `q`, valor `LPI`.
+
+**Resposta:** O parâmetro denominado `q` com o valor `LPI`.
+
+### Exercício Guiado 4 — Cache e método POST
+
+**Enunciado:** Por que a solicitação HTTP POST não é adequada para armazenamento em cache?
+
+**Solução passo a passo:**
+
+1. O método POST implica uma operação de escrita no servidor.
+2. A resposta está associada exclusivamente a essa solicitação específica.
+3. Por padrão, apenas respostas a GET são armazenadas em cache.
+
+**Resposta:** Como as solicitações feitas com o método POST implicam numa operação de escrita no servidor, elas não devem ser armazenadas em cache.
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+1. **Enunciado:** Como seria possível usar o navegador web para monitorar as solicitações e respostas feitas por uma página HTML?
+   
+
+<SolutionBlock>
+Todos os navegadores mais comuns oferecem **ferramentas de desenvolvimento** (Developer Tools) que podem mostrar todas as transações de rede realizadas pela página atual.
+
+   ```bash
+   # Atalho no Chrome/Edge: F12 ou Ctrl+Shift+I → separador "Network"
+   # Atalho no Firefox: F12 ou Ctrl+Shift+I → separador "Network"
+   ```
+
+   Explicação: As ferramentas de desenvolvimento do navegador permitem inspecionar cada solicitação HTTP, incluindo cabeçalhos, métodos, códigos de estado, tempos de resposta e conteúdos.
+</SolutionBlock>
+
+
+
+2. **Enunciado:** O que acontece quando o caminho de uma solicitação HTTP aponta para um diretório no sistema de arquivos do servidor?
+   
+
+<SolutionBlock>
+Por padrão, a maioria dos servidores HTTP procura um ficheiro chamado `index.html` (ou outro nome predefinido) nesse diretório e envia-o como resposta. Se o ficheiro não existir, o servidor emitirá uma resposta **404 Not Found**.
+
+   ```bash
+   # Exemplo: criar um index.html num diretório e verificar o comportamento
+   mkdir -p /var/www/exemplo
+   echo "<h1>Página Principal</h1>" > /var/www/exemplo/index.html
+
+   # Verificar configuração do Apache
+   grep -i "DirectoryIndex" /etc/apache2/apache2.conf
+
+   # Verificar configuração do NGINX
+   grep -i "index" /etc/nginx/nginx.conf
+   ```
+
+   Explicação: A diretiva `DirectoryIndex` (Apache) ou `index` (NGINX) define qual ficheiro é servido quando o caminho aponta para um diretório em vez de um ficheiro específico.
+</SolutionBlock>
+
+
+
+3. **Enunciado:** O conteúdo dos ficheiros enviados por HTTPS é protegido por criptografia. Apesar disso, computadores intermediários podem identificar qual recurso o cliente solicitou do servidor?
+   
+
+<SolutionBlock>
+Não. Os próprios cabeçalhos HTTP de solicitação e resposta também são criptografados por TLS. Portanto, computadores intermediários não conseguem ler nem identificar o recurso solicitado.
+
+   ```bash
+   # Verificar se uma ligação é HTTPS e está criptografada
+   curl -vI https://learning.lpi.org/ 2>&1 | grep -i "SSL"
+
+   # Exemplo de output:
+   # * SSL connection using TLSv1.3 / AES_256_GCM / SHA384
+   ```
+
+   Explicação: O TLS criptografa todo o conteúdo da comunicação, incluindo URLs, cabeçalhos e corpo de dados. Apenas o endereço IP do servidor é visível para intermediários (a menos que se use SNI ou DNS sobre HTTPS).
+</SolutionBlock>
+
+
+
+4. **Enunciado:** Utilize o `curl` para simular uma solicitação HTTP GET e observar o cabeçalho de resposta, incluindo o código de estado.
+   
+
+<SolutionBlock>
+```bash
+   curl -I https://learning.lpi.org/
+   ```
+
+   Exemplo de output:
+   ```
+   HTTP/2 200
+   content-type: text/html
+   date: Thu, 16 Jul 2026 10:00:00 GMT
+   server: nginx
+   ```
+
+   Explicação: O `curl -I` envia apenas uma solicitação HEAD (sem descargar o corpo), mostrando os cabeçalhos de resposta. O código de estado **200** indica sucesso.
+</SolutionBlock>
+
+
+
+5. **Enunciado:** Crie uma solicitação POST com `curl` para enviar dados de formulário a um servidor.
+   
+
+<SolutionBlock>
+```bash
+   curl -X POST https://httpbin.org/post \
+     -d "nome=Joao&email=joao@exemplo.pt" \
+     -H "Content-Type: application/x-www-form-urlencoded"
+   ```
+
+   Explicação: O `-X POST` define o método HTTP. O `-d` envia os dados como corpo da mensagem. O `-H` define o Content-Type para indicar ao servidor o formato dos dados enviados. O servidor httpbin.org ecoa os dados recebidos, permitindo verificar se a solicitação foi bem formada.
+</SolutionBlock>
+
+
+
+## 🔗 Ligações
+
+← Anterior: [T02 — 031.2 Arquitetura de aplicativos web]()
+→ Próximo: [T04 — A anatomia do documento HTML]()

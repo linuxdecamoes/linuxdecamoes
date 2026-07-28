@@ -1,0 +1,174 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="107.1 Administrar contas de utilizador, grupos e ficheiros de sistema"
+  code="102"
+  topicNumber="T06"
+  objective="Administrar contas de utilizador, grupos e ficheiros de sistema"
+  weight={3}
+  pages="LPIC-1 (102) - Version 5.0"
+  accent="iris"
+/>
+
+
+
+## Resumo Conciso
+
+### Comandos de gestão de utilizadores
+
+| Comando | Função | Opções importantes |
+|---|---|---|
+| `useradd` | Criar nova conta de utilizador | `-c` (comentário), `-d` (dir. inicial), `-e` (expiração), `-g` (grupo primário), `-G` (grupos secundários), `-m` (criar home), `-s` (shell), `-u` (UID) |
+| `usermod` | Modificar conta de utilizador | `-c`, `-d`, `-e`, `-g`, `-G`, `-l` (renomear login), `-L` (bloquear), `-s`, `-u`, `-U` (desbloquear) |
+| `userdel` | Remover conta de utilizador | `-r` (remover home e spool de email) |
+| `passwd` | Alterar senha e aging | `-d` (apagar), `-e` (forçar troca), `-l`/`-u` (bloquear/desbloquear), `-n` (idade mín.), `-x` (idade máx.), `-S` (status) |
+| `chage` | Alterar info de expiração da senha | `-d` (última alteração), `-E` (expiração da conta), `-I` (inatividade), `-m` (idade mín.), `-M` (idade máx.), `-W` (aviso) |
+
+### Comandos de gestão de grupos
+
+| Comando | Função | Opções importantes |
+|---|---|---|
+| `groupadd` | Criar novo grupo | `-g` (GID específico) |
+| `groupmod` | Modificar grupo | `-n` (renomear), `-g` (alterar GID) |
+| `groupdel` | Remover grupo | — |
+| `getent` | Consultar bases de dados passwd/group | `passwd <user>`, `group <group>` |
+| `id` | Mostrar UID, GID e grupos de um utilizador | — |
+| `groups` | Mostrar grupos de um utilizador | — |
+
+### Ficheiros fundamentais
+
+| Ficheiro | Campos | Descrição |
+|---|---|---|
+| `/etc/passwd` | 7 campos (`:`) | Nome, senha (x), UID, GID, GECOS, home, shell |
+| `/etc/shadow` | 9 campos (`:`) | Nome, hash senha, última troca, idade mín/máx, aviso, inatividade, expiração, reservado |
+| `/etc/group` | 4 campos (`:`) | Nome, senha (x), GID, membros |
+| `/etc/gshadow` | 4 campos (`:`) | Nome, senha cript., administradores, membros |
+| `/etc/skel/` | — | Directório esqueleto (copiado para novos homes — ver T01) |
+| `/etc/login.defs` | — | Parâmetros: UID_MIN/MAX, GID_MIN/MAX, CREATE_HOME, USERGROUPS_ENAB, PASS_MAX_DAYS, etc. |
+
+### Bloquear/desbloquear contas
+
+| Ação | Comandos |
+|---|---|
+| Bloquear | `usermod -L`, `passwd -l` |
+| Desbloquear | `usermod -U`, `passwd -u` |
+| Verificar bloqueio | Verificar se o 2.º campo em `/etc/shadow` começa com `!` |
+
+### Bits SUID/SGID
+
+- `passwd` tem **SUID** (`-rwsr-xr-x`): executado com privilégios de root.
+- `crontab` tem **SGID** (`-rwxr-sr-x`): executado com privilégios do grupo crontab.
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Criar grupos e utilizador
+
+**Enunciado:** Crie os grupos `administrators` e `developers`, depois crie o utilizador `kevin` com esses grupos secundários.
+
+
+
+<SolutionBlock>
+```bash
+groupadd administrators
+groupadd developers
+useradd -G administrators,developers kevin
+id kevin
+# uid=1010(kevin) gid=1010(kevin) groups=1010(kevin),1008(administrators),1009(developers)
+```
+
+O comando cria o utilizador, o seu grupo primário `kevin` (USERGROUPS_ENAB=yes), o diretório inicial (CREATE_HOME=yes) e adiciona os grupos secundários.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Criar, renomear e gerir grupos
+
+**Enunciado:** Crie o grupo `designers`, renomeie para `web-designers` e adicione-o aos grupos secundários de `kevin`.
+
+
+
+<SolutionBlock>
+```bash
+groupadd designers
+groupmod -n web-designers designers
+usermod -a -G web-designers kevin
+id kevin
+# uid=1010(kevin) gid=1010(kevin) groups=1010(kevin),1008(administrators),1009(developers),1011(web-designers)
+```
+
+A opção `-a` é essencial para **anexar** sem remover grupos existentes.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Remover um grupo secundário
+
+**Enunciado:** Remova apenas o grupo `developers` dos grupos secundários de `kevin`.
+
+
+
+<SolutionBlock>
+```bash
+usermod -G administrators,web-designers kevin
+id kevin
+# uid=1010(kevin) gid=1010(kevin) groups=1010(kevin),1008(administrators),1011(web-designers)
+```
+
+`usermod -G` sem `-a` **substitui** todos os grupos secundários; é necessário listar todos os que se pretendem manter.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Criar utilizador com parâmetros específicos
+
+**Enunciado:** Adicione a conta `emma` com UID 1050, grupo primário `administrators` e grupos secundários `developers` e `web-designers`. Mude o shell para `/bin/sh`.
+
+
+
+<SolutionBlock>
+```bash
+useradd -u 1050 -g administrators -G developers,web-designers emma
+usermod -s /bin/sh emma
+id emma
+# uid=1050(emma) gid=1008(administrators) groups=1008(administrators),1009(developers),1011(web-designers)
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 5 — Expiração de senha e limpeza
+
+**Enunciado:** Verifique e altere a data de expiração da conta de `kevin` para 31/12/2022. Depois remova os utilizadores e grupos criados.
+
+
+
+<SolutionBlock>
+```bash
+chage -l kevin | grep "Account expires"
+# Account expires     : never
+
+chage -E 2022-12-31 kevin
+chage -l kevin | grep "Account expires"
+# Account expires     : dec 31, 2022
+
+userdel -r emma
+userdel -r kevin
+groupdel administrators
+groupdel developers
+groupdel web-designers
+```
+
+`usermod -e` é equivalente a `chage -E` para definir a data de expiração da conta.
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T05 - 106.3 Acessibilidade]()
+→ Próximo: [T07 - 107.2 Automatizar e agendar tarefas administrativas]()

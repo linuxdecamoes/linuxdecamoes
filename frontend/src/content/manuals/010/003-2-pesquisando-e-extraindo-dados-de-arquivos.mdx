@@ -1,0 +1,223 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="Pesquisando e extraindo dados de arquivos"
+  code="010"
+  topicNumber="T10"
+  objective="3.2"
+  weight={3}
+  pages="Linux Essentials (010) - Version 4.1"
+  accent="sage"
+/>
+
+
+
+## Resumo Conciso
+
+Este tópico integra **duas lições**: a **Lição 1** (redirecionamento de E/S e pipes) e a **Lição 2** (`grep` e expressões regulares).
+
+### Canais padrão (stdin / stdout / stderr)
+
+| Canal | Nome | Nº | Origem/Destino por defeito |
+|-------|------|:--:|----------------------------|
+| **stdin** | entrada padrão | 0 | teclado |
+| **stdout** | saída padrão | 1 | ecrã |
+| **stderr** | erro padrão | 2 | ecrã |
+
+### Operadores de redirecionamento (Lição 1)
+
+| Operador | Ação |
+|----------|------|
+| `>` | redireciona **stdout** para ficheiro (sobrescreve) |
+| `>>` | **anexa** stdout ao ficheiro |
+| `2>` | redireciona **stderr** (sobrescreve) |
+| `2>>` | anexa stderr |
+| `&>` | stdout **+** stderr (sobrescreve) |
+| `&>>` | anexa stdout + stderr |
+| `<` | entrada a partir de ficheiro |
+| `<<DELIM` | **here document** — bloco de texto até ao delimitador |
+
+- **`/dev/null`** — "bit bucket": descarta tudo o que lá for enviado (`2> /dev/null` silencia erros).
+- ⚠️ `>` **sobrescreve** sem avisar — usar `>>` para acrescentar.
+
+### Pipes (`|`)
+A saída de um comando torna-se **automaticamente** a entrada do seguinte. Os comandos intermédios que transformam os dados chamam-se **filtros**. Encadeia-se livremente: `cmd1 | cmd2 | cmd3`.
+
+### Filtros e visualizadores (Lição 1)
+
+| Comando | Função | Opções comuns |
+|---------|--------|---------------|
+| `cat` | exibe/concatena ficheiros | — |
+| `less` / `more` | paginação (rolagem) | — |
+| `head` | primeiras **10** linhas | `-n N` (N linhas) |
+| `tail` | últimas **10** linhas | `-n N`; **`-f`** segue em tempo real |
+| `cut` | corta campos | `-f N -d "delim"` |
+| `sort` | ordena linhas | `-r` (reverso), `-f` (ignora maiúsculas) |
+| `wc` | conta linhas/palavras/bytes | `-l` / `-w` / `-c` |
+| `tr` | traduz/remove caracteres | `-d` (apaga) |
+| `find` | procura ficheiros | `-name` |
+
+### `grep` (Lição 2) — global regular expression print
+Procura um padrão dentro de ficheiros e imprime as linhas correspondentes.
+
+| Opção | Efeito |
+|-------|--------|
+| `-i` | ignora maiúsculas/minúsculas |
+| `-r` | pesquisa **recursiva** (subdiretórios) |
+| `-c` | **conta** o nº de correspondências |
+| `-v` | **inverte** — linhas que NÃO correspondem |
+| `-E` | expressões regulares **estendidas** (`+`, `?`, `\|`) |
+
+### Expressões regulares — metacaracteres
+
+| Metacaractere | Significado |
+|---------------|-------------|
+| `.` | qualquer caractere (exceto nova linha) |
+| `[abc]` | um dos caracteres listados |
+| `[^abc]` | qualquer caractere **exceto** os listados |
+| `[a-z]` | intervalo de caracteres |
+| `^` | início de linha |
+| `$` | fim de linha |
+| `a\|b` | OU (uma das strings) — exige `-E` |
+| `*` | zero ou mais do padrão anterior |
+| `+` | um ou mais (ERE) |
+| `?` | zero ou um (ERE) |
+
+- Em padrões complexos, usar **aspas duplas** (`"padrão"`) para o shell não interpretar os metacaracteres.
+- Diferença crucial: `grep "ab"` procura a string literal "ab"; `grep "[ab]"` procura qualquer linha com `a` ou `b`.
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+> Exercícios da autoria do agente. Consolidam o tópico 3.2 (redirecionamento, pipes, `grep`, regex).
+> *Dica:* trabalha em `~/lab32`. As soluções estão em `<details>`.
+
+### Exploratório 1 — Construir e filtrar um ficheiro de logs
+Cria um ficheiro `servicos.log` com 4 linhas (níveis ERROR/WARN/OK) e usa `grep` para isolar os erros e para excluir os OK.
+
+
+
+<SolutionBlock>
+```bash
+mkdir -p ~/lab32 && cd ~/lab32
+
+# Construir o ficheiro com here document
+cat << 'EOF' > servicos.log
+ERROR falha no disco
+WARN memoria alta
+OK servico ativo
+ERROR rede instavel
+EOF
+
+cat servicos.log
+
+# Apenas erros (maiúsculas/minúsculas ignoradas)
+grep -i "error" servicos.log
+
+# Tudo exceto OK
+grep -v "OK" servicos.log
+```
+
+**Aprendido:** o **here document** (`<< 'EOF'`) escreve várias linhas num só comando sem editor. O `grep -v` inverte a seleção — útil para remover "ruído" dos logs.
+</SolutionBlock>
+
+
+
+### Exploratório 2 — Pipeline: listar e contar utilizadores
+Numa só linha, ordena os nomes de utilizador de `/etc/passwd` e conta-os. Depois, numa segunda linha, mostra os **shells** mais comuns por ordem decrescente (usa `cut`, `sort`, `uniq -c`).
+
+
+
+<SolutionBlock>
+```bash
+# Contar utilizadores (campo 1, delimitador :)
+cut -d: -f1 /etc/passwd | sort | wc -l
+
+# Shells mais comuns (campo 7), com contagem
+cut -d: -f7 /etc/passwd | sort | uniq -c | sort -rn | head
+```
+
+**Aprendido:** encadeamento de filtros — `cut` extrai o campo → `sort` prepara iguais adjacentes → `uniq -c` agrupa e conta → `sort -rn` ordena por frequência → `head` limita. O `:` foi o delimitador de campo (`-d:`).
+</SolutionBlock>
+
+
+
+### Exploratório 3 — Separar stdout e stderr em ficheiros diferentes
+Executa um `find` em `/etc` à procura de `*.conf`, gravando os **resultados** num ficheiro e os **erros** noutro. Conta as linhas de cada um.
+
+
+
+<SolutionBlock>
+```bash
+cd ~/lab32
+find /etc -name "*.conf" > achados.txt 2> erros.txt
+
+# Quantos resultados e quantos erros?
+wc -l achados.txt erros.txt
+
+# Descartar só os erros (silenciar)
+find /etc -name "*.conf" 2> /dev/null | wc -l
+```
+
+**Aprendido:** `>` envia o canal 1 (stdout) e `2>` o canal 2 (stderr) para destinos diferentes. O `/dev/null` descarta os erros — prática comum para "limpar" a saída de comandos ruidosos.
+</SolutionBlock>
+
+
+
+### Exploratório 4 — `head`, `tail` e `cut` combinados
+Mostra as **3 primeiras** linhas de `/etc/passwd` e, dessas, extrai apenas o **nome de utilizador** e a **shell** (campos 1 e 7).
+
+
+
+<SolutionBlock>
+```bash
+head -n 3 /etc/passwd | cut -d: -f1,7
+```
+
+**Resultado esperado:**
+```
+root:/bin/bash
+daemon:/usr/sbin/nologin
+bin:/bin/sh
+```
+**Aprendido:** `cut -f1,7` seleciona **vários** campos separados por vírgula. O `head` limita o volume antes do `cut` atuar.
+</SolutionBlock>
+
+
+
+### Exploratório 5 — Expressões regulares com `grep`
+Sobre o `/etc/passwd`:
+1. Lista as linhas que começam por `root` **ou** `daemon`.
+2. Conta quantos utilizadores têm `bash` como shell (linha acaba em `/bin/bash`).
+3. Mostra as linhas que **não** contêm nenhum algarismo.
+
+
+
+<SolutionBlock>
+```bash
+# 1. Início root OU daemon (operador |, precisa de -E)
+grep -E "^(root|daemon)" /etc/passwd
+
+# 2. Contar shells que terminam em /bin/bash
+grep -cE "/bin/bash$" /etc/passwd
+
+# 3. Linhas sem nenhum algarismo (intervalo negado)
+grep -v "[0-9]" /etc/passwd | head
+```
+
+**Aprendido:**
+- `^(a|b)` ancora o **OU** no início da linha.
+- `$` ancora o fim; `[0-9]` é um intervalo de dígitos, e `-v` inverte para "linhas sem dígitos".
+- O `-E` é indispensável sempre que usares `|`, `+` ou `?`.
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T09 - Empacotando arquivos na linha de comando]()
+→ Próximo: [T11 - Transformando comandos em Scripts]()

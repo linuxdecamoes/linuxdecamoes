@@ -1,0 +1,159 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T12 — 054.3 Conformidade e redução de riscos"
+  code="050"
+  topicNumber="T12"
+  objective="054.3"
+  weight={3}
+  pages="LPI Open Source Essentials (050) - Version 1.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Requisitos para lançamento de software baseado em código aberto
+
+| Ação | Descrição |
+|---|---|
+| **Análise prévia dos componentes** | Políticas claras sobre que software usar e onde incluí-lo; garantir segurança e participação na comunidade |
+| **Preservar a licença original** | Não remover a licença; remover é considerado plágio e pode causar problemas legais |
+| **Estar atento às licenças** | Manter catálogo de licenças de cada ficheiro ou pacote |
+| **Reconhecer o autor** | Incluir aviso de direitos autorais em documentação, propaganda e site |
+| **Não existe endosso** | Deixar claro que o detentor dos direitos autorais não endossa o produto (requisito BSD) |
+| **Oferecer código-fonte (copyleft)** | Distribuir código-fonte para componentes sob licença copyleft, incluindo versões alteradas |
+| **Não incluir copyleft em produtos proprietários** | Evitar incorporar componentes copyleft que acionem a necessidade de liberar o produto inteiro |
+| **Documentar alterações** | Indicar claramente as alterações feitas ao distribuir versões modificadas |
+| **Conceder direitos de patente** | Não cobrar taxas ou exercer controles com base em patentes sobre código licenciado |
+| **Respeitar marcas registadas** | Não parodiar, alterar ou exibir marcas sem permissão |
+
+### Riscos do software de código aberto
+
+| Risco | Descrição |
+|---|---|
+| **Violação de licença** | Organizações como a Software Freedom Conservancy fazem cumprir licenças; danos à reputação e relacionamento com a comunidade |
+| **Confiança e reputação** | Trocar licença aberta por proprietária enfurece clientes e desenvolvedores; bifurcação do projeto |
+| **Investimentos não recompensados** | Projetos de código aberto geralmente são menos lucrativos do que o esperado |
+| **Bifurcações (forks)** | Desenvolvedores do fork são responsáveis por manutenção; difícil acompanhar mudanças do projeto principal |
+| **Licenças incompatíveis** | Componentes com licenças incompatíveis não podem ser usados juntos; problema comum em fusões e aquisições |
+| **Responsabilidade do produto** | Licenças dispensam responsabilidade, mas tribunais nem sempre reconhecem cláusulas "nenhuma garantia" |
+| **Regulamentações de exportação** | Restrições a software com criptografia; empresas devem verificar regulamentações locais |
+
+### Lista de materiais de software (SBOM)
+
+| Formato | Desenvolvedor | Características |
+|---|---|---|
+| **SPDX** | Linux Foundation | Estrutura em árvore; documenta dependências; snippets reutilizáveis |
+| **CycloneDX** | OWASP | Campos detalhados para vulnerabilidades; popular em organizações de segurança; suporte a nuvem |
+
+- SBOM detalha: pacotes, nomes de ficheiros, licenças, autores e números de versão
+- Gerada automaticamente para cada lançamento
+
+### Análise de Composição de Software (SCA)
+
+- Avalia origem, vulnerabilidades, licenças e outros fatores do software
+- Ferramentas extraem informações de licença e verificam compatibilidade
+- Podem comparar trechos de código com bibliotecas de código aberto para detetar atribuição indevida
+- Especialmente importante durante fusões e aquisições
+
+### Políticas formais e conformidade
+
+- Políticas para: onde usar código aberto, critérios de avaliação, varreduras SCA, recompensas para contribuidores, diretrizes de contribuição, requisitos de documentação
+- **CLA (Contributor License Agreement):** documento legal que concede direitos ao projeto para usar o código
+- **DCO (Developer Certificate of Origin):** documento mais simples que atesta o direito de contribuir
+- **CAA (Copyright Assignment Agreement):** concessão de todos os direitos autorais ao projeto; prática controversa
+
+### Open Source Program Office (OSPO)
+
+| Função | Descrição |
+|---|---|
+| **Promover código aberto** | Disseminar conceitos do open source; incentivar adopção de software apropriado |
+| **Definição de políticas** | Mobilizar gerentes para criar políticas e configurar repositórios |
+| **Aplicação de políticas** | Lembrar desenvolvedores de analisar software e SBOMs; preservar documentação |
+| **Educação** | Explicar avaliação e participação em projetos; detalhes legais de licenças; mudanças organizacionais |
+
+## Exercícios Guiados
+
+### Exercício Guiado 1 — Preservar licenças
+
+**Enunciado:** Por que um desenvolvedor não pode simplesmente pegar o código que quiser de um projeto de código aberto e colocá-lo em seu próprio código sem preservar a licença?
+
+**Solução:** Isso geralmente é uma violação da licença de código aberto, além de representar plágio e violação de direitos autorais. Na prática, a organização pode ser forçada a cumprir a licença, com consequências que vão desde constrangimento e danos à reputação até a destruição de seu modelo de negócios, se houver código copyleft misturado com código proprietário.
+
+### Exercício Guiado 2 — Documentos de contribuição
+
+**Enunciado:** Que tipos de documentos um desenvolvedor teria de assinar ao contribuir para um projeto de código aberto?
+
+**Solução:** Um Contrato de Licença de Contribuidor (CLA) é um documento legal que concede direitos à organização de código aberto para usar o código. Um Certificado de Origem do Desenvolvedor (DCO) é um documento mais curto e simples que garante que o desenvolvedor tem o direito de contribuir com o código. Um Contrato de Cessão de Direitos Autorais (CAA) concede todos os direitos à organização receptora.
+
+### Exercício Guiado 3 — Marcas registadas
+
+**Enunciado:** Você encontra um software de código aberto que seria uma excelente base para seu site de varejo. Você pode colocar seu logotipo por cima do logo original para criar uma imagem atraente para seu site?
+
+**Solução:** Se o projeto tiver registrado seu logotipo, essa alteração provavelmente violaria a marca registrada. Mesmo que o logotipo não seja registrado, a alteração poderia ser vista como desrespeitosa e confusa.
+
+### Exercício Guiado 4 — SBOM
+
+**Enunciado:** Para que serve uma Software Bill of Materials (SBOM) e quais são os dois formatos mais populares?
+
+**Solução:** Uma SBOM é uma lista de todos os componentes de software de um projeto, incluindo pacotes, licenças, autores e números de versão. Os dois formatos mais populares são o **SPDX** (desenvolvido pela Linux Foundation), que usa uma estrutura em árvore com snippets reutilizáveis, e o **CycloneDX** (desenvolvido pelo OWASP), que é mais detalhado em informações de vulnerabilidade e popular em organizações com foco em segurança.
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Bifurcações
+
+**Enunciado:** Quais considerações podem levá-lo a fazer uma bifurcação de um projeto de código aberto para seu próprio uso, apesar das desvantagens das bifurcações?
+
+
+
+<SolutionBlock>
+Se tu estiver satisfeito com o estado atual do código, talvez não precise acompanhar as mudanças no projeto principal. Você pode querer criar um produto substancialmente diferente dos usos aos quais o projeto principal é destinado e, portanto, estar disposto a se separar do projeto principal. O código pode ser valioso o suficiente em seu plano de negócios para que sua equipe esteja disposta a assumir total responsabilidade por seu desenvolvimento e manutenção.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Rejeitar código aberto
+
+**Enunciado:** Quando tu encontras algum software de código aberto que atende às suas necessidades, por quais motivos poderia rejeitá-lo?
+
+
+
+<SolutionBlock>
+O código pode conter muitos bugs e vulnerabilidades de segurança, a comunidade de desenvolvedores do projeto pode não funcionar bem, tu pode não gostar da direção em que o código está evoluindo ou a licença pode não ser compatível com outros trechos de código do seu produto.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Copyleft em produto proprietário
+
+**Enunciado:** Você gostaria de usar uma ferramenta de login sob licença copyleft em seu produto proprietário. Existe uma maneira de fazer isso sem que tu precises oferecer o teu produto sob a licença copyleft?
+
+
+
+<SolutionBlock>
+Integrar o código da ferramenta ao seu pode acionar o requisito de reciprocidade do copyleft, dependendo de qual licença estiver em vigor. A ferramenta de login deve ser separada do seu produto para que seu produto não seja visto como derivado. Por exemplo, pode ser seguro executar a ferramenta copyleft como um processo separado e se comunicar com ela por meio de passagem de mensagens.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — SCA
+
+**Enunciado:** Por que é importante executar uma Análise de Composição de Software (SCA) durante uma fusão ou aquisição?
+
+
+
+<SolutionBlock>
+Durante uma fusão ou aquisição, a empresa adquirente pode descobrir que o software que deseja adquirir é menos valioso do que esperava, porque contém componentes de código aberto com exigências que interferem em seu uso pretendido na nova organização. A SCA identifica licenças incompatíveis, vulnerabilidades de segurança e problemas de conformidade que poderiam ter impacto financeiro ou legal significativo após a conclusão da operação.
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T11 - 054.2 Modelos de negócios para prestadores de serviços]()
+→ Próximo: [T13 - 055.1 Modelos de desenvolvimento de software]()

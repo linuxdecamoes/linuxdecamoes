@@ -1,0 +1,247 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="107.2 Automatizar e agendar tarefas administrativas"
+  code="102"
+  topicNumber="T07"
+  objective="Automatizar e agendar tarefas administrativas"
+  weight={3}
+  pages="LPIC-1 (102) - Version 5.0"
+  accent="iris"
+/>
+
+
+
+## Resumo Conciso
+
+### Cron — Tarefas periódicas
+
+#### Crontab de utilizador — 6 campos
+
+```
+min  hora  dia_mes  mes  dia_semana  comando
+ *    *      *      *       *        /caminho/comando
+```
+
+| Operador | Significado | Exemplo |
+|---|---|---|
+| `*` | Qualquer valor | `* * * * *` (a cada minuto) |
+| `,` | Lista de valores | `0,15,30,45` |
+| `-` | Intervalo | `1-5` (seg a sex) |
+| `/` | Escalonamento | `*/20` (a cada 20 min) |
+
+**Atalhos:** `@hourly`, `@daily`, `@weekly`, `@monthly`, `@yearly`, `@reboot`
+
+#### Crontab de sistema — 7 campos (campo adicional: utilizador)
+
+```
+min  hora  dia_mes  mes  dia_semana  user  comando
+ *    *      *      *       *       root  /caminho/comando
+```
+
+**Localizações:**
+| Caminho | Descrição |
+|---|---|
+| `/etc/crontab` | Crontab principal do sistema |
+| `/etc/cron.d/` | Ficheiros crontab adicionais do sistema |
+| `/etc/cron.{hourly,daily,weekly,monthly}/` | Scripts executados periodicamente |
+| `/var/spool/cron/` | Crontabs de utilizador |
+
+#### Comandos crontab
+
+| Comando | Função |
+|---|---|
+| `crontab -e` | Criar/editar crontab do utilizador |
+| `crontab -l` | Listar crontab atual |
+| `crontab -r` | Remover crontab |
+| `crontab -u <user>` | Editar crontab de outro utilizador (requer root) |
+
+#### Variáveis de ambiente no crontab
+
+| Variável | Função |
+|---|---|
+| `HOME` | Directório de trabalho do cron |
+| `MAILTO` | Destinatário de emails de saída/erro |
+| `PATH` | Caminho de procura de comandos |
+| `SHELL` | Shell utilizado (`/bin/sh` por omissão) |
+
+#### Controlo de acesso ao cron
+
+| Ficheiro | Comportamento |
+|---|---|
+| `/etc/cron.allow` existe | Apenas utilizadores listados podem usar `crontab` |
+| Só `/etc/cron.deny` existe | Utilizadores listados **não** podem usar `crontab` (vazio = todos podem) |
+| Nenhum dos dois existe | Depende da distribuição |
+
+### At — Tarefas únicas
+
+| Comando | Função |
+|---|---|
+| `at <tempo>` | Agendar comando para momento específico |
+| `atq` / `at -l` | Listar jobs pendentes |
+| `atrm` / `at -d` | Remover job por ID |
+| `at -c <id>` | Ver comandos de um job |
+
+**Especificações de tempo:** `HH:MM`, `now +5 minutes`, `tomorrow`, `today`, `midnight`, `noon`, `teatime` (16h)
+
+#### Controlo de acesso ao at
+
+| Ficheiro | Comportamento |
+|---|---|
+| `/etc/at.allow` existe | Apenas utilizadores listados podem usar `at` |
+| Só `/etc/at.deny` existe | Utilizadores listados **não** podem usar `at` |
+| Nenhum dos dois existe | Depende da distribuição |
+
+### Systemd Timers — Alternativa ao cron
+
+#### Unidade `.timer` (exemplo: `foobar.timer`)
+
+```ini
+[Unit]
+Description=Run the foobar service
+
+[Timer]
+OnCalendar=Mon *-*-1..7 05:30:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+```
+
+| Expressão OnCalendar | Significado |
+|---|---|
+| `hourly` | `*-*-* *:00:00` |
+| `daily` | `*-*-* 00:00:00` |
+| `weekly` | `Mon *-*-* 00:00:00` |
+| `monthly` | `*-*-01 00:00:00` |
+| `yearly` | `*-01-01 00:00:00` |
+
+| Comando | Função |
+|---|---|
+| `systemctl enable/start <timer>.timer` | Ativar e iniciar temporizador |
+| `systemctl list-timers` | Listar temporizadores ativos |
+| `systemd-run --on-calendar=...` | Alternativa ao `at` (tarefa única) |
+| `systemd-run --on-active="2m"` | Executar após período monotónico |
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Criar e listar crontab
+
+**Enunciado:** Crie um crontab que execute `date` todas as sextas às 13h e liste o resultado.
+
+
+
+<SolutionBlock>
+```bash
+crontab -e
+# Adicionar: 00 13 * * 5 date
+crontab -l
+# 00 13 * * 5 date
+```
+
+A saída é enviada ao utilizador por email. Consulte com `mail`.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Redirecionar saída no crontab
+
+**Enunciado:** Execute `foobar.sh` a cada minuto, redirecionando a saída para `output.log` e mantendo o erro para email.
+
+
+
+<SolutionBlock>
+```bash
+crontab -e
+# Adicionar: */1 * * * * ./foobar.sh >> output.log
+```
+
+O cron invoca comandos no directório inicial do utilizador, por isso `./foobar.sh` funciona sem caminho absoluto.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Desabilitar e configurar MAILTO
+
+**Enunciado:** Comente o primeiro job e defina `MAILTO` para enviar erros apenas para `emma`.
+
+
+
+<SolutionBlock>
+```bash
+crontab -e
+# Comentar: #00 13 * * 5 date
+# Adicionar no topo:
+MAILTO="emma"
+*/1 * * * * ./foobar.sh
+```
+
+`MAILTO=""` (vazio) impede qualquer envio de email.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Agendar tarefa com at
+
+**Enunciado:** Agende o script `foo.sh` para as 10h30 do próximo dia 31 de outubro.
+
+
+
+<SolutionBlock>
+```bash
+at 10:30 AM October 31
+warning: commands will be executed using /bin/sh
+at> ./foo.sh
+at> Ctrl+D
+job 50 at Thu Oct 31 10:30:00 2019
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 5 — Gerir jobs at
+
+**Enunciado:** Liste todos os jobs at (como root) e remova-os todos.
+
+
+
+<SolutionBlock>
+```bash
+atq
+# 52      Sat Oct  5 10:19:00 2019 a dave
+# 50      Thu Oct 31 10:30:00 2019 a frank
+
+atrm 50 52
+```
+
+Como root, `atq` lista jobs de todos os utilizadores. `atrm` aceita múltiplos IDs.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 6 — Verificar bits especiais do crontab
+
+**Enunciado:** Que bit especial tem o comando `crontab` e qual o seu significado?
+
+
+
+<SolutionBlock>
+```bash
+ls -l /usr/bin/crontab
+# -rwxr-sr-x 1 root crontab 25104 ...
+```
+
+Tem **SGID** definido (o `s` no lugar do executável do grupo), o que significa que é executado com privilégios do grupo `crontab` (ver T06 para bits SUID/SGID). É por isso que utilizadores comuns podem editar o seu próprio crontab.
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T06 - 107.1 Administrar contas de utilizador, grupos e ficheiros de sistema]()
+→ Próximo: [T08 - 107.3 Localização e internacionalização]()

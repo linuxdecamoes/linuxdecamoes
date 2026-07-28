@@ -1,0 +1,137 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="106.3 Acessibilidade"
+  code="102"
+  topicNumber="T05"
+  objective="Configurar e gerir funcionalidades de acessibilidade"
+  weight={1}
+  pages="LPIC-1 (102) - Version 5.0"
+  accent="iris"
+/>
+
+
+
+## Resumo Conciso
+
+### Configurações de acessibilidade por ambiente
+
+| Ambiente | Módulo de acessibilidade | Localização |
+|---|---|---|
+| **T04 GNOME** | Acesso Universal | Menu no canto superior direito (configurável) |
+| **T04 KDE** | Configurações do sistema → Personalização → Acessibilidade | — |
+| **T04 Xfce** | Acessibilidade | Conjunto reduzido de funcionalidades |
+
+### Assistente de teclado e mouse
+
+| Recurso | Função | Ativação (GNOME) | Ativação (KDE) |
+|---|---|---|---|
+| **Teclas de aderência** (Sticky keys) | Digitar atalhos uma tecla de cada vez | Digitação → Teclas de aderência | Teclas modificadoras |
+| **Teclas de repercussão** (Bounce keys) | Inibir pressionamentos não intencionais (latência entre toques) | Filtros do teclado | Filtros do teclado |
+| **Teclas lentas** (Slow keys) | Exigir tempo de pressão antes de aceitar a tecla | Filtros do teclado | Filtros do teclado |
+| **Mouse por teclado** | Controlar ponteiro com teclado numérico | Acesso universal | Sistema → Mouse → Navegação por teclado |
+| **Teclado virtual** | Entrada de texto via mouse/touchpad | Acesso universal → Teclado virtual | Pacote `onboard` (instalar manualmente) |
+
+### Gestos de ativação
+
+| Recurso | Gesto |
+|---|---|
+| Teclas de aderência | Pressionar **Shift 5 vezes consecutivas** |
+| Teclas lentas | Manter **Shift pressionado durante 8 segundos** |
+
+### Configurações visuais (GNOME — Acesso Universal → Visão)
+
+| Opção | Efeito |
+|---|---|
+| **Alto contraste** | Janelas e botões em cores mais contrastadas |
+| **Texto grande** | Ampliar tamanho padrão da fonte |
+| **Tamanho do cursor** | Cursor maior e mais fácil de localizar |
+
+### Ferramentas de ampliação e leitura de tela
+
+| Ferramenta | Ambiente | Função |
+|---|---|---|
+| **Ampliação** (GNOME) | GNOME | Zoom em partes da tela (taxa, posição, cor) |
+| **KMagnifier** | KDE | Ampliador de tela via inicializador de aplicações |
+| **Orca** | Todos | Leitor de tela — voz sintetizada + suporte a visores braille |
+| **KMouseTool** | KDE | Gera cliques do mouse quando o cursor está parado |
+
+### Configurações do rato
+
+| Opção | Função |
+|---|---|
+| **Clique secundário simulado** | Clique direito ao pressionar e segurar o botão esquerdo |
+| **Clique flutuante** | Evento de clique ao segurar o mouse sem mover |
+| **Intervalo de duplo clique** | Ajustável em Preferências do mouse |
+
+> Os recursos de teclas de aderência, teclas lentas, teclas de repercussão e mouse por teclado são fornecidos pelo **AccessX**, parte da extensão X keyboard. Podem ser configurados via `xkbset`.
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — KMouseTool no KDE
+
+**Enunciado:** No KDE, que aplicativo ajuda pessoas com lesões por esforço repetitivo a produzir cliques do mouse sem pressionar fisicamente o botão?
+
+
+
+<SolutionBlock>
+O aplicativo **KMouseTool**, que gera cliques automaticamente quando o cursor está parado brevemente sobre um elemento. Pode ser encontrado no inicializador de aplicações do KDE.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Alterar aparência para melhor legibilidade
+
+**Enunciado:** Que aspetos de aparência do ambiente gráfico podem ser modificados para facilitar a leitura do texto no ecrã?
+
+
+
+<SolutionBlock>
+- **Tamanho de fonte maior** — nas configurações da área de trabalho
+- **Alto contraste** — temas de alto contraste para melhor distinção visual
+- **Texto grande** — opção integrada no GNOME (Acesso Universal → Visão)
+- **Tamanho do cursor** — cursor maior e mais visível
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Orca e visores braille
+
+**Enunciado:** De que forma o aplicativo Orca pode ajudar utilizadores com deficiência visual a interagir com a área de trabalho?
+
+
+
+<SolutionBlock>
+O Orca é um **leitor de tela** que:
+- Gera uma voz sintetizada que descreve os eventos no ecrã
+- Lê o texto sob o cursor do mouse
+- Funciona com **visores braille atualizáveis** — dispositivos que exibem caracteres em braille através de pinos táteis
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Teclas de aderência no X Window System
+
+**Enunciado:** Os recursos de acessibilidade de teclado como teclas de aderência e teclas lentas são fornecidos por qual extensão do X Window System? Que comando pode ser usado para as configurar via linha de comandos?
+
+
+
+<SolutionBlock>
+São fornecidos pelo **AccessX**, parte da extensão **X keyboard** do X Window System. O comando para configurar via linha de comandos é:
+
+```bash
+xkbset
+```
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T04 - 106.2 Desktops gráficos]()
+→ Próximo: [T06 - 107.1 Administrar contas de utilizador, grupos e ficheiros de sistema]()

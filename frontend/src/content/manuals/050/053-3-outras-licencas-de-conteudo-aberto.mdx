@@ -1,0 +1,159 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T09 — 053.3 Outras licenças de conteúdo aberto"
+  code="050"
+  topicNumber="T09"
+  objective="053.3"
+  weight={1}
+  pages="LPI Open Source Essentials (050) - Version 1.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Licenças para documentação de software
+
+| Conceito | Detalhe |
+|---|---|
+| **Necessidade** | Documentação contém textos, gráficos e exemplos de código, frequentemente sujeita a condições diferentes do código |
+| **Problema com GPL** | Condições copyleft da GPLv3.0 podem impedir a adoção de trechos em outros programas; ambiguidade sobre "código-fonte" em documentação (ver conceitos de licenciamento) |
+| **Licenças recomendadas** | CC (ex.: CC-BY) ou FDL (Free Documentation License) |
+| **FDL (Free Documentation License)** | Licença copyleft dedicada a documentação; complementa a GNU GPL; aplica-se a qualquer obra textual |
+
+### Licenças para base de dados
+
+#### Proteção de base de dados
+
+| Tipo de proteção | Base | Prazo |
+|---|---|---|
+| **Obra do tipo base de dados** | Criação intelectual pessoal (seleção e organização) | 70 anos após morte do autor |
+| **Lei de bases de dados (UE)** | Investimento substancial na aquisição, verificação ou apresentação | 15 anos após produção/publicação |
+
+- O objeto protegido é um conjunto de elementos independentes organizados sistematicamente e acessíveis individualmente
+- Os dados em si e o SGBD (sistema de gestão) são **separados** do base de dados para efeitos de licenciamento
+
+#### Open Database License (ODbL)
+
+- Desenvolvida pelo **Open Data Commons** (Open Knowledge Foundation)
+- Distinção clara entre proteção do base de dados e proteção dos conteúdos individuais
+- Contém **copyleft para base de dados** — bases de dados derivadas devem ser redistribuídas sob as mesmas condições
+- **Não se aplica** a SGBD (software de gestão)
+- Obras produzidas a partir do conteúdo devem indicar a fonte do base de dados
+
+#### Community Data License Agreements (CDLA)
+
+- Projeto da **Linux Foundation** para licenciamento de dados
+| Versão | Tipo | Característica principal |
+|---|---|---|
+| **CDLA Permissiva 2.0** | Permissiva | Concede direitos de uso, modificação e partilha; única condição: transmitir texto/licença |
+| **CDLA Compartilhamento 1.0** | Copyleft | Dados aprimorados devem ser publicados sob as mesmas condições |
+
+- Distinção entre **licença de entrada** (dados adicionados) e **licença de saída** (uso dos dados compilados)
+
+### Acesso aberto
+
+| Marco | Ano | Contribuição |
+|---|---|---|
+| **BOAI (Budapeste)** | 2001 | Define acesso aberto como disponibilidade gratuita na internet pública |
+| **Declaração de Berlim** | 2003 | Promove a internet como instrumento para base global de conhecimento |
+
+- Conceito: acesso gratuito à literatura científica e outros conteúdos na internet
+- **Não é uma licença específica**, mas um conceito de licenciamento
+- Licenças CC são frequentemente usadas, mas não são obrigatórias
+| Modelo | Descrição |
+|---|---|
+| **Gold (Ouro)** | Publicação disponibilizada diretamente pelo editor sob licença aberta |
+| **Green (Verde)** | Editor não distribui em acesso aberto, mas autor disponibiliza no seu site sob licença aberta |
+
+## Exercícios Guiados
+
+### Exercício Guiado 1 — Licenças clássicas para documentação e bases de dados
+
+**Enunciado:** As licenças de código aberto "clássicas" também podem ser usadas para documentação e bases de dados?
+
+**Solução:** **Depende, não há uma resposta única.** A GPLv3.0 aplica-se a "qualquer obra protegida por direitos autorais" e não se limita ao código, mas as suas condições podem ser problemáticas para documentação e bases de dados. É frequentemente preferível usar licenças específicas como a FDL (para documentação) ou a ODbL (para bases de dados).
+
+### Exercício Guiado 2 — Licenças separadas para documentação
+
+**Enunciado:** Faz sentido usar licenças separadas para a documentação? Por quê?
+
+**Solução:** **Sim**, porque geralmente a documentação abarca outros conteúdos além do próprio programa. Elas também regulam, por exemplo, como as impressões da documentação devem ser tratadas. As condições de uma licença copyleft estrita para programas podem impedir a adoção de trechos individuais da documentação em outros programas.
+
+### Exercício Guiado 3 — Licenças separadas para bases de dados
+
+**Enunciado:** Faz sentido usar licenças separadas para bases de dados? Por quê?
+
+**Solução:** **Sim**, isso pode ser útil. Em particular, uma licença de base de dados específica pode atribuir um efeito copyleft à base de dados sem que o copyleft afete o código circundante. Além disso, as licenças de bases de dados abordam as disposições específicas que a lei de direitos autorais prevê para a proteção das bases de dados (como a lei de bases de dados da UE).
+
+### Exercício Guiado 4 — Licenças adequadas para documentação
+
+**Enunciado:** Quais das seguintes licenças são adequadas para documentação? CC-BY-4.0, FDL, ODbL, GPL-3.0, BSD-3-Clause
+
+**Solução:** As licenças adequadas para documentação são:
+- **CC-BY-4.0** — licença permissiva amplamente usada para documentação
+- **FDL** — Free Documentation License, licença copyleft dedicada a documentação
+
+As restantes não são especificamente adequadas: ODbL é para bases de dados, GPL-3.0 é para software, e BSD-3-Clause é uma licença permissiva para software.
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Licenças para fontes
+
+**Enunciado:** Existem licenças específicas para fontes?
+
+
+
+<SolutionBlock>
+**Sim**, existem. Um exemplo é a **SIL Open Font License (OFL)**, que contém um copyleft específico para fontes. No entanto, o copyleft da OFL não tem efeito se as fontes forem usadas inalteradas — aplica-se apenas quando as fontes são modificadas e redistribuídas.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Estratégias de acesso aberto
+
+**Enunciado:** Explique resumidamente duas estratégias ou modelos de acesso aberto.
+
+
+
+<SolutionBlock>
+**Gold (Ouro):** Na estratégia de acesso aberto "Gold", a publicação é disponibilizada diretamente pelo editor sob uma licença de conteúdo aberto, geralmente (mas não exclusivamente) utilizando licenças Creative Commons.
+
+**Green (Verde):** O modelo de acesso aberto "Green" aplica-se quando o editor não distribui a publicação em acesso aberto, mas o autor tem a oportunidade de disponibilizar a publicação para download no seu site (ou outro lugar) sob uma licença aberta.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Definição aberta
+
+**Enunciado:** O que se entende por "definição aberta"?
+
+
+
+<SolutionBlock>
+A **"definição aberta"** é um entendimento comum, formulado pela **Open Knowledge Foundation**, do termo "aberto" em "dados abertos", "conhecimento aberto" e "conteúdo aberto". A definição descreve, em particular, as liberdades básicas que devem ser concedidas para que uma licença seja "aberta" no sentido da definição. Dentre elas estão o acesso, o uso, a edição ou modificação e o partilha.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Diferença entre base de dados e SGBD
+
+**Enunciado:** Qual é a diferença entre um base de dados e um sistema de gestão de base de dados (SGBD) para efeitos de licenciamento?
+
+
+
+<SolutionBlock>
+O **base de dados** é o conjunto de dados organizados sistematicamente e acessíveis individualmente — pode ser protegido como obra do tipo base de dados ou pela lei de bancos de dados (UE). O **SGBD** (como MySQL, PostgreSQL, MariaDB) é o software que gere os dados — é considerado um **programa de computador** e protegido como tal, de forma independente do base de dados. A licença de um SGBD não depende da licença do base de dados, uma vez que não é considerado uma "obra derivada" deste.
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T08 - 053.2 Licenças Creative Commons]()
+→ Próximo: [T10 - 054.1 Modelos de negócios para desenvolvimento de software]()

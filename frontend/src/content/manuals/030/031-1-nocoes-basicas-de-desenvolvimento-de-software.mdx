@@ -1,0 +1,297 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T01 — 031.1 Noções básicas de desenvolvimento de software"
+  code="030"
+  topicNumber="T01"
+  objective="031.1"
+  weight={1}
+  pages="LPI Web Development Essentials (030) - Version 1.0"
+  accent="amber"
+/>
+
+
+
+## Resumo Conciso
+
+### Código-fonte
+
+O código-fonte é uma descrição textual da tarefa que o programador deseja realizar, escrita numa linguagem de programação definida. É uma abstração de alto nível, compreensível por humanos, que representa as operações que o computador irá executar. O código-fonte é organizado em ficheiros de texto simples, cada um com uma extensão que identifica a linguagem (`.c`, `.py`, `.js`, etc.).
+
+**Organização:**
+- Programas simples: poucas linhas num único ficheiro
+- Programas complexos: milhares de ficheiros e pastas dedicadas a tarefas específicas
+- Aplicativos web: documentos HTML podem incorporar código JavaScript diretamente
+
+### Editores de Código e IDE
+
+| Ferramenta | Desvantagem | Ideal para |
+|---|---|---|
+| Editor de texto simples | Sem funcionalidades avançadas | Edição rápida |
+| IDE (Visual Studio, Eclipse, Xcode) | Mais pesado, requer instalação | Programadores menos experientes; projetos grandes |
+| Editores avançados (Vim) | Curva de aprendizagem elevada | Programadores experientes que preferem flexibilidade |
+
+**Funcionalidades de um IDE:** preenchimento automático, verificação de código em tempo real, depuração e testes automatizados.
+
+### Sistemas de Controle de Versão (VCS)
+
+O código-fonte está em constante evolução. Ferramentas como **Git**, **Subversion** e **Mercurial** mantêm um registo de todas as alterações e dos seus autores.
+
+- **Git:** VCS mais popular; permite múltiplas cópias independentes de um repositório
+- **Repositórios online:** GitHub, GitLab, Savannah (GNU)
+- **Benefícios:** rastrear alterações, reverter modificações, trabalho colaborativo sem conflitos
+
+### Paradigmas de Programação
+
+| Paradigma | Característica | Exemplo |
+|---|---|---|
+| **Procedural** | Instruções executadas em ordem sequencial; funções/sub-rotinas chamadas por uma rotina principal | C |
+| **Orientado a Objetos (OOP)** | Estado do programa dividido em subestados independentes (objetos); classes com atributos e métodos | C++, Java, C# |
+| **Funcional** | Funções autossuficientes, sem estado comum entre si; influenciado pelo formalismo matemático | JavaScript (parcialmente), Haskell |
+| **Declarativo** | Descreve o estado desejado, não o processo para o atingir | SQL |
+
+> A maioria das linguagens modernas permite misturar aspetos de diferentes paradigmas. Exemplo: JavaScript combina procedural, funcional e OOP.
+
+### Bibliotecas
+
+Funções pré-construídas que podem ser incorporadas no código. Em JavaScript, incluem-se com `import from`:
+
+```javascript
+import { OrbitControls } from 'modules/OrbitControls.js';
+```
+
+### Compiladores vs. Interpretadores
+
+| Característica | Linguagens Compiladas | Linguagens Interpretadas |
+|---|---|---|
+| **Tradução** | Antecipada para execução futura | No momento da execução |
+| **Resultado** | Binário em linguagem de máquina | Script executado por um interpretador |
+| **Desempenho** | Mais rápido | Mais lento (tradução a cada execução) |
+| **Exemplos** | C, C++, C# | JavaScript, Python, PHP |
+| **Plataforma** | Compilado para plataforma específica | Multiplataforma (o interpretador adapta) |
+
+**Exceção — Bytecode:** Linguagens como **Java** compilam para bytecode (formato intermédio), que é depois executado por um runtime. É mais rápido que interpretação pura, mas mais lento que binário nativo.
+
+**Ferramentas de automação de compilação:** `make`, `Maven`, `Gradle`
+
+### Linguagens de Programação Principais
+
+| Linguagem | Paradigma(s) | Uso Principal |
+|---|---|---|
+| C | Procedural | Sistemas, microcontroladores, supercomputadores |
+| C++ | OOP, procedural | Processamento pesado, jogos, sistemas |
+| C# | OOP | Aplicações Windows, jogos (Unity) |
+| Java | OOP | Aplicações empresariais, Android (via bytecode) |
+| JavaScript | Funcional, procedural, OOP | Aplicações web (front-end e back-end com Node.js) |
+| Python | OOP, funcional, procedural | Mineração de dados, ciência, scripts |
+| PHP | Procedural, OOP | Servidores web (back-end) |
+
+### Programas e Linguagens Compostos
+
+Um aplicativo pode ter componentes em linguagens diferentes, comunicando via API. Exemplo: Python para mineração de dados + C++ para processamento numérico pesado.
+
+## 🧭 Exercícios Guiados (resolvidos)
+
+### Exercício Guiado 1 — Editar código-fonte
+
+**Enunciado:** Que tipo de programa pode ser usado para editar um código-fonte?
+
+**Solução passo a passo:**
+
+1. O código-fonte é um ficheiro de texto simples.
+2. Qualquer programa capaz de editar texto simples pode ser usado para editar código-fonte.
+3. Na prática, utilizam-se editores de texto como o Vim ou Nano, editores com suporte a sintaxe como o VS Code, ou IDEs como o Eclipse.
+
+**Resposta:** Em princípio, qualquer programa capaz de editar texto simples.
+
+### Exercício Guiado 2 — Controle de versão
+
+**Enunciado:** Que tipo de ferramenta ajuda a integrar o trabalho de diferentes desenvolvedores na mesma base de código?
+
+**Solução passo a passo:**
+
+1. Quando vários programadores trabalham no mesmo projeto, precisam de uma forma de coordenar alterações.
+2. Um sistema de controlo de versão (VCS) regista todas as alterações e permite que cada desenvolvedor trabalhe numa cópia independente.
+3. O Git é o VCS mais utilizado atualmente.
+
+**Resposta:** Um sistema de controlo de origem ou versão, como o Git.
+
+### Exercício Guiado 3 — Paradigma procedural em C
+
+**Enunciado:** Identifique os componentes de um programa procedural em C e explique a ordem de execução.
+
+**Solução passo a passo:**
+
+1. O programa contém variáveis globais (`side`, `area`, `volume`).
+2. Existem duas sub-rotinas: `square()` e `cube()`.
+3. A função `main()` atribui valor a `side`, chama `square()`, depois `cube()`, e imprime o resultado.
+4. A ordem das ações em `main()` determina a sequência de estados do programa.
+
+```c
+#include <stdio.h>
+float side;
+float area;
+float volume;
+void square(){ area = side * side; }
+void cube(){ volume = area * side; }
+int main(){
+  side = 2;
+  square();
+  cube();
+  printf("Volume: %f\n", volume);
+  return 0;
+}
+```
+
+### Exercício Guiado 4 — Paradigma OOP em C++
+
+**Enunciado:** Reescreva o exemplo procedural em C++ usando o paradigma orientado a objetos.
+
+**Solução passo a passo:**
+
+1. Criar uma classe `Cube` que encapsula o atributo `side` e o método `volume()`.
+2. O método `volume()` calcula o volume diretamente, sem depender de variáveis externas.
+3. Em `main()`, cria-se um objeto `Cube` e invoca-se o método `volume()`.
+
+```cpp
+#include <iostream>
+class Cube {
+  float side;
+  public:
+    Cube(float s){ side = s; }
+    float volume() { return side * side * side; }
+};
+int main(){
+  float side = 2;
+  Cube cube(side);
+  std::cout << "Volume: " << cube.volume() << std::endl;
+  return 0;
+}
+```
+
+### Exercício Guiado 5 — Paradigma funcional em JavaScript
+
+**Enunciado:** Implemente a mesma funcionalidade (cálculo de volume) em JavaScript usando o paradigma funcional.
+
+**Solução passo a passo:**
+
+1. Criar uma função `cube()` que recebe `side` como parâmetro.
+2. A função é autossuficiente: recebe todos os dados necessários e produz sempre o mesmo resultado para o mesmo parâmetro.
+3. Não há estado partilhado entre funções.
+
+```javascript
+function cube(side){
+  return side*side*side;
+}
+console.log("Volume: " + cube(2));
+```
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+1. **Enunciado:** Suponha que pretende escrever um jogo em 3D para ser jogado no navegador. Quais bibliotecas de terceiros fornecem recursos para a animação 3D em JavaScript?
+   
+
+<SolutionBlock>
+Existem muitas opções de bibliotecas de gráficos 3D para JavaScript, como **three.js** e **BabylonJS**. Estas bibliotecas abstraem a complexidade do WebGL e fornecem APIs de alto nível para criar cenas, modelos, iluminação e animações em 3D.
+
+   ```bash
+   npm install three
+   ```
+
+   Explicação: A three.js é amplamente utilizada para criar experiências 3D na web. O BabylonJS é uma alternativa robusta com suporte a física e animação.
+</SolutionBlock>
+
+
+
+2. **Enunciado:** Além do PHP, quais outras linguagens podem ser usadas no lado do servidor de um aplicativo web?
+   
+
+<SolutionBlock>
+Qualquer linguagem suportada pelo aplicativo de servidor HTTP usado no host do servidor. Alguns exemplos são **Python**, **Ruby**, **Perl** e o próprio **JavaScript** (via Node.js).
+
+   ```bash
+   # Verificar se o Node.js está instalado
+   node --version
+   # Verificar se o Python está instalado
+   python3 --version
+   ```
+
+   Explicação: O servidor HTTP é responsável por processar as solicitações. Ele pode delegar a geração de respostas dinâmicas para scripts escritos em diversas linguagens.
+</SolutionBlock>
+
+
+
+3. **Enunciado:** Liste os tipos de extensão de ficheiro associados às linguagens C, Python e JavaScript.
+   
+
+<SolutionBlock>
+- C: `.c`
+   - Python: `.py`
+   - JavaScript: `.js`
+
+   ```bash
+   # Criar exemplos de cada tipo
+   echo 'int main() { return 0; }' > exemplo.c
+   echo 'print("Olá")' > exemplo.py
+   echo 'console.log("Olá")' > exemplo.js
+
+   # Listar as extensões
+   ls -la exemplo.*
+   ```
+
+   Explicação: Cada linguagem adota uma extensão de nome de ficheiro autoexplicativa para facilitar a identificação do tipo de código-fonte.
+</SolutionBlock>
+
+
+
+4. **Enunciado:** Crie um repositório Git local e faça um primeiro commit com um ficheiro de exemplo.
+   
+
+<SolutionBlock>
+```bash
+   mkdir meu-projeto
+   cd meu-projeto
+   git init
+   echo "# Meu Projeto" > README.md
+   git add README.md
+   git commit -m "Primeiro commit"
+   ```
+
+   Explicação: O `git init` cria um novo repositório. O `git add` coloca o ficheiro no staging area, e o `git commit` grava as alterações no histórico do repositório local.
+</SolutionBlock>
+
+
+
+5. **Enunciado:** Compile um programa simples em C e execute o binário resultante.
+   
+
+<SolutionBlock>
+```bash
+   # Criar o ficheiro fonte
+   cat << 'EOF' > hello.c
+   #include <stdio.h>
+   int main(){
+     printf("Olá, mundo!\n");
+     return 0;
+   }
+   EOF
+
+   # Compilar
+   gcc hello.c -o hello
+
+   # Executar
+   ./hello
+   ```
+
+   Explicação: O GCC compila o código-fonte C para linguagem de máquina, produzindo um binário executável. O processo de compilação converte o texto em instruções nativas da plataforma.
+</SolutionBlock>
+
+
+
+## 🔗 Ligações
+
+← Anterior: [030 - Visão Geral]()
+→ Próximo: [T02 — 031.2 Arquitetura de aplicativos web]()

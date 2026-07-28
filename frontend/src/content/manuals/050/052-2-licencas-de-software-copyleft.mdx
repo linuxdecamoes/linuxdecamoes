@@ -1,0 +1,190 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T05 — 052.2 Licenças de software Copyleft"
+  code="050"
+  topicNumber="T05"
+  objective="052.2"
+  weight={1}
+  pages="LPI Open Source Essentials (050) - Version 1.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### O Princípio Copyleft
+
+| Conceito | Descrição |
+|---|---|
+| **Copyleft** | Princípio que complementa a lei de direitos autorais, exigindo que as liberdades concedidas por uma licença sejam preservadas em todas as versões e trabalhos derivados. |
+| **Reciprocidade** | Quem faz uso das liberdades também deve concedê-las a outros nas mesmas condições. |
+| **Licença recíproca** | Outro nome para licença copyleft, uma vez que o princípio da reciprocidade é fundamental. |
+
+### Evolução da GPL
+
+| Versão | Ano | Características principais |
+|---|---|---|
+| **GPLv1** | 1989 | Primeira versão; estabelece as liberdades essenciais e o princípio copyleft (embora o termo não apareça explicitamente). |
+| **GPLv2** | 1991 | Definições mais precisas (ex.: código-fonte); Seção 7 estabelece a liberdade como absoluta; licença mais popular durante décadas. O kernel do Linux ainda usa GPLv2. |
+| **GPLv3** | 2007 | Introduz os termos "propagação" e "transmissão" (substituindo "distribuição"); aborda DRM e tivoização; inclui disposições sobre patentes. |
+
+### Três Liberdades Essenciais (numeração da FSF)
+
+- **Liberdade 0** — Executar o programa como se desejar
+- **Liberdade 1** — Estudar e alterar o funcionamento do programa (requer código-fonte)
+- **Liberdade 2** — Redistribuir cópias para ajudar outras pessoas
+- **Liberdade 3** — Distribuir cópias de versões modificadas a terceiros
+
+### Licenças Copyleft da FSF
+
+| Licença | Descrição |
+|---|---|
+| **GPLv2** | Licença pública geral; copyleft forte; kernel Linux. |
+| **GPLv3** | Versão atual; adiciona proteção contra DRM/tivoização; concessões de patentes. |
+| **LGPLv2 / LGPLv3** | Licença pública geral **menor**; copyleft fraco; concebida para bibliotecas de software. Permite vinculação a software não copyleft. |
+| **AGPLv3** | Licença pública geral Affero; copyleft forte; aplica-se a software disponibilizado como serviço de rede (SaaS/ASP), fechando a brecha ASP da GPLv3. |
+
+### Licenças Copyleft de Outras Organizações
+
+| Licença | Organização | Característica |
+|---|---|---|
+| **MPL 2.0** (Mozilla Public License) | Mozilla Foundation | Copyleft fraco; copyleft em nível de ficheiro; permite integração com software proprietário. |
+| **EPL 2.0** (Eclipse Public License) | Eclipse Foundation | Copyleft fraco; considerada "amigável aos negócios". |
+
+### Termos da GPLv3
+
+| Termo | Definição |
+|---|---|
+| **Propagação** | Fazer algo com a obra que, sem permissão, tornaria responsável por violação de direitos autorais (inclui cópia, distribuição, disponibilização ao público). |
+| **Transmissão** | Propagação que permite a terceiros criar ou receber cópias. Interação via rede sem transferência de cópia não é transmissão. |
+| **Tivoização** | Uso de software GPLv2 em dispositivos que impedem tecnicamente a instalação de versões modificadas (origem: empresa TiVo). A GPLv3 aborda este problema. |
+
+### Obras Combinadas vs. Derivadas
+
+| Tipo | Descrição | Implicação de licenciamento |
+|---|---|---|
+| **Obra combinada** | Dois softwares (A e B) juntos, mas potencialmente separáveis. | Se sob a mesma licença copyleft, sem problemas. Se sob licenças diferentes, requer análise cuidadosa. |
+| **Obra derivada** | Código de B integrado diretamente no código de A; partes não separáveis. | Copyleft forte exige que a obra derivada inteira esteja sob a mesma licença do original. |
+
+### Copyleft Forte vs. Fraco
+
+| Característica | Copyleft Forte | Copyleft Fraco |
+|---|---|---|
+| **Exigência** | Toda obra derivada deve ser lançada sob a mesma licença | Apenas a parte derivada do original deve manter a mesma licença |
+| **Exemplos** | GPLv2, GPLv3, AGPLv3 | LGPL, MPL, EPL |
+| **Vinculação** | O software que usa uma biblioteca GPL deve adotar a GPL | O software que usa uma biblioteca LGPL não é automaticamente sujeito ao copyleft |
+
+## Exercícios Guiados
+
+### Exercício Guiado 1 — Significado da abreviatura GPL
+
+**Enunciado:** O que significa a abreviatura GPL?
+
+**Solução:** GPL significa **General Public License** (Licença Pública Geral). É a licença copyleft mais conhecida e utilizada, criada pela Free Software Foundation. As versões mais importantes são a GPLv2 (1991) e a GPLv3 (2007).
+
+### Exercício Guiado 2 — Por que as licenças copyleft são recíprocas?
+
+**Enunciado:** Por que as licenças copyleft também são chamadas de recíprocas?
+
+**Solução:** O princípio do copyleft exige que as liberdades concedidas por uma licença também sejam concedidas a outras pessoas, sem restrições. Por exemplo, se se fizer uma alteração no software sob a GPL, terá a obrigação de disponibilizar essas alterações a terceiros nas mesmas condições. A reciprocidade significa que quem beneficia das liberdades também deve concedê-las, criando um ciclo de partilha obrigatório.
+
+### Exercício Guiado 3 — Licença copyleft para bibliotecas
+
+**Enunciado:** Qual licença copyleft da FSF é adequada para bibliotecas de software?
+
+**Solução:** A **GNU Lesser General Public License (LGPL)**, também conhecida como Licença Pública Geral Menor GNU. A LGPL é um copyleft fraco que permite a vinculação de bibliotecas a software não copyleft, sem que o software integrador seja automaticamente sujeito ao copyleft. Originalmente chamada de "Licença Pública Geral de Bibliotecas GNU", o termo "Biblioteca" foi substituído por "Menor" na versão 3.
+
+### Exercício Guiado 4 — Termos que substituem "distribuição" na GPLv3
+
+**Enunciado:** Quais termos em inglês substituem o termo "distribuição" na GPLv3 e por quê?
+
+**Solução:** Os termos são **"propagate"** (propagar) e **"convey"** (transmitir). A razão para esta mudança é que o termo "distribuição" ("distribution") está firmemente ancorado na lei internacional de direitos autorais e pode gerar ambiguidades ou conflitos em diferentes jurisdições. Ao criar novos termos e defini-los explicitamente, a GPLv3 evita mal-entendidos jurídicos. "Propagar" abrange atividades como cópia e disponibilização ao público; "transmitir" refere-se a permitir que terceiros criem ou recebam cópias.
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Licenças copyleft: identificação
+
+**Enunciado:** Quais das opções a seguir são licenças copyleft?
+
+- GPL versão 2
+- 3-clause BSD License
+- LGPL versão 3
+- CC BY-ND
+- EPL versão 2
+
+
+
+<SolutionBlock>
+- **GPL versão 2** ✅ — Licença copyleft forte da FSF.
+- **3-clause BSD License** ❌ — Licença permissiva, não copyleft.
+- **LGPL versão 3** ✅ — Licença copyleft fraco da FSF.
+- **CC BY-ND** ❌ — Licença de conteúdo aberto com restrição de obras derivadas; não é copyleft no sentido tradicional de software.
+- **EPL versão 2** ✅ — Licença copyleft fraco da Eclipse Foundation.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Combinação de licenças copyleft fortes
+
+**Enunciado:** É possível criar uma obra derivada combinando partes de dois projetos de software que estejam sob diferentes licenças copyleft fortes? Por quê?
+
+
+
+<SolutionBlock>
+**Geralmente não.** As licenças com copyleft forte exigem que as versões modificadas estejam sob a mesma licença, o que torna a combinação de partes sob diferentes licenças copyleft fortes uma contradição insolúvel: cada licença exige que a obra derivada inteira esteja sob os seus próprios termos. A principal exceção são as cláusulas de atualização como "or later" (ex.: GPLv2-or-later), que permitem o relicenciamento para GPLv3 — permitindo assim combinar código licenciado GPLv2-or-later com código GPLv3.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Copyleft forte vs. fraco: classificação
+
+**Enunciado:** Quais das seguintes licenças têm um copyleft forte e quais têm um copyleft fraco?
+
+- Common Development and Distribution License (CDDL) 1.1
+- GNU AGPLv3
+- Microsoft Reciprocal License (MS-RL)
+- IBM Public License (IPL) 1.0
+- Sleepycat License
+
+
+
+<SolutionBlock>
+| Licença | Tipo |
+|---|---|
+| CDDL 1.1 | Copyleft **fraco** |
+| GNU AGPLv3 | Copyleft **forte** |
+| MS-RL | Copyleft **fraco** |
+| IBM IPL 1.0 | Copyleft **fraco** |
+| Sleepycat License | Copyleft **forte** |
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Problemas de compatibilidade com copyleft fraco
+
+**Enunciado:** Descreva alguns problemas de compatibilidade que podem surgir ao combinar software sob uma licença copyleft fraca com software sob uma licença não copyleft.
+
+
+
+<SolutionBlock>
+Embora o copyleft fraco não exija que toda a obra derivada esteja sob a mesma licença, a combinação com outras licenças levanta questões fundamentais de compatibilidade:
+
+1. **Separação das partes** — É necessário determinar se as partes originais dos dois projetos estão claramente separadas no novo trabalho e se ainda podem ser licenciadas de formas diferentes.
+2. **Nível de conexão** — Em que nível ocorre a ligação: código-fonte adotado diretamente ou apenas vinculação dinâmica (biblioteca)?
+3. **Relicenciamento** — Uma das licenças permite o relicenciamento de maneira geral?
+4. **Análise individual** — Todas estas questões só podem ser respondidas após uma análise precisa das respectivas licenças e com assessoria jurídica especializada.
+
+A complexidade destas questões torna essencial consultar um advogado antes de combinar software sob diferentes licenças.
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T04 - 052.1 Conceitos de licenças de software de código aberto]()
+→ Próximo: [T06 - 052.3 Licenças de software permissivas]()

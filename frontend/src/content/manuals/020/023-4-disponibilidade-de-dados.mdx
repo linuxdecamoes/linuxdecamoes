@@ -1,0 +1,215 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="023.4 — Disponibilidade de Dados"
+  code="020"
+  topicNumber="T11"
+  objective="023.4"
+  weight={3}
+  pages="LPI Security Essentials (020) - Version 1.0"
+  accent="coral"
+/>
+
+
+
+## Resumo Conciso
+
+Garantir a disponibilidade dos dados é crucial — a perda de dados pode ser catastrófica. Backups e armazenamento em nuvem são os pilares fundamentais da disponibilidade.
+
+### Importância dos Backups
+
+- **Recuperação rápida** em caso de falhas de hardware, acidentes ou ciberataques
+- **Integridade dos dados** — mantê-los intactos e sem corrupção
+- **Continuidade dos negócios** — prevenir interrupções operacionais
+- **Plano de backup**: determinar quais dados são importantes e com que frequência copiá-los
+
+### Tipos de Backup
+
+| Tipo | Descrição | Vantagem | Desvantagem |
+|---|---|---|---|
+| **Completo** | Copia todos os dados num ponto específico | Recuperação mais abrangente | Demorado, requer muito espaço |
+| **Incremental** | Copia dados alterados desde o último backup (completo ou incremental) | Eficiente em espaço e tempo | Restauração complexa (requer todos os incrementais) |
+| **Diferencial** | Copia todas as alterações desde o último backup completo | Restauração simplificada (só backup completo + diferencial mais recente) | Mais espaço que incremental |
+| **Snapshot** | Captura o estado do sistema num ponto específico | Recuperação quase instantânea | Requer sistemas de armazenamento avançados |
+
+### Comparação: Restauração Incremental vs. Diferencial
+
+| Aspeto | Incremental | Diferencial |
+|---|---|---|
+| Dados copiados | Desde o último backup (completo ou incremental) | Desde o último backup completo |
+| Espaço necessário | Menor | Maior |
+| Velocidade de backup | Mais rápido | Mais lento |
+| Complexidade de restauração | Maior (todos os incrementais em sequência) | Menor (completo + diferencial mais recente) |
+
+### Retenção de Backups
+
+- Classificar dados por importância e definir períodos de retenção
+- Conformidade com regulamentações (GDPR, HIPAA)
+- Granularidade: backups de hora em hora (24h), diários (semana anterior), semanais (ano anterior)
+- Manter várias versões para recuperação num ponto específico no tempo
+- Processos automatizados de exclusão ao atingir períodos de retenção
+- Armazenamento externo para proteção contra desastres
+- Testar periodicamente o processo de restauração
+- Documentação completa da política de retenção
+
+### Implicações de Segurança dos Backups
+
+| Medida | Descrição |
+|---|---|
+| **Criptografia** | Proteger backups contra acesso não autorizado |
+| **Controlo de acesso** | Apenas pessoal autorizado acede aos backups |
+| **Registo de auditoria** | Log de quem acede e quando |
+| **Armazenamento fora do local** | Proteção contra desastres físicos (incêndios, roubo) |
+| **Resiliência a ransomware** | Armazenamento imutável ou backups isolados |
+
+### Armazenamento em Nuvem
+
+- Dados armazenados em servidores remotos do provedor
+- Preço depende de: quantidade de armazenamento, tempo de retenção, velocidade de transferência
+- Controlo granular de acesso via interface web ou ferramenta de linha de comando
+- Serviços de partilha (Dropbox, Google Drive, OneDrive) ≠ soluções de backup — exclusões propagam-se
+
+### Implicações de Segurança na Nuvem
+
+- Provedor deve demonstrar confiança e segurança robusta
+- Avaliar medidas de segurança do provedor; usar criptografia adicional se necessário
+- Garantir acesso apenas a indivíduos autorizados
+- Manter registo de acessos
+
+### Dependência de Internet e Sincronização
+
+- Armazenamento em nuvem depende de conectividade
+- Cuidado com custos de largura de banda
+- Sincronização garante correspondência entre dados na nuvem e locais
+- Sem sincronização adequada: backups desatualizados ou incompletos
+
+## Exercícios Guiados
+
+### Exercício Guiado 1: Propósito dos Backups
+
+**Enunciado:** Qual é o propósito principal de um backup?
+
+**Solução:**
+Para recuperar dados em caso de perda ou dano. Os backups servem como uma rede de segurança para os dados, permitindo recuperação rápida e eficiente em eventos inesperados como falhas de hardware, acidentes ou ciberataques.
+
+### Exercício Guiado 2: Backup Mais Eficiente em Espaço
+
+**Enunciado:** Qual tipo de backup é descrito como o mais eficiente em termos de espaço de armazenamento, mas pode ser mais lento ao restaurar dados?
+
+**Solução:**
+Backup incremental. Copia apenas os dados que mudaram desde o último backup, sendo eficiente em armazenamento. No entanto, a restauração requer o último backup completo e todos os backups incrementais subsequentes, o que pode tornar o processo mais lento e complexo.
+
+### Exercício Guiado 3: Política de Retenção de Backups
+
+**Enunciado:** Qual é o propósito de uma política de retenção de backups?
+
+**Solução:**
+Para definir por quanto tempo os backups são retidos e quando eles são excluídos. Uma boa política equilibra a disponibilidade de dados, os requisitos de conformidade, os custos de armazenamento e a eficiência operacional. Deve incluir classificação de dados, períodos de retenção por categoria e processos automatizados de exclusão.
+
+### Exercício Guiado 4: Segurança de Backups Fora do Local
+
+**Enunciado:** Quais são as principais medidas de segurança para backups armazenados fora do local ou na nuvem?
+
+**Solução:**
+- Criptografar todos os dados armazenados fora do local como precaução contra roubo
+- Implementar protocolos de segurança rigorosos incluindo controlo de acesso
+- Conformidade com regulamentações de proteção de dados
+- Usar armazenamento imutável ou backups isolados para resiliência contra ransomware
+- Manter registo de acessos e auditar regularmente
+- Avaliar as medidas de segurança do provedor de serviços
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1: Plano de Backup Pessoal
+
+**Enunciado:** Crie um plano de backup para seus dados pessoais ou relacionados ao trabalho, considerando o tipo de dados, a frequência dos backups e as opções de armazenamento.
+
+
+
+<SolutionBlock>
+As soluções variam dependendo do sistema:
+- **Linux**: Déjà Dup e duplicity para gestão fácil de backups
+- **macOS**: Time Machine e backups do iCloud
+- **Windows**: Ferramenta de Backup do Windows
+
+Muitas dessas utilidades oferecem maneiras de agendar tarefas de backup para acompanhar as mudanças nos dados. Um plano típico incluiria:
+1. Backup completo semanal (ex.: domingo à noite)
+2. Backups incrementais diários durante a semana
+3. Armazenamento: disco externo local + nuvem para redundância
+4. Retenção: backups diários por 30 dias, semanais por 12 semanas, mensais por 12 meses
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2: Serviço de Armazenamento em Nuvem
+
+**Enunciado:** Pesquise um serviço de armazenamento em nuvem popular e suas características de segurança.
+
+
+
+<SolutionBlock>
+Fatores a considerar:
+- Quantidade de armazenamento disponível para cada plano de serviço
+- Metodologias de criptografia utilizadas (em trânsito e em repouso)
+- Restrições de acesso aos dados e controlos de partilha
+- Taxas de transferência de dados
+- Conformidade com regulamentações (GDPR, SOC 2, etc.)
+- Funcionalidades de versionamento e recuperação de ficheiros eliminados
+- Opções de autenticação multifatorial
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3: Comparação de Estratégias de Backup
+
+**Enunciado:** Compare os cenários de restauração de backups incrementais e diferenciais, usando o exemplo da administradora de TI Emma.
+
+
+
+<SolutionBlock>
+**Cenário Incremental**:
+- Domingo: backup completo
+- Seg-Sáb: backups incrementais diários
+- Quarta: falha de hardware
+- Restauração: backup completo (domingo) → incrementais de segunda, terça e quarta
+- **Resultado**: Recuperação bem-sucedida, mas processo mais complexo com múltiplos backups em sequência
+
+**Cenário Diferencial**:
+- Domingo: backup completo
+- Seg-Sáb: backups diferenciais diários (todas as alterações desde domingo)
+- Quarta: falha de software
+- Restauração: backup completo (domingo) → diferencial de quarta-feira
+- **Resultado**: Recuperação bem-sucedida e mais simples — apenas dois backups necessários
+
+A principal diferença: incrementais são mais eficientes em espaço, diferenciais são mais simples de restaurar.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4: Sincronização de Dados na Nuvem
+
+**Enunciado:** Discuta os riscos de confiar exclusivamente em serviços de partilha de ficheiros (Dropbox, Google Drive) como solução de backup.
+
+
+
+<SolutionBlock>
+Serviços de partilha como Dropbox, Google Drive e OneDrive **não são soluções de backup**, mas sim meios de fornecer acesso a ficheiros. Riscos:
+
+1. **Propagação de exclusões**: Quando um utilizador elimina um ficheiro, provavelmente será eliminado do sistema dos outros utilizadores também
+2. **Sem recuperação automática**: Para restaurar ficheiros removidos, pode ser necessário contactar o provedor (com custo adicional)
+3. **Dependência de internet**: Sem conectividade, sem acesso aos dados
+4. **Custos de largura de banda**: Provedores podem cobrar taxas por grandes volumes de dados
+5. **Segurança**: Dados ficam em "computadores de outras pessoas" — confiança no provedor é essencial
+
+**Recomendação**: Usar serviços de partilha para colaboração, mas implementar uma solução de backup separada e independente.
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T10 - 023.3 Malware]()
+→ Próximo: [T12 - 024.1 Redes, Serviços de Rede e Internet]()

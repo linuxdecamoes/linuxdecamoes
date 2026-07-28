@@ -1,0 +1,262 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="Segurança Básica e Identificação de Tipos de Utilizadores"
+  code="010"
+  topicNumber="T16"
+  objective="5.1"
+  weight={2}
+  pages="Linux Essentials (010) - Version 4.1"
+  accent="sage"
+/>
+
+
+
+## Resumo Conciso
+
+### Contas e identificadores (UID/GID)
+- Toda a interação com o Linux passa por uma **conta**, que define login, privilégios e limites de acesso.
+- **UID** (User ID) e **GID** (Group ID) são referências numéricas (sistemas atuais: 64 bits). Cada utilizador tem um UID e um **GID primário**, podendo ainda pertencer a outros grupos.
+- Por omissão, cada utilizador é colocado num grupo com o **mesmo nome e GID = UID**.
+- Utilizadores e grupos são enumerados de forma **independente** (o mesmo nº pode ser UID e GID).
+
+### Tipos de contas
+
+| Tipo | UID/GID típicos | Características |
+|------|-----------------|-----------------|
+| **Superusuário** (`root`) | **UID 0**, GID 0 | Acesso/controlo **ilimitado**. Diretório `/root` (topo, fora de `/home`). |
+| **Padrão / regular** | **≥ 1000** (4 dígitos; legado ≥500) | Diretório em `/home`, shell `/bin/bash`. |
+| **Sistema** | **&lt; 1000** (2 dígitos &lt;100, ou 500-1000) | Pré-criadas na instalação; serviços/recursos que **não** correm como root. Geralmente **sem** diretório dedicado e **sem** shell válido (`/sbin/nologin`). |
+| **Serviço** | frequentemente **> 1000** | Criadas ao instalar serviços; similares às de sistema. (Para o LPI Essentials: UID **&lt; 1000** = sistema; **> 1000** = regular/serviço.) |
+
+> **Regra prática LPI:** UID **&lt; 1000 → conta de sistema**; UID **≥ 1000 → conta de utilizador regular** (podendo incluir contas de serviço).
+
+### Shells de login e diretórios iniciais
+- Shell padrão: **`/bin/bash`**; outros comuns: `csh`, `ksh`, `zsh`.
+- Shell inválido típico: **`/sbin/nologin`** (conta sem acesso interativo, ex.: só FTP).
+- Trocar o próprio shell: **`chsh`** (interativo) ou **`chsh -s /usr/bin/zsh`** (não interativo).
+- Diretório inicial costuma ser o único local com **acerto de gravação garantido**; o do `root` é `/root`, **fora de `/home`** para que root continue funcional mesmo se `/home` estiver indisponível.
+
+### Obter informações sobre utilizadores
+
+| Comando | Mostra |
+|---------|--------|
+| `id [user]` | UID, GID primário e grupos suplementares do utilizador. |
+| `who` | **Logins ativos** (utilizador, TTY, hora). |
+| `w` | Logins ativos + uptime + carga + processo atual + CPU. |
+| `last` | Últimos logins (inclui utilizadores já **desligados**) e boots. |
+| `lastb` | Tentativas de login **mal-sucedidas**. |
+| `whoami` | Nome do utilizador atual. |
+
+### Troca de utilizador e elevação de privilégios
+- **`su -`** — muda para `root` (ou outro utilizador) com **shell de login**. Sempre usar **`-`**! Partilhar a senha de root é má prática.
+- **`sudo COMANDO`** — executa um comando com privilégios usando a **própria senha** (se autorizado em `/etc/sudoers`). Mais seguro que `su` (não expõe a senha de root). Primeiro `sudo` num período curto fica cacheado.
+- **Convenção de prompt:** `$` = utilizador normal; `#` = root.
+
+### Arquivos de controlo de acesso (em `/etc`)
+
+| Arquivo | Conteúdo | Permissões padrão |
+|---------|----------|-------------------|
+| `/etc/passwd` | Atributos do utilizador (UID, GID, home, shell, GECOS). **Sem** senha. | Legível por **todos** |
+| `/etc/group` | Grupos: nome, GID, membros. | Legível por **todos** |
+| `/etc/shadow` | **Hash** da senha + políticas de expiração. | **Só root** (e serviços de auth) |
+| `/etc/gshadow` | Senhas/administradores de grupo. | **Só root** |
+| `/etc/sudoers` | Quem pode usar `sudo` e como. | **Só root** (editar com `visudo`) |
+| `/etc/sudoers.d/` | Ficheiros suplementares ao `sudoers`. | — |
+
+> **Nunca editar** estes ficheiros diretamente; usar sempre os utilitários próprios.
+
+### Estrutura do /etc/passwd (7 campos, separados por `:`)
+`USERNAME:PASSWORD:UID:GID:GECOS:HOMEDIR:SHELL`
+
+Exemplo: `emma:x:1000:1000:Emma Smith,42 Douglas St,555.555.5555:/home/emma:/bin/bash`
+- `PASSWORD` → quase sempre **`x`** (hash está em `/etc/shadow`).
+- `GECOS` → CSV com `Nome completo, Local, Contacto` (alterável com `chfn`).
+
+### Estrutura do /etc/group (4 campos)
+`NAME:PASSWORD:GID:MEMBERS` — ex.: `students:x:1023:jsmith,emma`. (O utilizador **não** é listado se este for o seu grupo primário.)
+
+### Estrutura do /etc/shadow
+`USERNAME:PASSWORD:LASTCHANGE:MINAGE:MAXAGE:WARN:INACTIVE:EXPDATE[:reserved]`
+
+Formas comuns do campo `PASSWORD`:
+- `!!` — conta **desativada**, sem hash.
+- `!$6$sal$hash...` — conta **desativada**, com hash guardado.
+- `$6$sal$hash...` — conta **ativada** (`$6$`=SHA-512, `$5$`=SHA-256, `$1$`=MD5).
+- O **sal** (8-16 caracteres) torna cada hash único, mesmo para senhas iguais em máquinas diferentes.
+
+> A senha é guardada como **hash unidirecional (one-way)** — é possível gerar o hash a partir da senha, mas não o inverso.
+
+| Nome de utilizador | `emma` |
+|---|---|
+| Senha | `x` — deve sempre ser **`x`** para um login ativo válido (hash em `/etc/shadow`) |
+| UID | `1000` |
+| GID principal | `1000` |
+| GECOS | `Emma Smith,42 Douglas St,555.555.5555` |
+| Diretório inicial | `/home/emma` |
+| Shell | `/bin/ksh` |
+
+---
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+> Exercícios da autoria do agente, para praticares diretamente no terminal Linux. Consolidam o tópico 5.1 (contas, /etc/passwd, /etc/shadow, id/who/w/last, su/sudo).
+> *Dica:* precisas de uma sessão Linux (física, VM ou WSL). As soluções estão em `<details>` para poderes tentar primeiro.
+
+### Exploratório 1 — Quem sou eu? Identifica a tua conta
+Descobre, **só por comandos**: o teu nome de utilizador, o teu UID/GID, todos os grupos a que pertences e o teu GID primário.
+
+
+
+<SolutionBlock>
+```bash
+# Nome do utilizador atual
+whoami
+
+# UID, GID primário e grupos suplementares (tudo num só comando)
+id
+
+# Apenas os grupos
+groups
+# ou, para outro utilizador:
+groups emma
+```
+
+**Como ler o `id`:**
+```
+uid=1000(emma) gid=1000(emma) groups=1000(emma),27(sudo),...
+       │            │                └─ grupos suplementares
+       │            └─ GID primário
+       └─ UID
+```
+
+Se aparece `uid=0(root)` → és root.
+</SolutionBlock>
+
+
+
+### Exploratório 2 — Decifrar uma linha de /etc/passwd
+Usa o `getent` para obter a tua própria entrada e a do `root`, e identifica **cada um dos 7 campos**.
+
+
+
+<SolutionBlock>
+```bash
+# A tua entrada (getent respeita fontes do sistema, não lê só o ficheiro)
+getent passwd $(whoami)
+
+# A entrada do root
+getent passwd root
+
+# Listar todos os utilizadores com UID >= 1000 (regulares)
+getent passwd | awk -F: '$3 >= 1000 {print $1, "UID="$3, "shell="$7}'
+```
+
+**Os 7 campos** (separados por `:`):
+1. **USERNAME** · 2. **PASSWORD** (`x`) · 3. **UID** · 4. **GID** · 5. **GECOS** (CSV) · 6. **HOMEDIR** · 7. **SHELL**
+
+**Reflexão:** o `awk -F:` usa `:` como separador e `$3` é o UID — útil para filtrar contas de sistema (&lt; 1000) das regulares (≥ 1000).
+</SolutionBlock>
+
+
+
+### Exploratório 3 — Sessões ativas e histórico de logins
+Compara `who`, `w`, `last` e `lastb` e explica a diferença entre eles.
+
+
+
+<SolutionBlock>
+```bash
+# Quem está ligado AGORA (básico)
+who
+
+# Quem está ligado AGORA + detalhes de sistema/carga/processo
+w
+
+# Histórico de logins (inclui sessões já fechadas e boots)
+last | head -20
+
+# Tentativas de login FALHADAS (requer root)
+sudo lastb | head -20
+```
+
+**Diferenças-chave:**
+| Comando | Âmbito | Extra |
+|---------|--------|-------|
+| `who` | só sessões **ativas** | — |
+| `w` | só sessões **ativas** | uptime, carga média, CPU, processo atual |
+| `last` | **histórico** (ativas + já fechadas + boots) | lê `/var/log/wtmp` |
+| `lastb` | tentativas **falhadas** | lê `/var/log/btmp` (precisa root) |
+</SolutionBlock>
+
+
+
+### Exploratório 4 — Elevar privilégios: su - vs sudo
+Descobre que privilégios tens com `sudo`, muda para root com `su -` e regressa. Observa como o prompt muda entre `$` e `#`.
+
+
+
+<SolutionBlock>
+```bash
+# Que comandos estou autorizado a correr com sudo? (usa a MINHA senha)
+sudo -l
+
+# Executar um comando como root sem mudar de shell
+sudo cat /etc/shadow        # se permitido
+
+# Mudar PARA root com shell de login completo (pede a senha de ROOT)
+su -
+# Agora o prompt termina em '#'  →  és root
+whoami                       # -> root
+
+# Para sair e voltar ao utilizador normal:
+exit
+```
+
+**Regras de ouro:**
+- `su` **sem** `-` é perigoso: herda o ambiente do utilizador. **Sempre `su -`.**
+- `sudo` é preferível a `su -`: usa a **tua** senha e deixa registo (log) de quem fez o quê.
+- `$` = utilizador normal · `#` = root.
+</SolutionBlock>
+
+
+
+### Exploratório 5 — Permissões do /etc/shadow e do backup /etc/passwd-
+Verifica quem pode ler cada ficheiro de contas e descobre para que serve o ficheiro `/etc/passwd-`.
+
+
+
+<SolutionBlock>
+```bash
+# Permissões dos 4 ficheiros de contas
+ls -l /etc/passwd /etc/group /etc/shadow /etc/gshadow
+
+# Ficheiros de backup (terminados em '-')
+ls -l /etc/passwd- /etc/group- /etc/shadow- /etc/gshadow-
+
+# Tentar ler /etc/shadow como utilizador normal (deve falhar)
+cat /etc/shadow            # -> Permission denied
+sudo cat /etc/shadow | head    # só com root
+```
+
+**Como interpretar as permissões:**
+```
+-rw-r--r--  /etc/passwd    -> todos podem ler (info pública: UID/GID/home/shell)
+-rw-r--r--  /etc/group     -> todos podem ler
+-rw-r-----  /etc/shadow    -> SÓ root/grupo shadow podem ler (_hashes das senhas)
+-rw-r-----  /etc/gshadow   -> SÓ root/grupo shadow
+```
+
+**Sobre o `-` (ex.: `/etc/passwd-`):** é uma **cópia de segurança** automática deixada pelas ferramentas de gestão de utilizadores antes de uma alteração — permite reverter se algo correr mal. **Nunca** o edites à mão.
+</SolutionBlock>
+
+
+
+---
+
+## 🔗 Ligações
+
+← Anterior: [T15 - Seu Computador na Rede]() / → Próximo: [T17 - Criando Utilizadores e Grupos]()

@@ -1,0 +1,161 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="101.2 Inicialização do sistema"
+  code="101"
+  topicNumber="T02"
+  objective="Descrever a seqüência de inicialização do sistema Linux"
+  weight={3}
+  pages="LPIC-1 (101) - Version 5.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Sequência de inicialização (BIOS)
+
+1. **POST** (power-on self-test) — identifica falhas de hardware ao ligar
+2. BIOS ativa componentes básicos (vídeo, teclado, armazenamento)
+3. BIOS carrega **1º estágio do bootloader** a partir do **MBR** (primeiros 440 bytes) — ver T05 para detalhes sobre GRUB
+4. 1º estágio chama o **2º estágio**, que apresenta opções e carrega o kernel
+
+### Sequência de inicialização (UEFI)
+
+1. **POST** (power-on self-test)
+2. UEFI ativa componentes básicos
+3. Firmware lê **NVRAM** → executa aplicativo EFI predefinido na **ESP** (EFI System Partition)
+4. Aplicativo EFI (geralmente bootloader) carrega o kernel
+
+### BIOS vs UEFI — Diferenças-chave
+
+| Característica | BIOS | UEFI |
+|---|---|---|
+| Local do bootloader | MBR do dispositivo de armazenamento | Partição ESP (FAT12/FAT16/FAT32) |
+| Leitura de FS | Não | Sim (FAT12, FAT16, FAT32, ISO-9660) |
+| Armazenamento de config | MBR | NVRAM |
+| Segurança | Limitada | Inicialização Segura (EFI assinados) |
+
+### GRUB — Parâmetros comuns do kernel
+
+| Parâmetro | Função |
+|---|---|
+| `acpi=off` | Desabilita suporte a ACPI |
+| `init=/bin/bash` | Define iniciador alternativo (shell Bash) |
+| `systemd.unit=<target>` | Define destino do systemd (ex: `graphical.target`) |
+| `1` ou `S` | Ativa nível de execução 1 (single user) |
+| `mem=512M` | Limita RAM disponível |
+| `maxcpus=2` | Limita número de processadores |
+| `quiet` | Oculta mensagens de inicialização |
+| `vga=ask` | Mostra modos de vídeo disponíveis |
+| `root=/dev/sda3` | Define partição raiz alternativa |
+| `ro` | Montagem inicial somente leitura |
+| `rw` | Montagem inicial leitura/escrita |
+
+### Arquivos importantes
+
+| Caminho | Função |
+|---|---|
+| `/etc/default/grub` | Configuração do GRUB (linha `GRUB_CMDLINE_LINUX`) |
+| `/boot/grub/grub.cfg` | Arquivo de configuração gerado do GRUB |
+| `/proc/cmdline` | Parâmetros do kernel usados na inicialização atual |
+| `/etc/fstab` | Sistemas de arquivos configurados para montagem — ver T20 |
+| `/var/log/` | Arquivos de log do sistema |
+
+### initramfs
+
+- Arquivo contendo um **sistema de arquivos raiz temporário** usado durante a inicialização
+- Fornece módulos necessários para o kernel acessar o FS raiz "de verdade"
+- Removido da RAM após o init ser carregado
+
+### Programas init — Implementações
+
+| Implementação | Características |
+|---|---|
+| **SysVinit** (SysV) | Níveis de execução 0-6, scripts em `/etc/init.d/`, PID 1 |
+| **systemd** | Gerenciador moderno, unidades (units), sockets, D-Bus, cgroups, compatibilidade com SysV |
+| **Upstart** | Foco em inicialização paralela, usado pelo Ubuntu (descontinuado em 2015) |
+
+### Comandos de inspeção da inicialização
+
+| Comando | Função |
+|---|---|
+| `dmesg` | Exibe mensagens do buffer de anel do kernel |
+| `dmesg -H` / `dmesg --human` | Paginação automática da saída |
+| `dmesg --clear` | Limpa o buffer de anel do kernel |
+| `journalctl -b 0` | Mensagens da inicialização atual (systemd) |
+| `journalctl -b -1` | Mensagens da inicialização anterior |
+| `journalctl --list-boots` | Lista de inicializações com hashes e datas |
+| `journalctl -D <caminho>` | Lê logs de diretório diferente de `/var/log/journal/` |
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — MBR sobrescrito por novo SO
+
+**Enunciado:** O carregador de inicialização apresenta uma lista de sistemas operacionais a escolher quando houver mais de um sistema operacional instalado na máquina. No entanto, um sistema operacional recém-instalado pode sobrescrever o MBR do disco rígido, apagando o primeiro estágio do gerenciador de inicialização e tornando o outro sistema operacional inacessível. Por que isso não aconteceria em uma máquina equipada com um firmware UEFI?
+
+
+
+<SolutionBlock>
+As máquinas UEFI não usam o MBR do disco rígido para armazenar o primeiro estágio do gerenciador de inicialização.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Kernel sem initramfs
+
+**Enunciado:** Qual é uma consequência comum de se instalar um kernel personalizado sem fornecer uma imagem initramfs apropriada?
+
+
+
+<SolutionBlock>
+O sistema de arquivos raiz pode ficar inacessível se seu tipo tiver sido compilado como um módulo externo do kernel.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Paginação do dmesg
+
+**Enunciado:** O log de inicialização tem centenas de linhas, portanto a saída do comando `dmesg` é frequentemente canalizada para um comando de paginação — como o comando `less` — para facilitar a leitura. Qual opção do `dmesg` faz automaticamente a paginação da saída, eliminando a necessidade de usar explicitamente um comando de paginação?
+
+
+
+<SolutionBlock>
+Os comandos `dmesg -H` ou `dmesg --human` habilitam a paginação por padrão.
+
+```bash
+dmesg -H
+# ou
+dmesg --human
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Inspecionar logs de disco removido
+
+**Enunciado:** Um disco rígido contendo todo o sistema de arquivos de uma máquina offline foi removido e conectado a uma máquina operacional como drive secundário. Supondo que seu ponto de montagem seja `/mnt/hd`, como o `journalctl` seria usado para inspecionar o conteúdo dos arquivos de diário localizados em `/mnt/hd/var/log/journal/`?
+
+
+
+<SolutionBlock>
+Com os comandos `journalctl -D /mnt/hd/var/log/journal` ou `journalctl --directory=/mnt/hd/var/log/journal`
+
+```bash
+journalctl -D /mnt/hd/var/log/journal
+# ou
+journalctl --directory=/mnt/hd/var/log/journal
+```
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T01 - 101.1 Determinar e definir configurações de hardware]() | → Próximo: [T03 - 101.3 Alterar níveis de execução - destinos de energia]()

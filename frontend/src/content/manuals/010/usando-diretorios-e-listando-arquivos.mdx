@@ -1,0 +1,370 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="Usando diretórios e listando arquivos"
+  code="010"
+  topicNumber="T07"
+  objective="2.3"
+  weight={2}
+  pages="Linux Essentials (010) - Version 4.1"
+  accent="sage"
+/>
+
+
+
+## Resumo Conciso
+
+### Ficheiros e diretórios (Lição 1)
+- **Ficheiros** contêm dados (texto, binários, executáveis). **Diretórios** organizam o sistema de ficheiros e podem conter ficheiros **e** outros diretórios (subdiretórios).
+- O **pai** de um subdiretório é o diretório que o contém.
+- **Nomes:** podem ter letras (maiúsculas/minúsculas são **distintas**), números, espaços e caracteres especiais. Recomenda-se **evitar** espaços — preferir `_` ou `.`. Se inevitável, escapar com `\` ou usar aspas: `cd Mission\ Statements` ou `cd "Mission Statements"`.
+- **Sufixo após o ponto** (`.txt`, `.jpg`) **não tem significado** especial em Linux (ao contrário do Windows) — é só para leitura humana.
+
+### Navegação: `pwd`, `ls`, `cd`
+
+| Comando | Função | Exemplo |
+|---------|--------|---------|
+| `pwd` | Imprime o diretório de trabalho **atual** (caminho absoluto) | `/home/user/Documents/Reports` |
+| `ls` | Lista o conteúdo do diretório atual (ou do indicado) | `ls` / `ls /etc` |
+| `cd <caminho>` | Muda de diretório | `cd /home/user` |
+| `cd` (sem args) | Volta ao **home** do utilizador | — |
+| `tree` | Mostra a árvore de diretórios (nem sempre instalado) | `tree -L 1 /` |
+
+### Caminhos absolutos vs relativos
+
+| Tipo | Característica | Exemplos |
+|------|----------------|----------|
+| **Absoluto** | Começa **sempre** por `/`; válido a partir de **qualquer** local | `/home/user/Downloads`, `/var`, `/` |
+| **Relativo** | **Não** começa por `/`; só faz sentido a partir da localização atual | `../Reports`, `docs`, `Documents/Reports` |
+
+### Caminhos relativos especiais (`ls -a` revela-os)
+
+| Símbolo | Significado |
+|---------|-------------|
+| `.` | Diretório **atual** |
+| `..` | Diretório **pai** |
+| `~` | Diretório **home** do utilizador atual |
+| `~user` | Home do utilizador `user` (ex.: `~michael`) |
+
+```bash
+$ cd ..                  # sobe um nível
+$ cd ../..               # sobe dois níveis
+$ cd ~                   # volta ao home
+$ cd                     # equivalente a cd ~
+$ cd ~michael            # home do michael (requer permissões)
+```
+
+### Diretório Home e FHS (Lição 2)
+- Raiz do sistema de ficheiros = `/` (root). Estrutura normalizada pelo **FHS** (Filesystem Hierarchy Standard).
+- **Diretórios típicos de raiz:** `/bin`, `/boot`, `/dev`, `/etc`, `/home`, `/lib`, `/mnt`, `/opt`, `/proc`, `/root` (home do root), `/run`, `/sbin`, `/srv`, `/sys`, `/tmp`, `/usr`, `/var`.
+- Alterar ficheiros fora do `home` afeta **todos** os utilizadores e exige permissões de **administrador**.
+- **`/home`** ≈ prédio de apartamentos: cada utilizador tem o seu. O **root** é o "síndico" (home em `/root`, não em `/home/root`).
+- Sessões novas abrem **sempre** no home do utilizador.
+
+### Ficheiros e diretórios ocultos
+- Qualquer nome que comece por **`.`** (ponto) é oculto.
+- Típico no home: `.bash_history`, `.bash_logout`, `.bash_profile`, `.bashrc` — são **configurações** do utilizador (modificar só se souberes o que fazes).
+- `-a` (all) revela-os: `ls -a`.
+
+### Opções do `ls` (as mais úteis)
+
+| Opção | Nome | Efeito |
+|-------|------|--------|
+| `-a` | all | Lista **todos**, incluindo ocultos (`.`/`..` e `.ficheiro`) |
+| `-l` | long | Lista longa (permissões, dono, tamanho, data) — um item por linha |
+| `-h` | human-readable | Tamanhos legíveis (K, M, G) — usar **com** `-l` |
+| `-d` | directory | Lista o diretório em si, não o seu conteúdo |
+| `-R` | recursive | Lista também o conteúdo de todos os subdiretórios |
+| `-t` | time | Ordena por data de modificação (recente primeiro) |
+| `-S` | size | Ordena por tamanho (maior primeiro) |
+| `-X` | eXtension | Ordena por extensão |
+| `-r` | reverse | Inverte a ordem de qualquer ordenação |
+
+**Combinações comuns:**
+
+| Comando | Mostra |
+|---------|--------|
+| `ls -lh` | Lista longa + tamanhos legíveis |
+| `ls -la` | Tudo (inclusive ocultos), lista longa |
+| `ls -lt` | Lista longa, ordenado por data (recente no topo) |
+| `ls -lrt` | O mesmo, mas com mais recente **no fundo** (útil em logs) |
+| `ls -lX` | Lista longa agrupada por extensão |
+| `ls -d */` | Só subdiretórios (incl. ocultos com `-a`) |
+| `ls -R` | Árvore inteira a partir do ponto atual |
+
+### Interpretar a saída de `ls -l`
+```
+-rw-r--r-- 1 user staff 3606 Jan 13 2017 report2018.txt
+```
+| Campo | Significado |
+|-------|-------------|
+| `-rw-r--r--` | Tipo (`-`=ficheiro, `d`=diretório) + permissões |
+| `1` | Número de links |
+| `user staff` | Dono (`user`) e grupo (`staff`) |
+| `3606` | Tamanho em bytes (ou legível com `-h`) |
+| `Jan 13 2017` | Data da última modificação |
+| `report2018.txt` | Nome |
+
+> **Curiosidade:** com `ls -lh`, os **diretórios** aparecem sempre com ~`4.0K` — esse é o tamanho do **link** (lista de ficheiros), não do conteúdo total. Para o tamanho real do conteúdo, usa `du -h`.
+
+### Recursão
+"Algo definido em termos de si mesmo". Em Bash, `ls -R` = "faz `ls` aqui **e repete** em cada subdiretório". É essencial em comandos de modificação (ex.: `cp -r`, `rm -r`).
+
+| `/home/user/Downloads` | **Absoluto** | Começa por `/` |
+|---|---|---|
+| `../Reports` | **Relativo** | Não começa por `/` (usa `..`) |
+| `/var` | **Absoluto** | Começa por `/` |
+| `docs` | **Relativo** | Não começa por `/` |
+| `/` | **Absoluto** | É a própria raiz |
+
+> **Regra simples:** começa por `/` → absoluto; caso contrário → relativo.
+
+### Guiado 2 (L1) — Prever a saída de `ls -a`
+
+**Enunciado:** *Dada a árvore* (mostrada abaixo, com `/etc/udev` contendo `rules.d/` e `udev.conf`) *, um utilizador corre `cd /etc/udev` seguido de `ls -a`. Qual a saída?*
+
+**Solução:**
+O `ls -a` revela os dois caminhos especiais (`.` e `..`) além do conteúdo real:
+```
+.   ..   rules.d   udev.conf
+```
+
+### Guiado 3 (L1) — Comando `cd` mais curto
+
+**Enunciado:** *Indique o comando mais curto para cada cenário.*
+
+**Solução:**
+
+| Local atual | Destino | Comando | Tipo de caminho |
+|-------------|---------|---------|-----------------|
+| `/` | `home/lost+found` | `cd home/lost+found` | Relativo (exemplo dado) |
+| `/` | `/etc/network` | `cd etc/network` | Relativo (mais curto que o absoluto) |
+| `/home/user/Documents/` | `/etc/` | `cd /etc` | Absoluto (não há relativo mais curto) |
+| `/etc/systemd/system/` | `/home/user/` | `cd /home/user` | Absoluto (mais curto que subir 3 níveis) |
+
+### Guiado 4 (L1) — Prever o `pwd` final
+
+**Enunciado:** *Sequência:*
+```
+$ pwd           → /etc/udev/rules.d
+$ cd ../../systemd/user
+$ cd ..
+$ pwd           → ?
+```
+
+**Solução passo a passo:**
+1. Partida: `/etc/udev/rules.d`.
+2. `cd ../../systemd/user`:
+   - `..` → `/etc/udev`
+   - `..` → `/etc`
+   - entra em `systemd/user` → `/etc/systemd/user`.
+3. `cd ..` → `/etc/systemd`.
+4. `pwd` → **`/etc/systemd`**.
+
+### Guiado 5 (L2) — Navegação com `~` (com árvore)
+
+**Enunciado:** *Dada a árvore (com `/etc`, `/home/user/Documents`, `/home/michael/Music`, …), indique o comando mais curto:*
+
+**Solução:**
+
+| Cenário | Comando | Nota |
+|---------|---------|------|
+| Ir para `/etc/network` a partir de **qualquer** local | `cd /etc/network` | Absoluto (único que funciona sempre) |
+| `user` ir para o seu `Documents` a partir de `/etc/udev` | `cd ~/Documents` | Caminho relativo-a-home |
+| `user` ir para a `Music` do `michael` a partir de qualquer local | `cd ~michael/Music` | Home de outro utilizador (requer permissão) |
+
+### Guiado 6 (L2) — Interpretar `ls -lrS` e `ls -ad */`
+
+**Enunciado:** *Dada uma listagem de diretórios e imagens (com tamanhos), responda:*
+
+**Solução:**
+
+1. **`ls -lrS` — que ficheiro aparece no início?**
+   - `-S` ordena por tamanho (maior → menor); `-r` inverte (menor → maior primeiro).
+   - Os diretórios têm **4.0K** (menor tamanho da lista); entre iguais, `ls` ordena **alfabeticamente** por defeito.
+   - Resposta: **`scary.jpg`** (46K) — é o primeiro **ficheiro** (não diretório) por ordem, porque os diretórios de 4K vêm primeiro alfabeticamente, mas entre os ficheiros pequenos, `scary.jpg` é o que surge primeiro.
+
+2. **`ls -ad */` — o que mostra?**
+   - `-d` lista o diretório em si (não o conteúdo); `*/` filtra só o que termina em `/` (subdiretórios).
+   - Saída: **todos os subdiretórios**, incluindo os ocultos (devido ao `-a`).
+
+---
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+> Exercícios da autoria do agente para praticares **diretamente no terminal**. Consolidam o tópico 2.3.
+> *Dica:* precisas de uma sessão Bash. As soluções estão em `<details>`.
+
+### Exploratório 1 — Onde estás? Confirma com 3 fontes
+O prompt mostra a localização, mas nem sempre é fiável. Mostra o teu diretório atual de **três formas**: pelo comando próprio, pela variável de ambiente correspondente e pela saída do `pwd` com caminho **físico** (se houver symlinks).
+
+
+
+<SolutionBlock>
+```bash
+# 1. Comando clássico
+pwd
+
+# 2. Variável de ambiente do shell (PWD é atualizada pelo cd)
+echo $PWD
+
+# 3. pwd com caminho físico (resolve symlinks)
+pwd -P
+
+# E o diretório anterior (para voltar com cd -)
+echo $OLDPWD
+cd -                # salta entre o atual e o anterior
+```
+
+**O que aprendeste:**
+- `PWD` é uma variável de ambiente mantida pelo Bash — sempre atualizada pelo `cd`.
+- `pwd -P` mostra o caminho **físico** (útil quando se está dentro de um symlink); `pwd -L` (por defeito) mostra o caminho **lógico**.
+- `cd -` é um atalho prático para alternar entre dois diretórios.
+</SolutionBlock>
+
+
+
+### Exploratório 2 — Excursão por caminhos relativos
+Partindo do teu **home** (`cd ~`), faz esta sequência **sem usar caminhos absolutos**, prevendo o `pwd` após cada passo:
+
+```bash
+cd ~
+mkdir -p projetos/web/src projetos/web/img       # cria árvore
+cd projetos/web/src
+cd ../img
+cd ../../..
+```
+Confirma no fim que voltaste ao home.
+
+
+
+<SolutionBlock>
+```bash
+cd ~
+mkdir -p projetos/web/src projetos/web/img
+
+cd projetos/web/src
+pwd                # /home/USER/projetos/web/src
+
+cd ../img          # sobe a 'web', entra em 'img'
+pwd                # /home/USER/projetos/web/img
+
+cd ../../..        # sobe 3 níveis: img -> web -> projetos -> home
+pwd                # /home/USER  (= ~)
+```
+
+**O que aprendeste:** `..` é **combinável** — `../../..` sobe três níveis de uma só vez. Muito mais curto que escrever o caminho absoluto. Ligar ao Guiado 4 do manual.
+</SolutionBlock>
+
+
+
+### Exploratório 3 — Explorar todas as faces do `ls`
+Cria um diretório de testes `~/lab-t07` com ficheiros e subdiretórios (incluindo um **oculto**). Depois executa as **5 variantes** de `ls` e observa as diferenças.
+
+
+
+<SolutionBlock>
+```bash
+# Preparar cenário
+mkdir -p ~/lab-t07/sub
+cd ~/lab-t07
+touch ficheiro.txt imagem.jpg .secreto
+echo "olá" > sub/notas.md
+
+# 1. ls simples — só visíveis, sem detalhe
+ls
+
+# 2. ls -a — revela . .. e o .secreto
+ls -a
+
+# 3. ls -l — lista longa com permissões/dono/data
+ls -l
+
+# 4. ls -lh — tamanhos legíveis (K, M)
+ls -lh
+
+# 5. ls -laR — tudo + ocultos + recursivo (vê dentro de sub/)
+ls -laR
+
+# 6. Ordenações úteis
+ls -lt                 # por data de modificação (recente primeiro)
+ls -lS                 # por tamanho (maior primeiro)
+ls -lX                 # por extensão (.jpg antes de .txt antes de .md)
+
+# Limpeza
+cd ~ && rm -rf ~/lab-t07
+```
+
+**O que aprendeste:** cada opção responde a uma pergunta diferente:
+- `-a` → "há ficheiros ocultos?"
+- `-l` → "quem é o dono / tamanho / data?"
+- `-h` → "qual o tamanho legível?"
+- `-R` → "o que há dentro dos subdiretórios?"
+- `-t` / `-S` / `-X` → "ordena por data/tamanho/extensão".
+</SolutionBlock>
+
+
+
+### Exploratório 4 — Tamanho real de um diretório (`du`)
+O manual avisa que `ls -lh` mostra `4.0K` para qualquer diretório (é o tamanho do link, não do conteúdo). Usa o **`du -h`** para ver o tamanho **real** de um diretório e dos seus subdiretórios.
+
+
+
+<SolutionBlock>
+```bash
+# Tamanho total do teu home, legível
+du -sh ~                    # ex.: 1.2G  /home/user
+
+# Tamanho de cada subdiretório do home (1º nível)
+du -sh ~/* 2>/dev/null
+
+# Os 5 maiores subdiretórios do home
+du -sh ~/* 2>/dev/null | sort -hr | head -5
+```
+
+**O que aprendeste:**
+- `du -s` (summary) dá **só o total**; sem `-s` mostra **cada** subdiretório recursivamente.
+- `du -h` = "human readable" (K, M, G), tal como `ls -h`.
+- Comparação com `ls -lh`: o `ls` mentia sobre o tamanho dos diretórios; o `du` diz a verdade (soma o conteúdo todo).
+</SolutionBlock>
+
+
+
+### Exploratório 5 — Ficheiros ocultos e configuração do teu shell
+Os ficheiros ocultos do home costumam ser **configurações**. Lista todos os ficheiros ocultos do teu home, identifica qual configura o Bash e mostra as **5 primeiras linhas** desse ficheiro.
+
+
+
+<SolutionBlock>
+```bash
+# Listar só ficheiros ocultos (começados por .) no home
+ls -la ~ | grep '^\.'           # uma abordagem
+ls -lad ~/.*                    # outra abordagem (glob .*)
+
+# Os típicos do Bash:
+ls -la ~/.bashrc ~/.bash_profile ~/.bash_logout ~/.bash_history 2>/dev/null
+
+# Ver as primeiras linhas do .bashrc
+head -n 5 ~/.bashrc
+
+# Onde está definido o teu alias 'll' (se existir)?
+grep -n 'alias ll' ~/.bashrc /etc/bash.bashrc 2>/dev/null
+```
+
+**O que aprendeste:**
+- **`.bashrc`** é o ficheiro de configuração do Bash para shells interativos não-login — é onde se definem **aliases** (como `ll` ≡ `ls -l`) e prompt.
+- `.bash_profile` corre em shells de **login**; `.bash_history` guarda o histórico de comandos; `.bash_logout` corre ao sair.
+- Estes ficheiros só aparecem com `ls -a` (ou `ls -la`) — o ponto inicial torna-os ocultos. Ligar ao Exploratório 3 do manual (sobre o alias `ll`).
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T06 - Usando a linha de comando para conseguir ajuda]()
+→ Próximo: [T08 - Criando, Movendo e Deletando Arquivos]()

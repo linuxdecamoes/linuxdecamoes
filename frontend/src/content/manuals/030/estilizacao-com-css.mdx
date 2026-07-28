@@ -1,0 +1,276 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T10 — Estilização com CSS"
+  code="030"
+  topicNumber="T10"
+  objective="033.3"
+  weight={2}
+  pages="LPI Web Development Essentials (030) - Version 1.0"
+  accent="amber"
+/>
+
+
+
+## Resumo Conciso
+
+### Cores
+
+#### Palavras-chave de cor
+
+Nomes simples como `black`, `white`, `red`, `purple`, `green`, `yellow`, `blue`:
+
+```css
+* { color: purple; }
+```
+
+#### Valores numéricos de cor
+
+| Formato | Sintaxe | Exemplo (vermelho) |
+|---------|---------|---------------------|
+| RGB | `rgb(R, G, B)` | `rgb(255,0,0)` |
+| RGB % | `rgb(R%, G%, B%)` | `rgb(100%,0%,0%)` |
+| Hexadecimal | `#RRGGBB` | `#FF0000` |
+| Hex abreviado | `#RGB` | `#F00` |
+
+**Tabela de cores comuns:**
+
+| Palavra-chave | RGB | Hex |
+|---------------|-----|-----|
+| black | `rgb(0,0,0)` | `#000000` |
+| white | `rgb(255,255,255)` | `#FFFFFF` |
+| red | `rgb(255,0,0)` | `#FF0000` |
+| purple | `rgb(128,0,128)` | `#800080` |
+| green | `rgb(0,128,0)` | `#008000` |
+| yellow | `rgb(255,255,0)` | `#FFFF00` |
+| blue | `rgb(0,0,255)` | `#0000FF` |
+
+**Dica:** Se os dígitos de cada componente hexadecimal se repetirem (ex: `#FF0000`), pode abreviar para um dígito por componente (`#F00`).
+
+#### Opacidade da cor
+
+A opacidade é um quarto componente que varia de 0 (totalmente transparente) a 1 (totalmente opaca):
+
+| Notação | Exemplo | Descrição |
+|---------|---------|-----------|
+| RGBA | `rgba(255,0,0,0.5)` | Vermelho 50% transparente |
+| Hexadecimal | `#FF000080` | Vermelho 50% transparente (hex) |
+
+### Plano de Fundo
+
+| Propriedade | Descrição | Valores |
+|------------|-----------|---------|
+| `background-color` | Cor de fundo | Palavras-chave, RGB, hex |
+| `background-image` | Imagem de fundo | `url("imagem.jpg")` |
+| `background-repeat` | Repetição da imagem | `repeat`, `no-repeat`, `repeat-x`, `repeat-y` |
+| `background-position` | Posição da imagem | `top`, `bottom`, `left`, `right`, `center`, `%` |
+
+**Exemplo comum:**
+
+```css
+body {
+  background-image: url("background.jpg");
+  background-repeat: no-repeat;
+  background-position: 30% 10%;
+}
+```
+
+**Propriedade abreviada (shorthand):**
+
+```css
+body {
+  background: no-repeat url("background.jpg");
+}
+```
+
+### Bordas
+
+A propriedade `border` tem três componentes:
+
+| Propriedade | Descrição | Valores |
+|------------|-----------|---------|
+| `border-color` | Cor da borda | Mesmos valores de cor |
+| `border-style` | Estilo da borda | `dotted`, `dashed`, `double`, `groove`, `ridge`, `inset`, `outset` |
+| `border-width` | Espessura da borda | `thin`, `medium`, `thick` ou valor numérico |
+
+### Unidades de Medida
+
+#### Unidades Absolutas
+
+| Unidade | Descrição | Equivalência |
+|---------|-----------|-------------|
+| `px` | Pixel | 1/96 de polegada |
+| `pt` | Ponto | 1/72 de polegada |
+| `in` | Polegada | 2,54 cm = 96 px |
+| `cm` | Centímetro | 96 px / 2,54 |
+| `mm` | Milímetro | 1 cm / 10 |
+
+#### Unidades Relativas
+
+| Unidade | Descrição |
+|---------|-----------|
+| `%` | Relativa ao elemento pai |
+| `em` | Tamanho da fonte do elemento atual |
+| `rem` | Tamanho da fonte do elemento raiz (`<html>`) |
+| `vw` | 1% da largura da janela de visualização |
+| `vh` | 1% da altura da janela de visualização |
+
+**Vantagem das unidades relativas:** Permitem criar layouts ajustáveis alterando apenas uma medida base. Por exemplo, definir `font-size` no `body` em `pt` e usar `rem` nos outros elementos permite ajustar todos os tamanhos alterando apenas um valor.
+
+### Propriedades de Fonte e Texto
+
+| Propriedade | Descrição | Valores |
+|------------|-----------|---------|
+| `font-family` | Nome da fonte | `"Nome", genérico` |
+| `font-size` | Tamanho da fonte | `xx-small` a `xxx-large`, `smaller`, `larger`, valores numéricos, `%` |
+| `font-weight` | Espessura da fonte | `normal`, `bold`, `lighter`, `bolder` |
+| `font-style` | Estilo da fonte | `normal`, `italic`, `oblique` |
+| `line-height` | Distância entre linhas | Valor numérico (1 = altura da fonte) |
+| `text-decoration` | Decoração do texto | `none`, `underline`, `line-through` |
+| `list-style-type` | Estilo dos marcadores | `circle`, `square`, `none` |
+
+**Famílias de fontes genéricas:**
+- `serif` — Padrão da maioria dos navegadores
+- `sans-serif` — Sem serifa
+- `monospace` — Largura fixa
+
+**Exemplo com fallback:**
+
+```css
+* {
+  font-family: "DejaVu Sans", sans-serif;
+}
+```
+
+O navegador procura as fontes pela ordem especificada e usa a genérica como substituto.
+
+## 🧭 Exercícios Guiados (resolvidos)
+
+### Exercício Guiado 1 — Semitransparência com RGBA
+
+**Enunciado:** Como adicionar uma semitransparência à cor azul (`rgb(0,0,255)`) para usá-la na propriedade CSS `color`?
+
+**Solução passo a passo:**
+
+1. Usar o prefixo `rgba` em vez de `rgb`
+2. Adicionar um quarto valor (canal alpha) entre 0 e 1
+3. **Resposta:** `rgba(0,0,255,0.5)` — azul com 50% de transparência
+
+### Exercício Guiado 2 — Cor hexadecimal abreviada
+
+**Enunciado:** Que cor corresponde ao valor hexadecimal `#000`?
+
+**Solução passo a passo:**
+
+1. `#000` é a abreviatura de `#000000`
+2. Todos os componentes (R, G, B) estão a zero
+3. **Resposta:** A cor `black` (preto)
+
+### Exercício Guiado 3 — Fallback de fonte
+
+**Enunciado:** Dado que Times New Roman é uma fonte serif e que não está disponível em todos os dispositivos, como seria possível escrever uma regra CSS para solicitar o uso de Times New Roman, tendo a família de fontes genérica serif como substituto?
+
+**Solução passo a passo:**
+
+1. Especificar primeiro o nome da fonte desejada entre aspas
+2. Seguir com a família genérica como alternativa
+3. **Resposta:**
+
+```css
+* {
+  font-family: "Times New Roman", serif;
+}
+```
+
+### Exercício Guiado 4 — Tamanho relativo de fonte
+
+**Enunciado:** Como usar uma palavra-chave de tamanho relativo para definir uma fonte menor para o elemento `<p class="disclaimer">` em relação ao seu elemento pai?
+
+**Solução passo a passo:**
+
+1. Usar a palavra-chave `smaller` na propriedade `font-size`
+2. Esta palavra-chave reduz o tamanho em relação ao elemento pai
+3. **Resposta:**
+
+```css
+p.disclaimer {
+  font-size: smaller;
+}
+```
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+1. **Enunciado:** Reescreva a regra CSS seguinte como uma única propriedade abreviada `background`:
+
+   ```css
+   body {
+     background-image: url("background.jpg");
+     background-repeat: repeat-x;
+   }
+   ```
+
+   
+
+<SolutionBlock>
+```css
+   body {
+     background: repeat-x url("background.jpg");
+   }
+   ```
+
+   Explicação: A propriedade abreviada `background` permite combinar `background-image` e `background-repeat` (e outras propriedades background-*) numa só declaração.
+</SolutionBlock>
+
+
+
+2. **Enunciado:** Escreva uma regra de CSS para o elemento `<div id="header">` de maneira a alterar somente a borda inferior para 4px.
+
+   
+
+<SolutionBlock>
+```css
+   #header {
+     border-bottom-width: 4px;
+   }
+   ```
+
+   Explicação: A propriedade `border-bottom-width` permite alterar apenas a largura da borda inferior sem afetar os outros lados.
+</SolutionBlock>
+
+
+
+3. **Enunciado:** Escreva uma propriedade `font-size` que dobre o tamanho da fonte usada no elemento raiz da página.
+
+   
+
+<SolutionBlock>
+```css
+   font-size: 2rem;
+   ```
+
+   Explicação: A unidade `rem` corresponde ao tamanho da fonte usado no elemento raiz (`<html>`). `2rem` equivale a 2× o tamanho da fonte raiz.
+</SolutionBlock>
+
+
+
+4. **Enunciado:** O duplo espaçamento é um recurso comum de formatação nos processadores de texto. Como definir um formato semelhante usando CSS?
+
+   
+
+<SolutionBlock>
+```css
+   line-height: 2em;
+   ```
+
+   Explicação: A unidade `em` corresponde ao tamanho da fonte do elemento atual. Um `line-height` de `2em` cria um espaçamento duplo entre linhas.
+</SolutionBlock>
+
+
+
+## 🔗 Ligações
+
+← Anterior: [T09 — Seletores de CSS e aplicação de estilo]()
+→ Próximo: [T11 — Layout e modelo de caixa CSS]()

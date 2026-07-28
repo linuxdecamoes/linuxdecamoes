@@ -1,0 +1,182 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="023.1 — Segurança de Hardware"
+  code="020"
+  topicNumber="T08"
+  objective="023.1"
+  weight={3}
+  pages="LPI Security Essentials (020) - Version 1.0"
+  accent="coral"
+/>
+
+
+
+## Resumo Conciso
+
+A segurança de hardware é fundamental para a proteção geral dos sistemas de computação, pois vulnerabilidades a nível físico podem contornar defesas baseadas em software.
+
+### Principais Componentes de um Computador
+
+| Componente | Função | Ameaça Principal | Mitigação |
+|---|---|---|---|
+| **CPU** | Executar instruções e cálculos | Ataques de canal lateral | Patches de hardware, atualização de firmware |
+| **RAM** | Armazenamento temporário de dados | Cold boot attacks (inicialização a frio) | Criptografia de memória, limpeza de RAM ao desligar |
+| **Dispositivos de armazenamento** | Retenção permanente de dados | Roubo/extração de dados | Criptografia de disco, apagamento seguro |
+| **Adaptadores de rede** | Conectividade em rede | Man-in-the-middle, packet sniffing | Criptografia, firewalls |
+
+### Dispositivos Inteligentes e IoT
+
+- **Dispositivos pessoais**: smartphones, tablets, smart TVs — alvos principais para ciberataques
+- **Dispositivos IoT domésticos**: termostatos, lâmpadas, câmeras — frequentemente *plug and play* com credenciais padrão
+- **Roteadores**: gateways entre IoT e internet — precisam de palavras-passe fortes, criptografia e segmentação de rede
+
+### Acesso Físico
+
+| Risco | Descrição |
+|---|---|
+| Adulteração de hardware | Substituição/modificação de discos, instalação de keyloggers |
+| Extração de dados | Cópia da mídia de armazenamento para desencriptação posterior |
+| Boot a partir de mídias externas | Contorno do SO via pendrive/CD — mitigar com proteção BIOS/UEFI e senha GRUB |
+
+### Tecnologias de Conectividade
+
+| Tecnologia | Tipos / Versões | Principais Ameaças |
+|---|---|---|
+| **USB** | USB-A, USB-B, USB-C; USB 2.0, 3.0, 3.1 | Dispositivos maliciosos, exfiltração de dados |
+| **Bluetooth** | Classic, Low Energy (BLE) | Bluejacking, bluesnarfing, falsificação de dispositivo |
+| **RFID** | Passivo, ativo, semi-passivo | Interceptação, clonagem, skimming |
+
+### Computação Confiável
+
+- **Trusted Platform Module (TPM)**: componente de hardware para segurança a nível de sistema
+- **Secure Boot**: garante que o sistema inicia apenas software verificado e confiável
+- **Atestado remoto**: permite que um dispositivo prove a uma parte remota que está num estado confiável
+- **Criptografia de dados**: TPM gere chaves de criptografia sem que saiam do ambiente de hardware seguro
+
+## Exercícios Guiados
+
+### Exercício Guiado 1: Vulnerabilidades dos Componentes de Hardware
+
+**Enunciado:** Explique as potenciais vulnerabilidades de segurança do processador, memória (RAM), dispositivos de armazenamento e adaptadores de rede. Para cada componente, forneça um exemplo real de uma ameaça de segurança e sugira uma estratégia ou solução para mitigar o risco.
+
+**Solução:**
+- **Processadores**: Vulneráveis a ataques de canal lateral, onde um invasor extrai dados sensíveis analisando o comportamento da CPU. Mitigação: aplicar patches de hardware e atualizar o firmware do sistema.
+- **RAM**: Enfrenta riscos como cold boot attacks, onde os dados são recuperados após o desligamento. Mitigação: usar criptografia de memória e limpar a RAM ao desligar.
+- **Dispositivos de armazenamento**: Suscetíveis a roubo de dados, especialmente sem criptografia. Mitigação: criptografia de disco completo e práticas de apagamento seguro.
+- **Adaptadores de rede**: Podem ser explorados em ataques man-in-the-middle ou packet sniffing. Mitigação: criptografar comunicações e habilitar firewalls.
+
+### Exercício Guiado 2: Riscos de Segurança em Dispositivos IoT
+
+**Enunciado:** Descreva três riscos de segurança comuns associados a dispositivos IoT. Além disso, explique duas melhores práticas para mitigar esses riscos. Por fim, discuta como a Computação Confiável e o TPM podem aumentar a segurança de dispositivos IoT.
+
+**Solução:**
+- **Três riscos**: (1) Acesso não autorizado devido à preservação de credenciais padrão; (2) Ataques de botnets que utilizam dispositivos comprometidos em ataques DDoS; (3) Violações de privacidade causadas por transmissões de dados inseguras.
+- **Duas melhores práticas**: Alterar nomes de utilizador e palavras-passe padrão; atualizar regularmente o firmware para corrigir vulnerabilidades.
+- **Computação Confiável/TPM**: Garante que dispositivos IoT iniciem apenas software confiável, armazena chaves criptográficas com segurança e permite o atestado remoto seguro.
+
+### Exercício Guiado 3: Inicialização Segura em Diferentes Sistemas Operacionais
+
+**Enunciado:** Pesquise como diferentes sistemas operacionais, como Windows, Linux e macOS, implementam mecanismos de inicialização segura.
+
+**Solução:**
+- **Windows**: Utiliza o Secure Boot com UEFI e TPM para garantir que apenas software confiável seja carregado. Protege contra carregadores de inicialização não autorizados e rootkits.
+- **Linux** (ex. Ubuntu): Oferece suporte ao Secure Boot usando UEFI. Os utilizadores podem precisar de configurar manualmente as definições de Secure Boot para compatibilidade com drivers ou kernels personalizados.
+- **macOS**: Utiliza Secure Boot integrado ao chip de segurança T2 da Apple, garantindo que apenas software assinado pela Apple seja carregado.
+
+### Exercício Guiado 4: Botnet Mirai
+
+**Enunciado:** Pesquise um exemplo real de ataque de botnet em dispositivos IoT, como o botnet Mirai.
+
+**Solução:**
+O botnet Mirai comprometeu milhares de dispositivos IoT (câmeras, roteadores) explorando palavras-passe fracas ou padrão. O Mirai escaneou a internet em busca de dispositivos vulneráveis, infectou-os e formou um botnet capaz de lançar ataques DDoS em grande escala. O botnet interrompeu sites e serviços importantes, incluindo a Dyn (provedor de DNS), afetando plataformas como Twitter, Netflix e Reddit.
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1: Credenciais Padrão em Dispositivos IoT
+
+**Enunciado:** Pesquise como os dispositivos IoT domésticos (roteadores, câmeras, assistentes virtuais) entregues de fábrica são configurados com credenciais padrão. Verifique se o seu próprio roteador utiliza a senha padrão de fábrica e, em caso afirmativo, altere-a imediatamente.
+
+
+
+<SolutionBlock>
+Muitos dispositivos IoT são entregues com nomes de utilizador e palavras-passe padrão (ex.: admin/admin, admin/12345). Estas credenciais são amplamente conhecidas e tornam o dispositivo extremamente vulnerável a ataques.
+
+**Passos recomendados:**
+1. Aceder à interface de administração do roteador (geralmente via 192.168.1.1 ou 192.168.0.1 no navegador)
+2. Iniciar sessão com as credenciais de fábrica (consulte o manual ou o adesivo no dispositivo)
+3. Alterar imediatamente a palavra-passe de administração para uma combinação complexa de letras, números e símbolos
+4. Desativar o acesso remoto à interface de administração, caso não seja necessário
+5. Atualizar o firmware do dispositivo para a versão mais recente
+
+**Outros dispositivos IoT para verificar:** câmeras IP, chaves inteligentes, impressoras de rede, assistentes virtuais (Alexa, Google Home). Todos devem ter as credenciais padrão alteradas na primeira configuração.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2: Ameaças Físicas ao Hardware
+
+**Enunciado:** Pesquise e descreva três ameaças físicas distintas ao hardware de um computador: Secure Boot (como ataque), keylogger de hardware e cold boot attack. Para cada uma, explique o mecanismo de ataque e a respetiva mitigação.
+
+
+
+<SolutionBlock>
+**1. Secure Boot desativado (ataque de boot kit):**
+O Secure Boot garante que apenas software assinado é carregado durante o arranque. Se um invasor consegue desativar o Secure Boot na BIOS/UEFI (por exemplo, com acesso físico e sabendo a senha do firmware), pode instalar um bootkit que se carrega antes do sistema operacional, ficando invisível para antivírus e firewalls.
+*Mitigação:* Configurar senha na BIOS/UEFI, manter Secure Boot ativado e monitorar alterações no firmware.
+
+**2. Keylogger de hardware:**
+Um keylogger de hardware é um pequeno dispositivo fisicamente intercalado entre o teclado e a porta USB do computador. Regista todas as teclas premidas, incluindo palavras-passe e dados sensíveis, sem necessitar de software instalado. É quase indetectável por software antivírus.
+*Mitigação:* Inspecionar fisicamente as ligações USB antes de usar, preferir teclados com encriptação embutida e usar autenticação multifator.
+
+**3. Cold boot attack (ataque de inicialização a frio):**
+Após o desligamento do computador, os dados na RAM podem permanecer na memória durante vários segundos (ou minutos com refrigeração com ar comprimido). Um invasor com acesso físico pode desligar o PC, refrigerar os módulos de RAM e inseri-los noutro computador para extrair dados sensíveis como chaves de criptografia e senhas em texto simples.
+*Mitigação:* Criptografia de memória (full memory encryption), desligar o PC corretamente (não apenas reiniciar) e usar ferramentas de limpeza de RAM antes do desligamento.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3: Comparação de Tecnologias USB
+
+**Enunciado:** Compare os diferentes tipos de conectores USB (USB-A, USB-B, USB-C) e versões do protocolo USB, discutindo as implicações de segurança de cada um.
+
+
+
+<SolutionBlock>
+| Tipo | Uso Comum | Velocidade | Implicação de Segurança |
+|---|---|---|---|
+| USB-A | Periféricos (teclados, mouses, armazenamento) | Variável conforme versão | Formato mais comum, maior superfície de ataque |
+| USB-B | Dispositivos maiores (impressoras, discos externos) | Variável | Menos exposto por ser menos portátil |
+| USB-C | Padrão mais recente, reversível | Até USB 3.1+ | Velocidades maiores = transferência mais rápida de dados maliciosos |
+
+Versões: USB 2.0, 3.0 e 3.1 variam em velocidade de transferência. Transferências mais rápidas beneficiam o desempenho, mas também significam que dados maliciosos podem ser transferidos mais rapidamente.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4: Ataques Bluetooth
+
+**Enunciado:** Explique a diferença entre bluejacking e bluesnarfing, e descreva medidas de proteção contra ambos.
+
+
+
+<SolutionBlock>
+- **Bluejacking**: Envio de mensagens ou arquivos indesejados para um dispositivo com bluetooth ativado ao alcance. Pode levar a ataques de phishing ou disseminação de links maliciosos.
+- **Bluesnarfing**: Acesso não autorizado aos dados de um dispositivo (contatos, mensagens, informações sensíveis) sem o consentimento do utilizador. Mais grave que o bluejacking.
+
+**Medidas de proteção**:
+1. Desativar o Bluetooth quando não estiver em uso
+2. Monitorar a atividade de bluetooth em dispositivos corporativos
+3. Restringir o uso de bluetooth em ambientes seguros
+4. Educar os funcionários sobre proteção de dispositivos pessoais em espaços públicos
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T07 - 022.4 Criptografia de Armazenamento]()
+→ Próximo: [T09 - 023.2 Segurança de Aplicativos]()

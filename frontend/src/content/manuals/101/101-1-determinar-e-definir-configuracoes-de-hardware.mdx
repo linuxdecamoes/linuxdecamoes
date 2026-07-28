@@ -1,0 +1,155 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="101.1 Determinar e definir configurações de hardware"
+  code="101"
+  topicNumber="T01"
+  objective="Determinar e definir configurações de hardware de um sistema Linux"
+  weight={2}
+  pages="LPIC-1 (101) - Version 5.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### BIOS vs UEFI
+
+| Característica | BIOS                                              | UEFI                                  |
+| -------------- | ------------------------------------------------- | ------------------------------------- |
+| Firmware       | Basic Input/Output System                         | Unified Extensible Firmware Interface |
+| Armazenamento  | Chip de memória não volátil na placa-mãe          | Chip de memória não volátil (NVRAM)   |
+| Inicialização  | MBR (primeiros 440 bytes do primeiro dispositivo) | Aplicativos EFI em partição ESP       |
+| Configuração   | Utilitário de configuração (tecla Del, F2, F12)   | Menu de inicialização + NVRAM         |
+
+### Ativação do dispositivo
+
+- Tecla de acesso ao utilitário de configuração: **Del**, **F2** ou **F12** (varia por fabricante)
+- Permite ativar/desativar periféricos integrados
+- Configurar IRQ (solicitação de interrupção) e DMA (acesso direto à memória)
+- Definir ordem de dispositivos de inicialização
+
+### Comandos para inspeção de hardware
+
+| Comando | Função | Opções importantes |
+|---|---|---|
+| `lspci` | Lista dispositivos conectados ao barramento PCI | `-s <endereço>` (dispositivo específico), `-v` (detalhes), `-k` (módulos) |
+| `lsusb` | Lista dispositivos USB conectados | `-v` (detalhes), `-d <ID>` (dispositivo específico), `-t` (árvore hierárquica), `-s <Bus>:<Dev>` |
+| `lsmod` | Lista módulos do kernel carregados | — |
+| `modprobe` | Carrega/descarrega módulos do kernel | `-r` (descarregar módulo e dependências) |
+| `modinfo` | Exibe informações sobre um módulo | `-p` (parâmetros disponíveis) |
+
+### Módulos do kernel
+
+- Componentes de software que controlam dispositivos de hardware (drivers)
+- Podem fazer parte do kernel oficial ou ser adicionados separadamente
+- Pacote **kmod**: conjunto de ferramentas para gerenciar módulos (inserir, remover, listar, verificar propriedades, resolver dependências e aliases)
+- Saída do `lsmod`: Module (nome), Size (RAM em bytes), Used by (módulos dependentes)
+
+### Arquivos de configuração de módulos
+
+| Caminho | Função |
+|---|---|
+| `/etc/modprobe.conf` | Configuração principal de módulos |
+| `/etc/modprobe.d/<module_name>.conf` | Configuração específica por módulo (recomendado) |
+| `/etc/modprobe.d/blacklist.conf` | Lista de módulos a impedir carregamento automático |
+
+### Pseudosistemas de arquivos
+
+| Arquivo/Diretório | Função |
+|---|---|
+| `/proc/cpuinfo` | Informações detalhadas sobre a(s) CPU(s) |
+| `/proc/interrupts` | Lista de números de interrupções por dispositivo por CPU |
+| `/proc/ioports` | Regiões de portas de E/S registradas e em uso |
+| `/proc/dma` | Canais de DMA registrados em uso |
+| `/sys` | Informações do dispositivo e dados do kernel relacionados ao hardware |
+| `/dev` | Arquivos associados a dispositivos do sistema |
+
+### Dispositivos de armazenamento
+
+| Tipo | Padrão de nome em `/dev` | Exemplo |
+|---|---|---|
+| IDE/SATA/SCSI/SSD/USB | `/dev/sdXpY` | `/dev/sda1`, `/dev/sdb2` |
+| Cartões SD | `/dev/mmcblkXpY` | `/dev/mmcblk0p1` |
+| NVMe | `/dev/nvmeXnYpZ` | `/dev/nvme0n1p1` |
+| CD/DVD (IDE 2º canal) | `/dev/hdc` | — |
+| Disquete | `/dev/fdX` | `/dev/fd0` |
+
+### Hotplug e udev
+
+- **Hotplug**: detecção e configuração de dispositivos enquanto o sistema está em execução (ex: USB)
+- **Coldplug**: detecção de dispositivos já presentes durante a inicialização
+- **udev**: subsistema responsável por criar dispositivos em `/dev` dinamicamente
+- Regras de udev: `/etc/udev/rules.d/`
+- Udev utiliza o **SysFS** (pseudosistema de arquivos montado em `/sys`)
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Servidores legados sem teclado
+
+**Enunciado:** É comum encontrar máquinas legadas em ambientes de produção, por exemplo quando certos equipamentos usam uma conexão desatualizada para se comunicar com o computador controlador, sendo assim necessário estar particularmente atento a algumas peculiaridades dessas máquinas mais antigas. Certos servidores x86 com firmware BIOS mais antigo, por exemplo, não inicializam se um teclado não for detectado. Como esse problema específico pode ser evitado?
+
+
+
+<SolutionBlock>
+O utilitário de configuração da BIOS tem uma opção para desativar o bloqueio do computador quando um teclado não é encontrado.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Ausência do lspci em ARM
+
+**Enunciado:** Os sistemas operacionais criados em torno do kernel do Linux também estão disponíveis para uma ampla variedade de arquiteturas de computadores além do x86, como os computadores de placa única baseados na arquitetura ARM. Um usuário atento notará a ausência do comando `lspci` nessas máquinas, como o Raspberry Pi. Que diferença em relação às máquinas x86 justifica essa ausência?
+
+
+
+<SolutionBlock>
+Ao contrário da maioria das máquinas x86, um computador baseado em ARM, como o Raspberry Pi, não possui um barramento PCI; portanto, o comando `lspci` é inútil.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Nome de disco USB em roteador
+
+**Enunciado:** Muitos roteadores de rede incluem uma porta USB que permite a conexão de um dispositivo externo, como um disco rígido USB. Sabendo que a maioria deles usa um sistema operacional baseado em Linux, qual seria o nome de um disco rígido USB externo no diretório `/dev/`, supondo-se que não haja nenhum outro dispositivo de bloco convencional no roteador?
+
+
+
+<SolutionBlock>
+Os kernels do Linux modernos identificam os discos rígidos USB como dispositivos SATA, de modo que o arquivo correspondente será `/dev/sda`, já que não existe nenhum outro dispositivo de bloco convencional no sistema.
+
+```bash
+# Para verificar dispositivos de bloco disponíveis:
+lsblk
+# ou
+ls /dev/sd*
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Verificar vulnerabilidade Meltdown
+
+**Enunciado:** Em 2018, a vulnerabilidade de hardware conhecida como Meltdown foi descoberta. Ela afeta quase todos os processadores de diferentes arquiteturas. As versões mais recentes do kernel Linux podem informar se o sistema atual está vulnerável. Como obter essas informações?
+
+
+
+<SolutionBlock>
+O arquivo `/proc/cpuinfo` tem uma linha que mostra os bugs conhecidos para a CPU correspondente, como por exemplo `bugs: cpu_meltdown`.
+
+```bash
+# Para verificar vulnerabilidades da CPU:
+grep -i bugs /proc/cpuinfo
+```
+</SolutionBlock>
+
+
+
+---
+
+← Anterior: [101 - Visão Geral]()
+→ Seguinte: [T02 - 101.2 Inicialização do sistema]()

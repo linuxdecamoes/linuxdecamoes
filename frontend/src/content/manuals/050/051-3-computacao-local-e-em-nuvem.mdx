@@ -1,0 +1,183 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T03 — 051.3 Computação local e em nuvem"
+  code="050"
+  topicNumber="T03"
+  objective="051.3"
+  weight={1}
+  pages="LPI Open Source Essentials (050) - Version 1.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Computação no local vs. em nuvem
+
+| Conceito | Descrição |
+|---|---|
+| Data center local (on-premise) | Sala separada para armazenar os servidores da organização, geralmente trancada e climatizada |
+| Hospedagem remota | Modelo em que a organização licencia servidores numa empresa externa que os configura e mantém |
+| Computação em nuvem | Nenhum computador físico é dedicado a uma única organização; o provedor mantém diversos sistemas para vários clientes usando máquinas virtuais |
+| Hipervisor | Sistema operacional que suporta múltiplas máquinas virtuais num computador físico |
+
+### Modelos de operação em nuvem
+
+| Modelo | Descrição |
+|---|---|
+| Nuvem pública | Provedor oferece poder computacional a múltiplos clientes (ex.: AWS, Google Cloud, Azure) |
+| Nuvem privada | Grande organização administra seu próprio data center local como nuvem, atendendo aos seus próprios departamentos |
+| Nuvem híbrida | Combinação de data center local com serviços de nuvem pública |
+
+### Tipos de serviços em nuvem
+
+| Serviço | Sigla | Descrição | Responsabilidade do cliente |
+|---|---|---|---|
+| Infraestrutura como serviço | IaaS | Fornece hardware e software que suportam máquinas virtuais | Carregar SO e aplicações |
+| Plataforma como serviço | PaaS | Programador não se preocupa com SO nem bibliotecas | Carregar apenas as funções |
+| Software como serviço | SaaS | Aplicativo executado em sistema em nuvem | Apenas usar o aplicativo (ex.: redes sociais, lojas online) |
+| Banco de dados como serviço | DaaS | Instância de servidor de base de dados na nuvem | Ler e gravar como se estivesse local |
+
+### Modelos de custo
+
+| Aspeto | Computação local | Computação em nuvem |
+|---|---|---|
+| Hardware | Custo fixo de aquisição | Sem custo de compra |
+| Energia e manutenção | Custo recorrente | Incluído no serviço |
+| Escalabilidade | Limitada pelo hardware disponível | Instantânea (ativar/remover servidores em segundos) |
+| Cobrança | Fixa | Pago pelo uso (CPU, tempo, dados armazenados) |
+
+### Vantagens da nuvem
+
+| Vantagem | Descrição |
+|---|---|
+| Flexibilidade | Ativar novos servidores a qualquer momento e eliminar quando não necessário |
+| Custos potencialmente menores | Servidor físico compartilhado entre vários clientes; economias de escala |
+| Eficiência | Computadores aproveitados de forma mais eficiente |
+| Gestão automática | Sistemas podem ser gerenciados via API |
+| Atualização contínua | Possibilidade de atualizações rápidas ao desligar/iniciar máquinas virtuais |
+| Zonas de disponibilidade | Execução em múltiplas zonas para proteção contra falhas |
+
+### Riscos da nuvem
+
+| Risco | Descrição |
+|---|---|
+| Custo inesperado | Difícil controlar uso ao ativar servidores rapidamente; faturas elevadas |
+| Vendor lock-in | Difícil transferir dados de um provedor para outro |
+| Segurança | Provedores são alvos óbvios; hipervisor introduz novo perigo potencial |
+| Propriedade dos dados | Dados na nuvem teoricamente mais vulneráveis; criptografia recomendada |
+| Disponibilidade | Data centers na nuvem também podem falhar |
+| Bugs em serviços | Dependência de bugs no software do provedor |
+| Pegada de carbono | Rede de comunicação consome muita eletricidade |
+| Latência de rede | Desempenho afetado se conexão for pouco confiável ou lenta |
+| Conformidade regulamentar | RGPD (Europa), PIPL (China) exigem dados em regiões específicas |
+
+### Regiões e zonas
+
+| Conceito | Descrição |
+|---|---|
+| Região | Área geográfica onde o provedor opera data centers (ex.: oeste dos EUA, Europa) |
+| Zona de disponibilidade | Subdivisão de uma região; execução em várias zonas protege contra falhas |
+
+### Código aberto e nuvem
+
+A computação em nuvem está fortemente associada ao código aberto porque:
+- Sistemas operacionais de código aberto são gratuitos e evitam complicações de licenciamento
+- Máquinas virtuais executam facilmente SO de código aberto (Linux)
+- O início da nuvem remonta ao lançamento do Amazon Web Services (AWS) em 2006
+
+## Exercícios Guiados
+
+### Exercício Guiado 1 — Eficiência do computador na nuvem
+
+**Enunciado:** Por que um computador físico num centro de nuvem é usado de forma mais eficiente do que um computador num centro de dados local tradicional?
+
+**Solução:** Na nuvem, cada computador pode executar múltiplas instâncias de sistemas operacionais e até mesmo executar instâncias enviadas por diferentes clientes. Portanto, o computador fica mais tempo em uso. Em contraste, num data center local tradicional, cada servidor é tipicamente dedicado a uma organização, ficando subutilizado durante períodos de baixa demanda.
+
+### Exercício Guiado 2 — Nuvem híbrida
+
+**Enunciado:** O que é uma nuvem híbrida?
+
+**Solução:** Uma nuvem híbrida emprega data centers de um provedor de nuvem e um ou mais data centers locais. Esta prática permite manter dados sensíveis no local ao mesmo tempo que se aproveita da flexibilidade e escalabilidade da nuvem pública para cargas de trabalho variáveis.
+
+### Exercício Guiado 3 — IaaS e administrador de sistema
+
+**Enunciado:** Que tipo de computação em nuvem geralmente exige a presença de um administrador de sistema no lado do cliente?
+
+**Solução:** A infraestrutura como serviço (IaaS) exige que o cliente execute a administração do sistema para tarefas como a criação e upload de instâncias do sistema operacional e aplicações. O administrador do sistema trata quase tudo da mesma forma que num data center local, uma vez que a IaaS fornece apenas o hardware e o software que suportam as máquinas virtuais.
+
+### Exercício Guiado 4 — Proteção contra apagões na nuvem
+
+**Enunciado:** Como proteger o seu serviço contra apagões ao usar um provedor de nuvem?
+
+**Solução:** Escolhendo diversas zonas em cada região onde o serviço é executado, pois é altamente improvável que diversas zonas falhem simultaneamente. As ferramentas do provedor permitem transferir serviços de uma zona com falhas para uma zona funcional.
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Custos na nuvem vs. no local
+
+**Enunciado:** Compare os diferentes tipos de custos para executar servidores na nuvem com os custos de executá-los no local.
+
+
+
+<SolutionBlock>
+**Nuvem:** Paga-se pelo uso da CPU e pelo armazenamento de dados por cada período medido pelo provedor. Não há custo pela compra do hardware.
+
+**No local:** Há o custo fixo do hardware e outros equipamentos como o ar-condicionado, além de custos recorrentes como energia e manutenção física. A organização é responsável pela segurança física, refrigeração e administração de toda a infraestrutura.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Posicionamento geográfico de serviços na nuvem
+
+**Enunciado:** Você opera no Oriente Médio, mas tem muitos clientes na Europa e no Extremo Oriente. Descreva onde colocaria seus serviços numa oferta na nuvem.
+
+
+
+<SolutionBlock>
+- Escolha uma região do Oriente Médio para os seus próprios escritórios e clientes locais.
+- Uma região na Europa é importante para cumprir o Regulamento Geral de Proteção de Dados (RGPD).
+- Talvez precise de uma região na China para cumprir a Lei de Proteção de Informações Pessoais (PIPL) da China.
+- Vale a pena utilizar regiões no Extremo Oriente e na Europa para garantir um melhor desempenho na interação com os clientes nesses locais.
+- Dentro de cada região, escolha diversas zonas para se proteger contra a falha de uma única zona.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Papel do código aberto na nuvem
+
+**Enunciado:** Explique por que o software de código aberto é especialmente importante no contexto da computação em nuvem.
+
+
+
+<SolutionBlock>
+Quando uma empresa possui um grande número de computadores e implementa sistemas operacionais dinamicamente, é importante não ter a preocupação extra de lidar com licenças. Embora existam modelos de licenciamento para sistemas operacionais proprietários na nuvem, eles são bem mais complicados do que simplesmente executar uma máquina virtual e um sistema operacional de código aberto. Além disso, o código aberto geralmente é gratuito, o que reduz significativamente os custos de operação em larga escala.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Nuvem privada vs. pública
+
+**Enunciado:** Quais são as principais razões para uma grande organização optar por uma nuvem privada em vez de uma nuvem pública?
+
+
+
+<SolutionBlock>
+- **Segurança:** Organizações com dados altamente sensíveis (militares, financeiros, de saúde) podem preferir manter o controlo total sobre a infraestrutura.
+- **Conformidade regulamentar:** Algumas regulamentações exigem que os dados permaneçam em infraestrutura controlada pela organização.
+- **Personalização:** A nuvem privada permite configurações específicas não disponíveis em nuvens públicas.
+- **Custo previsível:** Embora o investimento inicial seja maior, as organizações com carga de trabalho constante podem ter custos mais previsíveis a longo prazo.
+- **Desempenho:** Controlo total sobre a rede e hardware, sem partilha com outros clientes.
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T02 - 051.2 Arquitetura de software]()
+→ Próximo: [T04 - 052.1 Conceitos de licenças de software de código aberto]()

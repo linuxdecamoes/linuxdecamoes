@@ -1,0 +1,232 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="022.2 — Criptografia na Web"
+  code="020"
+  topicNumber="T05"
+  objective="022.2"
+  weight={3}
+  pages="LPI Security Essentials (020) - Version 1.0"
+  accent="coral"
+/>
+
+
+
+## Resumo Conciso
+
+- **HTTPS** = HTTP sobre TLS; porta TCP 443 (vs HTTP na porta 80)
+- Protege: **confidencialidade**, **integridade** e **autenticação** do servidor
+- Navegadores verificam certificados X.509 durante o handshake TLS
+
+### HTTP vs HTTPS
+
+| Característica | HTTP | HTTPS |
+|---|---|---|
+| Porta padrão TCP | 80 | 443 |
+| Criptografia | Sem (texto simples) | TLS (texto cifrado) |
+| Integridade de dados | Não garante | Garante (via MAC) |
+| Autenticação do servidor | Não verifica | Verifica (certificado X.509) |
+| Vulnerável a man-in-the-middle | Sim | Não (com certificado válido) |
+
+### TLS — Transport Layer Security
+
+- Sucessor do SSL (década de 1990)
+- **Handshake TLS**: autenticação inicial, troca de chaves criptográficas, acordo de algoritmos
+  - Servidor apresenta certificado digital assinado por CA confiável
+  - Utiliza Diffie-Hellman ou ECDH para troca de chaves
+- **Registro TLS**: encapsula protocolos de nível superior; privacidade (criptografia simétrica) + integridade (MAC)
+
+### Certificados X.509 no HTTPS
+
+| Campo/Extensão | Função |
+|---|---|
+| **Subject** | Identifica o servidor HTTPS associado à chave pública |
+| **Subject Alternative Name (SAN)** | Permite múltiplas identidades (DNS, IP) num único certificado |
+| **Issuer** | CA que emitiu o certificado |
+| **Validity** | Período de validade (notBefore/notAfter) |
+| **Extensions** | Dados adicionais (uso de chave, identidade da entidade) |
+| **SignatureValue** | Assinatura da CA |
+
+### Associação de Certificados a Sites
+
+- Extensão **SAN** permite múltiplos nomes DNS ou endereços IP
+- Curingas: `*.example.com` corresponde a qualquer subdomínio único
+  - `*.example.com` → `www.example.com` ✓
+  - `*.example.com` → `basket.carol.example.com` ✗
+- Se SAN do tipo DNS Name estiver presente, é usada como identificador; caso contrário, usa-se o campo Common Name do Subject
+
+### Verificações do Navegador em Certificados X.509
+
+1. **Correspondência de nome**: Subject ou SAN vs. identidade do servidor
+2. **Cadeia de confiança**: certificado → CA intermediária → Root CA confiável
+3. **Período de validade**: verificar notBefore e notAfter
+4. **Estado de revogação**: consultar CRL ou OCSP
+5. **Assinatura digital**: verificar assinatura da CA emissora
+6. **Uso de chave/extensões**: garantir que o certificado é usado para o propósito pretendido
+
+### Determinar se um Site está Criptografado
+
+- **Ícone de cadeado** na barra de endereços (HTTPS)
+- **https://** no início da URL
+- Avisos do navegador:
+  - `"Not Secure"` — site sem HTTPS
+  - `"Your connection is not private"` — certificado expirado, revogado ou não confiável
+  - `"Potential Security Risk Ahead"` — problemas de configuração do certificado
+
+### Redirecionamento HTTP → HTTPS
+
+```
+http://www.example.com/~carol/home.html
+→ https://www.example.com/~carol/home.html
+```
+
+Muitos sites configuram redirecionamento automático para impor conexões seguras.
+
+### CRL e OCSP
+
+| Mecanismo | Descrição |
+|---|---|
+| **CRL** (Certificate Revocation List) | Lista pública de números de série de certificados revogados |
+| **OCSP** (Online Certificate Status Protocol) | Consulta em tempo real do estado do certificado à CA |
+
+## Exercícios Guiados
+
+### Exercício Guiado 1: HTTP vs HTTPS
+
+**Enunciado:** Quais características pertencem ao protocolo HTTP e quais pertencem ao protocolo HTTPS?
+
+**Solução:**
+
+| Característica | HTTP | HTTPS |
+|---|---|---|
+| Dados encapsulados diretamente por TCP | ✓ | |
+| Ataques podem escutar a comunicação | ✓ | |
+| Dados criptografados transmitidos | | ✓ |
+| Porta 80 padrão | ✓ | |
+| Porta 443 padrão | | ✓ |
+| Texto simples transmitido | ✓ | |
+| Dados encapsulados pelo TLS | | ✓ |
+| Dados podem ser modificados por man-in-the-middle | ✓ | |
+| Identidade do servidor verificada | | ✓ |
+| Protocolo fornece integridade de dados | | ✓ |
+
+### Exercício Guiado 2: Validade de Identidade do Servidor
+
+**Enunciado:** Em qual das seguintes situações a identidade de um servidor web seria considerada válida ou inválida?
+
+**Solução:**
+
+| URI | SAN/Subject | Válido? |
+|---|---|---|
+| `https://www.example1.com/penguin.html` | `*.penguin.com`, `www.example.com` | **Não válido** |
+| `https://hotlinux.org` | `www.xyz.com`, `*.linux.org` | **Não válido** (domínio não coincide) |
+| `https://www.securityessent.com` | `*.securityessent.com`, `www.securityessent.com` | **Válido** (CN e SAN coincidem) |
+| `https://www.certsun.com/` | `ohlala.com`, `*.certsun.com` | **Válido** (`*.certsun.com` corresponde a `www.certsun.com`) |
+| `https://www.justaparadigm.com/` | `www.carol.com`, `www.justaparadigm.com` | **Válido** |
+| `https://198.51.100.10/` | `www.carol.com`, `198.51.100.10` | **Válido** (IP direto, sem www) |
+| `https://251.32.75.42/` | `www.abc.com`, `251.32.75.42` | **Válido** |
+
+### Exercício Guiado 3: Campos do Certificado X.509v3
+
+**Enunciado:** Quais informações estão contidas nos campos Issuer, Validity, Subject, Extensions e SignatureValue?
+
+**Solução:**
+
+| Campo | Conteúdo |
+|---|---|
+| **Issuer** | Nome comum da CA e outras informações sobre a CA |
+| **Validity** | Datas que especificam a duração válida do certificado |
+| **Subject** | Nome comum do sujeito e outras informações sobre o sujeito |
+| **Extensions** | Nome DNS do sujeito, endereço IP e outros dados extensivos |
+| **SignatureValue** | Assinatura da CA |
+
+### Exercício Guiado 4: Cadeia de Confiança no Navegador
+
+**Enunciado:** Como um cliente HTTPS verifica a identidade da CA emissora do certificado X.509?
+
+**Solução:** Os clientes HTTPS processam os campos que listam o nome distinto do emissor e o nome distinto do sujeito para realizar a cadeia de nomes para validação do caminho de certificação. A cadeia de nomes é realizada correspondendo o nome distinto do emissor em um certificado com o nome do sujeito em outro certificado. Por fim, o nome distinto do emissor no certificado raiz deve ter uma correspondência no repositório raiz do cliente.
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1: Handshake TLS
+
+**Enunciado:** Descreva os passos de um handshake TLS e como a identidade do servidor é autenticada.
+
+
+
+<SolutionBlock>
+Durante o handshake TLS:
+1. O cliente envia uma mensagem ClientHello com as cifras suportadas
+2. O servidor responde com ServerHello, selecionando algoritmos e apresentando seu certificado X.509
+3. O cliente verifica a cadeia de confiança do certificado até uma Root CA confiável
+4. Se válido, cliente e servidor trocam chaves (Diffie-Hellman/ECDH) para estabelecer a chave de sessão simétrica
+5. Ambas as partes enviam Finished messages para confirmar a integridade do handshake
+6. Todos os dados subsequentes são criptografados com a chave de sessão (AES)
+
+A autenticação é feita verificando a assinatura da CA no certificado do servidor.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2: Certificado X.509v3
+
+**Enunciado:** Quais informações estão contidas nos campos do certificado X.509v3 de um servidor web?
+
+
+
+<SolutionBlock>
+| Campo | Informação |
+|---|---|
+| **Issuer** | Nome comum da CA e informações adicionais sobre a CA emissora |
+| **Validity** | Datas notBefore e notAfter que definem o período válido |
+| **Subject** | Nome comum (CN) e informações sobre a entidade proprietária |
+| **Extensions** | SAN (DNS names, IP addresses), Key Usage, Basic Constraints, etc. |
+| **SignatureValue** | Assinatura criptográfica da CA sobre o conteúdo do certificado |
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3: Revogação de Certificados
+
+**Enunciado:** Descreva uma situação que pode fazer com que um certificado X.509 se torne inválido antes do término do seu período de validade.
+
+
+
+<SolutionBlock>
+Um comprometimento ou suspeita de comprometimento da chave privada correspondente é a principal razão para revogação antecipada. Outras situações incluem:
+- Erro nas informações do certificado (ex: nome de domínio incorreto)
+- Saída da CA de confiança pelos navegadores
+- Mudança de titularidade do domínio
+- Reencenação da entidade (ex: organização encerrou atividades)
+
+A CA publica o número de série revogado numa CRL ou atualiza o estado via OCSP.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4: Portas e Redirecionamento
+
+**Enunciado:** Explique a diferença entre as portas TCP usadas por HTTP e HTTPS e como o redirecionamento automático funciona.
+
+
+
+<SolutionBlock>
+- **HTTP**: porta TCP 80 (comunicação em texto simples)
+- **HTTPS**: porta TCP 443 (comunicação criptografada via TLS)
+
+Quando um servidor está configurado para HTTPS, ele pode redirecionar automaticamente o tráfego HTTP para HTTPS. Exemplo:
+- Pedido: `http://www.example.com/~carol/home.html`
+- Redirecionamento (301/302): `https://www.example.com/~carol/home.html`
+
+A maioria dos motores de busca e navegadores prioriza sites HTTPS, incentivando a adoção generalizada de criptografia web.
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T04 - 022.1 Criptografia e PKI]()
+→ Próximo: [T06 - 022.3 Criptografia de Email]()

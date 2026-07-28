@@ -1,0 +1,170 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="107.3 Localização e internacionalização"
+  code="102"
+  topicNumber="T08"
+  objective="Gerir a localização e internacionalização do sistema"
+  weight={2}
+  pages="LPIC-1 (102) - Version 5.0"
+  accent="iris"
+/>
+
+
+
+## Resumo Conciso
+
+### Fusos horários
+
+| Comando/Ficheiro | Função |
+|---|---|
+| `date` | Exibe data/hora e deslocamento UTC (ex: `-03`) |
+| `timedatectl` | Mostra hora local, UTC, RTC, fuso horário e sync NTP |
+| `tzselect` | Assistente interativo para selecionar fuso horário |
+| `/etc/timezone` | Fuso horário padrão do sistema (ex: `America/Sao_Paulo`) |
+| `/etc/localtime` | Link simbólico para `/usr/share/zoneinfo/<zona>` |
+| `/usr/share/zoneinfo/` | Dados de todos os fusos horários |
+| `TZ` | Variável de ambiente que sobrepõe o fuso horário da sessão |
+
+**Notas:**
+- Recomenda-se definir o relógio de hardware em **UTC** e o fuso horário via software.
+- Nomes genéricos usam `Etc/GMT+N` (ex: `Etc/GMT+3` para UTC-3).
+- Para mudança temporária: `env TZ='Africa/Cairo' date`
+- Para permanente: adicionar `TZ='...'` a `~/.profile` ou `/etc/environment`
+
+### Localização (Locale)
+
+#### Variáveis de ambiente de localidade
+
+| Variável | Função |
+|---|---|
+| `LANG` | Localidade padrão (ex: `pt_BR.UTF-8`) |
+| `LC_ALL` | Sobrepõe **todas** as outras variáveis LC |
+| `LC_COLLATE` | Ordem alfabética (listagens de ficheiros) |
+| `LC_CTYPE` | Tratamento de caracteres (maiúsculas/minúsculas) |
+| `LC_MESSAGES` | Idioma das mensagens de programas GNU |
+| `LC_MONETARY` | Formato de moeda |
+| `LC_NUMERIC` | Separadores decimais e milhar |
+| `LC_TIME` | Formato de data e hora |
+| `LC_PAPER` | Tamanho do papel |
+
+#### Ficheiros de configuração
+
+| Ficheiro | Função |
+|---|---|
+| `/etc/locale.conf` | Localidade padrão do sistema (ex: `LANG=pt_BR.UTF-8`) |
+| `~/.bash_profile` / `~/.profile` | Localidade personalizada do utilizador |
+
+#### Comandos
+
+| Comando | Função |
+|---|---|
+| `locale` | Mostra todas as variáveis de localidade definidas |
+| `localectl set-locale LANG=...` | Altera a localidade do sistema (systemd) |
+
+### Codificação de caracteres
+
+| Padrão | Descrição |
+|---|---|
+| **ASCII** | 127 caracteres, baseado no inglês — limitado |
+| **ISO-8859-1** | Extensão do ASCII para ocidentais — preterido |
+| **UTF-8** | Padrão Unicode recomendado — compatível com ASCII |
+| **Unicode** | Padrão universal — atribui número único a cada caractere |
+
+| Comando | Função |
+|---|---|
+| `iconv -f <origem> -t <destino> <ficheiro>` | Converter codificação de caracteres |
+| `iconv -l` | Listar codificações suportadas |
+| `//TRANSLIT` | Transliteração para caracteres sem equivalente no destino |
+
+**Exemplo:** `iconv -f ISO-8859-1 -t UTF-8 original.txt > converted.txt`
+
+### Dica importante para scripts
+
+- Definir `LANG=C` em scripts garante ordenação por byte (previsível e mais rápido).
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Alterar fuso horário da sessão
+
+**Enunciado:** Qual comando torna `Pacific/Auckland` o fuso horário da sessão atual?
+
+
+
+<SolutionBlock>
+```bash
+export TZ=Pacific/Auckland
+date
+```
+
+A variável `TZ` sobrepõe o fuso horário do sistema apenas para a sessão em curso.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Separador decimal com `uptime`
+
+**Enunciado:** O `uptime` usa `,` como separador decimal com `de_DE.UTF-8`. Como forçar o uso de `.`?
+
+
+
+<SolutionBlock>
+```bash
+export LC_NUMERIC=en_US.UTF-8
+# ou
+export LC_ALL=en_US.UTF-8
+uptime
+```
+
+Basta alterar `LC_NUMERIC` ou `LC_ALL` para a localidade americana.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Transliteração com `iconv`
+
+**Enunciado:** Converter `readme.txt` (UTF-8) para ASCII simples com transliteração.
+
+
+
+<SolutionBlock>
+```bash
+iconv -f UTF-8 -t ASCII//TRANSLIT -o ascii.txt readme.txt
+```
+
+`//TRANSLIT` substitui caracteres não-ASCII por equivalentes aproximados (ex: `ã` → `a`, `é` → `e`).
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Listar variáveis de localidade
+
+**Enunciado:** Consulte a localidade atual e altere-a temporariamente para `en_US.UTF-8`.
+
+
+
+<SolutionBlock>
+```bash
+locale
+# LANG=pt_BR.UTF-8
+# ...
+
+env LC_ALL=en_US.UTF-8 locale
+# LANG=en_US.UTF-8
+# ...
+```
+
+`LC_ALL` sobrepõe todas as outras variáveis para o comando seguinte.
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T07 - 107.2 Automatizar e agendar tarefas administrativas]()
+→ Próximo: [T09 - 108.1 Manutenção da data e hora do sistema]()

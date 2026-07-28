@@ -1,0 +1,154 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="106.1 Instalar e configurar o X11"
+  code="102"
+  topicNumber="T03"
+  objective="Instalar e configurar o servidor X11"
+  weight={2}
+  pages="LPIC-1 (102) - Version 5.0"
+  accent="iris"
+/>
+
+
+
+## Resumo Conciso
+
+### Arquitetura do X Window System
+
+- **Modelo cliente-servidor**: o cliente (aplicativo) comunica com o servidor X (exibição gráfica)
+- **Protocolo X11**: versão 11 do X.org, padrão nas distribuições Linux modernas
+- **Modular**: funcionalidades extras são adicionadas como extensões (libXrandr, libXcursor, libX11, etc.)
+- **Rede**: múltiplos clientes de diferentes máquinas podem aceder a um único servidor X remoto
+
+### Nome de exibição (DISPLAY)
+
+Formato: `hostname:displaynumber.screennumber`
+
+| Componente | Descrição |
+|---|---|
+| `hostname` | Sistema que exibe a aplicação (omissão = local) |
+| `displaynumber` | Número da sessão do servidor X (começa em 0) |
+| `screennumber` | Número do ecrã lógico (padrão 0) |
+
+```bash
+echo $DISPLAY          # Ex: :0
+DISPLAY=:0.1 firefox & # Iniciar na segunda tela
+```
+
+### Ficheiros de configuração
+
+| Caminho | Função |
+|---|---|
+| `/etc/X11/xorg.conf` | Configuração principal do Xorg |
+| `/etc/X11/xorg.conf.d/` | Configurações adicionais por ficheiro (analisados antes de xorg.conf) |
+| `/usr/share/X11/xorg.conf.d/` | Configurações fornecidas pela distribuição |
+| `~/.xsession-errors` | Log de erros da sessão X do utilizador |
+
+### Secções do xorg.conf
+
+| Secção | Função |
+|---|---|
+| `InputDevice` | Configurar teclado/mouse específicos |
+| `InputClass` | Configurar classes de dispositivos (teclados, mouses) |
+| `Monitor` | Descrever o monitor físico e ligação |
+| `Device` | Descrever a placa de vídeo e driver |
+| `Screen` | Unir secções Monitor e Device |
+| `ServerLayout` | Agrupar todas as secções numa interface |
+
+### Comandos essenciais
+
+| Comando | Função |
+|---|---|
+| `xdpyinfo` | Exibir informações sobre a sessão X em execução |
+| `Xorg -configure` | Gerar ficheiro `xorg.conf` a partir do hardware detetado |
+| `setxkbmap` | Modificar layout do teclado durante sessão X |
+| `localectl set-x11-keymap` | Modificar layout do teclado e criar/configurar `00-keyboard.conf` |
+
+### Wayland vs X11
+
+| Característica | X11 | Wayland |
+|---|---|---|
+| Servidor intermediário | Sim | Não (compositor integrado) |
+| Renderização | Servidor X | Aplicação diretamente via kernel |
+| Variável de ambiente | `DISPLAY` | `WAYLAND_DISPLAY` |
+| Compatibilidade | Universal | Apps antigos via XWayland |
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Valor de DISPLAY num sistema multi-ecrã
+
+**Enunciado:** Qual seria o conteúdo da variável de ambiente `DISPLAY` num sistema chamado `lab01` com uma configuração de ecrã único, visualizada a partir de um terminal na terceira tela independente?
+
+
+
+<SolutionBlock>
+```bash
+echo $DISPLAY
+lab01:0.2
+```
+
+O `:0` indica a primeira sessão do servidor X e `.2` indica a terceira tela (índice começa em 0).
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Criar configuração de teclado para o X
+
+**Enunciado:** Que comando pode ser usado para criar um ficheiro de configuração de teclado para uso pelo X Window System?
+
+
+
+<SolutionBlock>
+```bash
+localectl --no-convert set-x11-keymap "us" pc105
+```
+
+Este comando cria automaticamente o ficheiro `/etc/X11/xorg.conf.d/00-keyboard.conf`. A opção `--no-convert` impede a alteração do mapa do teclado na consola.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Desabilitar terminais virtuais em quiosque
+
+**Enunciado:** Pretende configurar um sistema de quiosque e desabilitar a alternância para terminais virtuais (Ctrl+Alt+F1-F6). Crie o ficheiro `/etc/X11/xorg.conf.d/10-kiosk.conf` com a secção `ServerFlags` apropriada.
+
+
+
+<SolutionBlock>
+```
+Section "ServerFlags"
+    Option "DontVTSwitch" "True"
+EndSection
+```
+
+A opção `DontVTSwitch` impede a alternância para terminais virtuais de texto.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Informações do servidor X em execução
+
+**Enunciado:** Execute um comando para obter informações detalhadas sobre a sessão do servidor X atual, incluindo versão, extensões e dimensão do ecrã.
+
+
+
+<SolutionBlock>
+```bash
+xdpyinfo
+```
+
+A saída inclui: nome da tela (idêntico ao `DISPLAY`), versão do X.Org, lista de extensões e informações sobre o ecrã (dimensões, resolução, profundidade de cor).
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T02 - 105.2 Editar e escrever scripts simples]()
+→ Próximo: [T04 - 106.2 Desktops gráficos]()

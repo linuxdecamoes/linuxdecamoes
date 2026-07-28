@@ -1,0 +1,162 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="108.3 Fundamentos de MTA (Mail Transfer Agent)"
+  code="102"
+  topicNumber="T11"
+  objective="Compreender os fundamentos de MTA (Mail Transfer Agent)"
+  weight={1}
+  pages="LPIC-1 (102) - Version 5.0"
+  accent="iris"
+/>
+
+
+
+## Resumo Conciso
+
+### Conceitos Fundamentais
+
+| Conceito | Descrição |
+|---|---|
+| **MTA** (Mail Transfer Agent) | Serviço que coleta e entrega emails entre máquinas |
+| **MUA** (Mail User Agent) | Aplicativo cliente de email (Thunderbird, mail, mailx) |
+| **SMTP** | Protocolo de transferência de email (porta TCP 25) |
+| **IMAP / POP3** | Protocolos para recuperar email de caixas remotas |
+| **mbox** | Formato de armazenamento: todas as mensagens num único ficheiro |
+| **Open Relay** | MTA que retransmite emails cegamente — vulnerabilidade de segurança |
+
+### MTAs Disponíveis para Linux
+
+| MTA | Características |
+|---|---|
+| **Sendmail** | MTA tradicional, flexível, bastante compatível |
+| **Postfix** | Alternativa popular, mais fácil de configurar |
+| **qmail** | Alternativa leve |
+| **Exim** | Alternativa flexível |
+
+> Todos pretendem ser substitutos diretos do Sendmail — aplicativos compatíveis com Sendmail costumam funcionar com qualquer MTA.
+
+### Localizações Importantes
+
+| Caminho | Função |
+|---|---|
+| `/var/spool/mqueue/` | Fila de saída (Sendmail) |
+| `/var/spool/postfix/` | Fila de saída (Postfix) |
+| `/var/spool/mail/<user>` | Caixa de entrada (Sendmail) |
+| `/var/mail/<user>` | Caixa de entrada (Postfix) |
+| `/etc/aliases` | Aliases de email do sistema |
+| `~/.forward` | Redirecionamento pessoal de email |
+
+> Para logs de email, ver T10.
+
+### Comandos Principais
+
+| Comando | Função |
+|---|---|
+| `sendmail` | Composição e envio de mensagens |
+| `mail` / `mailx` | Cliente de email (modo leitura/envio) |
+| `mailq` / `sendmail -bp` | Lista mensagens não entregues |
+| `newaliases` / `sendmail -bi` | Atualiza banco de aliases |
+| `nc` | Envio de comandos SMTP diretamente |
+
+### Formato de Aliases (`/etc/aliases`)
+
+```
+alias: destino
+```
+
+Tipos de destino:
+- **Nome de utilizador**: encaminha para caixa local (`postmaster: carol`)
+- **Caminho de ficheiro**: anexa ao ficheiro (`logs: /var/log/mail.log`)
+- **Comando pipe**: processa mensagem (`subscribe: |subscribe.sh`)
+- **Ficheiro de inclusão**: múltiplos destinos (`team: :include:/var/local/destinations`)
+- **Endereço externo**: encaminha para email externo
+- **Outro alias**: encadeamento
+
+### Fluxo de Envio de Email
+
+1. Utilizador compõe mensagem (MUA ou `sendmail`/`mail`)
+2. MTA local coloca na fila de saída
+3. MTA consulta DNS para registro MX do domínio destino
+4. MTA envia via SMTP ao MTA remoto
+5. MTA remoto armazena na caixa de entrada do destinatário
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Enviar email com anexo
+
+**Enunciado:** Usando `mail` do mailx, qual comando enviará uma mensagem para `emma@lab1.campus` com `logs.tar.gz` como anexo e a saída de `uname -a` como corpo?
+
+
+
+<SolutionBlock>
+```bash
+uname -a | mail -a logs.tar.gz emma@lab1.campus
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Alias para /dev/null
+
+**Enunciado:** Como configurar um alias em todo o sistema para redirecionar todos os emails enviados ao utilizador `test` para `/dev/null`?
+
+
+
+<SolutionBlock>
+Adicionar a seguinte linha em `/etc/aliases`:
+```
+test: /dev/null
+```
+Executar `newaliases` para atualizar o banco de dados.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Comando alternativo ao newaliases
+
+**Enunciado:** Que comando, além de `newaliases`, pode atualizar o banco de aliases?
+
+
+
+<SolutionBlock>
+```bash
+sendmail -bi
+# ou
+sendmail -I
+```
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Verificar e limpar a fila de email
+
+**Enunciado:** Liste as mensagens pendentes na fila de email e remova todas as mensagens da fila (Postfix).
+
+
+
+<SolutionBlock>
+```bash
+# Listar fila de email
+mailq
+# ou
+sendmail -bp
+
+# Remover todas as mensagens da fila (Postfix, como root)
+postsuper -d ALL
+```
+
+`mailq` mostra as mensagens pendentes com o seu ID, tamanho, data e destinatário. `postsuper -d ALL` remove **todas** as mensagens da fila (atenção: não pede confirmação). Para remover uma mensagem específica, use `postsuper -d <ID>`. Nota: `sendmail -q` **não** remove mensagens — processa/entrega a fila pendente.
+</SolutionBlock>
+
+
+
+---
+
+## Ligações
+
+← Anterior: [T10 - 108.2 Log do sistema]()
+→ Próximo: [T12 - 108.4 Configurar impressoras e impressão]()

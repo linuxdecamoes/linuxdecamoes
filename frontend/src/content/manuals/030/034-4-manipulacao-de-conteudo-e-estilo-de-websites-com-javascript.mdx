@@ -1,0 +1,274 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T15 — 034.4 Manipulação de conteúdo e estilo de websites com JavaScript"
+  code="030"
+  topicNumber="T15"
+  objective="034.4"
+  weight={4}
+  pages="LPI Web Development Essentials (030) - Version 1.0"
+  accent="amber"
+/>
+
+
+
+## Resumo Conciso
+
+### Document Object Model (DOM)
+
+O DOM é uma estrutura de dados que funciona como interface de programação para o documento HTML. Cada elemento do documento é representado como um **nó** no DOM. Alterações no DOM são refletidas imediatamente no documento.
+
+O objeto `document` é o elemento DOM superior; todos os outros ramificam-se a partir dele.
+
+### Métodos de seleção de elementos
+
+| Método | Retorna | Descrição |
+|---|---|---|
+| `document.getElementsByTagName("tag")` | Coleção (array-like) | Todos os elementos com o nome de tag dado |
+| `document.getElementsByClassName("class")` | Coleção (array-like) | Todos os elementos com a classe especificada |
+| `document.getElementById("id")` | Elemento único ou `null` | O elemento com o ID fornecido (IDs devem ser únicos) |
+| `document.querySelector("seletor")` | Primeiro elemento correspondente ou `null` | Usa seletores CSS |
+| `document.querySelectorAll("seletor")` | NodeList (array-like) | Todos os elementos que correspondem ao seletor CSS |
+
+```javascript
+// Iterar por todos os elementos
+let elements = document.getElementsByTagName("*");
+for (let element of elements) {
+  if (element.id == "content_first") {
+    element.innerHTML = "<p>New content</p>";
+  }
+}
+
+// Selecionar um elemento específico (melhor desempenho)
+document.getElementById("content_first").innerHTML = "<p>New content</p>";
+
+// Usar seletor CSS
+document.querySelector("#content_first").innerHTML = "<p>New content</p>";
+
+// Pseudoclasse CSS para selecionar o 2º elemento
+document.querySelector("#content_first p:nth-child(2)").innerHTML = "New content";
+```
+
+### Propriedade `innerHTML`
+
+Contém todo o código de marcação HTML dentro do elemento. Pode ser lido ou substituído:
+
+```javascript
+let body = document.getElementsByTagName("body")[0];
+console.log(body.innerHTML);               // Ler conteúdo
+body.innerHTML = "<p>Content erased</p>";   // Substituir conteúdo
+```
+
+**Nota:** Substituir `innerHTML` com código HTML hard-coded não é prática recomendada — dificulta a manutenção.
+
+### Trabalhar com atributos
+
+| Método | Descrição |
+|---|---|
+| `element.getAttribute("attr")` | Lê o valor de um atributo |
+| `element.setAttribute("attr", "value")` | Adiciona ou altera um atributo |
+| `element.removeAttribute("attr")` | Remove um atributo |
+| `element.attr` (notação de pontos) | Acede diretamente ao valor do atributo |
+
+```javascript
+// Mostrar uma secção aleatória
+let content_visible = "#content_first";
+document.querySelector(content_visible).removeAttribute("hidden");
+
+// Esconder todas as secções exceto a escolhida
+for (let element of document.querySelectorAll(".content:not(" + content_visible + ")")) {
+  element.setAttribute("hidden", "");
+}
+```
+
+### Manipular estilos CSS via DOM
+
+```javascript
+// CSS inline (não recomendado)
+document.querySelector("#content_first").style.display = "block";
+
+// Abordagem recomendada: usar classes CSS
+document.querySelector("#content_first").classList.add("highlight");
+```
+
+### Trabalhar com classes CSS — `classList`
+
+| Método | Descrição |
+|---|---|
+| `classList.add("class")` | Adiciona uma classe ao elemento |
+| `classList.remove("class")` | Remove uma classe do elemento |
+| `classList.toggle("class")` | Adiciona se ausente; remove se presente |
+
+```javascript
+// Destacar apenas um elemento, removendo highlight dos outros
+function highlight(id) {
+  for (let element of document.querySelectorAll(".content")) {
+    element.classList.remove('highlight');
+  }
+  document.getElementById(id).classList.add('highlight');
+}
+```
+
+**Exemplo CSS para suporte:**
+
+```css
+div.content { border: 1px solid black; opacity: 0.25; }
+div.content.highlight { border: 1px solid red; opacity: 1; }
+```
+
+### Manipuladores de eventos
+
+Ações associadas a eventos interativos (cliques, movimento do mouse, etc.):
+
+| Atributo | Evento |
+|---|---|
+| `onClick` | Clique do rato |
+| `onMouseOver` | Cursor sobre o elemento |
+| `onMouseOut` | Cursor abandona o elemento |
+
+```html
+<button onClick="highlight('content_first')">First</button>
+<button onClick="highlight('content_second')">Second</button>
+<button onClick="highlight('content_third')">Third</button>
+```
+
+```javascript
+// Ação inline (para código simples)
+<button onClick="document.getElementById('content_first').classList.toggle('highlight')">
+
+// Ação via função (para código complexo)
+<button onClick="highlight('content_first')">
+```
+
+## 🧭 Exercícios Guiados (resolvidos)
+
+### Exercício Guiado 1 — Inserir conteúdo via innerHTML
+
+**Enunciado:** Usando o método `document.getElementById()`, como seria possível inserir a frase "Dynamic content" no conteúdo interno do elemento cujo ID é `message`?
+
+**Solução passo a passo:**
+
+1. Selecionar o elemento com `document.getElementById("message")`.
+2. Atribuir o novo conteúdo à propriedade `innerHTML`.
+
+```javascript
+document.getElementById("message").innerHTML = "Dynamic content";
+```
+
+### Exercício Guiado 2 — querySelector vs. getElementById
+
+**Enunciado:** Qual é a diferença entre referenciar um elemento por seu ID usando o método `document.querySelector()` ou fazê-lo com o método `document.getElementById()`?
+
+**Solução passo a passo:**
+
+1. `document.getElementById("id")` — o ID é passado diretamente, sem caracteres adicionais.
+2. `document.querySelector("#id")` — o ID deve ser precedido pelo caractere `#` (hash/cardinal), pois usa a sintaxe de seletores CSS.
+
+```javascript
+document.getElementById("content_first");
+document.querySelector("#content_first");
+```
+
+### Exercício Guiado 3 — classList.remove()
+
+**Enunciado:** Qual é a finalidade do método `classList.remove()`?
+
+**Solução passo a passo:**
+
+1. O método remove a classe cujo nome é fornecido como argumento do atributo `class` do elemento.
+2. Não afeta outras classes associadas ao mesmo elemento.
+
+```javascript
+element.classList.remove("highlight");
+```
+
+### Exercício Guiado 4 — classList.toggle()
+
+**Enunciado:** Qual o resultado do uso do método `myelement.classList.toggle("active")` se a classe `active` não tiver sido atribuída a `myelement`?
+
+**Solução passo a passo:**
+
+1. Se a classe não estiver presente, `toggle()` adiciona-a.
+2. Se a classe já estiver presente, `toggle()` remove-a.
+3. Neste caso, a classe `active` será **adicionada** ao elemento.
+
+```javascript
+myelement.classList.toggle("active"); // active é adicionada
+myelement.classList.toggle("active"); // active é removida
+```
+
+## 🔬 Exercícios Exploratórios (prática no terminal)
+
+1. **Enunciado:** Qual argumento atribuído ao método `document.querySelectorAll()` fará com que ele imite o método `document.getElementsByTagName("input")`?
+
+   
+
+<SolutionBlock>
+```javascript
+   document.querySelectorAll("input");
+   ```
+
+   Explicação: O seletor CSS `"input"` corresponde a todos os elementos `<input>`, da mesma forma que `getElementsByTagName("input")`. O `querySelectorAll()` usa seletores CSS, enquanto `getElementsByTagName()` usa nomes de tags diretamente.
+</SolutionBlock>
+
+
+
+2. **Enunciado:** Como usar a propriedade `classList` para listar todas as classes associadas a um elemento determinado?
+
+   
+
+<SolutionBlock>
+```javascript
+   let element = document.getElementById("content_first");
+   for (let i = 0; i < element.classList.length; i++) {
+     console.log(element.classList[i]);
+   }
+   ```
+
+   Explicação: A propriedade `classList` é um objeto semelhante a um array (DOMTokenList). Pode-se iterar com um loop `for` usando a propriedade `length` para obter o número de classes e aceder a cada uma pelo índice.
+</SolutionBlock>
+
+
+
+3. **Enunciado:** Como adicionar um manipulador de eventos a um botão para que, ao ser clicado, execute a função `highlight('content_first')`?
+
+    
+
+<SolutionBlock>
+```javascript
+    let btn = document.querySelector("#myButton");
+    btn.addEventListener("click", function() {
+      highlight('content_first');
+    });
+    ```
+
+    Explicação: O método `addEventListener()` associa um evento (neste caso, `"click"`) a uma função de retorno de chamada. Esta é a abordagem recomendada em vez do atributo `onClick` inline, pois permite múltiplos ouvintes de eventos no mesmo elemento.
+</SolutionBlock>
+
+
+
+4. **Enunciado:** Qual é a diferença entre substituir o `innerHTML` de um elemento e usar `classList.toggle()`?
+
+    
+
+<SolutionBlock>
+```javascript
+    // innerHTML substitui todo o conteúdo HTML interno do elemento
+    document.getElementById("content_first").innerHTML = "<p>Novo conteúdo</p>";
+
+    // classList.toggle apenas adiciona/remove uma classe CSS
+    document.getElementById("content_first").classList.toggle("highlight");
+    ```
+
+    Explicação: `innerHTML` substitui todo o conteúdo de marcação interno do elemento, o que pode destruir eventos e estrutura existentes. `classList.toggle()` apenas altera a classe do elemento, preservando o conteúdo HTML e permitindo alterar o estilo visual de forma mais segura.
+</SolutionBlock>
+
+
+
+## 🔗 Ligações
+
+← Anterior: [T14 - 034.3 Estruturas de controle e funções do JavaScript]()
+→ Próximo: [T16 — 035.1 Noções básicas de Node.js](T16%20-%20035.1%20Noções%20básicas%20de%20Node.js.md)

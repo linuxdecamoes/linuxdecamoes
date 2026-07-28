@@ -1,0 +1,192 @@
+import {
+  TopicHero,
+  SolutionBlock,
+} from "@/components/mdx"
+
+<TopicHero
+  title="T18 — 056.3 Ferramentas de comunicação e colaboração"
+  code="050"
+  topicNumber="T18"
+  objective="056.3"
+  weight={2}
+  pages="LPI Open Source Essentials (050) - Version 1.0"
+  accent="terracotta"
+/>
+
+
+
+## Resumo Conciso
+
+### Conceitos de comunicação
+
+| Tipo | Descrição |
+|---|---|
+| **Comunicação síncrona** | Pessoas conversam simultaneamente (reuniões presenciais, videoconferências, chamadas telefónicas); ideal para temas interativos e conflitos |
+| **Comunicação assíncrona** | Pessoas comunicam em momentos diferentes (e-mail, SMS, cartas); permite ritmo próprio, tradução automática e retenção de conhecimento |
+| **Comunicação interna** | Notas técnicas, coordenação interna da equipa |
+| **Comunicação externa** | Comunicados de imprensa, interação com utilizadores finais |
+
+### Ferramentas de comunicação
+
+#### E-mail, listas de discussão e newsletters
+
+| Conceito | Descrição |
+|---|---|
+| **Lista de discussão** | Lista de distribuição; alcance centenas ou milhares de assinantes; usada para coordenação interna e interação com utilizadores |
+| **Arquivo de lista** | Armazena mensagens para referência futura; mensagens não podem ser facilmente apagadas |
+| **Filtros** | Recurso para gerenciar grandes quantidades de mensagens com base em elementos como prefixo no campo de assunto |
+| **Newsletter** | Forma especial de lista de e-mail; notifica sobre novos lançamentos e avanços importantes |
+
+#### Fóruns de discussão
+
+- Alternativa mais acessível às listas de discussão; cada fórum inclui categorias com tópicos específicos (threads)
+- Conteúdo pode ser editado ou excluído posteriormente
+- Maior usabilidade para utilizadores inexperientes
+- Exemplo: fóruns do LibreOffice (https://community.documentfoundation.org/)
+
+#### Mensagens instantâneas e plataformas de bate-papo
+
+| Aspeto | Descrição |
+|---|---|
+| **Vantagens** | Baixa barreira de entrada; popular entre geração mais jovem; organizados em grupos/canais |
+| **Desvantagens** | Excesso de notificações ("fadiga de alertas"); muitos são proprietários (dados não acessíveis) |
+| **Plataformas** | WhatsApp, Telegram, Signal, Matrix/Element |
+
+### Plataformas autônomas, federadas e centralizadas
+
+| Tipo | Descrição | Exemplos |
+|---|---|---|
+| **Autônoma** | Roda de forma isolada para uma comunidade | Fóruns, wikis |
+| **Federada / descentralizada** | Funciona individualmente mas pode ser conectada a outros servidores | E-mail, Nextcloud, ownCloud, Element, Mastodon |
+| **Centralizada** | Administrada por um único provedor; não interage com terceiros | Facebook, Instagram, WhatsApp, Telegram |
+
+- Sistemas autônomos e federados: a comunidade mantém controlo total sobre conteúdo e funcionalidade
+- Sistemas centralizados: conteúdo armazenado nos servidores do provedor, sujeito aos seus termos
+
+### Ferramentas para colaboração
+
+#### Wiki
+
+- Ferramenta colaborativa para trabalhar num site composto por vários documentos/artigos
+- Permite edição, tradução e criação de conteúdo; armazena revisões para referência futura
+- Usado como base de conhecimento; hospeda documentação e sistema de ajuda
+- Exemplo: wiki do LibreOffice (https://wiki.documentfoundation.org)
+
+#### Rastreadores de bugs e problemas (bug/issue trackers)
+
+- Ferramenta dedicada para relatar bugs ou sugerir novos recursos de forma estruturada
+- Fornece informações e etapas necessárias para reproduzir um problema (relatório de erro)
+- O projeto não esquece o problema; pode ser atribuído à pessoa certa
+- Exemplo: rastreador de bugs do LibreOffice (https://bugs.documentfoundation.org)
+
+#### Helpdesks e sistemas de tickets
+
+- Semelhante a rastreadores de bugs, mas focado em ajudar utilizadores com problemas e solicitações gerais
+- Fluxo de trabalho baseado em prioridades, níveis de escalonamento e tempo de resposta
+
+#### Sistema de gestão de conteúdo (CMS)
+
+- Ajuda a gerenciar o conteúdo de sites; oferece editor WYSIWYG e modelos de layout
+- Estrutura conteúdo em categorias e idiomas; conteúdo não desaparece em reformulações de página
+
+#### Sistema de gestão de documentos (DMS)
+
+- Diferente do CMS; usado para armazenar documentos existentes (contratos, faturas, recibos, e-mails)
+- Uso interno, não destinado ao público em geral
+
+#### Gerenciamento de código-fonte (SCM)
+
+- Plataforma onde desenvolvedores trabalham juntos no código
+- Git é o mais utilizado; existem interfaces gráficas para iniciantes
+- Permitem check-out, trabalho local e solicitação de merge/pull request
+- Plataformas centralizadas (GitHub, GitLab) integram SCM com wikis, rastreamento de problemas e outras ferramentas
+
+### Tipos de documentação
+
+| Tipo | Descrição |
+|---|---|
+| **Documentação do utilizador** | Explica como usar o software; páginas de ajuda, manuais, livros |
+| **Documentação do administrador** | Informações para implantação em larga escala; ligação a bases de dados, configurações centralizadas, atualizações |
+| **Documentação do desenvolvedor** | Arquitetura do software, padrões de código, ferramentas e fluxos de trabalho |
+| **Documentação da arquitetura** | Estrutura e design do sistema; frequentemente integrada à documentação do desenvolvedor |
+
+## Exercícios Guiados
+
+### Exercício Guiado 1 — Importância de ferramentas de comunicação e colaboração
+
+**Enunciado:** Por que os projetos de software, principalmente de código aberto, precisam pensar em ferramentas adequadas para comunicação e colaboração?
+
+**Solução:** Por um lado, trabalhar em colaboração com um grupo distribuído globalmente tem muitos desafios, que podem ser resolvidos com ferramentas adequadas. Por outro lado, os voluntários nem sempre ficam no projeto até o final, de forma que reter e compartilhar conhecimento é outro aspeto importante no uso de ferramentas de comunicação e colaboração. Quanto mais simples as contribuições, mais sustentável será o projeto.
+
+### Exercício Guiado 2 — Comunicação síncrona vs. assíncrona
+
+**Enunciado:** Dê um exemplo de comunicação síncrona e um de comunicação assíncrona.
+
+**Solução:** A comunicação síncrona pode ser uma conversa ao vivo, uma ligação telefónica ou uma videoconferência. Exemplos de comunicação assíncrona incluem e-mail, SMS, cartas e fax.
+
+### Exercício Guiado 3 — Desvantagens dos aplicativos de mensagens
+
+**Enunciado:** Cite uma desvantagem dos aplicativos de mensagens e explique como isso pode ser evitado.
+
+**Solução:** Quando instalados no celular, esses aplicativos enviam muitas notificações, uma para cada nova mensagem. Uma configuração adequada pode ajudar a evitar isso. Outra desvantagem é que muitos aplicativos de mensagens são controlados por fornecedores proprietários, o que dificulta a preservação de conhecimento a longo prazo.
+
+### Exercício Guiado 4 — CMS vs. DMS
+
+**Enunciado:** Qual a diferença entre um sistema de gestão de conteúdo e um sistema de gestão de documentos?
+
+**Solução:** Um CMS é usado para apresentar conteúdo de uma maneira dada ou seguindo um modelo específico, geralmente de forma pública. Um DMS é usado para armazenar documentos existentes, em geral internamente. O CMS é frequentemente empregado para apresentações públicas, ao passo que o DMS é usado para gerenciar documentos internos como contratos, faturas e correspondências.
+
+## Exercícios Exploratórios
+
+### Exercício Exploratório 1 — Diferenças entre projeto local e projeto internacional de código aberto
+
+**Enunciado:** Qual é uma das principais diferenças entre um clube esportivo local e um projeto internacional de código aberto?
+
+
+
+<SolutionBlock>
+Os projetos de código aberto não estão vinculados a um idioma ou local específico. Os colaboradores podem residir em diferentes países e continentes, falar diferentes línguas nativas e até mesmo viver em diferentes fusos horários. A maior parte das atividades realizadas num projeto de código aberto acontece virtualmente, não presencialmente.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 2 — Contribuição gratificante
+
+**Enunciado:** Por que contribuir para um projeto de código aberto pode ser particularmente gratificante?
+
+
+
+<SolutionBlock>
+Muitos projetos de código aberto contam com um grupo diversificado de pessoas. Ao colaborar com elas, é possível aprender muito, descobrir coisas novas e ampliar as suas possibilidades. A diversidade de perspetivas e competências enriquece o experiência do colaborador.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 3 — Software de rastreamento de bugs do Ubuntu
+
+**Enunciado:** Qual o software de rastreamento de bugs usado pelo projeto Ubuntu?
+
+
+
+<SolutionBlock>
+O projeto Ubuntu utiliza o **Launchpad** como software de rastreamento de bugs. O Launchpad é uma plataforma de código aberto desenvolvida pela Canonical que integra rastreamento de bugs, gestão de pacotes e colaboração entre desenvolvedores.
+</SolutionBlock>
+
+
+
+### Exercício Exploratório 4 — Listas de discussão do kernel do Linux
+
+**Enunciado:** Qual o nome do site que abriga as listas de discussão do kernel do Linux?
+
+
+
+<SolutionBlock>
+O site que abriga as listas de discussão do kernel do Linux é o **LKML (Linux Kernel Mailing List)**, acessível em https://lkml.org/. É uma das listas de discussão mais antigas e ativas do mundo do código aberto, onde desenvolvedores discutem o desenvolvimento do kernel do Linux.
+</SolutionBlock>
+
+
+
+## Ligações
+
+← Anterior: [T17 - 056.2 Gestão do código-fonte]()
+→ Fim: [050 - Visão Geral]()
