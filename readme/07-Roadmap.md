@@ -14,6 +14,7 @@
 | 3 — Backend API | ✅ | API REST + pipeline de dados | FastAPI (Python 3.12) + SQLAlchemy/SQLModel + Alembic; PostgreSQL operacional; endpoints `/api/search`, `/api/chat`; CORS configurado |
 | 4 — RAG | ✅ | IA generativa integrada | FAISS + `paraphrase-multilingual-MiniLM-L12-v2` (384 dims) + Groq (`openai/gpt-oss-20b`); 114 tópicos LPI → 1831 chunks; pipeline em `../rag/pipeline.py` |
 | 5 — Quizzes | ✅ | Sistema de quizzes completo, dados a 100% | Código: API client (`lib/api.ts`), endpoint geração LLM, quiz-taker interativo, QuizzesCard, spaced repetition SM-2. **Dados:** 92/92 tópicos gerados (460 quizzes). Concluído 2026-07-23. |
+| 6 — Deploy Automático | ✅ | CI/CD GitHub → VPS configurado | Workflow `deploy.yml` (verify: lint+build → deploy: SSH); Vault removido do build docker (os `.mdx` estão commitados); branch canónica `master`; backups (cron + S3 + restore). Concluído 2026-08-01 — ver [[08-Deploy]]. |
 
 ---
 
@@ -46,6 +47,12 @@
 ## Decisões Recentes
 
 Resumo das últimas entradas do histórico (`agents.md` §8.2):
+
+### Deploy Automático GitHub → VPS (2026-08-01)
+
+CI/CD com GitHub Actions: `verify` (lint + build do frontend, 132 páginas SSG) → `deploy` (SSH à VPS `danieldias@54.37.15.115:2294` → `git reset --hard` + `docker compose up --build -d`). O build docker deixou de depender do Vault externo (`../Vault`) — os 146 `.mdx` estão commitados em `frontend/src/content/manuals/`. Branch canónica `master`; workflow resiliente a secrets não configurados (job `deploy` é ignorado até `VPS_HOST` existir). Guia completo em `readme/08-Deploy.md`. Backups: cron diário 03:00 + upload S3 + restauro. *Pendente do utilizador:* criar a chave SSH `github_actions` na VPS e configurar os secrets do GitHub.
+
+> Spec: `docs/superpowers/specs/2026-08-01-deploy-automatico-vps-design.md` · Plano: `docs/superpowers/plans/2026-08-01-deploy-automatico-vps.md`
 
 ### Polimento premium do template MDX (2026-07-22)
 
