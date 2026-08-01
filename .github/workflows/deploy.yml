@@ -39,10 +39,26 @@ jobs:
         working-directory: frontend
         run: npm run build
 
+  check-secret:
+    name: Verificar secrets VPS
+    runs-on: ubuntu-latest
+    outputs:
+      vps-host: ${{ steps.check.outputs.host }}
+    steps:
+      - id: check
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          if [ -n "$VPS_HOST" ]; then
+            echo "host=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "host=false" >> "$GITHUB_OUTPUT"
+          fi
+
   deploy:
     name: Deploy na VPS
-    needs: verify
-    if: ${{ github.secret_source == 'Actions' }}
+    needs: [verify, check-secret]
+    if: needs.check-secret.outputs.vps-host == 'true'
     runs-on: ubuntu-latest
     environment: production
     steps:
