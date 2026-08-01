@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useSyncExternalStore, useState } from "react"
 import { MeshGradient } from "@paper-design/shaders-react"
 import Link from "next/link"
 import { GraduationCap } from "lucide-react"
@@ -23,17 +23,23 @@ const HERO_COLORS = [
 ]
 
 export function HeroSection() {
-  const [dimensions, setDimensions] = useState({ width: 1280, height: 900 })
-  const [mounted, setMounted] = useState(false)
+  const [dimensions, setDimensions] = useState(() =>
+    typeof window === "undefined"
+      ? { width: 1280, height: 900 }
+      : { width: window.innerWidth, height: Math.max(800, window.innerHeight) },
+  )
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  )
 
   useEffect(() => {
-    setMounted(true)
     const update = () =>
       setDimensions({
         width: window.innerWidth,
         height: Math.max(800, window.innerHeight),
       })
-    update()
     window.addEventListener("resize", update)
     return () => window.removeEventListener("resize", update)
   }, [])
