@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import Link from "next/link"
 import {
   BookOpen,
@@ -11,6 +12,33 @@ import {
 } from "lucide-react"
 import { manuals } from "@/lib/manuals"
 import { ManualsExplorer } from "@/components/manuals/manuals-explorer"
+
+export const metadata: Metadata = {
+  title: "Manuais LPI",
+  description:
+    "114 tópicos dos manuais oficiais do Linux Professional Institute (LPI), traduzidos, enriquecidos e pesquisáveis com inteligência artificial. Estuda Linux Essentials e LPIC-1 em português europeu.",
+  keywords: [
+    "manuais LPI", "Linux Essentials", "LPIC-1", "certificação Linux",
+    "tópicos Linux", "estudo Linux", "manuais oficiais LPI", "PT-PT",
+  ],
+  robots: { index: true, follow: true },
+  alternates: { canonical: "/manuals" },
+  openGraph: {
+    title: "Manuais LPI — Linux de Camões",
+    description:
+      "114 tópicos dos manuais oficiais do Linux Professional Institute (LPI), traduzidos e pesquisáveis com IA.",
+    type: "website",
+    locale: "pt_PT",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Manuais LPI" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Manuais LPI — Linux de Camões",
+    description:
+      "114 tópicos dos manuais oficiais LPI, traduzidos e pesquisáveis com IA.",
+    images: ["/opengraph-image"],
+  },
+}
 
 export default function ManualsPage() {
   const totalTopics = manuals.reduce((sum, m) => sum + m.topics.length, 0)

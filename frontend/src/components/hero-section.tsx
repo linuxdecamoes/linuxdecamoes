@@ -68,8 +68,9 @@ export function HeroSection() {
       <div className="absolute inset-0 bg-white/25 pointer-events-none" />
 
       <div className="relative z-10 mx-auto max-w-4xl px-4 py-24 text-center sm:py-32 lg:py-40">
-        <h1
+        <p
           className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl"
+          aria-hidden="true"
           style={{
             color: "var(--foreground)",
             animation: "slideUp 0.6s ease-out 0.1s both",
@@ -86,7 +87,7 @@ export function HeroSection() {
               <span aria-hidden="true">SysAdmin.</span>
             </span>
           </span>
-        </h1>
+        </p>
 
         <p
           className="mx-auto mt-6 max-w-2xl text-lg leading-8"

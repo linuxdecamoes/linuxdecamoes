@@ -15,14 +15,36 @@ import { LandingFooter } from "@/components/landing-footer"
 import { GithubIcon } from "@/components/hero-section"
 
 export const metadata: Metadata = {
-  title: "Sobre — Linux de Camões",
+  title: "Sobre",
   description:
-    "Conhece o projeto Linux de Camões: plataforma open-source de aprendizagem de Linux, baseada nos manuais oficiais de certificação LPI.",
+    "Conhece o projeto Linux de Camões: plataforma open-source de aprendizagem de Linux, baseada nos manuais oficiais de certificação LPI. Open source, MIT License, em português europeu.",
+  keywords: [
+    "Linux de Camões", "sobre", "projeto open-source", "aprendizagem Linux",
+    "LPI", "certificação", "MIT License", "PT-PT",
+  ],
+  robots: { index: true, follow: true },
+  alternates: { canonical: "/sobre" },
   openGraph: {
     title: "Sobre — Linux de Camões",
     description:
-      "Plataforma open-source de aprendizagem de Linux com IA interativa.",
+      "Conhece o projeto Linux de Camões: plataforma open-source de aprendizagem de Linux com IA interativa. Open source, MIT License, em português europeu.",
     type: "website",
+    locale: "pt_PT",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "Linux de Camões",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Sobre — Linux de Camões",
+    description:
+      "Plataforma open-source de aprendizagem de Linux com IA interativa.",
+    images: ["/opengraph-image"],
   },
 }
 
@@ -114,6 +136,7 @@ export default function SobrePage() {
 
         {/* Missão / Público / Filosofia */}
         <section className="mx-auto max-w-6xl px-4 py-24">
+          <h2 className="sr-only">O Projeto</h2>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {missionCards.map((card) => (
               <div
