@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import Link from "next/link"
 import {
   Brain,
@@ -14,6 +15,18 @@ import { LandingFooter } from "@/components/landing-footer"
 import { HeroSection } from "@/components/hero-section"
 import { GithubIcon } from "@/components/hero-section"
 
+export const metadata: Metadata = {
+  title: "Domine Sistemas Linux com IA Interativa",
+  description:
+    "A plataforma de aprendizagem de Linux baseada nos manuais oficiais. Estuda, pratica e prepara-te para os exames de certificação LPI com IA interativa e quizzes inteligentes.",
+  openGraph: {
+    title: "Linux de Camões — Plataforma de Aprendizagem de Linux",
+    description:
+      "A plataforma de aprendizagem de Linux baseada nos manuais oficiais. Do universo ao marketplace — uma ponte entre formação certificada e experiência real.",
+    type: "website",
+  },
+}
+
 function DiscordIcon({ className, style }: { className?: string; style?: React.CSSProperties }) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" className={className} style={style} aria-hidden="true">
@@ -28,6 +41,9 @@ export default function Home() {
       <LandingHeader />
 
       <main className="flex-1">
+        <h1 className="sr-only">
+          Domine Sistemas Linux — SysAdmin, DevOps, Cloud Native, Segurança.
+        </h1>
         <HeroSection />
 
         {/* Bento Grid */}

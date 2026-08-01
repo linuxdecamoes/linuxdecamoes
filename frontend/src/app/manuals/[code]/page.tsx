@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import Link from "next/link"
 import { ArrowLeft, BookOpen, Layers, FileText } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -6,6 +7,45 @@ import { TopicAccordion } from "@/components/manuals/topic-accordion"
 
 export function generateStaticParams() {
   return manuals.map((m) => ({ code: m.code }))
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ code: string }>
+}): Promise<Metadata> {
+  const { code } = await params
+  const manual = getManual(code)
+
+  if (!manual) {
+    return { title: "Manual não encontrado" }
+  }
+
+  const levelLabel = manual.level === "essentials" ? "Linux Essentials" : "LPIC-1"
+
+  return {
+    title: manual.title,
+    description: `${manual.description} — ${manual.topics.length} tópicos do manual oficial ${manual.code} do LPI (${levelLabel}).`,
+    keywords: [
+      "manuais LPI", manual.title, `LPI ${manual.code}`, levelLabel,
+      "certificação Linux", "tópicos Linux", "estudo Linux", "PT-PT",
+    ],
+    robots: { index: true, follow: true },
+    alternates: { canonical: `/manuals/${code}` },
+    openGraph: {
+      title: `${manual.title} — Manuais LPI`,
+      description: `${manual.description} — ${manual.topics.length} tópicos do manual oficial ${manual.code} da certificação ${levelLabel}.`,
+      type: "website",
+      locale: "pt_PT",
+      images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: manual.title }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${manual.title} — Manuais LPI`,
+      description: `${manual.description} — ${manual.topics.length} tópicos de estudo.`,
+      images: ["/opengraph-image"],
+    },
+  }
 }
 
 export default async function ManualDetailPage({
@@ -32,8 +72,32 @@ export default async function ManualDetailPage({
     (t) => t.objective || /^\d{3}/.test(t.slug)
   ).length
 
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://linuxdecamoes.pt"
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Manuais LPI",
+        item: `${SITE_URL}/manuais`,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: manual.title,
+        item: `${SITE_URL}/manuais/${code}`,
+      },
+    ],
+  }
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <section
         className={`relative overflow-hidden border-b border-border ${accent.soft}`}
       >
