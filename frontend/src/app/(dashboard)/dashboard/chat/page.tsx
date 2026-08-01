@@ -5,6 +5,7 @@ import { Send, Bot, User, Loader2, ExternalLink } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { sendChatMessage } from "@/lib/api";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -44,21 +45,17 @@ function ChatContent() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:8000/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query }),
-      });
-
-      if (!res.ok) throw new Error("Erro ao obter resposta");
-
-      const data = await res.json();
+      const data = await sendChatMessage(query);
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
           content: data.answer,
-          sources: data.sources,
+          sources: data.sources.map((s) => ({
+            topic: s.topico,
+            score: s.score,
+            excerpt: s.texto,
+          })),
         },
       ]);
     } catch {
