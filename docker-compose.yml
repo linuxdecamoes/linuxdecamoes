@@ -35,25 +35,10 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-      args:
-        VAULT_PATH: /app/Vault
-      additional_contexts:
-        # Build-time context nomeado "vault": expõe o Vault ao Dockerfile via
-        # `RUN --mount=type=bind,from=vault` durante `npm run build`. Isto é
-        # necessário porque o `generateStaticParams` (SSG) invoca
-        # `loadTopicBySlug` 113 vezes — sem o Vault no build, todos os tópicos
-        # 404'ariam e ficavam "colados" como páginas estáticas de erro.
-        # (Nota: `build.volumes` não existe no schema do compose; o idioma
-        # padrão BuildKit é `additional_contexts` + `RUN --mount=type=bind`.)
-        vault: ../Vault
     ports:
       - "3001:3000"
     env_file:
-      - ./frontend/.env
-    environment:
-      - VAULT_PATH=/app/Vault
-    volumes:
-      - ../Vault:/app/Vault:ro
+      - ./frontend/.env.local
     restart: unless-stopped
 
 volumes:
