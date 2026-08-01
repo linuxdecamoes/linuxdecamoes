@@ -42,7 +42,7 @@ jobs:
   deploy:
     name: Deploy na VPS
     needs: verify
-    if: ${{ secrets.VPS_HOST != '' }}
+    if: ${{ github.secret_source == 'Actions' }}
     runs-on: ubuntu-latest
     environment: production
     steps:
