@@ -1,0 +1,72 @@
+name: Deploy para VPS
+
+on:
+  push:
+    branches: [main, master]
+    paths-ignore:
+      - 'readme/**'
+      - 'docs/**'
+      - '**.md'
+      - '.obsidian/**'
+      - '.codex/**'
+
+concurrency:
+  group: deploy-vps
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Verificacao (Lint + Build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Instalar dependencias
+        working-directory: frontend
+        run: npm ci
+
+      - name: Lint
+        working-directory: frontend
+        run: npm run lint
+
+      - name: Build
+        working-directory: frontend
+        run: npm run build
+
+  deploy:
+    name: Deploy na VPS
+    needs: verify
+    if: ${{ secrets.VPS_HOST != '' }}
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          script: |
+            set -e
+            cd ${{ secrets.VPS_APP_PATH || '/opt/linuxdecamoes' }}
+
+            echo "▶ Git pull..."
+            git fetch origin
+            git reset --hard origin/$(git rev-parse --abbrev-ref HEAD)
+
+            echo "▶ A reconstruir e reiniciar containers..."
+            docker compose down backend frontend
+            docker compose up --build -d --remove-orphans
+
+            echo "▶ A verificar se os servicos estao saudaveis..."
+            sleep 5
+            docker compose ps
+
+            echo "✅ Deploy concluido!"
