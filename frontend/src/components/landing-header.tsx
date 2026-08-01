@@ -56,7 +56,7 @@ export function LandingHeader() {
           href="/"
           className="flex items-center gap-2 font-semibold text-foreground"
         >
-          <img src="/linuxdecamoes.png" alt="" className="h-9 w-9" />
+          <img src="/linuxdecamoes_bk.svg" alt="" className="h-11 w-11" />
           <span className="hidden sm:inline">
             Linux de Camões
           </span>
