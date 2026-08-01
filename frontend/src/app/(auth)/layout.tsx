@@ -30,12 +30,13 @@ export default function AuthLayout({
           className="mb-8 flex items-center gap-2 rounded-lg p-2 transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
           aria-label="Página inicial — Linux de Camões"
         >
-          <div
-            className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground font-bold text-lg"
-            aria-hidden="true"
-          >
-            L
-          </div>
+          <img
+            src="/linuxdecamoes_bk.svg"
+            alt=""
+            width={44}
+            height={44}
+            className="h-11 w-11"
+          />
           <span className="text-xl font-semibold text-foreground">
             Linux de Camões
           </span>
