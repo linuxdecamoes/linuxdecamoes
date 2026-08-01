@@ -69,6 +69,6 @@ linuxdecamoes/
 
 ## Documentação Relacionada
 
-- [[02-Backend]] · [[03-Frontend]] · [[04-Banco-de-Dados]] · [[05-Docker]] · [[06-Features]] · [[07-Roadmap]]
+- [[02-Backend]] · [[03-Frontend]] · [[04-Banco-de-Dados]] · [[05-Docker]] · [[06-Features]] · [[07-Roadmap]] · [[08-Deploy]]
 - `docs/Norma 01 - Sistema de Tokens e Cores.md` (governança de cores)
 - `docs/Norma 02 - Layout Bento e Grelha.md` (governança de layout)

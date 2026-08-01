@@ -185,85 +185,15 @@ linuxdecamoes/
 
 ## Deploy na VPS + CI/CD
 
-### 1. Provisionamento inicial (VPS)
+Guia completo, passo a passo (provisionamento, chave SSH, secrets, primeiro
+deploy, backups e troubleshooting): **[`readme/08-Deploy.md`](readme/08-Deploy.md)**
 
-Na VPS (Ubuntu/Debian), corre uma unica vez:
+Resumo:
 
-```bash
-# Na VPS:
-curl -fsSL https://raw.githubusercontent.com/linuxdecamoes/linuxdecamoes/master/scripts/setup-vps.sh | bash
-```
-
-Isto instala Docker, clona o repo em `/opt/linuxdecamoes` e cria os `.env`.
-
-Depois edita os ficheiros `.env` com as tuas chaves:
-
-```bash
-vim /opt/linuxdecamoes/.env
-vim /opt/linuxdecamoes/backend/.env
-vim /opt/linuxdecamoes/frontend/.env.local
-```
-
-E sobe os servicos:
-
-```bash
-cd /opt/linuxdecamoes
-docker compose up --build -d
-```
-
-### 2. Pipeline CI/CD (GitHub Actions)
-
-O workflow `.github/workflows/deploy.yml` faz deploy automatico sempre que
-fazes push para `main`. Corre lint + build primeiro, e so depois faz deploy na
-VPS via SSH.
-
-**Configura os segredos no GitHub** (Settings → Secrets and variables → Actions):
-
-| Segredo | Descricao |
-|---------|-----------|
-| `VPS_HOST` | IP ou dominio da VPS |
-| `VPS_USER` | Utilizador SSH (ex: ubuntu, root) |
-| `VPS_SSH_KEY` | Chave privada SSH (conteudo completo de `~/.ssh/id_ed25519`) |
-| `VPS_PORT` | Porta SSH (opcional, default 22) |
-| `VPS_APP_PATH` | Caminho do repo na VPS (opcional, default `/opt/linuxdecamoes`) |
-
-**Gerar chave SSH para o GitHub Actions:**
-
-Na VPS:
-
-```bash
-ssh-keygen -t ed25519 -C "github-actions-deploy" -f ~/.ssh/github_actions
-cat ~/.ssh/github_actions.pub >> ~/.ssh/authorized_keys
-cat ~/.ssh/github_actions          # ← copia TUDO para o segredo VPS_SSH_KEY
-```
-
-### 3. Backups
-
-**Backup local (bash, via cron):**
-
-```bash
-# Corre diariamente as 03:00
-(crontab -l 2>/dev/null; echo "0 3 * * * /opt/linuxdecamoes/scripts/backup.sh >> /var/log/linuxdecamoes-backup.log 2>&1") | crontab -
-```
-
-**Backup para S3/AWS (Python):**
-
-```bash
-pip install boto3
-export S3_BUCKET=linuxdecamoes-backups
-export AWS_ACCESS_KEY_ID=AKIA...
-export AWS_SECRET_ACCESS_KEY=...
-python3 scripts/backup_s3.py
-```
-
-Isto faz pg_dump e envia para o bucket S3. Podes usar com AWS S3, Cloudflare R2
-ou MinIO (self-hosted).
-
-**Restauro:**
-
-```bash
-./scripts/restore.sh backups/pg_2026-07-31_120000.dump
-```
+1. **Provisionamento** (uma vez): `curl -fsSL https://raw.githubusercontent.com/linuxdecamoes/linuxdecamoes/master/scripts/setup-vps.sh | bash`
+2. **Chave SSH**: gerar `~/.ssh/github_actions` na VPS e copiar a pública para `~/.ssh/authorized_keys`.
+3. **Secrets**: `VPS_HOST`, `VPS_USER`, `VPS_SSH_KEY`, `VPS_PORT`, `VPS_APP_PATH` (ver guia para valores).
+4. **Push para `master`** → CI faz lint+build e faz deploy automático na VPS.
 
 ## Licença
 
