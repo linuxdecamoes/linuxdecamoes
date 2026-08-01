@@ -45,11 +45,18 @@ primeiro push funciona logo à partida.
 
 ## 1. Provisionamento Inicial (uma vez)
 
-Na VPS (Ubuntu/Debian), corre uma única vez:
+Na VPS (Ubuntu/Debian), corre **numa só linha** (se partires o comando em duas,
+o terminal devolve `curl: (2) no URL specified`):
 
 ```bash
-# Na VPS:
 curl -fsSL https://raw.githubusercontent.com/linuxdecamoes/linuxdecamoes/master/scripts/setup-vps.sh | bash
+```
+
+Alternativa mais segura (evita problemas de colagem no terminal):
+
+```bash
+curl -fsSL -o setup-vps.sh https://raw.githubusercontent.com/linuxdecamoes/linuxdecamoes/master/scripts/setup-vps.sh
+bash setup-vps.sh
 ```
 
 O script `scripts/setup-vps.sh`:
@@ -85,6 +92,33 @@ docker compose ps        # db/backend/frontend Up (healthy)
 ```
 
 Portas expostas: `3001` (frontend), `8000` (backend), `5432` (PostgreSQL).
+
+### PostgreSQL — user e password
+
+O user e a password da base de dados são definidos no `docker-compose.yml` e no
+`.env` da raiz. **Default:** user `kubeai`, password `kubeai`, db `kubeai` — o
+compose lê de `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB`, com fallback
+para `kubeai` se não forem definidos.
+
+> ⚠️ **A password só é aplicada quando o volume `pgdata` é criado.** Se o
+> contentor já arrancou antes, mudar o `.env` **não muda** a password real do
+> PostgreSQL (fica gravada no volume). Duas opções:
+>
+> - **Instalação nova / sem dados importantes:** `docker compose down -v` e
+>   `docker compose up --build -d` (apaga o volume e recria com a nova password).
+> - **Com dados existentes:** mudar por SQL (não apaga nada):
+>
+> ```bash
+> docker exec -it linuxdecamoes-db-1 psql -U kubeai -d kubeai -c "ALTER USER kubeai WITH PASSWORD 'A_NOVA_PASSWORD';"
+> ```
+>
+> E **alinhar a `DATABASE_URL`** no `backend/.env` com a nova password, senão o
+> backend falha a ligação (dentro da rede Docker o host da BD é `db`, não
+> `localhost`):
+>
+> ```
+> DATABASE_URL=postgresql+asyncpg://kubeai:A_NOVA_PASSWORD@db:5432/kubeai
+> ```
 
 ## 4. Chave SSH para o GitHub Actions
 
@@ -181,6 +215,7 @@ python3 scripts/backup_s3.py
 | Portas inacessíveis de fora | Firewall da VPS | Abrir `3001`, `8000`, `5432` (ou usar reverse proxy com TLS) |
 | Rate limit da Groq | Quizzes pendentes de geração | Esperar reset diário ou trocar para `llama-3.1-8b-instant` |
 | `docker compose ps` mostra serviço Down | .env sem chaves ou erro de arranque | Ver `docker compose logs <serviço>` |
+| Backend não liga à BD (password inválida) | Password só muda com o volume criado | `ALTER USER ... WITH PASSWORD` ou `docker compose down -v`; alinhar `DATABASE_URL` no `backend/.env` |
 | SSH `Permission denied` no deploy | `VPS_SSH_KEY` errado ou `authorized_keys` sem a chave pública | Regenerar e reconfigurar (§4–§5) |
 
 ## Referências
