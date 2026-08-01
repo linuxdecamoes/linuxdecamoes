@@ -6,9 +6,7 @@ export function DashboardFooter() {
       <div className="mx-auto w-full max-w-[1560px] 2xl:max-w-[1920px] px-4 md:px-8 xl:px-12 py-8">
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
           <div className="flex items-center gap-2">
-            <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary text-primary-foreground text-xs font-bold">
-              L
-            </div>
+            <img src="/linuxdecamoes_bk.svg" alt="" width={28} height={28} className="h-7 w-7" />
             <span className="text-sm font-semibold text-foreground">Linux de Camões</span>
           </div>
           <nav className="flex items-center gap-4 text-xs text-muted-foreground">
