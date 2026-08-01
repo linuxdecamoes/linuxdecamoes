@@ -50,7 +50,7 @@ Resumo das últimas entradas do histórico (`agents.md` §8.2):
 
 ### Deploy Automático GitHub → VPS (2026-08-01)
 
-CI/CD com GitHub Actions: `verify` (lint + build do frontend, 132 páginas SSG) → `deploy` (SSH à VPS `danieldias@54.37.15.115:2294` → `git reset --hard` + `docker compose up --build -d`). O build docker deixou de depender do Vault externo (`../Vault`) — os 146 `.mdx` estão commitados em `frontend/src/content/manuals/`. Branch canónica `master`; workflow resiliente a secrets não configurados (job `deploy` é ignorado até `VPS_HOST` existir). Guia completo em `readme/08-Deploy.md`. Backups: cron diário 03:00 + upload S3 + restauro. *Pendente do utilizador:* criar a chave SSH `github_actions` na VPS e configurar os secrets do GitHub.
+CI/CD com GitHub Actions: `verify` (lint + build do frontend, 132 páginas SSG) → `deploy` (SSH à VPS `danieldias@54.37.15.115:2294` → `git reset --hard` + `docker compose up --build -d`). O build docker deixou de depender do Vault externo (`../Vault`) — os 146 `.mdx` estão commitados em `frontend/src/content/manuals/`. Branch canónica `master`; workflow resiliente a secrets não configurados (job `deploy` é ignorado via `github.secret_source` até existirem secrets do repo). Guia completo em `readme/08-Deploy.md`. Backups: cron diário 03:00 + upload S3 + restauro. *Pendente do utilizador:* criar a chave SSH `github_actions` na VPS e configurar os secrets do GitHub.
 
 > Spec: `docs/superpowers/specs/2026-08-01-deploy-automatico-vps-design.md` · Plano: `docs/superpowers/plans/2026-08-01-deploy-automatico-vps.md`
 
