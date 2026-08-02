@@ -48,9 +48,10 @@ export function SplashScreen() {
     >
       <div className="relative flex flex-col items-center gap-6">
         <div className="relative">
-          <svg
+            <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 1586.42 1586.42"
+            fillRule="evenodd"
             className="splash-logo h-32 w-32 sm:h-40 sm:w-40"
             aria-hidden="true"
           >
@@ -58,7 +59,7 @@ export function SplashScreen() {
               cx="793.21"
               cy="793.21"
               r="793.21"
-              fill="var(--primary)"
+              fill="black"
               className="splash-bg"
             />
             <g className="splash-tier-1">
