@@ -26,6 +26,12 @@ const footerSections = [
       { href: "/dashboard/chat", label: "Motor RAG" },
     ],
   },
+  {
+    title: "Legal",
+    links: [
+      { href: "/privacidade", label: "Política de Privacidade" },
+    ],
+  },
 ]
 
 export function LandingFooter() {
