@@ -99,6 +99,7 @@
   --shadow-float: var(--shadow-float);
   --shadow-glass: var(--shadow-glass);
   --shadow-card-elevated: var(--shadow-card-elevated);
+  --splash-glow: oklch(0.55 0.20 260 / 0.3);
 }
 
 :root {
@@ -218,6 +219,7 @@
   --table-header-bg: var(--cream);
   --table-border: var(--border);
   --hero-watermark: oklch(0.93 0.008 250 / 0.5);
+  --splash-glow: oklch(0.55 0.20 260 / 0.3);
 }
 
 @layer base {
@@ -446,6 +448,51 @@
   100%     { transform: translateY(-80%); }
 }
 
+@keyframes splash-draw {
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes splash-glow {
+  0% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.15;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+@keyframes splash-name {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes splash-fadeout {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -637,3 +684,85 @@
 .chat-markdown h1 { font-size: 1.125rem; }
 .chat-markdown h2 { font-size: 1rem; }
 .chat-markdown h3 { font-size: 0.9375rem; }
+
+/* ================================================================
+   Splash Screen — Timing & Stagger
+   ================================================================ */
+
+.splash-overlay {
+  opacity: 1;
+  animation: splash-fadeout 0.4s ease-in 2.4s forwards;
+}
+
+.splash-bg {
+  opacity: 0;
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.splash-logo {
+  opacity: 0;
+  transform: scale(0.85);
+  animation: pop-in 0.4s ease-out 0.05s forwards;
+  will-change: transform, opacity;
+}
+
+.splash-tier-1,
+.splash-tier-2,
+.splash-tier-3,
+.splash-tier-4 {
+  opacity: 0;
+  animation: splash-draw 0.5s ease-out forwards;
+}
+
+.splash-tier-1 { animation-delay: 0.3s; }
+.splash-tier-2 { animation-delay: 0.45s; }
+.splash-tier-3 { animation-delay: 0.6s; }
+.splash-tier-4 { animation-delay: 0.75s; }
+
+.splash-glow-ring {
+  position: absolute;
+  inset: -8%;
+  border-radius: 50%;
+  border: 2px solid var(--splash-glow);
+  opacity: 0;
+  animation: splash-glow 0.4s ease-out 1.6s forwards;
+  pointer-events: none;
+}
+
+.splash-name {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: splash-name 0.4s ease-out 1.9s forwards;
+}
+
+html[data-splash="skip"] .splash-overlay {
+  display: none !important;
+  animation: none !important;
+}
+
+/* ================================================================
+   Splash Screen — Reduced Motion
+   ================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .splash-tier-1,
+  .splash-tier-2,
+  .splash-tier-3,
+  .splash-tier-4,
+  .splash-glow-ring,
+  .splash-name {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .splash-logo {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .splash-overlay {
+    animation: splash-fadeout 0.3s ease-in 0.6s forwards;
+  }
+}
