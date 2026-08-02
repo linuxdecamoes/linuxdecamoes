@@ -28,6 +28,9 @@ export function DashboardFooter() {
             <Link href="/lab" className="hover:text-foreground transition-colors">
               Lab
             </Link>
+            <Link href="/privacidade" className="hover:text-foreground transition-colors">
+              Privacidade
+            </Link>
           </nav>
           <p className="text-xs text-muted-foreground">
             &copy; 2026 Linux de Camões
