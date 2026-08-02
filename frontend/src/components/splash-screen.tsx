@@ -3,29 +3,31 @@
 import { useEffect, useRef, useState } from 'react';
 
 export function SplashScreen() {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    try {
+      return !sessionStorage.getItem('ldc:splash-shown');
+    } catch {
+      return false;
+    }
+  });
+
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    try {
-      if (sessionStorage.getItem('ldc:splash-shown')) return;
-    } catch {
-      return;
-    }
-
-    setVisible(true);
+    if (!visible) return;
 
     timerRef.current = setTimeout(() => {
-      try {
-        const el = document.querySelector('.splash-overlay');
-        if (el) el.dispatchEvent(new Event('splash-done'));
-      } catch {}
+      const el = document.querySelector<HTMLElement>('.splash-overlay');
+      if (el) {
+        el.style.animationPlayState = 'running';
+      }
     }, 3500);
 
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, []);
+  }, [visible]);
 
   if (!visible) return null;
 
@@ -38,7 +40,9 @@ export function SplashScreen() {
       onAnimationEnd={(e: React.AnimationEvent) => {
         if (e.animationName === 'splash-fadeout') {
           setVisible(false);
-          try { sessionStorage.setItem('ldc:splash-shown', '1'); } catch {}
+          try {
+            sessionStorage.setItem('ldc:splash-shown', '1');
+          } catch {}
         }
       }}
     >

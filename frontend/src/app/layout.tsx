@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Inter, JetBrains_Mono, Merriweather, Fira_Code } from "next/font/google";
+import { SplashScreen } from "@/components/splash-screen";
 import "./globals.css";
 
 const inter = Inter({
@@ -136,11 +137,17 @@ export default function RootLayout({
       >
         <head>
           <script
+            dangerouslySetInnerHTML={{
+              __html: `try{if(sessionStorage.getItem('ldc:splash-shown'))document.documentElement.setAttribute('data-splash','skip')}catch(e){}`,
+            }}
+          />
+          <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
           />
         </head>
         <body className="min-h-full flex flex-col antialiased">
+          <SplashScreen />
           {children}
         </body>
       </html>
