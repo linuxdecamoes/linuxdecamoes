@@ -1,6 +1,6 @@
 export function TopicsCard() {
   return (
-    <div className="flex h-full flex-col justify-between rounded-2xl border border-border bg-card p-6 shadow-bento transition-all hover:shadow-bento-hover lg:p-8">
+    <div className="surface-card">
       <div>
         <h2 className="text-xl lg:text-2xl font-bold text-foreground">
           Tópicos

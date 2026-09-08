@@ -3,7 +3,7 @@ import Link from "next/link"
 export function ChatCard() {
   return (
     <Link href="/dashboard/chat" className="group block h-full">
-      <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-bento transition-all hover:shadow-bento-hover lg:p-8">
+      <div className="surface-card relative overflow-hidden">
         <div className="relative z-10">
           <h2 className="text-xl lg:text-2xl font-bold text-foreground">
             Chat IA
