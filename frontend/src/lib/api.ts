@@ -1,4 +1,13 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+// Server-side code (server components, route handlers) runs inside the
+// Docker network and should talk to the backend directly via its service
+// name — the public domain often can't be reached from inside its own
+// container (no NAT hairpin). API_INTERNAL_URL is not a NEXT_PUBLIC_ var, so
+// it's only ever defined server-side; client-side code always falls back to
+// NEXT_PUBLIC_API_URL, which is what the browser needs.
+const API_BASE =
+  process.env.API_INTERNAL_URL ??
+  process.env.NEXT_PUBLIC_API_URL ??
+  "http://localhost:8000";
 
 async function apiFetch<T>(
   path: string,
