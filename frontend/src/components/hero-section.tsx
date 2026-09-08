@@ -67,7 +67,7 @@ export function HeroSection() {
           className="hero-grid-bg relative h-72 overflow-hidden border border-border bg-card-dark sm:h-96 lg:h-[26rem] lg:w-[calc(100%+4rem)] lg:justify-self-end"
           aria-hidden="true"
         >
-          <div className="relative flex h-full flex-col justify-center gap-3 px-6 font-mono text-sm text-white/80">
+          <div className="relative z-10 flex h-full flex-col justify-center gap-3 px-6 font-mono text-sm text-white/80">
             <div style={{ animation: "float 3s ease-in-out infinite" }}>$ uname -a</div>
             <div className="text-primary" style={{ animation: "float 3s ease-in-out infinite 0.6s" }}>
               Linux camoes 6.8.0 x86_64 GNU/Linux

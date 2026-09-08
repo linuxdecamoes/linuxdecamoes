@@ -624,12 +624,29 @@
     }
   }
 
-  /* Fundo tipo papel milimétrico para o painel da hero. */
+  /* Fundo tipo papel milimétrico para o painel da hero — linhas subtis
+     (não var(--border), que é claro de mais para um fundo escuro) mais
+     um glow petróleo suave a dar profundidade em vez de grid nua. */
   .hero-grid-bg {
+    position: relative;
     background-image:
-      linear-gradient(var(--border) 1px, transparent 1px),
-      linear-gradient(90deg, var(--border) 1px, transparent 1px);
-    background-size: 24px 24px;
+      linear-gradient(oklch(1 0 0 / 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, oklch(1 0 0 / 0.05) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .hero-grid-bg::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 90% 70% at 25% 20%, oklch(0.42 0.09 165 / 0.35), transparent 65%);
+    pointer-events: none;
+  }
+  .hero-grid-bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 120% 100% at 50% 50%, transparent 40%, oklch(0.13 0.03 260 / 0.65) 100%);
+    pointer-events: none;
   }
 }
 
