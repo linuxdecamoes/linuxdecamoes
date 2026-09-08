@@ -176,7 +176,7 @@ export default async function TopicPage({
             className="min-w-0"
             tabIndex={-1}
           >
-            <div className="rounded-2xl border border-border bg-card p-6 shadow-soft sm:p-8 lg:p-10">
+            <div className="border border-border bg-card p-6 sm:p-8 lg:p-10">
               <MDXContent />
             </div>
 

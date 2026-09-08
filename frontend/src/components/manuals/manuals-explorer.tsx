@@ -81,7 +81,7 @@ export function ManualsExplorer({ manuals }: ManualsExplorerProps) {
       </div>
 
       {noResults ? (
-        <div className="rounded-3xl border border-dashed border-border py-20 text-center">
+        <div className="border border-dashed border-border py-20 text-center">
           <p className="text-lg font-medium text-foreground">Nenhum manual encontrado</p>
           <p className="mt-1 text-sm text-muted-foreground">
             Tenta pesquisar por outro termo.
