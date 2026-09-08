@@ -3,14 +3,13 @@
 import { useEffect, useRef, useState } from 'react';
 
 export function SplashScreen() {
-  const [visible, setVisible] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    try {
-      return !sessionStorage.getItem('ldc:splash-shown');
-    } catch {
-      return false;
-    }
-  });
+  // Stable initial value on both server and client to avoid a hydration
+  // mismatch (React #418). Returning visitors never see this: the blocking
+  // inline script in layout.tsx sets data-splash="skip" on <html> before
+  // hydration, and the CSS rule in globals.css hides .splash-overlay
+  // (display: none) for that case — no JS-side sessionStorage check needed
+  // on mount.
+  const [visible, setVisible] = useState(true);
 
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 

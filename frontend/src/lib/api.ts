@@ -18,6 +18,21 @@ async function apiFetch<T>(
   return res.json();
 }
 
+/* ── Manuals ───────────────────────────────────────── */
+
+export type ManualStat = {
+  id: string;
+  code: string;
+  title: string;
+  total_topics: number;
+};
+
+export async function getManuals(): Promise<ManualStat[]> {
+  return apiFetch<ManualStat[]>("/api/manuals/", {
+    next: { revalidate: 3600 },
+  });
+}
+
 /* ── Users ─────────────────────────────────────────── */
 
 export type User = {

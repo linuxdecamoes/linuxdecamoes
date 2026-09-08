@@ -1,6 +1,6 @@
 """
 Serviço LLM via Groq API (gratuita).
-Utiliza o modelo Llama 3.1 8B Instant para gerar respostas e quizzes com contexto RAG.
+Utiliza o modelo openai/gpt-oss-20b para gerar respostas e quizzes com contexto RAG.
 """
 from __future__ import annotations
 
@@ -41,7 +41,7 @@ def generate_response(query: str, chunks: list[dict]) -> str:
     user_msg = f"Contexto dos manuais LPI:\n{context}\n\nPergunta do utilizador: {query}"
 
     response = client.chat.completions.create(
-        model="llama-3.1-8b-instant",
+        model="openai/gpt-oss-20b",
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": user_msg},
@@ -97,7 +97,7 @@ def generate_quizzes(chunks: list[dict], n: int = 5) -> list[dict]:
 
     client = Groq(api_key=settings.GROQ_API_KEY)
     response = client.chat.completions.create(
-        model="llama-3.1-8b-instant",
+        model="openai/gpt-oss-20b",
         messages=[
             {"role": "system", "content": QUIZ_GENERATION_SYSTEM},
             {

@@ -12,7 +12,7 @@ import {
 } from "lucide-react"
 import { LandingHeader } from "@/components/landing-header"
 import { LandingFooter } from "@/components/landing-footer"
-import { GithubIcon } from "@/components/hero-section"
+import { GithubIcon } from "@/components/icons"
 
 export const metadata: Metadata = {
   title: "Sobre",

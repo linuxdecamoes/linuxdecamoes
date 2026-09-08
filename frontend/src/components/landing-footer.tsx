@@ -6,16 +6,27 @@ const footerSections = [
     links: [
       { href: "/sobre", label: "Sobre Nós" },
       { href: "#roadmap", label: "Roadmap" },
-      { href: "#", label: "Licença MIT" },
+      {
+        href: "https://github.com/linuxdecamoes/linuxdecamoes/blob/main/LICENSE",
+        label: "Licença MIT",
+        external: true,
+      },
     ],
   },
   {
     title: "Comunidade",
     links: [
       { href: "https://github.com/linuxdecamoes", label: "GitHub", external: true },
-      { href: "#", label: "Guia de Contribuição" },
-      { href: "#", label: "Discord / Chat" },
-      { href: "#", label: "Reportar Issue" },
+      {
+        href: "https://github.com/linuxdecamoes/linuxdecamoes#readme",
+        label: "Guia de Contribuição",
+        external: true,
+      },
+      {
+        href: "https://github.com/linuxdecamoes/linuxdecamoes/issues/new",
+        label: "Reportar Issue",
+        external: true,
+      },
     ],
   },
   {
