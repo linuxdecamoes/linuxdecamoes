@@ -16,7 +16,7 @@ export function ManualCard({ manual, index }: ManualCardProps) {
   return (
     <Link
       href={`/manuals/${manual.code}`}
-      className="glass-card stagger-child group relative flex flex-col overflow-hidden rounded-3xl p-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      className="stagger-child group relative flex flex-col overflow-hidden border border-border bg-card p-6 transition-colors hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       style={{ animationDelay: `${delay}ms` }}
     >
       <span

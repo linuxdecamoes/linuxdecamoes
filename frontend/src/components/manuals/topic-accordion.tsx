@@ -51,7 +51,7 @@ export function TopicAccordion({ manual }: TopicAccordionProps) {
           <Accordion.Item
             key={group}
             value={group}
-            className="glass-card overflow-hidden rounded-2xl"
+            className="overflow-hidden border border-border bg-card"
           >
             <Accordion.Header>
               <Accordion.Trigger className="group flex w-full items-center justify-between gap-3 px-5 py-4 text-left font-semibold text-foreground hover:bg-muted/40 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">

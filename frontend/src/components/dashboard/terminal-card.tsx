@@ -3,7 +3,7 @@ import Link from "next/link"
 export function TerminalCard() {
   return (
     <Link href="/lab" className="group block h-full">
-      <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-border bg-card-dark p-6 shadow-bento transition-all hover:shadow-bento-hover lg:p-8">
+      <div className="surface-card relative overflow-hidden bg-card-dark">
         <div className="relative z-10">
           <h2 className="text-xl lg:text-2xl font-bold text-primary-foreground/90">Terminal Lab</h2>
           <p className="mt-1 text-sm text-primary-foreground/50">

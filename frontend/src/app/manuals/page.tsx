@@ -148,7 +148,7 @@ export default function ManualsPage() {
               {stats.map((s) => (
                 <div
                   key={s.label}
-                  className="flex min-w-[7rem] flex-col items-center rounded-2xl border border-border bg-card/80 px-5 py-3 text-center backdrop-blur-sm"
+                  className="flex min-w-[7rem] flex-col items-center border border-border bg-card px-5 py-3 text-center"
                 >
                   <span className="text-2xl font-bold text-foreground">{s.value}</span>
                   <span className="mt-0.5 text-xs text-muted-foreground">{s.label}</span>
@@ -184,7 +184,7 @@ export default function ManualsPage() {
                   />
                 )}
                 <div
-                  className={`glass-card h-full rounded-3xl p-6 ${
+                  className={`h-full border border-border bg-card p-6 ${
                     phase.status === "soon" ? "opacity-60" : ""
                   }`}
                 >
@@ -225,9 +225,9 @@ export default function ManualsPage() {
             {steps.map((step) => (
               <div
                 key={step.title}
-                className="glass-card rounded-3xl p-6 text-center"
+                className="border border-border bg-card p-6 text-center"
               >
-                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10">
+                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center bg-primary/10">
                   <step.icon className="h-6 w-6 text-primary" aria-hidden />
                 </div>
                 <h3 className="text-base font-semibold text-foreground">{step.title}</h3>

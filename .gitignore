@@ -53,3 +53,9 @@ next-env.d.ts
 
 # docker volumes
 pgdata/
+
+# superpowers brainstorming session files
+.superpowers/
+
+# superpowers implementation worktrees
+.worktrees/
