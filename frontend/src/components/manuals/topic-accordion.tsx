@@ -69,7 +69,7 @@ export function TopicAccordion({ manual }: TopicAccordionProps) {
                 />
               </Accordion.Trigger>
             </Accordion.Header>
-            <Accordion.Panel className="px-2 pb-2">
+            <Accordion.Panel keepMounted className="px-2 pb-2">
               <ul className="space-y-0.5">
                 {topics.map((topic, i) => (
                   <li key={topic.slug}>

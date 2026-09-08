@@ -1,12 +1,10 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Sparkles, Tag } from "lucide-react"
-import type { ManualTopic, TopicFrontmatter } from "@/lib/manuals"
+import type { TopicFrontmatter } from "@/lib/manuals"
 
 type TopicMetaProps = {
   frontmatter: TopicFrontmatter
-  prev?: ManualTopic
-  next?: ManualTopic
   manualCode: string
   topicSlug: string
   topicTitle: string

@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { AuthAwareNavLink } from "@/components/auth-aware-nav-link"
 
 export function DashboardFooter() {
   return (
@@ -10,24 +11,24 @@ export function DashboardFooter() {
             <span className="text-sm font-semibold text-foreground">Linux de Camões</span>
           </div>
           <nav className="flex items-center gap-4 text-xs text-muted-foreground">
-            <Link href="/dashboard" className="hover:text-foreground transition-colors">
+            <AuthAwareNavLink href="/dashboard" className="hover:text-foreground transition-colors">
               Dashboard
-            </Link>
-            <Link href="/dashboard/study" className="hover:text-foreground transition-colors">
+            </AuthAwareNavLink>
+            <AuthAwareNavLink href="/dashboard/study" className="hover:text-foreground transition-colors">
               Estudar
-            </Link>
+            </AuthAwareNavLink>
             <Link href="/manuals" className="hover:text-foreground transition-colors">
               Manuais
             </Link>
-            <Link href="/dashboard/chat" className="hover:text-foreground transition-colors">
+            <AuthAwareNavLink href="/dashboard/chat" className="hover:text-foreground transition-colors">
               Chat IA
-            </Link>
-            <Link href="/dashboard/quizzes" className="hover:text-foreground transition-colors">
+            </AuthAwareNavLink>
+            <AuthAwareNavLink href="/dashboard/quizzes" className="hover:text-foreground transition-colors">
               Quizzes
-            </Link>
-            <Link href="/lab" className="hover:text-foreground transition-colors">
+            </AuthAwareNavLink>
+            <AuthAwareNavLink href="/lab" className="hover:text-foreground transition-colors">
               Lab
-            </Link>
+            </AuthAwareNavLink>
             <Link href="/privacidade" className="hover:text-foreground transition-colors">
               Privacidade
             </Link>

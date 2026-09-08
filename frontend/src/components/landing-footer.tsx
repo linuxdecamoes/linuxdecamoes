@@ -1,11 +1,11 @@
 import Link from "next/link"
+import { AuthAwareNavLink } from "@/components/auth-aware-nav-link"
 
 const footerSections = [
   {
     title: "Projeto",
     links: [
       { href: "/sobre", label: "Sobre Nós" },
-      { href: "#roadmap", label: "Roadmap" },
       {
         href: "https://github.com/linuxdecamoes/linuxdecamoes/blob/main/LICENSE",
         label: "Licença MIT",
@@ -74,13 +74,23 @@ export function LandingFooter() {
               <ul className="mt-3 space-y-2">
                 {section.links.map((link) => (
                   <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                      {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                    >
-                      {link.label}
-                    </Link>
+                    {link.external ? (
+                      <Link
+                        href={link.href}
+                        className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {link.label}
+                      </Link>
+                    ) : (
+                      <AuthAwareNavLink
+                        href={link.href}
+                        className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                      >
+                        {link.label}
+                      </AuthAwareNavLink>
+                    )}
                   </li>
                 ))}
               </ul>

@@ -189,8 +189,6 @@ export default async function TopicPage({
           {/* Meta (sticky direita) */}
           <TopicMeta
             frontmatter={frontmatter}
-            prev={prev}
-            next={next}
             manualCode={code}
             topicSlug={slug}
             topicTitle={topic.title}
