@@ -245,7 +245,7 @@ export default async function Home() {
         {/* Comunidade */}
         <section id="comunidade" className="border-t border-border bg-background py-24">
           <div className="mx-auto max-w-4xl px-4">
-            <div className="relative overflow-hidden bg-card p-8 shadow-xl sm:p-12">
+            <div className="relative overflow-hidden border border-border bg-card p-8 sm:p-12">
               <GithubIcon className="absolute -right-8 -top-8 h-64 w-64 text-foreground opacity-[0.03]" />
 
               <div className="relative">
