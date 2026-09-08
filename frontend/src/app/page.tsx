@@ -43,13 +43,13 @@ const STACK_COLUMNS = [
   {
     title: "Backend",
     icon: Server,
-    color: "#22c55e",
+    color: "var(--coral)",
     items: ["FastAPI", "SQLAlchemy", "PostgreSQL", "Alembic"],
   },
   {
     title: "IA / ML",
     icon: Sparkles,
-    color: "#a855f7",
+    color: "var(--amber)",
     items: ["FAISS", "Groq", "sentence-transformers", "RAG"],
   },
   {
@@ -102,7 +102,7 @@ export default async function Home() {
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-12 auto-rows-[minmax(180px,auto)]">
             {/* Manuais Oficiais */}
-            <div className="bento-card relative rounded-2xl border border-border bg-card p-6 sm:col-span-2 lg:col-span-8">
+            <div className="bento-card relative border border-border bg-card p-6 sm:col-span-2 lg:col-span-8">
               <div className="mb-3 flex items-center gap-2">
                 <Award className="h-5 w-5 text-primary" />
                 <h3 className="font-semibold text-foreground">
@@ -118,7 +118,7 @@ export default async function Home() {
             </div>
 
             {/* Motor RAG */}
-            <div className="bento-card rounded-2xl border border-card-dark bg-card-dark p-6 text-white lg:col-span-4">
+            <div className="bento-card border border-card-dark bg-card-dark p-6 text-white lg:col-span-4">
               <div className="mb-3 flex items-center gap-2">
                 <Brain className="h-5 w-5" style={{ color: "var(--accent)" }} />
                 <h3 className="font-semibold">Motor RAG</h3>
@@ -131,7 +131,7 @@ export default async function Home() {
             </div>
 
             {/* SM-2 Quizzes */}
-            <div className="bento-card rounded-2xl border border-border bg-card p-6 lg:col-span-4">
+            <div className="bento-card border border-border bg-card p-6 lg:col-span-4">
               <div className="mb-3 flex items-center gap-2">
                 <Timer className="h-5 w-5 text-primary" />
                 <h3 className="font-semibold text-foreground">
@@ -146,7 +146,7 @@ export default async function Home() {
             </div>
 
             {/* Apoio Universitário */}
-            <div className="bento-card rounded-2xl border border-border bg-card p-6 lg:col-span-4">
+            <div className="bento-card border border-border bg-card p-6 lg:col-span-4">
               <div className="mb-3 flex items-center gap-2">
                 <Users className="h-5 w-5 text-primary" />
                 <h3 className="font-semibold text-foreground">
@@ -161,7 +161,7 @@ export default async function Home() {
             </div>
 
             {/* Labs K8s */}
-            <div className="bento-card rounded-2xl border border-dashed border-border bg-secondary p-6 lg:col-span-4">
+            <div className="bento-card border border-dashed border-border bg-secondary p-6 lg:col-span-4">
               <div className="mb-3 flex items-center gap-2">
                 <Terminal className="h-5 w-5 text-muted-foreground" />
                 <h3 className="font-semibold text-foreground">
@@ -186,14 +186,14 @@ export default async function Home() {
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
               {hasManualStats && (
                 <>
-                  <div className="rounded-2xl border border-border bg-card p-6 text-center">
+                  <div className="border border-border bg-card p-6 text-center">
                     <Layers className="mx-auto h-6 w-6 text-primary" />
                     <p className="mt-3 text-3xl font-bold text-foreground">
                       {stats.totalManuais}
                     </p>
                     <p className="text-sm text-muted-foreground">Manuais Oficiais</p>
                   </div>
-                  <div className="rounded-2xl border border-border bg-card p-6 text-center">
+                  <div className="border border-border bg-card p-6 text-center">
                     <BookOpen className="mx-auto h-6 w-6 text-primary" />
                     <p className="mt-3 text-3xl font-bold text-foreground">
                       {stats.totalTopicos}
@@ -203,7 +203,7 @@ export default async function Home() {
                 </>
               )}
               {stats.stars !== null && (
-                <div className="rounded-2xl border border-border bg-card p-6 text-center">
+                <div className="border border-border bg-card p-6 text-center">
                   <Star className="mx-auto h-6 w-6 text-primary" />
                   <p className="mt-3 text-3xl font-bold text-foreground">
                     {stats.stars}
@@ -245,7 +245,7 @@ export default async function Home() {
         {/* Comunidade */}
         <section id="comunidade" className="border-t border-border bg-background py-24">
           <div className="mx-auto max-w-4xl px-4">
-            <div className="relative overflow-hidden rounded-3xl bg-card p-8 shadow-xl sm:p-12">
+            <div className="relative overflow-hidden bg-card p-8 shadow-xl sm:p-12">
               <GithubIcon className="absolute -right-8 -top-8 h-64 w-64 text-foreground opacity-[0.03]" />
 
               <div className="relative">
