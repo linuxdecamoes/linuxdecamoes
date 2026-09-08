@@ -370,10 +370,6 @@
   75%  { transform: translate(12%, 8%) scale(1.04) rotate(-2deg); }
 }
 
-.hero-paper {
-  position: relative;
-}
-
 .hero-shader {
   position: relative;
   overflow: hidden;
