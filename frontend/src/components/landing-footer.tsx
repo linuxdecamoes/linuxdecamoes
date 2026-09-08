@@ -6,6 +6,7 @@ const footerSections = [
     title: "Projeto",
     links: [
       { href: "/sobre", label: "Sobre Nós" },
+      { href: "/changelog", label: "Atualizações" },
       {
         href: "https://github.com/linuxdecamoes/linuxdecamoes/blob/main/LICENSE",
         label: "Licença MIT",

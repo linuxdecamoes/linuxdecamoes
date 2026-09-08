@@ -29,6 +29,9 @@ export function DashboardFooter() {
             <AuthAwareNavLink href="/lab" className="hover:text-foreground transition-colors">
               Lab
             </AuthAwareNavLink>
+            <Link href="/changelog" className="hover:text-foreground transition-colors">
+              Atualizações
+            </Link>
             <Link href="/privacidade" className="hover:text-foreground transition-colors">
               Privacidade
             </Link>
