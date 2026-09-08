@@ -1,8 +1,9 @@
 import json
 from datetime import datetime, timedelta
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from core.limiter import limiter
 from db.base import get_db
 from models.models import Manual, Quiz, QuizResult, User, UserProgress, Topic
 from pydantic import BaseModel
@@ -180,7 +181,9 @@ async def get_due_quizzes(user_id: str, db: AsyncSession = Depends(get_db)):
 
 
 @router.post("/generate/{topic_id}")
+@limiter.limit("5/minute")
 async def generate_topic_quizzes(
+    request: Request,
     topic_id: str,
     db: AsyncSession = Depends(get_db),
 ):

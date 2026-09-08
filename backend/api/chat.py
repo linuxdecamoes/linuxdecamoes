@@ -5,8 +5,9 @@ POST /api/chat — recebe pergunta, pesquisa RAG, gera resposta com LLM.
 from __future__ import annotations
 
 from pydantic import BaseModel
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 
+from core.limiter import limiter
 from rag.service import search
 from rag.llm import generate_response
 
@@ -43,7 +44,8 @@ class SearchResponse(BaseModel):
 
 
 @router.post("/search", response_model=SearchResponse)
-async def search_only(req: SearchRequest):
+@limiter.limit("20/minute")
+async def search_only(request: Request, req: SearchRequest):
     if not req.query.strip():
         raise HTTPException(status_code=400, detail="Query não pode ser vazia")
 
@@ -56,7 +58,8 @@ async def search_only(req: SearchRequest):
 
 
 @router.post("/chat", response_model=ChatResponse)
-async def chat(req: ChatRequest):
+@limiter.limit("10/minute")
+async def chat(request: Request, req: ChatRequest):
     if not req.query.strip():
         raise HTTPException(status_code=400, detail="Query não pode ser vazia")
 
