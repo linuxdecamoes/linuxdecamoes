@@ -27,7 +27,7 @@ const firaCode = Fira_Code({
   weight: ["400", "500", "600", "700"],
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://linuxdecamoes.pt";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://linuxdecamoes.com";
 const SITE_NAME = "Linux de Camões";
 
 export const viewport: Viewport = {
