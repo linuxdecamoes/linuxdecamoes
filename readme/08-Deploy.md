@@ -3,10 +3,11 @@
 ## Visão Geral
 
 Este guia descreve, passo a passo, como a aplicação **Linux de Camões** é
-publicada na VPS (`<VPS_USER>@<VPS_IP>`, porta SSH `<SSH_PORT>`) e como fica
-configurada para que **cada push ao GitHub atualize automaticamente o ambiente
-de produção**. Não há passos mágicos nem comandos obscuros: o fluxo é um
-pipeline CI/CD que corre lint e build primeiro, e só depois toca na VPS.
+publicada na VPS (`<VPS_USER>@<VPS_IP>`, porta SSH `<SSH_PORT>` — ver os
+secrets do GitHub configurados na equipa) e como fica configurada para que
+**cada push ao GitHub atualize automaticamente o ambiente de produção**. Não
+há passos mágicos nem comandos obscuros: o fluxo é um pipeline CI/CD que corre
+lint e build primeiro, e só depois toca na VPS.
 
 > ⚠️ **Segurança (importante):** o repositório `linuxdecamoes` é **público**.
 > Chaves de API, tokens e chaves SSH **nunca** são commitados — os ficheiros
@@ -91,7 +92,9 @@ docker compose up --build -d
 docker compose ps        # db/backend/frontend Up (healthy)
 ```
 
-Portas expostas: `3001` (frontend), `8000` (backend), `5432` (PostgreSQL).
+Portas usadas: `3001` (frontend), `8000` (backend), `5432` (PostgreSQL) — todas
+vinculadas a `127.0.0.1` no `docker-compose.yml` (não acessíveis de fora da
+VPS). O acesso público passa sempre pelo reverse proxy com TLS.
 
 ### PostgreSQL — user e password
 
@@ -139,15 +142,17 @@ repository secret** e cria:
 
 | Segredo | Valor |
 |---------|-------|
-| `VPS_HOST` | `<VPS_IP>` |
-| `VPS_USER` | `<VPS_USER>` |
+| `VPS_HOST` | IP da VPS (não publicado nesta doc — ver gestor de secrets da equipa) |
+| `VPS_USER` | utilizador SSH da VPS |
 | `VPS_SSH_KEY` | conteúdo privado de `~/.ssh/github_actions` (copiado na VPS) |
-| `VPS_PORT` | `<SSH_PORT>` |
+| `VPS_PORT` | porta SSH da VPS |
 | `VPS_APP_PATH` | `/opt/linuxdecamoes` |
 
-> **Aviso de segurança:** os valores de host/user/porta acima são públicos por
-> natureza (identificam a VPS). O que **nunca** se partilha em docs ou no repo
-> é o conteúdo de `VPS_SSH_KEY` ou qualquer chave de API.
+> **Aviso de segurança:** o IP, utilizador e porta SSH reais da VPS não devem
+> ser publicados neste repositório público — dão a um atacante um alvo
+> concreto para brute-force/credential-stuffing sem qualquer reconhecimento
+> prévio. O que **nunca** se partilha em docs ou no repo é o conteúdo de
+> `VPS_SSH_KEY`, qualquer chave de API, ou os valores reais de host/user/porta.
 
 ## 6. Primeiro Deploy (automático)
 
@@ -212,7 +217,7 @@ python3 scripts/backup_s3.py
 |----------|----------------|---------|
 | Job `deploy` skipped | Secrets não configurados | Criar os secrets (§5); o job passa a correr no próximo push |
 | `docker compose up` falha no build do frontend | Vault `../Vault` não existe na VPS | Confirmar que `frontend/src/content/manuals/` está commitado (os 146 `.mdx` — o build não precisa do Vault) |
-| Portas inacessíveis de fora | Firewall da VPS | Abrir `3001`, `8000`, `5432` (ou usar reverse proxy com TLS) |
+| Frontend/backend inacessíveis publicamente | Reverse proxy mal configurado | As portas `3001`/`8000`/`5432` ficam **sempre** só em `127.0.0.1` — nunca as abrir diretamente à internet; corrigir a configuração do reverse proxy (nginx/Caddy) com TLS |
 | Rate limit da Groq | Quizzes pendentes de geração | Esperar reset diário ou trocar para `llama-3.1-8b-instant` |
 | `docker compose ps` mostra serviço Down | .env sem chaves ou erro de arranque | Ver `docker compose logs <serviço>` |
 | Backend não liga à BD (password inválida) | Password só muda com o volume criado | `ALTER USER ... WITH PASSWORD` ou `docker compose down -v`; alinhar `DATABASE_URL` no `backend/.env` |
