@@ -148,7 +148,7 @@ export default function ManualsPage() {
               {stats.map((s) => (
                 <div
                   key={s.label}
-                  className="flex min-w-[7rem] flex-col items-center rounded-2xl border border-border bg-card/80 px-5 py-3 text-center backdrop-blur-sm"
+                  className="flex min-w-[7rem] flex-col items-center border border-border bg-card px-5 py-3 text-center"
                 >
                   <span className="text-2xl font-bold text-foreground">{s.value}</span>
                   <span className="mt-0.5 text-xs text-muted-foreground">{s.label}</span>

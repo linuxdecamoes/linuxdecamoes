@@ -14,7 +14,7 @@ export function PrevNextNav({ prev, next, manualCode }: PrevNextNavProps) {
       {prev ? (
         <Link
           href={`/manuals/${manualCode}/${prev.slug}`}
-          className="glass-card group flex flex-col gap-1 rounded-xl p-4 transition-all hover:shadow-float hover:translate-x-[-2px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="glass-card group flex flex-col gap-1 rounded-xl border border-transparent p-4 transition-colors hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           <div className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground">
             <ArrowLeft className="h-3 w-3 transition-transform group-hover:-translate-x-0.5" aria-hidden />
@@ -30,7 +30,7 @@ export function PrevNextNav({ prev, next, manualCode }: PrevNextNavProps) {
       {next ? (
         <Link
           href={`/manuals/${manualCode}/${next.slug}`}
-          className="glass-card group flex flex-col gap-1 rounded-xl p-4 text-right transition-all hover:shadow-float hover:translate-x-[2px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="glass-card group flex flex-col gap-1 rounded-xl border border-transparent p-4 text-right transition-colors hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           <div className="flex items-center justify-end gap-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground">
             Seguinte
