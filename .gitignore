@@ -56,3 +56,6 @@ pgdata/
 
 # superpowers brainstorming session files
 .superpowers/
+
+# superpowers implementation worktrees
+.worktrees/
