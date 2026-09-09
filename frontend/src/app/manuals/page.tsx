@@ -117,8 +117,6 @@ export default function ManualsPage() {
           style={{ backgroundColor: "var(--accent)", opacity: 0.04 }}
           aria-hidden
         />
-        <div className="dot-pattern absolute inset-0 opacity-20" aria-hidden />
-
         <div className="relative mx-auto max-w-7xl px-4 py-20 sm:py-28">
           <div className="mx-auto max-w-3xl text-center">
             <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-xs font-medium text-muted-foreground">
@@ -127,7 +125,7 @@ export default function ManualsPage() {
             </span>
 
             <h1
-              className="mt-6 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl"
+              className="mt-6 font-heading text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl"
               style={{ animation: "slideUp 0.6s ease-out 0.1s both" }}
             >
               Manuais LPI
@@ -166,7 +164,7 @@ export default function ManualsPage() {
       <section className="border-t border-border bg-card/40">
         <div className="mx-auto max-w-5xl px-4 py-20">
           <div className="text-center">
-            <h2 className="text-2xl font-bold text-foreground sm:text-3xl">
+            <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
               O teu percurso de certificação
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
@@ -213,7 +211,7 @@ export default function ManualsPage() {
       <section className="border-t border-border">
         <div className="mx-auto max-w-5xl px-4 py-20">
           <div className="text-center">
-            <h2 className="text-2xl font-bold text-foreground sm:text-3xl">
+            <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
               Como funciona
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-muted-foreground">

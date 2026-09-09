@@ -93,7 +93,10 @@ export default async function Home() {
 
         {/* Bento Grid */}
         <section id="lpi" className="mx-auto max-w-6xl px-4 py-24">
-          <h2 className="mb-4 text-center text-2xl font-bold text-foreground sm:text-3xl">
+          <p className="mb-4 text-center font-mono text-xs uppercase tracking-[0.2em] text-primary">
+            $ ls /features
+          </p>
+          <h2 className="mb-4 text-center font-heading text-2xl font-bold text-foreground sm:text-3xl">
             Navegue nos Mares do Conhecimento
           </h2>
           <p className="mb-12 text-center text-base text-muted-foreground">
@@ -173,7 +176,7 @@ export default async function Home() {
                 nada. Ideal para quem quer ganhar confiança antes de tocar num
                 servidor de produção.
               </p>
-              <span className="mt-3 inline-block rounded-full bg-secondary px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
+              <span className="mt-3 inline-block border border-border px-2.5 py-0.5 font-mono text-xs uppercase tracking-wider text-muted-foreground">
                 Em breve
               </span>
             </div>
@@ -218,7 +221,10 @@ export default async function Home() {
         {/* Stack Tecnológica */}
         <section id="stack" className="bg-card-dark py-24">
           <div className="mx-auto max-w-6xl px-4">
-            <h2 className="mb-12 text-center text-2xl font-bold text-white sm:text-3xl">
+            <p className="mb-4 text-center font-mono text-xs uppercase tracking-[0.2em] text-primary">
+              $ cat stack.yml
+            </p>
+            <h2 className="mb-12 text-center font-heading text-2xl font-bold text-white sm:text-3xl">
               Uma Arquitetura de Excelência
             </h2>
 
@@ -249,11 +255,14 @@ export default async function Home() {
               <GithubIcon className="absolute -right-8 -top-8 h-64 w-64 text-foreground opacity-[0.03]" />
 
               <div className="relative">
-                <span className="inline-block rounded-full bg-primary px-3 py-1 text-xs font-semibold text-white">
+                <p className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
+                  $ git log --community
+                </p>
+                <span className="mt-4 inline-block border border-primary bg-primary px-3 py-1 font-mono text-xs font-semibold uppercase tracking-wider text-primary-foreground">
                   Licença MIT
                 </span>
 
-                <h2 className="mt-6 text-2xl font-bold text-foreground sm:text-3xl">
+                <h2 className="mt-6 font-heading text-2xl font-bold text-foreground sm:text-3xl">
                   Desenvolvido pela Comunidade.
                   <br />
                   Para a Comunidade.
@@ -279,11 +288,11 @@ export default async function Home() {
                 </div>
 
                 <div className="mt-8 flex flex-wrap gap-3">
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1 text-xs font-medium text-muted-foreground">
+                  <span className="inline-flex items-center gap-1.5 border border-border px-3 py-1 font-mono text-xs uppercase tracking-wider text-muted-foreground">
                     <GitPullRequest className="h-3.5 w-3.5" />
                     Pull Requests Bem-Vindos
                   </span>
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1 text-xs font-medium text-muted-foreground">
+                  <span className="inline-flex items-center gap-1.5 border border-border px-3 py-1 font-mono text-xs uppercase tracking-wider text-muted-foreground">
                     <CheckCircle2 className="h-3.5 w-3.5" />
                     Issues Respondidas Ativamente
                   </span>

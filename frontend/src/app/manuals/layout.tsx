@@ -8,9 +8,6 @@ export default function ManualsLayout({
 }) {
   return (
     <div className="relative flex min-h-screen flex-col">
-      {/* Atmosfera premium: gradientes radiais sobrepostos + grain SVG.
-          Wrapper fixed full-viewport abaixo de todo o conteúdo (z -1). */}
-      <div className="premium-atmosphere" aria-hidden />
       <Header />
       <main className="flex-1">{children}</main>
       <DashboardFooter />

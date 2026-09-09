@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
-import { Inter, JetBrains_Mono, Merriweather, Fira_Code } from "next/font/google";
+import { Inter, JetBrains_Mono, Merriweather } from "next/font/google";
 import { SplashScreen } from "@/components/splash-screen";
 import "./globals.css";
 
@@ -19,12 +19,6 @@ const merriweather = Merriweather({
   subsets: ["latin"],
   weight: ["400", "700"],
   style: ["normal", "italic"],
-});
-
-const firaCode = Fira_Code({
-  variable: "--font-fira-code",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
 });
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://linuxdecamoes.com";
@@ -126,7 +120,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html
         lang="pt"
-        className={`${inter.variable} ${jetbrainsMono.variable} ${merriweather.variable} ${firaCode.variable} h-full`}
+        className={`${inter.variable} ${jetbrainsMono.variable} ${merriweather.variable} h-full`}
       >
         <head>
           <script

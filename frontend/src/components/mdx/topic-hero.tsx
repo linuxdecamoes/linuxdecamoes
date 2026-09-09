@@ -61,9 +61,6 @@ export function TopicHero({
         style={{ backgroundColor: "var(--primary)", opacity: 0.04 }}
       />
 
-      {/* Dot pattern */}
-      <div className="dot-pattern pointer-events-none absolute inset-0 opacity-10" aria-hidden />
-
       <div className="relative p-8 md:p-12">
         {/* Badge do manual */}
         <div
