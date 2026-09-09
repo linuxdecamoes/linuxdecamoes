@@ -1,7 +1,7 @@
 export function AuthCardSkeleton({ title }: { title: "Entrar" | "Criar Conta" }) {
   return (
     <div
-      className="w-full max-w-md animate-pulse rounded-2xl border border-border bg-card p-8 shadow-lg"
+      className="w-full max-w-md animate-pulse border border-border bg-card p-8"
       role="status"
       aria-label={`A carregar ${title.toLowerCase()}...`}
     >
@@ -13,15 +13,15 @@ export function AuthCardSkeleton({ title }: { title: "Entrar" | "Criar Conta" })
       <div className="space-y-4">
         <div className="space-y-2">
           <div className="h-3 w-16 rounded bg-muted" />
-          <div className="h-10 w-full rounded-lg bg-muted" />
+          <div className="h-10 w-full bg-muted" />
         </div>
 
         <div className="space-y-2">
           <div className="h-3 w-24 rounded bg-muted" />
-          <div className="h-10 w-full rounded-lg bg-muted" />
+          <div className="h-10 w-full bg-muted" />
         </div>
 
-        <div className="h-10 w-full rounded-lg bg-muted" />
+        <div className="h-10 w-full bg-muted" />
       </div>
 
       <div className="mt-4 flex justify-center">
