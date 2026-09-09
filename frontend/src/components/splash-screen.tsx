@@ -58,7 +58,7 @@ export function SplashScreen() {
               cx="793.21"
               cy="793.21"
               r="793.21"
-              fill="black"
+              fill="var(--primary)"
               className="splash-bg"
             />
             <g className="splash-tier-1">
