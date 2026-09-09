@@ -26,6 +26,7 @@
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
+  --color-destructive-fg: var(--destructive-fg);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
@@ -93,13 +94,11 @@
   --color-gradient-accent: var(--gradient-accent);
   --color-gradient-hero: var(--gradient-hero);
   --color-bg-radial-warm: var(--bg-radial-warm);
-  --color-bg-atmosphere: var(--bg-atmosphere);
-  --color-bg-grain: var(--bg-grain);
   --shadow-soft: var(--shadow-soft);
   --shadow-float: var(--shadow-float);
   --shadow-glass: var(--shadow-glass);
   --shadow-card-elevated: var(--shadow-card-elevated);
-  --splash-glow: oklch(0.55 0.20 260 / 0.3);
+  --splash-glow: oklch(0.42 0.09 165 / 0.3);
 }
 
 :root {
@@ -119,6 +118,9 @@
   --accent: oklch(0.65 0.19 40);
   --accent-foreground: oklch(0.13 0.03 260);
   --destructive: oklch(0.60 0.20 25);
+  /* Vermelho escurecido para texto/ícone de erro (~4.8:1 sobre --card).
+     --destructive continua a servir bordas (>=3:1, não-texto). */
+  --destructive-fg: oklch(0.45 0.17 25);
   --border: oklch(0.88 0.01 250);
   --input: oklch(0.88 0.01 250);
   --ring: oklch(0.42 0.09 165);
@@ -171,22 +173,16 @@
     oklch(0.97 0.003 250) 0%,
     oklch(0.96 0.005 250) 60%,
     oklch(0.95 0.008 250) 100%);
+  /* Petróleo → laranja. O índigo genérico que aqui estava era o mesmo
+     gradiente azul→laranja que o redesign eliminou do hero, e continuava
+     visível na barra de progresso de leitura dos manuais. */
   --gradient-accent: linear-gradient(135deg,
-    oklch(0.55 0.20 260) 0%,
-    oklch(0.65 0.19 40) 100%);
+    var(--primary) 0%,
+    var(--accent) 100%);
 
   --bg-radial-warm: radial-gradient(circle at 20% 0%,
     oklch(0.96 0.005 250 / 0.6) 0%,
     transparent 50%);
-
-  /* --- Premium backgrounds: layered cool radials + grain --- */
-  --bg-atmosphere:
-    radial-gradient(ellipse 80% 60% at 15% 0%, oklch(0.96 0.005 250 / 0.5) 0%, transparent 60%),
-    radial-gradient(ellipse 70% 50% at 90% 10%, oklch(0.94 0.008 265 / 0.28) 0%, transparent 55%),
-    radial-gradient(ellipse 90% 50% at 50% 100%, oklch(0.95 0.005 250 / 0.35) 0%, transparent 65%),
-    radial-gradient(circle at 80% 80%, oklch(0.94 0.008 265 / 0.22) 0%, transparent 45%);
-
-  --bg-grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.1  0 0 0 0 0.12  0 0 0 0 0.18  0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
 
   --shadow-card-elevated:
     0 1px 0 oklch(1 0 0 / 0.6) inset,
@@ -219,7 +215,7 @@
   --table-header-bg: var(--cream);
   --table-border: var(--border);
   --hero-watermark: oklch(0.93 0.008 250 / 0.5);
-  --splash-glow: oklch(0.55 0.20 260 / 0.3);
+  --splash-glow: oklch(0.42 0.09 165 / 0.3);
 }
 
 @layer base {
@@ -231,6 +227,15 @@
   }
   html {
     @apply font-sans;
+  }
+  /* Indicador de foco para links simples (footers, logos, opções de quiz),
+     que hoje não tinham nenhum. O :not([data-slot]) exclui tudo o que passa
+     pelas primitivas shadcn — essas já desenham o seu próprio ring, e sem
+     a guarda apareceriam dois indicadores sobrepostos. */
+  a:focus-visible:not([data-slot]),
+  summary:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
   }
 }
 
@@ -279,8 +284,8 @@
 }
 
 @keyframes pulse-soft {
-  0%, 100% { box-shadow: 0 0 0 0 oklch(0.55 0.20 260 / 0); }
-  50%      { box-shadow: 0 0 0 4px oklch(0.55 0.20 260 / 0.15); }
+  0%, 100% { box-shadow: 0 0 0 0 oklch(0.42 0.09 165 / 0); }
+  50%      { box-shadow: 0 0 0 4px oklch(0.42 0.09 165 / 0.15); }
 }
 
 @keyframes reading-progress {
@@ -511,25 +516,6 @@
     box-shadow: var(--shadow-float), var(--shadow-glass);
   }
 
-  /* Premium atmosphere: layered radial gradients + subtle grain overlay.
-     Aplica-se a um wrapper fixed full-viewport abaixo de todo o conteúdo. */
-  .premium-atmosphere {
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    background: var(--bg-atmosphere);
-  }
-  .premium-atmosphere::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: var(--bg-grain);
-    background-size: 160px 160px;
-    opacity: 0.35;
-    mix-blend-mode: multiply;
-  }
-
   /* Hero card: gradient + grain + inset top highlight + elevated shadow.
      Para usar no TopicHero. Combina --gradient-hero com grain overlay. */
   .premium-hero {
@@ -588,40 +574,90 @@
   .stagger-list > *:nth-child(8)     { animation-delay: 420ms; }
   .stagger-list > *:nth-child(n+9)   { animation-delay: 480ms; }
 
-  /* Landing Page Components */
-  .dot-pattern {
-    background-image: radial-gradient(circle, oklch(0.85 0.01 250 / 0.4) 1px, transparent 1px);
-    background-size: 24px 24px;
-  }
-
+  /* Hover por borda, não por elevação — a regra do Blueprint. */
   .bento-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: border-color 0.2s ease;
   }
   .bento-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 40px oklch(0 0 0 / 0.08);
+    border-color: var(--primary);
   }
 
-  /* Superfície de card partilhada do dashboard — substitui o padrão
-     repetido rounded-2xl + shadow-bento em 7 ficheiros por uma única
-     classe. Borda sólida, sem sombra flutuante. */
+  /* Contrato de superfície Blueprint: borda 1px sólida, sem sombra,
+     hover = border-primary. Sem layout nem padding impostos, para poder
+     servir painéis que não são células de bento. */
+  .surface,
+  .surface-card {
+    border: 1px solid var(--border);
+    background: var(--card);
+    transition: border-color 0.2s ease;
+  }
+  .surface:hover,
+  .surface-card:hover {
+    border-color: var(--primary);
+  }
+
+  /* Painel não-interativo: mesma superfície, sem afordância de hover. */
+  .surface-static {
+    border: 1px solid var(--border);
+    background: var(--card);
+  }
+
+  /* Célula do bento do dashboard — layout por cima de .surface. */
   .surface-card {
     display: flex;
     height: 100%;
     flex-direction: column;
     justify-content: space-between;
-    border: 1px solid var(--border);
-    background: var(--card);
     padding: 1.5rem;
-    transition: border-color 0.2s ease;
-  }
-  .surface-card:hover {
-    border-color: var(--primary);
   }
   @media (min-width: 1024px) {
     .surface-card {
       padding: 2rem;
     }
+  }
+
+  /* Link de navegação do header — mono, maiúsculas, sublinhado de 2px como
+     indicador de rota ativa. Substitui navigationMenuTriggerStyle(). O estado
+     vem de data-active (atributo, não classe) para que os dois headers o
+     apliquem de forma idêntica sem conflitos de merge no cn(). O bloco
+     prefers-reduced-motion existente já zera a transição. */
+  .nav-link {
+    position: relative;
+    display: inline-flex;
+    height: 2.25rem;
+    align-items: center;
+    padding-inline: 0.625rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+    transition: color 0.2s ease;
+    outline: none;
+  }
+  .nav-link:hover {
+    color: var(--foreground);
+  }
+  .nav-link:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: -2px;
+  }
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0.625rem;
+    bottom: -1px;
+    height: 2px;
+    background: var(--primary);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.2s ease;
+  }
+  .nav-link[data-active="true"] {
+    color: var(--primary);
+  }
+  .nav-link[data-active="true"]::after {
+    transform: scaleX(1);
   }
 
   /* Fundo tipo papel milimétrico para o painel da hero — linhas subtis
