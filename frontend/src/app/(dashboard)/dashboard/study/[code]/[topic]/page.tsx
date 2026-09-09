@@ -75,7 +75,7 @@ export default function TopicStudyPage() {
           {content ? (
             <TopicContent content={content} />
           ) : (
-            <div className="bg-cream rounded-2xl shadow-bento p-8 text-center">
+            <div className="surface-static p-8 text-center">
               <p className="text-muted-foreground">Sem conteúdo disponível.</p>
             </div>
           )}
@@ -87,7 +87,7 @@ export default function TopicStudyPage() {
             {!showQuiz ? (
               <button
                 onClick={() => setShowQuiz(true)}
-                className="w-full px-6 py-3 rounded-xl bg-cta text-cta-foreground font-semibold text-sm"
+                className="w-full border border-primary bg-primary px-6 py-3 font-mono text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
               >
                 Iniciar Quiz ({quizzes.length} perguntas)
               </button>
