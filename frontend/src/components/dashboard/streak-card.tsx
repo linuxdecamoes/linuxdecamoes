@@ -24,7 +24,7 @@ export function StreakCard({ streak = 0 }: StreakCardProps) {
       </div>
 
       <div className="mt-6 flex items-center gap-4">
-        <svg width="100%" height="30" viewBox="0 0 104 30" preserveAspectRatio="none" className="flex-1">
+        <svg width="100%" height="30" viewBox="0 0 104 30" className="flex-1">
           <line x1="2" y1="15" x2="100" y2="15" stroke="var(--border)" strokeWidth="1" strokeDasharray="2 3" />
           {TIMELINE_X.map((x, i) => (
             <circle key={x} cx={x} cy={15} r={3} fill={i < activeDots ? "var(--primary)" : "var(--muted)"} />
