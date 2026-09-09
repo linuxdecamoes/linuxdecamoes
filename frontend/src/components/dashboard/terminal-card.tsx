@@ -6,7 +6,7 @@ export function TerminalCard() {
       <div className="surface-card bg-card-dark">
         <div className="corner-tick corner-tick--tl" />
         <div className="corner-tick corner-tick--br" />
-        <span className="card-tag card-tag--dark">LAB-01</span>
+        <span className="card-tag card-tag--dark" aria-hidden="true">LAB-01</span>
 
         <div>
           <h2 className="text-xl lg:text-2xl font-bold text-primary-foreground/90">Terminal Lab</h2>

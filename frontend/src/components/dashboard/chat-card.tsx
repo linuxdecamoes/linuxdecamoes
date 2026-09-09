@@ -6,7 +6,7 @@ export function ChatCard() {
       <div className="surface-card">
         <div className="corner-tick corner-tick--tl" />
         <div className="corner-tick corner-tick--br" />
-        <span className="card-tag">CHAT-03</span>
+        <span className="card-tag" aria-hidden="true">CHAT-03</span>
 
         <div>
           <h2 className="text-xl lg:text-2xl font-bold text-foreground">

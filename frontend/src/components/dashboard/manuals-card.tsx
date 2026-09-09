@@ -6,7 +6,7 @@ export function ManualsCard() {
       <div className="surface-card">
         <div className="corner-tick corner-tick--tl" />
         <div className="corner-tick corner-tick--br" />
-        <span className="card-tag">REF-05</span>
+        <span className="card-tag" aria-hidden="true">REF-05</span>
 
         <div>
           <h2 className="text-lg font-bold text-foreground">

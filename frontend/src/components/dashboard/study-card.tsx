@@ -13,7 +13,7 @@ export function StudyCard({ progress }: StudyCardProps) {
       <div className="surface-card">
         <div className="corner-tick corner-tick--tl" />
         <div className="corner-tick corner-tick--br" />
-        <span className="card-tag">FIG-02</span>
+        <span className="card-tag" aria-hidden="true">FIG-02</span>
 
         <div>
           <h2 className="text-xl lg:text-2xl font-bold tracking-tight text-foreground">
@@ -23,7 +23,7 @@ export function StudyCard({ progress }: StudyCardProps) {
             {progress.total_topics_completed}/{progress.total_topics} tópicos
           </p>
         </div>
-        <div className="mt-6 flex flex-col gap-3">
+        <div className="mt-6 flex max-h-[104px] flex-col gap-3 overflow-y-auto">
           {progress.manuals.map((m) => {
             const manual = getManual(m.code);
             const accent = manual?.accent ?? "sage";

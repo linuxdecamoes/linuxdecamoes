@@ -12,7 +12,7 @@ export function StreakCard({ streak = 0 }: StreakCardProps) {
     <div className="surface-static relative flex h-full flex-col justify-between p-6 lg:p-8">
       <div className="corner-tick corner-tick--tl" />
       <div className="corner-tick corner-tick--br" />
-      <span className="card-tag">SEQ-06</span>
+      <span className="card-tag" aria-hidden="true">SEQ-06</span>
 
       <div>
         <h2 className="text-xl lg:text-2xl font-bold text-foreground">
@@ -27,7 +27,7 @@ export function StreakCard({ streak = 0 }: StreakCardProps) {
         <svg width="100%" height="30" viewBox="0 0 104 30" className="flex-1">
           <line x1="2" y1="15" x2="100" y2="15" stroke="var(--border)" strokeWidth="1" strokeDasharray="2 3" />
           {TIMELINE_X.map((x, i) => (
-            <circle key={x} cx={x} cy={15} r={3} fill={i < activeDots ? "var(--primary)" : "var(--muted)"} />
+            <circle key={x} cx={x} cy={15} r={3} fill={i >= TIMELINE_X.length - activeDots ? "var(--primary)" : "var(--muted)"} />
           ))}
           <circle cx={TODAY_X} cy={15} r={4} fill="var(--card)" stroke="var(--coral)" strokeWidth={2} />
         </svg>

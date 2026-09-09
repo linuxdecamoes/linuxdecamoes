@@ -13,7 +13,7 @@ export function QuizzesCard({ dueCount = 0, totalCount = 0 }: QuizzesCardProps) 
       <div className="surface-card">
         <div className="corner-tick corner-tick--tl" />
         <div className="corner-tick corner-tick--br" />
-        <span className="card-tag">QZ-04</span>
+        <span className="card-tag" aria-hidden="true">QZ-04</span>
 
         <div>
           <h2 className="text-xl lg:text-2xl font-bold text-foreground">

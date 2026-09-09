@@ -1,9 +1,9 @@
 export function TopicsCard() {
   return (
-    <div className="surface-card">
+    <div className="surface-static relative flex h-full flex-col justify-between p-6 lg:p-8">
       <div className="corner-tick corner-tick--tl" />
       <div className="corner-tick corner-tick--br" />
-      <span className="card-tag">FIG-02</span>
+      <span className="card-tag" aria-hidden="true">FIG-02</span>
 
       <div>
         <h2 className="text-xl lg:text-2xl font-bold text-foreground">
