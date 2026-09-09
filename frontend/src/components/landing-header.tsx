@@ -1,15 +1,10 @@
 "use client"
 
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { useState, useEffect } from "react"
 import { MenuIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import {
-  NavigationMenu,
-  NavigationMenuList,
-  NavigationMenuItem,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu"
 import {
   Sheet,
   SheetContent,
@@ -19,18 +14,34 @@ import {
 } from "@/components/ui/sheet"
 import { GithubIcon } from "@/components/icons"
 
-const navLinks = [
-  { href: "/#projeto", label: "Início" },
-  { href: "/#lpi", label: "Funcionalidades" },
-  { href: "/#stack", label: "Stack" },
-  { href: "/#comunidade", label: "Comunidade" },
+type NavLink = {
+  href: string
+  label: string
+  /** id da secção da home, para os links de âncora */
+  section?: string
+}
+
+const navLinks: NavLink[] = [
+  { href: "/#projeto", label: "Início", section: "projeto" },
+  { href: "/#lpi", label: "Funcionalidades", section: "lpi" },
+  { href: "/#stack", label: "Stack", section: "stack" },
+  { href: "/#comunidade", label: "Comunidade", section: "comunidade" },
   { href: "/sobre", label: "Sobre" },
   { href: "/manuals", label: "Manuais" },
 ]
 
+const SECTION_IDS = navLinks
+  .map((l) => l.section)
+  .filter((s): s is string => Boolean(s))
+
 export function LandingHeader() {
+  const pathname = usePathname()
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  // Arranca a null (igual no servidor e no primeiro render do cliente) — ler
+  // location.hash durante o render seria o mesmo tipo de bug de hidratação
+  // que foi corrigido em e1b466f.
+  const [activeSection, setActiveSection] = useState<string | null>(null)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10)
@@ -38,34 +49,77 @@ export function LandingHeader() {
     return () => window.removeEventListener("scroll", onScroll)
   }, [])
 
+  useEffect(() => {
+    // Fora da home não há secções para observar. Não se limpa o estado aqui
+    // (setState síncrono num efeito provoca renders em cascata) — isActive()
+    // já só lê activeSection quando pathname === "/".
+    if (pathname !== "/") return
+
+    const targets = SECTION_IDS.map((id) => document.getElementById(id)).filter(
+      (el): el is HTMLElement => el !== null,
+    )
+    if (targets.length === 0) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((e) => e.isIntersecting)
+        if (visible.length === 0) return
+        // A secção mais acima na viewport é a que conta.
+        const topmost = visible.reduce((a, b) =>
+          a.boundingClientRect.top <= b.boundingClientRect.top ? a : b,
+        )
+        setActiveSection(topmost.target.id)
+      },
+      // 56px = altura do header (h-14); -60% no fundo faz com que a secção só
+      // conte quando já ocupa a parte de cima do ecrã.
+      { rootMargin: "-56px 0px -60% 0px" },
+    )
+
+    targets.forEach((el) => observer.observe(el))
+    return () => observer.disconnect()
+  }, [pathname])
+
+  const isActive = (link: NavLink) => {
+    if (link.section) {
+      return pathname === "/" && activeSection === link.section
+    }
+    return pathname === link.href || pathname.startsWith(`${link.href}/`)
+  }
+
   return (
     <header
-      className={`sticky top-0 z-50 border-b bg-background/90 backdrop-blur-xl supports-[backdrop-filter]:bg-background/70 transition-shadow ${
-        scrolled ? "shadow-md" : ""
+      className={`sticky top-0 z-50 border-b bg-background transition-colors duration-200 ${
+        scrolled ? "border-b-foreground/20" : "border-b-border"
       }`}
     >
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
         <Link
           href="/"
-          className="flex items-center gap-2 font-semibold text-foreground"
+          className="flex items-center gap-2 font-mono text-sm font-semibold tracking-tight text-foreground"
         >
           <img src="/linuxdecamoes_bk.svg" alt="" className="h-11 w-11" />
-          <span className="hidden sm:inline">
-            Linux de Camões
-          </span>
+          <span className="hidden sm:inline">Linux de Camões</span>
         </Link>
 
-        <NavigationMenu className="hidden md:flex">
-          <NavigationMenuList>
-            {navLinks.map((link) => (
-              <NavigationMenuItem key={link.href}>
-                <Link href={link.href} className={navigationMenuTriggerStyle()}>
-                  {link.label}
-                </Link>
-              </NavigationMenuItem>
-            ))}
-          </NavigationMenuList>
-        </NavigationMenu>
+        <nav className="hidden md:flex" aria-label="Navegação principal">
+          <ul className="flex items-center">
+            {navLinks.map((link) => {
+              const active = isActive(link)
+              return (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="nav-link"
+                    data-active={active || undefined}
+                    aria-current={active ? "page" : undefined}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              )
+            })}
+          </ul>
+        </nav>
 
         <div className="hidden items-center gap-2 md:flex">
           <a
@@ -77,13 +131,11 @@ export function LandingHeader() {
               <GithubIcon className="size-4" />
             </Button>
           </a>
-          <Link href="/dashboard">
-            <Button
-              className="bg-cta text-cta-foreground hover:bg-cta/90"
-              size="lg"
-            >
-              Aceder ao Dashboard
-            </Button>
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center gap-2 border border-primary bg-primary px-4 py-2 font-mono text-xs font-semibold uppercase tracking-wider text-primary-foreground transition-colors hover:bg-primary/90"
+          >
+            $ dashboard
           </Link>
         </div>
 
@@ -100,37 +152,43 @@ export function LandingHeader() {
           >
             <MenuIcon className="size-5" />
           </SheetTrigger>
-          <SheetContent side="left" className="w-72">
+          <SheetContent side="left" className="w-72 border-r border-border shadow-none">
             <SheetHeader>
-              <SheetTitle>Menu</SheetTitle>
+              <SheetTitle className="font-mono text-sm">$ menu</SheetTitle>
             </SheetHeader>
-            <nav className="flex flex-col gap-1 px-4">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setOpen(false)}
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
-                >
-                  {link.label}
-                </Link>
-              ))}
+            <nav className="flex flex-col px-4" aria-label="Navegação principal">
+              {navLinks.map((link) => {
+                const active = isActive(link)
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setOpen(false)}
+                    data-active={active || undefined}
+                    aria-current={active ? "page" : undefined}
+                    className="border-l-2 border-transparent px-3 py-2 font-mono text-xs uppercase tracking-wider text-muted-foreground transition-colors hover:border-primary hover:text-foreground data-[active]:border-primary data-[active]:text-primary"
+                  >
+                    {link.label}
+                  </Link>
+                )
+              })}
             </nav>
             <div className="flex flex-col gap-2 border-t border-border px-4 pt-4">
               <a
                 href="https://github.com/linuxdecamoes"
                 target="_blank"
                 rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 border border-border px-4 py-2 font-mono text-xs font-semibold uppercase tracking-wider text-foreground transition-colors hover:border-primary hover:text-primary"
               >
-                <Button variant="outline" className="w-full">
-                  <GithubIcon className="mr-2 size-4" />
-                  GitHub
-                </Button>
+                <GithubIcon className="size-4" />
+                GitHub
               </a>
-              <Link href="/dashboard" onClick={() => setOpen(false)}>
-                <Button className="w-full bg-cta text-cta-foreground hover:bg-cta/90">
-                  Aceder ao Dashboard
-                </Button>
+              <Link
+                href="/dashboard"
+                onClick={() => setOpen(false)}
+                className="inline-flex items-center justify-center gap-2 border border-primary bg-primary px-4 py-2 font-mono text-xs font-semibold uppercase tracking-wider text-primary-foreground transition-colors hover:bg-primary/90"
+              >
+                $ dashboard
               </Link>
             </div>
           </SheetContent>
