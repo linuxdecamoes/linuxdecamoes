@@ -260,8 +260,7 @@
 }
 
 @keyframes ring-fill {
-  from { stroke-dashoffset: 314; }
-  to { stroke-dashoffset: 94; }
+  from { stroke-dashoffset: 100; }
 }
 
 @keyframes page-flip {
