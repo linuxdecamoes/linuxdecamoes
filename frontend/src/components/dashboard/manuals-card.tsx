@@ -1,22 +1,20 @@
 import Link from "next/link"
-import { BookOpen } from "lucide-react"
 
 export function ManualsCard() {
   return (
     <Link href="/manuals" className="group block h-full">
       <div className="surface-card">
-        <div className="flex items-center gap-3">
-          <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
-            <BookOpen className="h-5 w-5 text-primary" aria-hidden />
-          </span>
-          <div>
-            <h2 className="text-lg font-bold text-foreground">
-              Manuais LPI
-            </h2>
-            <p className="text-xs text-muted-foreground">
-              114 tópicos pesquisáveis
-            </p>
-          </div>
+        <div className="corner-tick corner-tick--tl" />
+        <div className="corner-tick corner-tick--br" />
+        <span className="card-tag" aria-hidden="true">REF-05</span>
+
+        <div>
+          <h2 className="text-lg font-bold text-foreground">
+            Manuais LPI
+          </h2>
+          <p className="text-xs text-muted-foreground">
+            114 tópicos pesquisáveis
+          </p>
         </div>
 
         <p className="mt-4 text-sm text-muted-foreground transition-colors group-hover:text-foreground">

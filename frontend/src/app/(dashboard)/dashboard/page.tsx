@@ -54,15 +54,28 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      {/* Bento Grid */}
+      {/* Bento Grid — Terminal como faixa de abertura, 4 widgets em linha, Chat como faixa de fecho */}
       <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-12 gap-5">
-        {/* Terminal Lab — 8col × 2row */}
-        <div className="md:col-span-6 lg:col-span-8 lg:row-span-2 min-h-[200px]">
+        {/* Terminal Lab — faixa larga */}
+        <div className="md:col-span-6 lg:col-span-12 min-h-[180px]">
           <TerminalCard />
         </div>
 
-        {/* Estudo — 4col × 2row */}
-        <div className="md:col-span-3 lg:col-span-4 lg:row-span-2 min-h-[200px]">
+        {/* Sequência */}
+        <div className="md:col-span-3 lg:col-span-3 min-h-[160px]">
+          <StreakCard streak={studyProgress?.streak_consecutive_days ?? 0} />
+        </div>
+
+        {/* Quizzes */}
+        <div className="md:col-span-3 lg:col-span-3 min-h-[160px]">
+          <QuizzesCard
+            dueCount={studyProgress?.due_quiz_count ?? 0}
+            totalCount={studyProgress?.total_quizzes_taken ?? 0}
+          />
+        </div>
+
+        {/* Estudo */}
+        <div className="md:col-span-3 lg:col-span-3 min-h-[160px]">
           {studyProgress ? (
             <StudyCard progress={studyProgress} />
           ) : (
@@ -70,25 +83,14 @@ export default async function DashboardPage() {
           )}
         </div>
 
-        {/* Chat IA — 6col × 2row */}
-        <div className="md:col-span-3 lg:col-span-6 lg:row-span-2 min-h-[200px]">
-          <ChatCard />
-        </div>
-
-        {/* Quizzes — 6col × 2row */}
-        <div className="md:col-span-3 lg:col-span-6 lg:row-span-2 min-h-[200px]">
-          <QuizzesCard
-            dueCount={studyProgress?.due_quiz_count ?? 0}
-            totalCount={studyProgress?.total_quizzes_taken ?? 0}
-          />
-        </div>
-
-        {/* Manuais + Streak row — 6 + 6 preenche os 12 (sem buraco) */}
-        <div className="md:col-span-6 lg:col-span-6 min-h-[140px]">
+        {/* Manuais */}
+        <div className="md:col-span-3 lg:col-span-3 min-h-[160px]">
           <ManualsCard />
         </div>
-        <div className="md:col-span-6 lg:col-span-6 min-h-[140px]">
-          <StreakCard streak={studyProgress?.streak_consecutive_days ?? 0} />
+
+        {/* Chat IA — faixa larga */}
+        <div className="md:col-span-6 lg:col-span-12 min-h-[200px]">
+          <ChatCard />
         </div>
       </div>
     </div>
