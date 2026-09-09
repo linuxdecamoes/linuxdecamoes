@@ -249,11 +249,6 @@
   50% { opacity: 0; }
 }
 
-@keyframes fill-arc {
-  from { stroke-dashoffset: 220; }
-  to { stroke-dashoffset: 44; }
-}
-
 @keyframes pop-in {
   from { transform: scale(0); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
@@ -270,11 +265,6 @@
 
 @keyframes bar-fill {
   from { width: 0%; }
-}
-
-@keyframes flicker {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.05); opacity: 0.9; }
 }
 
 @keyframes stagger-in {
