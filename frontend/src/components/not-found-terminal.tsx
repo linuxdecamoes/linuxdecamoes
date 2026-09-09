@@ -11,13 +11,11 @@ export function NotFoundTerminal() {
   const command = `cd ${pathname || "/"}`
 
   useEffect(() => {
-    setTyped("")
-    setShowError(false)
-
     let i = 0
     const typeTimer = setInterval(() => {
       i += 1
       setTyped(command.slice(0, i))
+      if (i === 1) setShowError(false)
       if (i >= command.length) {
         clearInterval(typeTimer)
         setTimeout(() => setShowError(true), 300)
