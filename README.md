@@ -183,18 +183,6 @@ linuxdecamoes/
 | 5 — Quizzes SM-2 | 🟡 Parcial (62/92 tópicos com quizzes) |
 | 6 — Terminal interativo | 🔄 Em desenvolvimento |
 
-## Deploy na VPS + CI/CD
-
-Guia completo, passo a passo (provisionamento, chave SSH, secrets, primeiro
-deploy, backups e troubleshooting): **[`readme/08-Deploy.md`](readme/08-Deploy.md)**
-
-Resumo:
-
-1. **Provisionamento** (uma vez): `curl -fsSL https://raw.githubusercontent.com/linuxdecamoes/linuxdecamoes/master/scripts/setup-vps.sh | bash`
-2. **Chave SSH**: gerar `~/.ssh/github_actions` na VPS e copiar a pública para `~/.ssh/authorized_keys`.
-3. **Secrets**: `VPS_HOST`, `VPS_USER`, `VPS_SSH_KEY`, `VPS_PORT`, `VPS_APP_PATH` (ver guia para valores).
-4. **Push para `master`** → CI faz lint+build e faz deploy automático na VPS.
-
 ## Licença
 
 Distribuído sob licença **MIT**. Ver [`LICENSE`](LICENSE).
