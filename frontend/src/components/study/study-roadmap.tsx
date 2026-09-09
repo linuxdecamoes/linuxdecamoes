@@ -37,22 +37,22 @@ export function StudyRoadmap({ modules, manualCode, accent }: StudyRoadmapProps)
                   {isClickable ? (
                     <Link
                       href={`/dashboard/study/${manualCode}/${t.topic_id}`}
-                      className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm transition-colors ${
+                      className={`flex items-center gap-2 border-l-2 px-3 py-2 text-sm transition-colors ${
                         isActive
-                          ? `${classes.soft} ${classes.strong} font-semibold`
-                          : "hover:bg-muted"
+                          ? "border-primary bg-primary/5 font-semibold text-primary"
+                          : "border-transparent hover:border-primary hover:text-foreground"
                       }`}
                     >
                       <span>{icon}</span>
                       <span className="truncate">{t.title}</span>
                       {t.quiz_passed && t.quiz_score !== null && (
-                        <span className="ml-auto text-xs text-muted-foreground">
+                        <span className="ml-auto font-mono text-xs tabular-nums text-muted-foreground">
                           {Math.round(t.quiz_score)}%
                         </span>
                       )}
                     </Link>
                   ) : (
-                    <div className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm text-muted-foreground opacity-50 cursor-not-allowed">
+                    <div className="flex items-center gap-2 border-l-2 border-transparent px-3 py-2 text-sm text-muted-foreground cursor-not-allowed">
                       <span>{icon}</span>
                       <span className="truncate">{t.title}</span>
                     </div>

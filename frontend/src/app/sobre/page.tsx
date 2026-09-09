@@ -105,7 +105,7 @@ export default function SobrePage() {
           <div
             className="absolute inset-0"
             style={{
-              background: "radial-gradient(ellipse at 70% 20%, oklch(0.55 0.20 260 / 0.06), transparent 60%)",
+              background: "radial-gradient(ellipse at 70% 20%, oklch(0.42 0.09 165 / 0.06), transparent 60%)",
             }}
           />
           <div className="relative mx-auto max-w-4xl px-4 text-center">
@@ -117,7 +117,7 @@ export default function SobrePage() {
               Open Source · MIT License · PT-PT
             </div>
             <h1
-              className="text-4xl font-bold tracking-tight sm:text-5xl"
+              className="font-heading text-4xl font-bold tracking-tight sm:text-5xl"
               style={{ color: "var(--foreground)" }}
             >
               O Linux de Camões
@@ -141,7 +141,7 @@ export default function SobrePage() {
             {missionCards.map((card) => (
               <div
                 key={card.title}
-                className="bento-card relative rounded-2xl border p-6"
+                className="bento-card relative border p-6"
                 style={{ borderColor: "var(--border)", backgroundColor: "var(--background-card)" }}
               >
                 <div className="mb-3 flex items-center gap-2">
@@ -166,7 +166,7 @@ export default function SobrePage() {
         >
           <div className="mx-auto max-w-6xl px-4">
             <div className="mb-12 text-center">
-              <h2 className="text-2xl font-bold text-white sm:text-3xl">
+              <h2 className="font-heading text-2xl font-bold text-white sm:text-3xl">
                 Stack Tecnológica
               </h2>
               <p className="mt-3 text-sm text-white/60">
@@ -174,7 +174,7 @@ export default function SobrePage() {
               </p>
             </div>
 
-            <div className="overflow-x-auto rounded-2xl border" style={{ borderColor: "oklch(1 0 0 / 0.1)" }}>
+            <div className="overflow-x-auto border" style={{ borderColor: "oklch(1 0 0 / 0.1)" }}>
               <table className="w-full text-sm">
                 <caption className="sr-only">
                   Stack tecnológica do projeto Linux de Camões
@@ -226,7 +226,7 @@ export default function SobrePage() {
           style={{ borderColor: "var(--border)", backgroundColor: "var(--background)" }}
         >
           <div className="mx-auto max-w-4xl px-4">
-            <div className="relative overflow-hidden rounded-3xl bg-white p-8 shadow-xl sm:p-12">
+            <div className="relative overflow-hidden border border-border bg-card p-8 sm:p-12">
               <GithubIcon
                 className="absolute -right-8 -top-8 h-64 w-64 opacity-[0.03]"
                 style={{ color: "var(--foreground)" }}
@@ -241,7 +241,7 @@ export default function SobrePage() {
                 </span>
 
                 <h2
-                  className="mt-6 text-2xl font-bold sm:text-3xl"
+                  className="mt-6 font-heading text-2xl font-bold sm:text-3xl"
                   style={{ color: "var(--foreground)" }}
                 >
                   Desenvolvido pela Comunidade.

@@ -1,7 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { getUserGlobalProgress } from "@/lib/api";
 import { accentClasses, getManual } from "@/lib/manuals";
 
@@ -19,7 +18,7 @@ export default async function StudyPage() {
   return (
     <div className="mx-auto w-full max-w-[1560px] px-4 md:px-8 xl:px-12 py-8">
       <div className="mb-6">
-        <h1 className="text-3xl lg:text-4xl font-extrabold tracking-tight">
+        <h1 className="font-heading text-3xl lg:text-4xl font-bold tracking-tight">
           Estudo
         </h1>
         <p className="mt-1 text-muted-foreground">
@@ -37,27 +36,27 @@ export default async function StudyPage() {
             : 0;
 
           return (
-            <Link key={m.code} href={`/dashboard/study/${m.code}`}>
-              <Card className="h-full bg-cream shadow-bento hover:shadow-bento-hover transition-shadow duration-300 cursor-pointer">
-                <CardHeader>
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className={`inline-block w-3 h-3 rounded-full ${classes.dot}`} />
-                    <CardTitle className="text-lg font-bold">{m.title}</CardTitle>
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    {m.completed_topics}/{m.total_topics} tópicos · {m.modules_completed}/{m.modules_total} módulos
-                  </p>
-                </CardHeader>
-                <div className="px-6 pb-5">
-                  <div className="h-3 rounded-full bg-muted overflow-hidden">
-                    <div
-                      className={`h-full rounded-full ${classes.dot} transition-all duration-500`}
-                      style={{ width: `${pct}%` }}
-                    />
-                  </div>
-                  <p className="mt-2 text-xs text-muted-foreground text-right">{pct}%</p>
+            <Link
+              key={m.code}
+              href={`/dashboard/study/${m.code}`}
+              className="surface p-6 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ring)]"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <span className={`inline-block w-3 h-3 ${classes.dot}`} />
+                <h2 className="font-heading text-lg font-bold">{m.title}</h2>
+              </div>
+              <p className="font-mono text-xs text-muted-foreground">
+                {m.completed_topics}/{m.total_topics} tópicos · {m.modules_completed}/{m.modules_total} módulos
+              </p>
+              <div className="mt-4">
+                <div className="h-3 bg-muted overflow-hidden">
+                  <div
+                    className={`h-full ${classes.dot} transition-all duration-500`}
+                    style={{ width: `${pct}%` }}
+                  />
                 </div>
-              </Card>
+                <p className="mt-2 text-right font-mono text-xs tabular-nums text-muted-foreground">{pct}%</p>
+              </div>
             </Link>
           );
         })}

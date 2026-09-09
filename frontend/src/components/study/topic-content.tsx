@@ -23,21 +23,21 @@ export function TopicContent({ content }: TopicContentProps) {
 
   return (
     <div className="space-y-4">
-      <div className="bg-sage-soft/30 rounded-2xl p-6">
-        <h2 className="text-xl font-bold mb-2">{content.title}</h2>
-        <p className="text-sm text-muted-foreground">
+      <div className="border-l-2 border-primary bg-muted/40 p-6">
+        <h2 className="mb-2 font-heading text-xl font-bold">{content.title}</h2>
+        <p className="font-mono text-xs text-muted-foreground">
           Módulo {content.objective}
         </p>
       </div>
 
       {content.sections.map((s, idx) => (
-        <div key={idx} className="bg-cream rounded-xl shadow-bento overflow-hidden">
+        <div key={idx} className="surface-static overflow-hidden">
           <button
             onClick={() => toggle(idx)}
             className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-muted/30 transition-colors"
           >
             <div className="flex items-center gap-2">
-              <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-muted">
+              <span className="border border-border px-2 py-0.5 font-mono text-xs uppercase tracking-wider">
                 {TIPO_LABELS[s.tipo] ?? s.tipo}
               </span>
               <span className="text-sm font-semibold">{s.secao}</span>
@@ -55,7 +55,7 @@ export function TopicContent({ content }: TopicContentProps) {
       ))}
 
       {content.sections.length === 0 && (
-        <div className="bg-cream rounded-2xl shadow-bento p-8 text-center">
+        <div className="surface-static p-8 text-center">
           <p className="text-muted-foreground">
             Sem conteúdo RAG disponível para este tópico.
           </p>

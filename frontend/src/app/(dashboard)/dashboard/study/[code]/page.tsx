@@ -37,8 +37,8 @@ export default async function StudyManualPage({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Sidebar — Roadmap */}
         <aside className="lg:col-span-4 xl:col-span-3">
-          <div className="sticky top-24 bg-cream rounded-2xl shadow-bento p-5">
-            <h2 className="text-sm font-bold mb-4 uppercase tracking-wider text-muted-foreground">
+          <div className="surface-static sticky top-24 p-5">
+            <h2 className="mb-4 font-mono text-xs font-bold uppercase tracking-wider text-muted-foreground">
               Percurso
             </h2>
             {progress ? (
@@ -57,7 +57,7 @@ export default async function StudyManualPage({
 
         {/* Main — Content area */}
         <main className="lg:col-span-8 xl:col-span-9">
-          <div className="bg-cream rounded-2xl shadow-bento p-8 text-center">
+          <div className="surface-static p-8 text-center">
             <p className="text-muted-foreground">
               Seleciona um tópico no percurso ao lado para começar a estudar.
             </p>

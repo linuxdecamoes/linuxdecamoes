@@ -31,7 +31,7 @@ export default async function DashboardPage() {
       {/* Hero */}
       <div className="mb-6 flex flex-col gap-4 border border-border bg-card p-6 sm:flex-row sm:items-center sm:justify-between lg:p-8">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+          <h1 className="font-heading text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
             Olá, {firstName}
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">

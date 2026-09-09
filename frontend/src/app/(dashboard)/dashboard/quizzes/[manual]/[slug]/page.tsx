@@ -119,7 +119,7 @@ export default function QuizPage() {
   if (error) {
     return (
       <div className="mx-auto max-w-2xl px-4 py-16 text-center">
-        <div className="rounded-2xl border border-border bg-card p-8 shadow-bento">
+        <div className="surface-static p-8">
           <p className="text-muted-foreground">{error}</p>
           <div className="mt-6 flex justify-center gap-3">
             <Button variant="outline" onClick={() => router.back()}>
@@ -138,7 +138,7 @@ export default function QuizPage() {
   if (quizzes.length === 0) {
     return (
       <div className="mx-auto max-w-2xl px-4 py-16 text-center">
-        <div className="rounded-2xl border border-border bg-card p-8 shadow-bento">
+        <div className="surface-static p-8">
           <p className="text-muted-foreground">
             Não foi possível gerar questões para este tópico.
           </p>
@@ -156,12 +156,12 @@ export default function QuizPage() {
     const passed = pct >= 70;
     return (
       <div className="mx-auto max-w-2xl px-4 py-16 text-center">
-        <div className="rounded-2xl border border-border bg-card p-8 shadow-bento sm:p-12">
-          <div className={`mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full ${passed ? "bg-sage-soft" : "bg-coral-soft"}`}>
-            <Trophy className={`h-8 w-8 ${passed ? "text-sage" : "text-coral"}`} />
+        <div className="surface-static p-8 sm:p-12">
+          <div className={`mx-auto mb-4 flex h-16 w-16 items-center justify-center border ${passed ? "border-primary bg-primary/10" : "border-destructive bg-destructive/10"}`}>
+            <Trophy className={`h-8 w-8 ${passed ? "text-primary" : "text-destructive-fg"}`} />
           </div>
-          <h1 className="text-2xl font-bold text-foreground">Quiz Concluído!</h1>
-          <p className={`mt-4 text-5xl font-extrabold ${passed ? "text-sage" : "text-coral"}`}>{pct}%</p>
+          <h1 className="font-heading text-2xl font-bold text-foreground">Quiz Concluído!</h1>
+          <p className={`mt-4 font-mono text-5xl font-bold tabular-nums ${passed ? "text-primary" : "text-destructive-fg"}`}>{pct}%</p>
           <p className="mt-2 text-sm text-muted-foreground">
             {score.correct} de {score.total} corretas
           </p>
@@ -186,26 +186,33 @@ export default function QuizPage() {
     <div className="mx-auto max-w-2xl px-4 py-8">
       <button
         onClick={() => router.back()}
-        className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+        className="mb-6 inline-flex items-center gap-1 font-mono text-xs uppercase tracking-wider text-muted-foreground hover:text-primary transition-colors"
       >
         <ArrowLeft className="h-4 w-4" />
         Voltar
       </button>
 
       <div className="mb-6 flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">
-          Pergunta {current + 1} de {quizzes.length}
+        <p className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
+          Pergunta [{current + 1}/{quizzes.length}]
         </p>
-        <div className="h-2 w-32 overflow-hidden rounded-full bg-muted">
+        <div
+          className="h-2 w-32 overflow-hidden bg-muted"
+          role="progressbar"
+          aria-label="Progresso do quiz"
+          aria-valuemin={1}
+          aria-valuemax={quizzes.length}
+          aria-valuenow={current + 1}
+        >
           <div
-            className="h-full rounded-full bg-primary transition-all"
+            className="h-full bg-primary transition-all"
             style={{ width: `${((current + 1) / quizzes.length) * 100}%` }}
           />
         </div>
       </div>
 
-      <div className="rounded-2xl border border-border bg-card p-6 shadow-bento sm:p-8">
-        <h2 className="text-lg font-semibold text-foreground">
+      <div className="surface-static p-6 sm:p-8">
+        <h2 className="font-heading text-xl leading-snug text-foreground">
           {quiz.question}
         </h2>
 
@@ -216,39 +223,54 @@ export default function QuizPage() {
             const isSelected = selected === option;
             const showResult = result !== null;
 
+            // Estado nunca vive só na cor: cada variante muda borda, superfície
+            // e o chip da letra (WCAG 1.4.1).
+            let state = "border-border bg-card text-foreground hover:border-primary";
+            let chip = "border-border text-muted-foreground";
+            if (showResult) {
+              if (isCorrect) {
+                state = "border-primary bg-primary/10 font-medium text-foreground";
+                chip = "border-primary text-primary";
+              } else if (isSelected) {
+                state = "border-destructive bg-destructive/10 text-foreground";
+                chip = "border-destructive text-destructive-fg";
+              } else {
+                state = "border-border bg-muted/40 text-muted-foreground";
+              }
+            } else if (isSelected) {
+              state = "border-primary bg-primary/5 text-foreground";
+              chip = "border-primary text-primary";
+            }
+
             return (
               <button
                 key={i}
                 onClick={() => !result && setSelected(option)}
                 disabled={!!result}
-                className={`flex w-full items-center gap-3 rounded-xl border p-3 text-left text-sm transition-all ${
-                  showResult && isCorrect
-                    ? "border-sage bg-sage-soft text-foreground"
-                    : showResult && isSelected && !result?.is_correct
-                      ? "border-destructive bg-destructive/10 text-foreground"
-                      : isSelected
-                        ? "border-primary bg-primary/5 text-foreground"
-                        : "border-border hover:bg-muted text-foreground"
-                }`}
+                className={`flex w-full items-center gap-3 border p-3 text-left text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ring)] ${state}`}
               >
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border text-xs font-medium">
+                <span
+                  className={`flex h-7 w-7 shrink-0 items-center justify-center border font-mono text-xs ${chip}`}
+                >
                   {showResult && isCorrect ? (
-                    <CheckCircle className="h-4 w-4 text-sage" />
+                    <CheckCircle className="h-4 w-4 text-primary" />
                   ) : showResult && isSelected ? (
-                    <XCircle className="h-4 w-4 text-destructive" />
+                    <XCircle className="h-4 w-4 text-destructive-fg" />
                   ) : (
                     letter
                   )}
                 </span>
-                <span className="flex-1">{option}</span>
+                <span className="min-w-0 flex-1">{option}</span>
               </button>
             );
           })}
         </div>
 
         {result && quiz.explanation && (
-          <div className="mt-4 rounded-xl border border-border bg-muted/50 p-4 text-sm text-muted-foreground">
-            <strong className="text-foreground">Explicação:</strong>{" "}
+          <div className="mt-4 border-l-2 border-primary bg-muted/40 p-4 text-sm text-muted-foreground">
+            <p className="mb-1 font-mono text-xs uppercase tracking-wider text-primary">
+              Explicação
+            </p>
             {quiz.explanation}
           </div>
         )}

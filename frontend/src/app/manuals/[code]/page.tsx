@@ -59,7 +59,7 @@ export default async function ManualDetailPage({
   if (!manual) {
     return (
       <div className="mx-auto max-w-6xl px-4 py-24 text-center">
-        <h1 className="text-2xl font-bold text-foreground">Manual não encontrado</h1>
+        <h1 className="font-heading text-2xl font-bold text-foreground">Manual não encontrado</h1>
         <Link href="/manuals" className="mt-4 inline-block">
           <Button variant="outline">Voltar aos Manuais</Button>
         </Link>
@@ -107,8 +107,6 @@ export default async function ManualDetailPage({
           style={{ backgroundColor: "var(--primary)", opacity: 0.06 }}
           aria-hidden
         />
-        <div className="dot-pattern absolute inset-0 opacity-15" aria-hidden />
-
         <div className="relative mx-auto max-w-5xl px-4 py-16 sm:py-20">
           <Link
             href="/manuals"
@@ -131,7 +129,7 @@ export default async function ManualDetailPage({
           </div>
 
           <h1
-            className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl"
+            className="font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl"
             style={{ animation: "slideUp 0.6s ease-out 0.1s both" }}
           >
             {manual.title}
