@@ -3,40 +3,35 @@ import Link from "next/link"
 export function TerminalCard() {
   return (
     <Link href="/lab" className="group block h-full">
-      <div className="surface-card relative overflow-hidden bg-card-dark">
-        <div className="relative z-10">
+      <div className="surface-card bg-card-dark">
+        <div className="corner-tick corner-tick--tl" />
+        <div className="corner-tick corner-tick--br" />
+        <span className="card-tag card-tag--dark">LAB-01</span>
+
+        <div>
           <h2 className="text-xl lg:text-2xl font-bold text-primary-foreground/90">Terminal Lab</h2>
           <p className="mt-1 text-sm text-primary-foreground/50">
             Prática comandos Linux num terminal real
           </p>
         </div>
 
-        <div className="relative z-10 mt-6 flex flex-col gap-3 overflow-x-auto whitespace-pre">
-          <div
-            className="w-fit rounded-xl bg-primary-foreground/10 px-3 py-1.5 font-mono text-xs text-primary-foreground/80"
-            style={{ animation: "float 3s ease-in-out infinite" }}
-          >
-            $ ls -la /etc/nginx
-          </div>
-          <div
-            className="w-fit rounded-xl bg-primary-foreground/10 px-3 py-1.5 font-mono text-xs text-primary-foreground/80"
-            style={{ animation: "float 3s ease-in-out infinite 1.2s" }}
-          >
-            $ grep -r &quot;server_name&quot; /etc
-          </div>
-          <div
-            className="w-fit rounded-xl bg-primary-foreground/10 px-3 py-1.5 font-mono text-xs text-primary-foreground/80"
-            style={{ animation: "float 3s ease-in-out infinite 2.4s" }}
-          >
-            $ chmod +x deploy.sh
-          </div>
-          <div className="font-mono text-xs text-primary-foreground/40">
-            <span style={{ animation: "blink 1s step-end infinite" }}>_</span>
-          </div>
+        <div className="mt-6 overflow-x-auto whitespace-pre font-mono text-xs leading-7">
+          <p>
+            <span className="text-primary-foreground/70">aluno@linuxdecamoes</span>
+            <span className="text-primary-foreground/40">:~$ </span>
+            <span className="text-primary-foreground/90">ls -la /etc/nginx</span>
+          </p>
+          <p>
+            <span className="text-primary-foreground/70">aluno@linuxdecamoes</span>
+            <span className="text-primary-foreground/40">:~$ </span>
+            <span className="text-primary-foreground/90">chmod +x deploy.sh</span>
+          </p>
+          <p>
+            <span className="text-primary-foreground/70">aluno@linuxdecamoes</span>
+            <span className="text-primary-foreground/40">:~$ </span>
+            <span className="text-sage" style={{ animation: "blink 1s step-end infinite" }}>_</span>
+          </p>
         </div>
-
-        <div className="absolute -bottom-8 -right-8 h-32 w-32 rounded-full bg-primary-foreground/5" />
-        <div className="absolute -top-6 -left-6 h-24 w-24 rounded-full bg-primary-foreground/5" />
       </div>
     </Link>
   )
