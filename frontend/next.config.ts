@@ -4,12 +4,12 @@ import path from "node:path";
 
 const csp = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com",
+  "script-src 'self' 'unsafe-inline' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.linuxdecamoes.com https://accounts.linuxdecamoes.com",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https://img.clerk.com https://*.clerk.com",
+  "img-src 'self' data: blob: https://img.clerk.com https://*.clerk.com https://clerk.linuxdecamoes.com https://accounts.linuxdecamoes.com",
   "font-src 'self' data:",
-  "connect-src 'self' https://*.clerk.accounts.dev https://*.clerk.com https://clerk-telemetry.com https://api.github.com",
-  "frame-src 'self' https://*.clerk.accounts.dev https://*.clerk.com",
+  "connect-src 'self' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.linuxdecamoes.com https://accounts.linuxdecamoes.com https://clerk-telemetry.com https://api.github.com",
+  "frame-src 'self' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.linuxdecamoes.com https://accounts.linuxdecamoes.com",
   "worker-src 'self' blob:",
   "object-src 'none'",
   "base-uri 'self'",
