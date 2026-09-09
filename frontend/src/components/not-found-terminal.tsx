@@ -27,7 +27,7 @@ export function NotFoundTerminal() {
 
   return (
     <div
-      className="hero-grid-bg relative mx-auto w-full max-w-lg overflow-hidden border border-border bg-card-dark"
+      className="relative mx-auto w-full max-w-lg overflow-hidden border border-white/10 bg-card-dark-alt shadow-2xl"
       aria-hidden="true"
     >
       <div className="relative z-10 flex flex-col gap-2 px-6 py-6 font-mono text-sm text-white/80">
