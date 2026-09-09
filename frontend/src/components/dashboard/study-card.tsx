@@ -11,6 +11,10 @@ export function StudyCard({ progress }: StudyCardProps) {
   return (
     <Link href="/dashboard/study" className="group block h-full">
       <div className="surface-card">
+        <div className="corner-tick corner-tick--tl" />
+        <div className="corner-tick corner-tick--br" />
+        <span className="card-tag">FIG-02</span>
+
         <div>
           <h2 className="text-xl lg:text-2xl font-bold tracking-tight text-foreground">
             Estudo
@@ -38,9 +42,9 @@ export function StudyCard({ progress }: StudyCardProps) {
                     {m.modules_completed}/{m.modules_total} mód.
                   </span>
                 </div>
-                <div className="h-2 rounded-full bg-muted overflow-hidden">
+                <div className="h-[3px] bg-muted overflow-hidden">
                   <div
-                    className={`h-full rounded-full ${classes.dot} transition-all duration-500`}
+                    className={`h-full ${classes.dot} transition-all duration-500`}
                     style={{ width: `${pct}%` }}
                   />
                 </div>
