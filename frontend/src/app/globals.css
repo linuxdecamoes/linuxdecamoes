@@ -633,14 +633,14 @@
   .corner-tick--tl {
     top: -1px;
     left: -1px;
-    border-top: 1px solid;
-    border-left: 1px solid;
+    border-top: 1px solid var(--primary);
+    border-left: 1px solid var(--primary);
   }
   .corner-tick--br {
     bottom: -1px;
     right: -1px;
-    border-bottom: 1px solid;
-    border-right: 1px solid;
+    border-bottom: 1px solid var(--primary);
+    border-right: 1px solid var(--primary);
   }
 
   /* Legenda de canto tipo desenho técnico — string fixa por card,
