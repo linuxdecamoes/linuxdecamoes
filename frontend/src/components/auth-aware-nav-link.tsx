@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { useAuth } from "@clerk/nextjs"
 import { Lock } from "lucide-react"
 
@@ -13,17 +14,35 @@ function isProtectedRoute(href: string): boolean {
 type AuthAwareNavLinkProps = {
   href: string
   className?: string
+  /** Classes extra quando este link corresponde à rota atual. */
+  activeClassName?: string
   children: React.ReactNode
 }
 
-export function AuthAwareNavLink({ href, className, children }: AuthAwareNavLinkProps) {
+export function AuthAwareNavLink({
+  href,
+  className,
+  activeClassName,
+  children,
+}: AuthAwareNavLinkProps) {
   const { isSignedIn } = useAuth()
+  const pathname = usePathname()
   const needsLoginNotice = isProtectedRoute(href) && isSignedIn === false
+
+  // Mesma regra dos headers: /dashboard exige igualdade exata para não ficar
+  // ativo ao mesmo tempo que /dashboard/chat; os restantes casam por prefixo.
+  const isActive =
+    href === "/dashboard"
+      ? pathname === "/dashboard"
+      : pathname === href || pathname.startsWith(`${href}/`)
 
   return (
     <Link
       href={href}
-      className={className}
+      className={[className, isActive ? activeClassName : null]
+        .filter(Boolean)
+        .join(" ")}
+      aria-current={isActive ? "page" : undefined}
       title={needsLoginNotice ? "Requer conta" : undefined}
     >
       <span className="inline-flex items-center gap-1">
