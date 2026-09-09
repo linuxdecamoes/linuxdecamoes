@@ -1,21 +1,19 @@
-const dayLabels = ["D", "S", "T", "Q", "Q", "S", "S"]
-const now = new Date()
-
-function getDayLabel(i: number) {
-  const d = new Date(now)
-  d.setDate(d.getDate() - (6 - i))
-  return dayLabels[d.getDay()]
-}
-
 type StreakCardProps = {
   streak?: number
 }
 
+const TIMELINE_X = [8, 24, 40, 56, 72, 88] as const
+const TODAY_X = 96
+
 export function StreakCard({ streak = 0 }: StreakCardProps) {
-  const activeDays = Array.from({ length: 7 }, (_, i) => i >= 7 - Math.min(streak, 7))
+  const activeDots = Math.min(streak, TIMELINE_X.length)
 
   return (
-    <div className="surface-card">
+    <div className="surface-static relative flex h-full flex-col justify-between p-6 lg:p-8">
+      <div className="corner-tick corner-tick--tl" />
+      <div className="corner-tick corner-tick--br" />
+      <span className="card-tag">SEQ-06</span>
+
       <div>
         <h2 className="text-xl lg:text-2xl font-bold text-foreground">
           Sequência
@@ -26,38 +24,15 @@ export function StreakCard({ streak = 0 }: StreakCardProps) {
       </div>
 
       <div className="mt-6 flex items-center gap-4">
-        {streak > 0 && (
-          <svg
-            width="40" height="40" viewBox="0 0 48 48"
-            style={{ animation: "flicker 2s ease-in-out infinite" }}
-          >
-            <path
-              d="M24 4 C24 4 32 14 32 24 C32 30 28 34 24 36 C20 34 16 30 16 24 C16 14 24 4 24 4Z"
-              fill="var(--amber)"
-            />
-            <path
-              d="M24 14 C24 14 28 20 28 26 C28 30 26 32 24 33 C22 32 20 30 20 26 C20 20 24 14 24 14Z"
-              fill="var(--coral)"
-            />
-          </svg>
-        )}
-
-        <div className="flex gap-1.5">
-          {activeDays.map((active, i) => (
-            <div
-              key={i}
-              className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-medium transition-colors ${
-                active
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted text-muted-foreground"
-              }`}
-            >
-              {getDayLabel(i)}
-            </div>
+        <svg width="100%" height="30" viewBox="0 0 104 30" preserveAspectRatio="none" className="flex-1">
+          <line x1="2" y1="15" x2="100" y2="15" stroke="var(--border)" strokeWidth="1" strokeDasharray="2 3" />
+          {TIMELINE_X.map((x, i) => (
+            <circle key={x} cx={x} cy={15} r={3} fill={i < activeDots ? "var(--primary)" : "var(--muted)"} />
           ))}
-        </div>
+          <circle cx={TODAY_X} cy={15} r={4} fill="var(--card)" stroke="var(--coral)" strokeWidth={2} />
+        </svg>
 
-        <div className="ml-auto text-right">
+        <div className="shrink-0 text-right">
           <p className="text-2xl font-extrabold tabular-nums text-foreground">{streak}</p>
           <p className="text-xs text-muted-foreground">dias</p>
         </div>
