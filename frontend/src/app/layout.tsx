@@ -119,7 +119,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html
-        lang="pt"
+        lang="pt-PT"
         className={`${inter.variable} ${jetbrainsMono.variable} ${merriweather.variable} h-full`}
       >
         <head>

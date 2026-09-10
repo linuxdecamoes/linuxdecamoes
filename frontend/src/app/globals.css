@@ -410,34 +410,6 @@
   mix-blend-mode: multiply;
 }
 
-/* Hero text slider — CSS-only, zero runtime deps (ADR-001) */
-.hero-slider-container {
-  display: inline-block;
-  height: 1.2em;
-  overflow: hidden;
-  vertical-align: bottom;
-}
-
-.hero-slider {
-  display: flex;
-  flex-direction: column;
-  animation: slideTech 12s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-}
-
-.hero-slider > span {
-  height: 1.2em;
-  line-height: 1.2em;
-  display: block;
-}
-
-@keyframes slideTech {
-  0%, 18%  { transform: translateY(0); }
-  25%, 43% { transform: translateY(-20%); }
-  50%, 68% { transform: translateY(-40%); }
-  75%, 93% { transform: translateY(-60%); }
-  100%     { transform: translateY(-80%); }
-}
-
 @keyframes splash-draw {
   0% {
     opacity: 0;

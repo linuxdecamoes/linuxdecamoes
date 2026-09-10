@@ -23,8 +23,9 @@ type NavLink = {
 
 const navLinks: NavLink[] = [
   { href: "/#projeto", label: "Início", section: "projeto" },
-  { href: "/#lpi", label: "Funcionalidades", section: "lpi" },
-  { href: "/#stack", label: "Stack", section: "stack" },
+  { href: "/#aprender", label: "Aprender", section: "aprender" },
+  { href: "/#praticar", label: "Praticar", section: "praticar" },
+  { href: "/#certificar", label: "Certificar", section: "certificar" },
   { href: "/#comunidade", label: "Comunidade", section: "comunidade" },
   { href: "/sobre", label: "Sobre" },
   { href: "/manuals", label: "Manuais" },

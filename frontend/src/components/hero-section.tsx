@@ -1,6 +1,5 @@
 import Link from "next/link"
-import { GraduationCap } from "lucide-react"
-import { GithubIcon } from "@/components/icons"
+import { BookOpen, GraduationCap } from "lucide-react"
 
 export function HeroSection() {
   return (
@@ -18,26 +17,18 @@ export function HeroSection() {
             className="mt-4 font-heading text-4xl font-bold leading-tight text-foreground sm:text-5xl"
             style={{ animation: "slideUp 0.6s ease-out 0.1s both" }}
           >
-            Domine Sistemas Linux.
+            Aprende Linux, ao teu ritmo,
             <br />
-            <span className="hero-slider-container" aria-hidden="true">
-              <span className="hero-slider text-primary">
-                <span>SysAdmin.</span>
-                <span>DevOps.</span>
-                <span>Cloud Native.</span>
-                <span>Segurança.</span>
-                <span aria-hidden="true">SysAdmin.</span>
-              </span>
-            </span>
-            <span className="sr-only">SysAdmin, DevOps, Cloud Native, Segurança.</span>
+            em português.
           </h1>
 
           <p
             className="mt-6 max-w-md text-base leading-7 text-muted-foreground"
             style={{ animation: "slideUp 0.6s ease-out 0.2s both" }}
           >
-            A plataforma de aprendizagem de Linux baseada nos manuais oficiais.
-            Do universo ao marketplace — uma ponte entre formação certificada e experiência real.
+            Não precisas de saber nada de antemão. Estuda pelos manuais
+            oficiais, pratica com quizzes inteligentes e, se quiseres,
+            prepara-te para a certificação LPI.
           </p>
 
           <div
@@ -45,21 +36,19 @@ export function HeroSection() {
             style={{ animation: "slideUp 0.6s ease-out 0.3s both" }}
           >
             <Link
-              href="/sign-up"
+              href="/manuals"
               className="inline-flex items-center gap-2 border border-primary bg-primary px-6 py-3 font-mono text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
             >
-              <GraduationCap className="h-4 w-4" />
-              $ começar --agora
+              <BookOpen className="h-4 w-4" />
+              $ ver --manuais
             </Link>
-            <a
-              href="https://github.com/linuxdecamoes"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/sign-up"
               className="inline-flex items-center gap-2 border border-border px-6 py-3 font-mono text-sm font-semibold text-foreground transition-colors hover:border-primary hover:text-primary"
             >
-              <GithubIcon className="h-4 w-4" />
-              git clone --contribuir
-            </a>
+              <GraduationCap className="h-4 w-4" />
+              $ criar --conta
+            </Link>
           </div>
         </div>
 
