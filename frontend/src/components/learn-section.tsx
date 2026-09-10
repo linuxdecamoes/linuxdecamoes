@@ -46,7 +46,7 @@ export function LearnSection() {
                     {topicTitle}
                     <span className="ml-2 text-xs text-muted-foreground">— {manualTitle}</span>
                   </span>
-                  <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+                  <ArrowRight aria-hidden="true" className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
                 </Link>
               </li>
             ))}
@@ -56,7 +56,7 @@ export function LearnSection() {
             className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
           >
             Ver todos os manuais
-            <ArrowRight className="h-3.5 w-3.5" />
+            <ArrowRight aria-hidden="true" className="h-3.5 w-3.5" />
           </Link>
         </div>
 
