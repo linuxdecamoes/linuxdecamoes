@@ -32,7 +32,7 @@ export function LearnSection() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div className="border border-border bg-card p-6">
           <div className="mb-4 flex items-center gap-2">
-            <BookOpen className="h-5 w-5 text-primary" />
+            <BookOpen aria-hidden="true" className="h-5 w-5 text-primary" />
             <h3 className="font-semibold text-foreground">Alguns tópicos para começar</h3>
           </div>
           <ul className="space-y-3">
@@ -62,7 +62,7 @@ export function LearnSection() {
 
         <div className="border border-card-dark bg-card-dark p-6 text-white">
           <div className="mb-3 flex items-center gap-2">
-            <Brain className="h-5 w-5" style={{ color: "var(--accent)" }} />
+            <Brain aria-hidden="true" className="h-5 w-5" style={{ color: "var(--accent)" }} />
             <h3 className="font-semibold">Motor RAG</h3>
           </div>
           <p className="text-sm leading-relaxed opacity-80">

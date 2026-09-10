@@ -17,7 +17,7 @@ export function PracticeSection() {
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
           <div className="border border-border bg-card p-6">
             <div className="mb-3 flex items-center gap-2">
-              <Timer className="h-5 w-5 text-primary" />
+              <Timer aria-hidden="true" className="h-5 w-5 text-primary" />
               <h3 className="font-semibold text-foreground">Quizzes SM-2</h3>
             </div>
             <p className="text-sm leading-relaxed text-muted-foreground">
@@ -29,7 +29,7 @@ export function PracticeSection() {
 
           <div className="border border-dashed border-border bg-secondary p-6">
             <div className="mb-3 flex items-center gap-2">
-              <Terminal className="h-5 w-5 text-muted-foreground" />
+              <Terminal aria-hidden="true" className="h-5 w-5 text-muted-foreground" />
               <h3 className="font-semibold text-foreground">Labs Kubernetes</h3>
             </div>
             <p className="text-sm leading-relaxed text-muted-foreground">
