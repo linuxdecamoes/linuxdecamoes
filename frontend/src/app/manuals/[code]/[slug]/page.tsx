@@ -115,19 +115,19 @@ export default async function TopicPage({
         "@type": "ListItem",
         position: 1,
         name: "Manuais LPI",
-        item: `${SITE_URL}/manuais`,
+        item: `${SITE_URL}/manuals`,
       },
       {
         "@type": "ListItem",
         position: 2,
         name: manual.title,
-        item: `${SITE_URL}/manuais/${code}`,
+        item: `${SITE_URL}/manuals/${code}`,
       },
       {
         "@type": "ListItem",
         position: 3,
         name: topic.title,
-        item: `${SITE_URL}/manuais/${code}/${slug}`,
+        item: `${SITE_URL}/manuals/${code}/${slug}`,
       },
     ],
   }

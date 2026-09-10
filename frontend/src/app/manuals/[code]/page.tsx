@@ -81,13 +81,13 @@ export default async function ManualDetailPage({
         "@type": "ListItem",
         position: 1,
         name: "Manuais LPI",
-        item: `${SITE_URL}/manuais`,
+        item: `${SITE_URL}/manuals`,
       },
       {
         "@type": "ListItem",
         position: 2,
         name: manual.title,
-        item: `${SITE_URL}/manuais/${code}`,
+        item: `${SITE_URL}/manuals/${code}`,
       },
     ],
   }
