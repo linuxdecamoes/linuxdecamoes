@@ -28,6 +28,12 @@ interface CertifySectionProps {
   stars: number | null
 }
 
+const STATS_GRID_COLS: Record<number, string> = {
+  1: "sm:grid-cols-1",
+  2: "sm:grid-cols-2",
+  3: "sm:grid-cols-3",
+}
+
 export function CertifySection({ totalManuais, totalTopicos, stars }: CertifySectionProps) {
   const hasManualStats = totalManuais > 0
 
@@ -66,31 +72,33 @@ export function CertifySection({ totalManuais, totalTopicos, stars }: CertifySec
           ))}
         </div>
 
-        {(hasManualStats || stars !== null) && (
-          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-3">
-            {hasManualStats && (
-              <>
-                <div className="border border-border bg-card p-6 text-center">
-                  <Layers className="mx-auto h-6 w-6 text-primary" />
-                  <p className="mt-3 text-3xl font-bold text-foreground">{totalManuais}</p>
-                  <p className="text-sm text-muted-foreground">Manuais Oficiais</p>
+        {(() => {
+          const statCards = [
+            ...(hasManualStats
+              ? [
+                  { key: "manuais", icon: Layers, value: totalManuais, label: "Manuais Oficiais" },
+                  { key: "topicos", icon: BookOpen, value: totalTopicos, label: "Tópicos Estudáveis" },
+                ]
+              : []),
+            ...(stars !== null ? [{ key: "stars", icon: Star, value: stars, label: "Estrelas no GitHub" }] : []),
+          ]
+
+          if (statCards.length === 0) return null
+
+          return (
+            <div
+              className={`mt-12 grid grid-cols-1 gap-6 ${STATS_GRID_COLS[statCards.length]}`}
+            >
+              {statCards.map(({ key, icon: Icon, value, label }) => (
+                <div key={key} className="border border-border bg-card p-6 text-center">
+                  <Icon className="mx-auto h-6 w-6 text-primary" aria-hidden />
+                  <p className="mt-3 text-3xl font-bold text-foreground">{value}</p>
+                  <p className="text-sm text-muted-foreground">{label}</p>
                 </div>
-                <div className="border border-border bg-card p-6 text-center">
-                  <BookOpen className="mx-auto h-6 w-6 text-primary" />
-                  <p className="mt-3 text-3xl font-bold text-foreground">{totalTopicos}</p>
-                  <p className="text-sm text-muted-foreground">Tópicos Estudáveis</p>
-                </div>
-              </>
-            )}
-            {stars !== null && (
-              <div className="border border-border bg-card p-6 text-center">
-                <Star className="mx-auto h-6 w-6 text-primary" />
-                <p className="mt-3 text-3xl font-bold text-foreground">{stars}</p>
-                <p className="text-sm text-muted-foreground">Estrelas no GitHub</p>
-              </div>
-            )}
-          </div>
-        )}
+              ))}
+            </div>
+          )
+        })()}
 
         <p className="mt-12 text-center text-sm text-muted-foreground">
           És professor?{" "}
